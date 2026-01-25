@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jauhar Ulul Fauzi - Portfolio</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon_jf.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
@@ -368,28 +369,30 @@
             class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-2 md:gap-8 no-scrollbar pb-6 md:pb-0">
             <!-- Project 1 -->
             <div
-                class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-blue-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div
-                    class="h-40 md:h-48 bg-blue-900/20 flex items-center justify-center group-hover:bg-blue-900/30 transition">
-                    <span class="text-5xl md:text-6xl">📊</span>
+                class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-green-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
+                <div class="h-40 md:h-56 bg-green-900/20 flex items-center justify-center overflow-hidden">
+                    <img src="{{ asset('projects/kpri.png') }}" alt="KPRI Bakti Mulia"
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                 </div>
                 <div class="p-6 md:p-8">
-                    <span class="text-blue-500 text-xs font-bold tracking-wider uppercase mb-2 block">Data Mining •
-                        Koperasi</span>
-                    <h3 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-blue-500 transition">Efinnancient
+                    <span class="text-green-500 text-xs font-bold tracking-wider uppercase mb-2 block">Koperasi •
+                        Kemenag</span>
+                    <h3 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-green-500 transition">KPRI Bakti
+                        Mulia
                     </h3>
                     <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">
-                        Sistem koperasi terintegrasi menggunakan algoritma <strong>C4.5 Decision Tree</strong> sebagai
-                        penentu ambang batas pinjaman. Membantu digitalisasi koperasi dengan analisis data cerdas.
+                        Sistem digitalisasi <strong>KPRI Kemenag Kota Yogyakarta</strong>. Terintegrasi dengan fitur
+                        simpan
+                        pinjam dan analisis kelayakan kredit menggunakan <strong>C4.5 Algorithm</strong>.
                     </p>
                     <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-6">
-                        <span class="px-2 py-1 bg-zinc-800 rounded">PHP</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">C4.5 Algorithm</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded">PHP Native</span>
                         <span class="px-2 py-1 bg-zinc-800 rounded">MySQL</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded">Decision Support</span>
                     </div>
-                    <a href="https://github.com/jauhar05/efinnancient"
-                        class="inline-flex items-center text-sm font-bold text-white hover:text-blue-500 transition">
-                        View Details <span class="ml-2">→</span>
+                    <a href="http://kpribaktimulia.or.id/" target="_blank"
+                        class="inline-flex items-center text-sm font-bold text-white hover:text-green-500 transition">
+                        Visit Website <span class="ml-2">→</span>
                     </a>
                 </div>
             </div>
@@ -397,9 +400,9 @@
             <!-- Project 2 -->
             <div
                 class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-indigo-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div
-                    class="h-40 md:h-48 bg-indigo-900/20 flex items-center justify-center group-hover:bg-indigo-900/30 transition">
-                    <span class="text-5xl md:text-6xl">🏝️</span>
+                <div class="h-40 md:h-56 bg-indigo-900/20 flex items-center justify-center overflow-hidden">
+                    <img src="{{ asset('projects/jaugjakita.png') }}" alt="JaugjaKita"
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                 </div>
                 <div class="p-6 md:p-8">
                     <span class="text-indigo-500 text-xs font-bold tracking-wider uppercase mb-2 block">Recommendation
@@ -425,9 +428,9 @@
             <!-- Project 3 -->
             <div
                 class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div
-                    class="h-40 md:h-48 bg-emerald-900/20 flex items-center justify-center group-hover:bg-emerald-900/30 transition">
-                    <span class="text-5xl md:text-6xl">📝</span>
+                <div class="h-40 md:h-56 bg-emerald-900/20 flex items-center justify-center overflow-hidden">
+                    <img src="{{ asset('projects/kauiz.png') }}" alt="Kauiz"
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                 </div>
                 <div class="p-6 md:p-8">
                     <span class="text-emerald-500 text-xs font-bold tracking-wider uppercase mb-2 block">Smart
@@ -452,9 +455,9 @@
             <!-- Project 4 -->
             <div
                 class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-purple-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div
-                    class="h-40 md:h-48 bg-purple-900/20 flex items-center justify-center group-hover:bg-purple-900/30 transition">
-                    <span class="text-5xl md:text-6xl">💬</span>
+                <div class="h-40 md:h-56 bg-purple-900/20 flex items-center justify-center overflow-hidden">
+                    <img src="{{ asset('projects/livechat.png') }}" alt="LiveChat Event"
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                 </div>
                 <div class="p-6 md:p-8">
                     <span class="text-purple-500 text-xs font-bold tracking-wider uppercase mb-2 block">Realtime &
