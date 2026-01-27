@@ -497,7 +497,7 @@
                 <div>
                     <h3 class="text-xl font-bold text-white mb-1">Universitas Amikom Yogyakarta</h3>
                     <p class="text-blue-400 font-medium mb-1">Program Studi Sistem Informasi</p>
-                    <p class="text-gray-400 text-sm mb-1">Semester 4 • IPK: 3.91</p>
+                    <p class="text-gray-400 text-sm mb-1">Angkatan Tahun 2023 • IPK: 3.91</p>
                     <p class="text-gray-500 text-xs">Agustus 2023 - Sekarang</p>
                 </div>
             </div>
