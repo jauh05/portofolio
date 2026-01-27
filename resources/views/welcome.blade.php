@@ -445,7 +445,7 @@
                         <span class="px-2 py-1 bg-zinc-800 rounded">File Processing</span>
                         <span class="px-2 py-1 bg-zinc-800 rounded">Automation</span>
                     </div>
-                    <a href="https://github.com/jauhar05/kauiz"
+                    <a href="http://kauiz.jauharfauzi.my.id/"
                         class="inline-flex items-center text-sm font-bold text-white hover:text-emerald-500 transition">
                         View Details <span class="ml-2">→</span>
                     </a>
