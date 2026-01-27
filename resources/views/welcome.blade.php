@@ -418,7 +418,7 @@
                         <span class="px-2 py-1 bg-zinc-800 rounded">TF-IDF</span>
                         <span class="px-2 py-1 bg-zinc-800 rounded">Web App</span>
                     </div>
-                    <a href="https://github.com/jauhar05/jaugjakita"
+                    <a href="jaugjakita.jauharfauzi.my.id"
                         class="inline-flex items-center text-sm font-bold text-white hover:text-indigo-500 transition">
                         View Details <span class="ml-2">→</span>
                     </a>
@@ -473,7 +473,7 @@
                         <span class="px-2 py-1 bg-zinc-800 rounded">NLP</span>
                         <span class="px-2 py-1 bg-zinc-800 rounded">Realtime</span>
                     </div>
-                    <a href="https://github.com/jauhar05/livechat-event"
+                    <a href="https://livechat.jauharfauzi.my.id/"
                         class="inline-flex items-center text-sm font-bold text-white hover:text-purple-500 transition">
                         View Details <span class="ml-2">→</span>
                     </a>
