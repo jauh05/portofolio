@@ -18,7 +18,13 @@
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 100px;
-            /* Ensures navbar doesn't cover content */
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body {
+            overflow-x: hidden;
+            width: 100%;
         }
 
         .bg-dark-mesh {
@@ -116,14 +122,13 @@
 
     <!-- Dynamic Navbar Wrapper -->
     <div x-data="{ expanded: false }">
-        
+
         <!-- Mobile Navigation (New Design) -->
         <div class="md:hidden">
             <!-- Mobile Toggle Button (Top Left) -->
-            <button 
-                @click="expanded = !expanded" 
-                class="fixed top-6 left-6 z-[60] p-3 bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-full text-white shadow-2xl transition-all duration-300 group hover:scale-110 active:scale-95"
-                :class="expanded ? 'bg-transparent border-transparent' : ''">
+            <button @click="expanded = !expanded"
+                class="fixed top-6 left-6 z-[60] p-3 rounded-full text-white shadow-2xl transition-all duration-300 group hover:scale-110 active:scale-95"
+                :class="expanded ? 'bg-transparent border-transparent' : 'bg-zinc-900/80 backdrop-blur-xl border border-white/10'">
                 <!-- Hamburger Icon -->
                 <div class="relative w-6 h-6 flex flex-col justify-center items-center gap-1.5 overflow-hidden">
                     <span class="w-full h-0.5 bg-white rounded-full transition-all duration-300 group-hover:bg-blue-400"
@@ -136,45 +141,49 @@
             </button>
 
             <!-- Brand Logo (Top Right - for balance) -->
-             <div class="fixed top-6 right-6 z-40 p-3 bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl" x-show="!expanded" x-transition.opacity>
+            <div class="fixed top-6 right-6 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300"
+                :class="expanded ? 'bg-transparent border-transparent' : 'bg-zinc-900/80 backdrop-blur-xl border border-white/10'">
                 <div class="w-6 h-6 flex items-center justify-center font-bold text-white tracking-tighter">JF</div>
-             </div>
+            </div>
 
             <!-- Fullscreen Overlay Menu -->
-            <div x-show="expanded" 
-                style="display: none;"
-                x-transition:enter="transition ease-out duration-500"
+            <div x-show="expanded" style="display: none;" x-transition:enter="transition ease-out duration-500"
                 x-transition:enter-start="opacity-0 translate-y-full rounded-t-[100%]"
                 x-transition:enter-end="opacity-100 translate-y-0 rounded-t-0"
                 x-transition:leave="transition ease-in duration-300"
                 x-transition:leave-start="opacity-100 translate-y-0 rounded-t-0"
                 x-transition:leave-end="opacity-0 translate-y-full rounded-t-[100%]"
                 class="fixed inset-0 z-50 bg-[#050505] flex flex-col justify-center items-center">
-                
+
                 <!-- Background Gradients -->
-                <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
-                <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+                <div
+                    class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none">
+                </div>
+                <div
+                    class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none">
+                </div>
 
                 <!-- Menu Links -->
                 <nav class="flex flex-col gap-6 text-center z-10">
-                    <div class="mb-4 text-xs font-bold text-blue-500 uppercase tracking-[0.3em] opacity-80">Navigation</div>
-                    
-                    <a href="#about" @click="expanded = false" 
+                    <div class="mb-4 text-xs font-bold text-blue-500 uppercase tracking-[0.3em] opacity-80">Navigation
+                    </div>
+
+                    <a href="#about" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 hover:to-white hover:scale-110 transition-all duration-300">
                         About
                     </a>
-                    <a href="#projects" @click="expanded = false" 
+                    <a href="#projects" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 hover:to-white hover:scale-110 transition-all duration-300">
                         Projects
                     </a>
-                    <a href="#skills" @click="expanded = false" 
+                    <a href="#skills" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 hover:to-white hover:scale-110 transition-all duration-300">
                         Skills
                     </a>
-                    
+
                     <div class="w-12 h-1 bg-white/10 mx-auto my-4 rounded-full"></div>
 
-                    <a href="#contact" @click="expanded = false" 
+                    <a href="#contact" @click="expanded = false"
                         class="px-8 py-4 bg-white text-black rounded-full font-bold text-lg hover:bg-blue-50 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
                         Let's Talk
                     </a>
@@ -184,7 +193,11 @@
                 <div class="absolute bottom-12 flex gap-6 text-gray-500">
                     <!-- GitHub -->
                     <a href="#" class="hover:text-white transition-colors group">
-                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
                     </a>
                 </div>
             </div>
@@ -192,10 +205,12 @@
 
         <!-- Desktop Navigation (Cleaned & Static) -->
         <nav class="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit">
-            <div class="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 px-3">
+            <div
+                class="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 px-3">
                 <div class="flex items-center gap-4">
                     <!-- Logo / Home Icon -->
-                    <div class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-110 transition shadow-[0_0_20px_rgba(37,99,235,0.5)]">
+                    <div
+                        class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-110 transition shadow-[0_0_20px_rgba(37,99,235,0.5)]">
                         <span class="font-bold text-white tracking-tighter">JF</span>
                     </div>
 
