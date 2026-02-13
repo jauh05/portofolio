@@ -134,7 +134,7 @@
 </head>
 
 <body x-data="{ 
-        darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+        darkMode: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : true,
         currentColor: localStorage.getItem('color') || '59, 130, 246',
         initTheme() {
             if (this.darkMode) document.documentElement.classList.add('dark');
@@ -151,7 +151,7 @@
             localStorage.setItem('color', rgb);
             this.initTheme();
         }
-    }" x-init="initTheme()" :class="darkMode ? 'bg-[#050505] text-white' : 'bg-gray-50 text-zinc-900'"
+    }" x-init="initTheme()" :class="darkMode ? 'bg-[#050505] text-white' : 'bg-slate-50 text-zinc-900'"
     class="bg-mesh-theme antialiased transition-colors duration-300">
 
     <!-- Dynamic Navbar Wrapper -->
@@ -190,7 +190,8 @@
                 x-transition:leave="transition ease-in duration-300"
                 x-transition:leave-start="opacity-100 translate-y-0 rounded-t-0"
                 x-transition:leave-end="opacity-0 translate-y-full rounded-t-[100%]"
-                class="fixed inset-0 z-50 bg-[#050505] flex flex-col justify-center items-center">
+                :class="darkMode ? 'bg-[#050505]' : 'bg-white'"
+                class="fixed inset-0 z-50 flex flex-col justify-center items-center">
 
                 <!-- Background Gradients -->
                 <div
@@ -207,22 +208,27 @@
                     </div>
 
                     <a href="#about" @click="expanded = false"
-                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 hover:to-white hover:scale-110 transition-all duration-300">
+                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
+                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'">
                         About
                     </a>
                     <a href="#projects" @click="expanded = false"
-                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 hover:to-white hover:scale-110 transition-all duration-300">
+                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
+                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'">
                         Projects
                     </a>
                     <a href="#skills" @click="expanded = false"
-                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 hover:to-white hover:scale-110 transition-all duration-300">
+                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
+                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'">
                         Skills
                     </a>
 
-                    <div class="w-12 h-1 bg-white/10 mx-auto my-4 rounded-full"></div>
+                    <div class="w-12 h-1 mx-auto my-4 rounded-full" :class="darkMode ? 'bg-white/10' : 'bg-black/10'">
+                    </div>
 
                     <a href="#contact" @click="expanded = false"
-                        class="px-8 py-4 bg-white text-black rounded-full font-bold text-lg hover:bg-blue-50 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                        class="px-8 py-4 rounded-full font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                        :class="darkMode ? 'bg-white text-black hover:bg-blue-50' : 'bg-zinc-900 text-white hover:bg-zinc-800'">
                         Let's Talk
                     </a>
                 </nav>
@@ -230,7 +236,8 @@
                 <!-- Socials/Extra (Bottom) -->
                 <div class="absolute bottom-12 flex gap-6 text-gray-500">
                     <!-- GitHub -->
-                    <a href="#" class="hover:text-white transition-colors group">
+                    <a href="#" class="transition-colors group"
+                        :class="darkMode ? 'hover:text-white' : 'hover:text-black'">
                         <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor"
                             viewBox="0 0 24 24">
                             <path
@@ -243,12 +250,11 @@
 
         <!-- Desktop Navigation (Cleaned & Static) -->
         <nav class="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit">
-            <div 
-                :class="darkMode ? 'bg-zinc-900/95 border-white/10' : 'bg-white/90 border-gray-200 shadow-xl'"
+            <div :class="darkMode ? 'bg-zinc-900/95 border-white/10' : 'bg-white/90 border-gray-200 shadow-xl'"
                 class="backdrop-blur-2xl border rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-2 px-3 transition-colors duration-300">
                 <div class="flex items-center gap-4">
                     <!-- Logo / Home Icon -->
-                    <div 
+                    <div
                         class="bg-primary-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-110 transition shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
                         <span class="font-bold text-white tracking-tighter">JF</span>
                     </div>
@@ -278,10 +284,10 @@
             <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
                 JAUHAR FAUZI <br><span class="text-primary-500">ULUL ALBAB</span>
             </h1>
-            <p class="text-xl text-gray-200 font-semibold mb-6">
+            <p class="text-xl text-gray-500 dark:text-gray-200 font-semibold mb-6">
                 Software Engineer & Fullstack Developer
             </p>
-            <p class="text-gray-400 text-lg mb-8 max-w-lg leading-relaxed">
+            <p class="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-lg leading-relaxed">
                 Pemuda yang antusias dengan perkembangan teknologi 💻 dan sangat mencintai coding & algoritma 🧠✨.
                 Senang belajar hal baru, membangun solusi, dan mengeksplorasi teknologi untuk masa depan yang lebih baik
                 🚀.
@@ -316,23 +322,23 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div
                 class="bg-primary-600/10 border border-primary-500/20 p-8 rounded-3xl text-center hover:bg-primary-600/20 transition duration-300">
-                <h3 class="text-3xl font-bold mb-1 text-primary-400">8+</h3>
-                <p class="text-sm text-gray-400">Projects Completed</p>
+                <h3 class="text-3xl font-bold mb-1 text-primary-600 dark:text-primary-400">8+</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Projects Completed</p>
             </div>
             <div
-                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300">
-                <h3 class="text-3xl font-bold mb-1">10+</h3>
-                <p class="text-sm text-gray-400">Tech Stack</p>
+                class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
+                <h3 class="text-3xl font-bold mb-1 text-zinc-900 dark:text-white">10+</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Tech Stack</p>
             </div>
             <div
-                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300">
-                <h3 class="text-3xl font-bold mb-1">4+</h3>
-                <p class="text-sm text-gray-400">Years Exp</p>
+                class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
+                <h3 class="text-3xl font-bold mb-1 text-zinc-900 dark:text-white">4+</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Years Exp</p>
             </div>
             <div
-                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300">
-                <h3 class="text-3xl font-bold mb-1">100%</h3>
-                <p class="text-sm text-gray-400">Commitment</p>
+                class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
+                <h3 class="text-3xl font-bold mb-1 text-zinc-900 dark:text-white">100%</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Commitment</p>
             </div>
         </div>
     </section>
@@ -340,15 +346,16 @@
     <!-- Technical Skills Section (Moved Up) -->
     <section id="skills" class="max-w-6xl mx-auto px-6 py-8 md:py-20">
         <div
-            class="bg-zinc-900/40 border border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 overflow-hidden relative">
+            class="bg-white/50 dark:bg-zinc-900/40 border border-gray-200 dark:border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 overflow-hidden relative shadow-xl dark:shadow-none backdrop-blur-sm">
             <div class="absolute top-0 right-0 w-64 h-64 bg-primary-600/20 blur-[100px]"></div>
 
             <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Technical <span
-                            class="text-primary-500">Skills</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-zinc-900 dark:text-white">Technical <span
+                            class="text-primary-600 dark:text-primary-500">Skills</span>
                     </h2>
-                    <p class="text-gray-400 text-sm md:text-base">Expertise in modern web technologies and AI.</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base">Expertise in modern web
+                        technologies and AI.</p>
                 </div>
                 <div class="text-primary-500 font-mono text-sm hidden md:block">02 / SKILLS</div>
             </div>
@@ -366,14 +373,14 @@
                 class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 md:grid md:grid-cols-2 md:gap-6 no-scrollbar pb-6 md:pb-0">
                 <!-- Backend -->
                 <div
-                    class="p-6 md:p-8 bg-zinc-900/40 rounded-3xl border border-white/5 min-w-[85vw] md:min-w-0 snap-center">
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
                     <div class="flex items-center gap-3 mb-4 md:mb-6">
                         <span class="text-2xl">⚙️</span>
-                        <h3 class="text-lg md:text-xl font-bold">Backend</h3>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Backend</h3>
                     </div>
                     <div class="flex flex-wrap gap-3 md:gap-4">
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-laravel-original text-3xl md:text-4xl text-red-500"></i>
                             <span class="text-[10px] md:text-xs text-gray-400">Laravel</span>
                         </div>
@@ -400,16 +407,15 @@
                     </div>
                 </div>
 
-                <!-- Frontend -->
                 <div
-                    class="p-6 md:p-8 bg-zinc-900/40 rounded-3xl border border-white/5 min-w-[85vw] md:min-w-0 snap-center">
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
                     <div class="flex items-center gap-3 mb-4 md:mb-6">
                         <span class="text-2xl">🎨</span>
-                        <h3 class="text-lg md:text-xl font-bold">Frontend</h3>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Frontend</h3>
                     </div>
                     <div class="flex flex-wrap gap-3 md:gap-4">
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-tailwindcss-original text-3xl md:text-4xl text-cyan-400"></i>
                             <span class="text-[10px] md:text-xs text-gray-400">Tailwind</span>
                         </div>
@@ -438,14 +444,14 @@
 
                 <!-- Languages -->
                 <div
-                    class="p-6 md:p-8 bg-zinc-900/40 rounded-3xl border border-white/5 min-w-[85vw] md:min-w-0 snap-center">
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
                     <div class="flex items-center gap-3 mb-4 md:mb-6">
                         <span class="text-2xl">💻</span>
-                        <h3 class="text-lg md:text-xl font-bold">Languages</h3>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Languages</h3>
                     </div>
                     <div class="flex flex-wrap gap-3 md:gap-4">
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-php-plain text-3xl md:text-4xl text-indigo-400"></i>
                             <span class="text-[10px] md:text-xs text-gray-400">PHP</span>
                         </div>
@@ -469,14 +475,14 @@
 
                 <!-- AI -->
                 <div
-                    class="p-6 md:p-8 bg-zinc-900/40 rounded-3xl border border-white/5 min-w-[85vw] md:min-w-0 snap-center">
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
                     <div class="flex items-center gap-3 mb-4 md:mb-6">
                         <span class="text-2xl">🤖</span>
-                        <h3 class="text-lg md:text-xl font-bold">AI & Tech</h3>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">AI & Tech</h3>
                     </div>
                     <div class="flex flex-wrap gap-3 md:gap-4">
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <span class="text-2xl md:text-3xl">🧩</span>
                             <span class="text-[10px] md:text-xs text-gray-400 text-center">Prompt Eng.</span>
                         </div>
@@ -577,7 +583,7 @@
                 <div class="flex flex-col lg:flex-row lg:items-stretch">
                     <!-- Real PDF Canvas Section -->
                     <div
-                        class="lg:w-3/5 p-6 lg:p-14 relative bg-zinc-900/40 overflow-hidden flex items-center justify-center">
+                        class="lg:w-1/2 p-6 lg:p-14 relative bg-zinc-900/40 overflow-hidden flex items-center justify-center">
                         <div
                             class="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-indigo-600/10">
                         </div>
@@ -589,9 +595,9 @@
                         <div
                             class="relative z-10 w-full max-w-[400px] h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03]">
                             <!-- PDF Iframe -->
-                            <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" 
-                                class="w-full h-full border-none bg-white" 
-                                title="JAIC Journal PDF">
+                            <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
+                                class="w-full h-full border-none bg-white pointer-events-none" title="JAIC Journal PDF"
+                                scrolling="no">
                             </iframe>
 
                             <!-- Shimmering Glass Overlay (Pointer events none to allow iframe interaction if needed, or maybe removed appropriately) -->
@@ -616,19 +622,20 @@
 
                     <!-- Content Side -->
                     <div
-                        class="lg:w-2/5 p-8 lg:p-14 flex flex-col justify-center bg-zinc-950/90 backdrop-blur-3xl border-l border-white/5 relative">
+                        class="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center bg-white/95 dark:bg-zinc-950/90 backdrop-blur-3xl border-l border-gray-200 dark:border-white/5 relative">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-primary-600/10 blur-[60px]"></div>
 
                         <div class="mb-8">
                             <span
-                                class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6">
+                                class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6">
                                 JAIC PUBLICATION
                             </span>
                             <h3
-                                class="text-3xl lg:text-5xl font-black mb-8 text-white leading-tight tracking-tighter group-hover:text-primary-400 transition-colors">
+                                class="text-3xl lg:text-5xl font-black mb-8 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                                 Recommendation <br class="hidden lg:block">System Research
                             </h3>
-                            <p class="text-gray-400 mb-10 leading-relaxed text-base lg:text-lg font-medium">
+                            <p
+                                class="text-gray-600 dark:text-gray-400 mb-10 leading-relaxed text-base lg:text-lg font-medium">
                                 Publikasi ilmiah resmi pada <strong>Journal of Applied Informatics and Computing
                                     (JAIC)</strong>. Membahas optimasi TF-IDF & Cosine Similarity untuk pariwisata.
                             </p>
@@ -636,18 +643,22 @@
 
                         <div class="mb-10">
                             <div
-                                class="p-6 bg-gradient-to-r from-zinc-900 to-zinc-900/50 rounded-2xl border border-primary-500/30 group/stat hover:bg-white/5 transition-all relative overflow-hidden">
+                                class="p-6 bg-gradient-to-r from-gray-100 to-white dark:from-zinc-900 dark:to-zinc-900/50 rounded-2xl border border-primary-500/30 group/stat hover:shadow-lg transition-all relative overflow-hidden">
                                 <div class="absolute right-0 top-1/2 -translate-y-1/2 p-3 opacity-10">
-                                    <svg class="w-24 h-24 text-primary-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                                    <svg class="w-24 h-24 text-primary-500" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
+                                    </svg>
                                 </div>
                                 <div
-                                    class="text-primary-500 font-black text-[12px] mb-2 uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform">
+                                    class="text-primary-600 dark:text-primary-500 font-black text-[12px] mb-2 uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform">
                                     Terakreditasi</div>
-                                <div class="text-white font-black text-4xl flex items-center gap-3">
+                                <div class="text-zinc-900 dark:text-white font-black text-4xl flex items-center gap-3">
                                     SINTA 3
                                     <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
                                 </div>
-                                <p class="text-sm text-gray-400 mt-2 font-medium">Official National Indexing</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Official National
+                                    Indexing</p>
                             </div>
                         </div>
 
@@ -663,13 +674,15 @@
                 </div>
             </div>
 
-            <!-- Project 1 (Modern Look) -->
+            <!-- Project Cards (Generic Update for Light Mode) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
                 <div class="h-72 overflow-hidden relative">
                     <img src="{{ asset('projects/kpri.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
+                    </div>
                     <div class="absolute top-6 right-6">
                         <div
                             class="bg-green-500 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-green-400/20 backdrop-blur-md">
@@ -679,23 +692,25 @@
                 </div>
                 <div class="p-8 md:p-10 relative">
                     <div
-                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💰</span>
                     </div>
-                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-green-500 transition-colors">
+                    <h3
+                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-green-500 transition-colors">
                         KPRI Bakti Mulia</h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Digitalisasi simpan pinjam & analisis
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Digitalisasi simpan
+                        pinjam & analisis
                         kredit menggunakan **C4.5 Algorithm**.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">PHP
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">PHP
                             Native</span>
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Decision
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Decision
                             Support System</span>
                     </div>
                     <a href="http://kpribaktimulia.or.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-green-400 transition-all border-b-2 border-white/10 hover:border-green-500 pb-1">
+                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-green-500 dark:hover:text-green-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-green-500 pb-1">
                         VISIT WEBSITE <span
                             class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
@@ -704,11 +719,13 @@
 
             <!-- Project 2 (Modern Card) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-indigo-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)]">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-indigo-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)]">
                 <div class="h-72 overflow-hidden relative">
                     <img src="{{ asset('projects/jaugjakita.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
+                    </div>
                     <div class="absolute top-6 right-6">
                         <div
                             class="bg-indigo-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-indigo-400/20 backdrop-blur-md">
@@ -718,21 +735,23 @@
                 </div>
                 <div class="p-8 md:p-10 relative">
                     <div
-                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🤖</span>
                     </div>
-                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-indigo-400 transition-colors">
+                    <h3
+                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
                         JaugjaKita App</h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Sistem cerdas rekomendasi wisata di
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Sistem cerdas
+                        rekomendasi wisata di
                         Yogyakarta berbasis Machine Learning.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Python</span>
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Python</span>
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Streamlit</span>
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Streamlit</span>
                     </div>
                     <a href="http://jaugjakita.jauharfauzi.my.id" target="_blank"
-                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-indigo-400 transition-all border-b-2 border-white/10 hover:border-indigo-500 pb-1">
+                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-indigo-500 dark:hover:text-indigo-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-indigo-500 pb-1">
                         OPEN PROJECT <span
                             class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
@@ -741,11 +760,13 @@
 
             <!-- Project 3 (Modern Layout) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
                 <div class="h-72 overflow-hidden relative">
                     <img src="{{ asset('projects/kauiz.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
+                    </div>
                     <div class="absolute top-6 right-6">
                         <div
                             class="bg-emerald-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-emerald-400/20 backdrop-blur-md">
@@ -755,22 +776,24 @@
                 </div>
                 <div class="p-8 md:p-10 relative">
                     <div
-                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🎓</span>
                     </div>
-                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-emerald-400 transition-colors">
+                    <h3
+                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
                         Kauiz Ai Platform</h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Automatisasi pembuatan kuis cerdas
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Automatisasi pembuatan
+                        kuis cerdas
                         berbasis AI untuk pengajar modern.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Laravel</span>
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Laravel</span>
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">OpenAI
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">OpenAI
                             API</span>
                     </div>
                     <a href="http://kauiz.jauharfauzi.my.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-emerald-400 transition-all border-b-2 border-white/10 hover:border-emerald-500 pb-1">
+                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-emerald-500 dark:hover:text-emerald-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-emerald-500 pb-1">
                         EXPLORE APP <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
@@ -778,11 +801,13 @@
 
             <!-- Project 4 (Modern Layout) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)]">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)]">
                 <div class="h-72 overflow-hidden relative">
                     <img src="{{ asset('projects/livechat.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
+                    </div>
                     <div class="absolute top-6 right-6">
                         <div
                             class="bg-purple-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-purple-400/20 backdrop-blur-md">
@@ -792,21 +817,23 @@
                 </div>
                 <div class="p-8 md:p-10 relative">
                     <div
-                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💬</span>
                     </div>
-                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-purple-400 transition-colors">
+                    <h3
+                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors">
                         LiveChat Interaction</h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Filtering kata kasar *real-time* berbasis
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Filtering kata kasar
+                        *real-time* berbasis
                         pemrosesan bahasa alami.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Socket.io</span>
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Socket.io</span>
                         <span
-                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">NLP.js</span>
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">NLP.js</span>
                     </div>
                     <a href="https://livechat.jauharfauzi.my.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-purple-400 transition-all border-b-2 border-white/10 hover:border-purple-500 pb-1">
+                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-purple-500 dark:hover:text-purple-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-purple-500 pb-1">
                         LIVE DEMO <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
@@ -822,30 +849,32 @@
         <div class="grid md:grid-cols-2 gap-6">
             <!-- Amikom -->
             <div
-                class="bg-zinc-900/50 border border-white/5 p-8 rounded-3xl hover:border-primary-500/50 transition duration-300 flex items-start gap-4">
+                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:border-primary-500/50 transition duration-300 flex items-start gap-4 hover:shadow-lg dark:hover:shadow-none">
                 <div
-                    class="w-16 h-16 bg-white rounded-xl flex items-center justify-center p-2 flex-shrink-0 overflow-hidden">
+                    class="w-16 h-16 bg-gray-50 dark:bg-white rounded-xl flex items-center justify-center p-2 flex-shrink-0 overflow-hidden shadow-sm">
                     <img src="{{ asset('logo_amikom.png') }}" alt="Amikom Logo" class="w-full h-full object-contain">
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Universitas Amikom Yogyakarta</h3>
-                    <p class="text-primary-400 font-medium mb-1">Program Studi Sistem Informasi</p>
-                    <p class="text-gray-400 text-sm mb-1">Angkatan Tahun 2023 • IPK: 3.91</p>
+                    <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-1">Universitas Amikom Yogyakarta</h3>
+                    <p class="text-primary-600 dark:text-primary-400 font-medium mb-1">Program Studi Sistem Informasi
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Angkatan Tahun 2023 • IPK: 3.91</p>
                     <p class="text-gray-500 text-xs">Agustus 2023 - Sekarang</p>
                 </div>
             </div>
 
             <!-- Trainit -->
             <div
-                class="bg-zinc-900/50 border border-white/5 p-8 rounded-3xl hover:border-purple-500/50 transition duration-300 flex items-start gap-4">
+                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:border-purple-500/50 transition duration-300 flex items-start gap-4 hover:shadow-lg dark:hover:shadow-none">
                 <div
-                    class="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                    class="w-12 h-12 bg-purple-50 dark:bg-purple-600/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
                     💻
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Pelatihan – TrainIT Jogja</h3>
-                    <p class="text-purple-400 font-medium mb-1">Fullstack Developer</p>
-                    <p class="text-gray-400 text-sm mb-1">Materi: Laravel & Machine Learning (K-Means)</p>
+                    <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-1">Pelatihan – TrainIT Jogja</h3>
+                    <p class="text-purple-600 dark:text-purple-400 font-medium mb-1">Fullstack Developer</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Materi: Laravel & Machine Learning
+                        (K-Means)</p>
                     <p class="text-gray-500 text-xs">Febuari 2025 - Sekarang</p>
                 </div>
             </div>
@@ -858,48 +887,61 @@
                 class="text-primary-500">Experience</span></h2>
         <div class="space-y-6">
             <!-- Asdos -->
-            <div class="bg-zinc-900/30 border border-white/5 p-8 rounded-3xl hover:bg-zinc-900/50 transition">
+            <!-- Asdos -->
+            <div
+                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
                     <div>
-                        <h3 class="text-2xl font-bold text-white">Asisten Dosen – Struktur Data</h3>
-                        <p class="text-primary-400 text-lg">Informatika Universitas Amikom Yogyakarta</p>
+                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Asisten Dosen – Struktur Data</h3>
+                        <p class="text-primary-600 dark:text-primary-400 text-lg">Informatika Universitas Amikom
+                            Yogyakarta</p>
                     </div>
-                    <span class="text-gray-500 text-sm mt-2 md:mt-0 bg-zinc-800 px-3 py-1 rounded-full">September 2024 –
+                    <span
+                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">September
+                        2024 –
                         Sekarang</span>
                 </div>
-                <p class="text-gray-400 leading-relaxed">
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
                     Membantu dosen dalam pengajaran dan asistensi praktikum pemrograman struktural. Membimbing mahasiswa
                     dalam memahami konsep struktur data.
                 </p>
             </div>
 
             <!-- Founder Jauki -->
-            <div class="bg-zinc-900/30 border border-white/5 p-8 rounded-3xl hover:bg-zinc-900/50 transition">
+            <div
+                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
                     <div>
-                        <h3 class="text-2xl font-bold text-white">Founder – Jauki Academy</h3>
-                        <p class="text-purple-400 text-lg">Software House & Education</p>
+                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Founder – Jauki Academy</h3>
+                        <p class="text-purple-600 dark:text-purple-400 text-lg">Software House & Education</p>
                     </div>
-                    <span class="text-gray-500 text-sm mt-2 md:mt-0 bg-zinc-800 px-3 py-1 rounded-full">November 2022 –
+                    <span
+                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">November
+                        2022 –
                         Sekarang</span>
                 </div>
-                <p class="text-gray-400 leading-relaxed mb-4">
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                     Mengembangkan layanan jasa pembuatan website, prompting AI, dan portofolio digital. Memimpin tim
                     kecil dan berperan langsung dalam desain, implementasi, dan strategi pemasaran.
                 </p>
             </div>
 
             <!-- Waroeng Steak -->
-            <div class="bg-zinc-900/30 border border-white/5 p-8 rounded-3xl hover:bg-zinc-900/50 transition">
+            <div
+                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
                     <div>
-                        <h3 class="text-2xl font-bold text-white">Magang – Waroeng Steak Indonesia</h3>
-                        <p class="text-yellow-500 text-lg">Asisten Programmer - Divisi Marketing</p>
+                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Magang – Waroeng Steak Indonesia
+                        </h3>
+                        <p class="text-yellow-600 dark:text-yellow-500 text-lg">Asisten Programmer - Divisi Marketing
+                        </p>
                     </div>
-                    <span class="text-gray-500 text-sm mt-2 md:mt-0 bg-zinc-800 px-3 py-1 rounded-full">Agustus 2024 –
+                    <span
+                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">Agustus
+                        2024 –
                         September 2024</span>
                 </div>
-                <ul class="list-disc list-inside text-gray-400 space-y-2">
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
                     <li>Berkontribusi dalam pengembangan sistem loyalitas pelanggan berbasis website.</li>
                     <li>Mendalami framework Laravel dan PHP lanjutan.</li>
                     <li>Terlibat langsung dalam pemecahan masalah teknis dan presentasi solusi kepada tim.</li>
@@ -924,24 +966,27 @@
         <div
             class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-3 md:gap-6 no-scrollbar pb-6 md:pb-0">
             <div
-                class="bg-zinc-900/50 p-6 rounded-2xl border border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center">
+                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
                 <div class="text-4xl mb-4">🤝</div>
-                <h3 class="text-xl font-bold text-white mb-2">Kerja Tim yang Solid</h3>
-                <p class="text-gray-400 text-sm">Terbiasa bekerja sama dalam tim lintas bidang dan menjaga komunikasi
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2">Kerja Tim yang Solid</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Terbiasa bekerja sama dalam tim lintas bidang dan
+                    menjaga komunikasi
                     yang efektif.</p>
             </div>
             <div
-                class="bg-zinc-900/50 p-6 rounded-2xl border border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center">
+                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
                 <div class="text-4xl mb-4">⏱️</div>
-                <h3 class="text-xl font-bold text-white mb-2">Disiplin & Tepat Waktu</h3>
-                <p class="text-gray-400 text-sm">Mampu menyelesaikan tugas sesuai target dengan manajemen waktu yang
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2">Disiplin & Tepat Waktu</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Mampu menyelesaikan tugas sesuai target dengan
+                    manajemen waktu yang
                     baik.</p>
             </div>
             <div
-                class="bg-zinc-900/50 p-6 rounded-2xl border border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center">
+                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
                 <div class="text-4xl mb-4">📢</div>
-                <h3 class="text-xl font-bold text-white mb-2">Komunikatif & Percaya Diri</h3>
-                <p class="text-gray-400 text-sm">Mampu menyampaikan ide dan presentasi dengan jelas, baik dalam diskusi
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2">Komunikatif & Percaya Diri</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Mampu menyampaikan ide dan presentasi dengan jelas,
+                    baik dalam diskusi
                     maupun forum formal.</p>
             </div>
         </div>
@@ -973,14 +1018,14 @@
                 </h2>
 
                 <blockquote
-                    class="text-xl text-gray-400 font-light italic mb-10 border-l-4 border-primary-500 pl-6 py-2">
+                    class="text-xl text-gray-600 dark:text-gray-400 font-light italic mb-10 border-l-4 border-primary-500 pl-6 py-2">
                     "Terus belajar, beradaptasi, dan tumbuh bersama teknologi."
                 </blockquote>
 
                 <div class="flex flex-col gap-4 max-w-md">
                     <!-- Email -->
                     <a href="mailto:jauharfua05@gmail.com"
-                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-primary-500/30 rounded-2xl transition-all duration-300">
+                        class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900/50 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-white/5 hover:border-primary-500/30 rounded-2xl transition-all duration-300 shadow-md dark:shadow-none">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -992,11 +1037,11 @@
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">Email Me</div>
-                                <div class="text-white font-medium">jauharfua05@gmail.com</div>
+                                <div class="text-zinc-900 dark:text-white font-medium">jauharfua05@gmail.com</div>
                             </div>
                         </div>
-                        <svg class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
@@ -1004,7 +1049,7 @@
 
                     <!-- Instagram -->
                     <a href="https://instagram.com/jauhar.fauzi_"
-                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-pink-500/30 rounded-2xl transition-all duration-300">
+                        class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900/50 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-white/5 hover:border-pink-500/30 rounded-2xl transition-all duration-300 shadow-md dark:shadow-none">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -1016,11 +1061,11 @@
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">Instagram</div>
-                                <div class="text-white font-medium">@jauhar.fauzi_</div>
+                                <div class="text-zinc-900 dark:text-white font-medium">@jauhar.fauzi_</div>
                             </div>
                         </div>
-                        <svg class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
@@ -1028,7 +1073,7 @@
 
                     <!-- WhatsApp -->
                     <a href="https://wa.me/6289529104230"
-                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-green-500/30 rounded-2xl transition-all duration-300">
+                        class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900/50 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-white/5 hover:border-green-500/30 rounded-2xl transition-all duration-300 shadow-md dark:shadow-none">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-xl bg-green-500/10 text-green-500 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -1040,11 +1085,11 @@
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">WhatsApp</div>
-                                <div class="text-white font-medium">+62 895-2910-4230</div>
+                                <div class="text-zinc-900 dark:text-white font-medium">+62 895-2910-4230</div>
                             </div>
                         </div>
-                        <svg class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
@@ -1059,7 +1104,7 @@
                 </div>
 
                 <div
-                    class="bg-zinc-900/80 backdrop-blur-xl border border-white/10 p-8 rounded-[3rem] shadow-2xl relative overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
+                    class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200 dark:border-white/10 p-8 rounded-[3rem] shadow-2xl relative overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
                     <!-- Grid Pattern Overlay -->
                     <div
                         class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] opacity-20">
@@ -1069,7 +1114,9 @@
                         <!-- Header -->
                         <div class="flex items-center justify-between border-b border-white/5 pb-6">
                             <div>
-                                <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Current
+                                <div
+                                    class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">
+                                    Current
                                     Status</div>
                                 <div class="flex items-center gap-2">
                                     <span class="relative flex h-3 w-3">
@@ -1088,7 +1135,8 @@
 
                         <!-- Location -->
                         <div class="space-y-4">
-                            <div class="flex items-start gap-4 p-4 bg-zinc-800/30 rounded-2xl border border-white/5">
+                            <div
+                                class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-zinc-800/30 rounded-2xl border border-gray-200 dark:border-white/5">
                                 <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl">
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1098,15 +1146,19 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <div class="text-gray-400 text-xs font-bold uppercase tracking-wide">Base Location
+                                    <div
+                                        class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
+                                        Base Location
                                     </div>
-                                    <div class="text-white text-lg font-bold">Yogyakarta, Indonesia</div>
+                                    <div class="text-zinc-900 dark:text-white text-lg font-bold">Yogyakarta, Indonesia
+                                    </div>
                                     <div class="text-gray-500 text-xs mt-1">Remote / On-site capable</div>
                                 </div>
                             </div>
 
                             <!-- Open For -->
-                            <div class="flex items-start gap-4 p-4 bg-zinc-800/30 rounded-2xl border border-white/5">
+                            <div
+                                class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-zinc-800/30 rounded-2xl border border-gray-200 dark:border-white/5">
                                 <div class="p-3 bg-purple-500/10 text-purple-400 rounded-xl">
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1114,7 +1166,9 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <div class="text-gray-400 text-xs font-bold uppercase tracking-wide">Open For</div>
+                                    <div
+                                        class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
+                                        Open For</div>
                                     <div class="flex flex-wrap gap-2 mt-2">
                                         <span
                                             class="px-3 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/20">Freelance</span>
@@ -1127,7 +1181,7 @@
 
                         <!-- Bottom Action -->
                         <a href="https://wa.me/6289529104230"
-                            class="w-full py-4 bg-white text-black rounded-xl font-bold text-center hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.15)] flex justify-center items-center gap-2">
+                            class="w-full py-4 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-xl font-bold text-center hover:bg-zinc-800 dark:hover:bg-gray-200 transition shadow-[0_0_20px_rgba(0,0,0,0.15)] dark:shadow-[0_0_20px_rgba(255,255,255,0.15)] flex justify-center items-center gap-2">
                             <span>Start a Conversation</span>
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1141,9 +1195,9 @@
     </footer>
 
     <!-- Marquee -->
-    <div class="border-y border-white/10 py-8 overflow-hidden bg-black">
+    <div class="border-y border-gray-200 dark:border-white/10 py-8 overflow-hidden bg-white dark:bg-black">
         <div
-            class="flex gap-8 whitespace-nowrap animate-[marquee_20s_linear_infinite] uppercase font-black text-4xl opacity-50">
+            class="flex gap-8 whitespace-nowrap animate-[marquee_20s_linear_infinite] uppercase font-black text-4xl opacity-50 text-zinc-900 dark:text-white">
             <span>Code + Innovate + Solve • </span>
             <span>Build + Scale + Deploy • </span>
             <span>Code + Innovate + Solve • </span>
