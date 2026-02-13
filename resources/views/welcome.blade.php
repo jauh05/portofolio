@@ -114,54 +114,63 @@
 
 <body class="bg-dark-mesh text-white antialiased">
 
-    <!-- Dark Overlay when Navbar Expanded (Mobile Only) -->
-    <div x-data x-show="$root.__x_data_stack[0].expanded" x-transition:enter="transition opacity-300"
-        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-        x-transition:leave="transition opacity-300" x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-        @click="$root.__x_data_stack[0].expanded = false" style="display: none;"></div>
+    <!-- Dynamic Navbar Wrapper -->
+    <div x-data="{ expanded: false }">
+        <!-- Dark Overlay -->
+        <div x-show="expanded" 
+            x-transition:enter="transition duration-300 ease-out"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition duration-200 ease-in"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden"
+            @click="expanded = false" style="display: none;"></div>
 
-    <!-- Dynamic Island Navbar -->
-    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit"
-        x-data="{ expanded: false }">
-        <div class="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
-            :class="expanded ? 'px-8 py-8 rounded-[3rem] w-[90vw] max-w-[400px]' : 'p-2 w-fit pr-4'">
-            <div class="flex items-center" :class="expanded ? 'justify-between mb-8' : 'gap-3'">
-                <!-- Logo / Home Icon -->
-                <div class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-105 transition shadow-[0_0_20px_rgba(37,99,235,0.5)]"
-                    @click="expanded = !expanded">
-                    <template x-if="!expanded">
-                        <span class="font-bold text-white tracking-tighter">JF</span>
-                    </template>
-                    <template x-if="expanded">
-                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </template>
+        <!-- Dynamic Island Navbar -->
+        <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit">
+            <div class="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden mx-auto"
+                :class="expanded ? 'px-8 py-8 rounded-[2.5rem] w-[90vw] max-w-[380px]' : 'p-2 px-3'">
+                <div class="flex items-center" :class="expanded ? 'justify-between mb-8' : 'gap-4'">
+                    <!-- Logo / Home Icon -->
+                    <div class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-110 transition shadow-[0_0_20px_rgba(37,99,235,0.5)]"
+                        @click="expanded = !expanded">
+                        <template x-if="!expanded">
+                            <span class="font-bold text-white tracking-tighter">JF</span>
+                        </template>
+                        <template x-if="expanded">
+                            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </template>
+                    </div>
+
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex items-center gap-1" :class="expanded ? 'hidden' : 'flex'">
+                        <a href="#about"
+                            class="px-5 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">About</a>
+                        <a href="#projects"
+                            class="px-5 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">Projects</a>
+                        <a href="#skills"
+                            class="px-5 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">Skills</a>
+                        <a href="#contact"
+                            class="px-6 py-2 text-sm bg-white text-black font-black rounded-full hover:bg-blue-50 transition-all ml-2">Contact</a>
+                    </div>
+
+                    <!-- Mobile Menu Text (Collapsed - Symmetric) -->
+                    <div class="md:hidden text-[11px] font-black text-white/70 uppercase tracking-[0.3em] cursor-pointer"
+                        @click="expanded = !expanded" x-show="!expanded">
+                        Menu
+                    </div>
+
+                    <!-- Expanded Title (Mobile) -->
+                    <div class="md:hidden text-base font-black text-white uppercase tracking-[0.2em]" x-show="expanded">
+                        Explore
+                    </div>
+
+                    <!-- Spacer for balance when expanded -->
+                    <div class="md:hidden w-10" x-show="expanded"></div>
                 </div>
-
-                <!-- Expanded Menu (Desktop) -->
-                <div class="hidden md:flex items-center gap-1" :class="expanded ? 'hidden' : 'flex'">
-                    <a href="#about"
-                        class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-full transition">About</a>
-                    <a href="#projects"
-                        class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-full transition">Projects</a>
-                    <a href="#skills"
-                        class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-full transition">Skills</a>
-                    <a href="#contact"
-                        class="px-5 py-2 text-sm bg-white text-black font-bold rounded-full hover:bg-blue-50 transition ml-2">Contact</a>
-                </div>
-
-                <!-- Expanded Title (Mobile) -->
-                <div class="md:hidden text-sm font-bold text-white uppercase tracking-widest" x-show="expanded"
-                    x-transition>
-                    Navigation
-                </div>
-
-                <!-- Spacer for balance when expanded -->
-                <div class="md:hidden w-10" x-show="expanded"></div>
-            </div>
 
             <!-- Expanded Content (Mobile) -->
             <div x-show="expanded" x-collapse style="display: none;" class="md:hidden">
@@ -235,6 +244,7 @@
             </div>
         </div>
     </nav>
+    </div>
 
     <header id="about"
         class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 text-center md:text-left flex flex-col-reverse md:flex-row items-center gap-12">
@@ -491,274 +501,301 @@
         </div>
         </div>
 
-        <!-- Mobile Swipe Indicator (Enhanced & Animated) -->
-        <div class="md:hidden flex flex-col items-center justify-center mb-10 mt-4 px-4">
-            <div class="flex items-center gap-4 text-white/80 text-sm font-bold tracking-widest uppercase mb-3">
-                <div class="flex gap-1.5 order-2">
-                    <div class="w-10 h-1.5 bg-blue-600 rounded-full"></div>
-                    <div class="w-2 h-1.5 bg-zinc-800 rounded-full"></div>
-                    <div class="w-2 h-1.5 bg-zinc-800 rounded-full"></div>
+        <!-- Mobile Swipe Indicator (Masif & Jelas) -->
+        <div class="md:hidden flex flex-col items-center justify-center mb-12 mt-6">
+            <div
+                class="relative w-full max-w-[300px] h-16 bg-zinc-900/80 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent animate-[shimmer_2s_infinite]">
                 </div>
-                <span class="order-1">Geser Proyek</span>
+                <div class="flex items-center gap-6 text-white font-black text-[11px] uppercase tracking-[0.4em] z-10">
+                    <svg class="w-5 h-5 text-blue-500 animate-[bounce_1s_infinite] -rotate-90" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <span class="animate-pulse">Geser Layar</span>
+                    <svg class="w-5 h-5 text-blue-500 animate-[bounce_1s_infinite] rotate-90" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
             </div>
-            <div class="relative w-full h-8 flex justify-center items-center pointer-events-none">
-                <div class="absolute animate-[swipe_1.5s_ease-in-out_infinite] flex items-center gap-2">
-                    <div
-                        class="w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
-                        <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                    </div>
-                </div>
+            <div class="mt-4 flex gap-2">
+                <div class="w-12 h-1.5 bg-blue-600 rounded-full"></div>
+                <div class="w-3 h-1.5 bg-zinc-800 rounded-full"></div>
+                <div class="w-3 h-1.5 bg-zinc-800 rounded-full"></div>
             </div>
         </div>
 
         <style>
-            @keyframes swipe {
+            @keyframes shimmer {
                 0% {
-                    transform: translateX(-40px);
-                    opacity: 0;
-                }
-
-                50% {
-                    opacity: 1;
+                    transform: translateX(-100%);
                 }
 
                 100% {
-                    transform: translateX(40px);
-                    opacity: 0;
+                    transform: translateX(100%);
                 }
             }
         </style>
 
         <div
-            class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-2 lg:grid-cols-2 lg:gap-12 no-scrollbar pb-16 md:pb-0">
+            class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-2 lg:grid-cols-2 lg:gap-16 no-scrollbar pb-24 md:pb-0">
 
-            <!-- Project 0: Journal Publication (Redesigned PDF Style) -->
+            <!-- Project 0: Journal Publication (Real PDF View) -->
             <div
-                class="group relative bg-zinc-950 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-blue-500/40 hover:shadow-[0_0_60px_-15px_rgba(59,130,246,0.25)] min-w-[90vw] md:min-w-0 snap-center lg:col-span-2">
+                class="group relative bg-zinc-950 border border-white/10 rounded-[3rem] overflow-hidden transition-all duration-700 hover:border-blue-500/50 min-w-[92vw] md:min-w-0 snap-center lg:col-span-2 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
                 <div class="project-card-glow"></div>
-                <div class="flex flex-col lg:flex-row min-h-[480px]">
-                    <!-- PDF Visual Side -->
+                <div class="flex flex-col lg:flex-row lg:items-stretch">
+                    <!-- Real PDF Canvas Section -->
                     <div
-                        class="lg:w-1/2 p-8 lg:p-12 bg-white/5 flex items-center justify-center relative overflow-hidden group-hover:bg-white/10 transition-colors">
-                        <!-- Abstract Background Shapes -->
-                        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[80px] -z-0"></div>
-                        <div class="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600/10 blur-[80px] -z-0"></div>
-
-                        <!-- PDF Paper Simulation -->
+                        class="lg:w-3/5 p-6 lg:p-14 relative bg-zinc-900/40 overflow-hidden flex items-center justify-center">
                         <div
-                            class="relative w-full max-w-[280px] aspect-[1/1.414] bg-white rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform -rotate-3 group-hover:rotate-0 transition-transform duration-500 p-6 flex flex-col">
-                            <!-- Paper Corner Fold -->
+                            class="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-indigo-600/10">
+                        </div>
+
+                        <!-- High Quality Paper Shadow Effect -->
+                        <div class="absolute w-[80%] h-[90%] bg-black/40 blur-[40px] rotate-2 -z-0"></div>
+
+                        <!-- Realistic Paper Container -->
+                        <div
+                            class="relative z-10 w-full max-w-[340px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-zoom-in">
+                            <!-- Actual Journal Page Image -->
+                            <img src="{{ asset('projects/journal.png') }}" alt="JAIC Journal Original View"
+                                class="w-full h-auto object-cover border-b border-gray-100">
+
+                            <!-- PDF Reader Header Simulation -->
                             <div
-                                class="absolute top-0 right-0 w-12 h-12 bg-gray-100 shadow-[-5px_5px_10px_rgba(0,0,0,0.1)] border-b border-l border-gray-200 fold-effect">
-                            </div>
-
-                            <!-- Header Text -->
-                            <div class="w-1/2 h-4 bg-gray-200 mb-6 rounded-full"></div>
-                            <div class="w-full h-2 bg-blue-100 mb-2 rounded-full"></div>
-                            <div class="w-4/5 h-2 bg-blue-100 mb-10 rounded-full"></div>
-
-                            <!-- Journal Title Concept -->
-                            <div class="space-y-3 mb-10">
-                                <div class="w-full h-3 bg-gray-800 rounded-full"></div>
-                                <div class="w-full h-3 bg-gray-800 rounded-full"></div>
-                                <div class="w-2/3 h-3 bg-gray-800 rounded-full"></div>
-                            </div>
-
-                            <!-- Abstract Lines -->
-                            <div class="space-y-2 mt-auto">
-                                <div class="w-full h-1 bg-gray-200 rounded-full"></div>
-                                <div class="w-full h-1 bg-gray-200 rounded-full"></div>
-                                <div class="w-full h-1 bg-gray-200 rounded-full"></div>
-                                <div class="w-4/5 h-1 bg-gray-200 rounded-full"></div>
-                            </div>
-
-                            <!-- Footer of Paper -->
-                            <div class="mt-6 flex justify-between items-end">
-                                <div class="w-16 h-16 bg-blue-50 rounded-sm"></div>
-                                <div class="bg-blue-600 text-[8px] text-white font-bold px-2 py-1 rounded">RESEARCH
+                                class="absolute top-0 left-0 w-full h-8 bg-zinc-100/90 backdrop-blur border-b border-gray-200 flex items-center px-4 justify-between">
+                                <div class="flex gap-1.5">
+                                    <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                                    <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                                    <div class="w-2 h-2 rounded-full bg-green-400"></div>
                                 </div>
+                                <span
+                                    class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Journal_Open.pdf</span>
+                            </div>
+
+                            <!-- Shimmering Glass Overlay -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
                             </div>
                         </div>
 
-                        <!-- Floating PDF Icon -->
-                        <div
-                            class="absolute bottom-10 right-10 bg-red-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-2xl transform rotate-12 group-hover:rotate-0 transition-transform">
-                            <span class="text-white font-black text-sm">PDF</span>
+                        <!-- Badge Overlay -->
+                        <div class="absolute bottom-8 right-8 hidden lg:block">
+                            <div
+                                class="bg-red-600 text-white font-black text-xs px-6 py-3 rounded-2xl shadow-2xl transform rotate-3 flex items-center gap-3 border border-red-400/30">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
+                                    <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                                </svg>
+                                AUTHENTIC PAPER
+                            </div>
                         </div>
                     </div>
 
                     <!-- Content Side -->
-                    <div class="lg:w-1/2 p-8 lg:p-14 flex flex-col justify-center relative z-10">
-                        <div class="flex items-center gap-3 mb-6">
+                    <div
+                        class="lg:w-2/5 p-8 lg:p-14 flex flex-col justify-center bg-zinc-950/90 backdrop-blur-3xl border-l border-white/5 relative">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[60px]"></div>
+
+                        <div class="mb-8">
+                            <span
+                                class="inline-block px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6">
+                                JAIC PUBLICATION
+                            </span>
+                            <h3
+                                class="text-3xl lg:text-5xl font-black mb-8 text-white leading-tight tracking-tighter group-hover:text-blue-400 transition-colors">
+                                Recommendation <br class="hidden lg:block">System Research
+                            </h3>
+                            <p class="text-gray-400 mb-10 leading-relaxed text-base lg:text-lg font-medium">
+                                Publikasi ilmiah resmi pada <strong>Journal of Applied Informatics and Computing
+                                    (JAIC)</strong>. Membahas optimasi TF-IDF & Cosine Similarity untuk pariwisata.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-10">
                             <div
-                                class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase border border-blue-500/20">
-                                Scientific Paper
+                                class="p-5 bg-white/5 rounded-2xl border border-white/5 group/stat hover:bg-white/10 transition-colors">
+                                <div
+                                    class="text-blue-500 font-black text-[9px] mb-1 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
+                                    Situs Jurnal</div>
+                                <div class="text-white font-bold text-sm">Polibatam</div>
                             </div>
-                            <div class="text-white/40 text-[10px] font-bold tracking-widest uppercase">
-                                JAIC JOURNAL • 2024
+                            <div
+                                class="p-5 bg-white/5 rounded-2xl border border-white/5 group/stat hover:bg-white/10 transition-colors">
+                                <div
+                                    class="text-blue-500 font-black text-[9px] mb-1 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
+                                    Indexing</div>
+                                <div class="text-white font-bold text-sm">SINTA/Scopus</div>
                             </div>
                         </div>
-                        <h3
-                            class="text-2xl lg:text-4xl font-bold mb-6 text-white group-hover:text-blue-400 transition-colors leading-[1.1] tracking-tight">
-                            Yogyakarta Tourism Recommendation System Using TF-IDF & Cosine Similarity
-                        </h3>
-                        <p class="text-gray-400 mb-10 leading-relaxed text-base lg:text-lg">
-                            Penelitian akademik yang mengoptimalkan sistem rekomendasi wisata melalui pemrosesan bahasa
-                            alami (**NLP**) dan normalisasi kata untuk akurasi pencarian yang lebih baik.
-                        </p>
-                        <div class="flex flex-wrap gap-3 mb-10">
-                            <span
-                                class="px-4 py-1.5 bg-zinc-900 text-gray-400 border border-white/5 rounded-full text-xs font-semibold">TF-IDF</span>
-                            <span
-                                class="px-4 py-1.5 bg-zinc-900 text-gray-400 border border-white/5 rounded-full text-xs font-semibold">Cosine
-                                Similarity</span>
-                            <span
-                                class="px-4 py-1.5 bg-zinc-900 text-gray-400 border border-white/5 rounded-full text-xs font-semibold">Word
-                                Normalization</span>
-                        </div>
-                        <div>
-                            <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
-                                target="_blank"
-                                class="inline-flex items-center gap-4 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]">
-                                Read Journal PDF
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </a>
-                        </div>
+
+                        <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank"
+                            class="flex items-center justify-center gap-4 px-10 py-6 bg-blue-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
+                            View Official PDF
+                            <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Project 1 -->
+            <!-- Project 1 (Modern Look) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2rem] overflow-hidden hover:border-green-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.1)]">
-                <div class="h-48 md:h-64 overflow-hidden relative">
-                    <img src="{{ asset('projects/kpri.png') }}" alt="KPRI Bakti Mulia"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent opacity-60"></div>
-                </div>
-                <div class="p-8">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                        <span class="text-green-500 text-[10px] font-black tracking-widest uppercase">FINTECH •
-                            Koperasi</span>
+                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
+                <div class="h-72 overflow-hidden relative">
+                    <img src="{{ asset('projects/kpri.png') }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div class="absolute top-6 right-6">
+                        <div
+                            class="bg-green-500 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-green-400/20 backdrop-blur-md">
+                            Fintech Admin
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-green-500 transition">KPRI Bakti
-                        Mulia</h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed text-sm">
-                        Digitalisasi sistem simpan pinjam & analisis kredit menggunakan **C4.5 Algorithm** untuk Kemenag
-                        Kota Yogyakarta.
-                    </p>
+                </div>
+                <div class="p-8 md:p-10 relative">
+                    <div
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">💰</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-green-500 transition-colors">
+                        KPRI Bakti Mulia</h3>
+                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Digitalisasi simpan pinjam & analisis
+                        kredit menggunakan **C4.5 Algorithm**.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">PHP Native</span>
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">Decision
-                            Support</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">PHP
+                            Native</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Decision
+                            Support System</span>
                     </div>
                     <a href="http://kpribaktimulia.or.id/" target="_blank"
-                        class="inline-flex items-center text-sm font-black text-white hover:text-green-400 transition-all group/link">
-                        Live Preview <span class="ml-2 transform group-hover/link:translate-x-2 transition">→</span>
+                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-green-400 transition-all border-b-2 border-white/10 hover:border-green-500 pb-1">
+                        VISIT WEBSITE <span
+                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Project 2 -->
+            <!-- Project 2 (Modern Card) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2rem] overflow-hidden hover:border-indigo-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.1)]">
-                <div class="h-48 md:h-64 overflow-hidden relative">
-                    <img src="{{ asset('projects/jaugjakita.png') }}" alt="JaugjaKita"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent opacity-60"></div>
+                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-indigo-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)]">
+                <div class="h-72 overflow-hidden relative">
+                    <img src="{{ asset('projects/jaugjakita.png') }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div class="absolute top-6 right-6">
+                        <div
+                            class="bg-indigo-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-indigo-400/20 backdrop-blur-md">
+                            AI Recommendation
+                        </div>
+                    </div>
                 </div>
-                <div class="p-8">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
-                        <span class="text-indigo-500 text-[10px] font-black tracking-widest uppercase">AI •
-                            RecSys</span>
+                <div class="p-8 md:p-10 relative">
+                    <div
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">🤖</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-indigo-500 transition">JaugjaKita App
-                    </h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed text-sm">
-                        Portal rekomendasi wisata cerdas berbasis **TF-IDF & Cosine Similarity** untuk destinasi
-                        Yogyakarta.
-                    </p>
+                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-indigo-400 transition-colors">
+                        JaugjaKita App</h3>
+                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Sistem cerdas rekomendasi wisata di
+                        Yogyakarta berbasis Machine Learning.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">Python</span>
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">Streamlit</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Python</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Streamlit</span>
                     </div>
-                    <a href="http://jaugjakita.jauharfauzi.my.id"
-                        class="inline-flex items-center text-sm font-black text-white hover:text-indigo-400 transition-all group/link">
-                        Open Project <span class="ml-2 transform group-hover/link:translate-x-2 transition">→</span>
+                    <a href="http://jaugjakita.jauharfauzi.my.id" target="_blank"
+                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-indigo-400 transition-all border-b-2 border-white/10 hover:border-indigo-500 pb-1">
+                        OPEN PROJECT <span
+                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Project 3 -->
+            <!-- Project 3 (Modern Layout) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2rem] overflow-hidden hover:border-emerald-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.1)]">
-                <div class="h-48 md:h-64 overflow-hidden relative">
-                    <img src="{{ asset('projects/kauiz.png') }}" alt="Kauiz"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent opacity-60"></div>
+                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
+                <div class="h-72 overflow-hidden relative">
+                    <img src="{{ asset('projects/kauiz.png') }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div class="absolute top-6 right-6">
+                        <div
+                            class="bg-emerald-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-emerald-400/20 backdrop-blur-md">
+                            Ed-Tech SaaS
+                        </div>
+                    </div>
                 </div>
-                <div class="p-8">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                        <span class="text-emerald-500 text-[10px] font-black tracking-widest uppercase">EDTECH •
-                            AI</span>
+                <div class="p-8 md:p-10 relative">
+                    <div
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">🎓</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-emerald-500 transition">Kauiz Ai</h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed text-sm">
-                        Platform pembuatan kuis otomatis berbasis AI untuk efisiensi evaluasi pembelajaran bagi
-                        pengajar.
-                    </p>
+                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-emerald-400 transition-colors">
+                        Kauiz Ai Platform</h3>
+                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Automatisasi pembuatan kuis cerdas
+                        berbasis AI untuk pengajar modern.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">Laravel</span>
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">OpenAI API</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Laravel</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">OpenAI
+                            API</span>
                     </div>
-                    <a href="http://kauiz.jauharfauzi.my.id/"
-                        class="inline-flex items-center text-sm font-black text-white hover:text-emerald-400 transition-all group/link">
-                        View Details <span class="ml-2 transform group-hover/link:translate-x-2 transition">→</span>
+                    <a href="http://kauiz.jauharfauzi.my.id/" target="_blank"
+                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-emerald-400 transition-all border-b-2 border-white/10 hover:border-emerald-500 pb-1">
+                        EXPLORE APP <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Project 4 -->
+            <!-- Project 4 (Modern Layout) -->
             <div
-                class="group relative bg-zinc-900 border border-white/5 rounded-[2rem] overflow-hidden hover:border-purple-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(168,85,247,0.1)]">
-                <div class="h-48 md:h-64 overflow-hidden relative">
-                    <img src="{{ asset('projects/livechat.png') }}" alt="LiveChat Event"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent opacity-60"></div>
+                class="group relative bg-zinc-900 border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)]">
+                <div class="h-72 overflow-hidden relative">
+                    <img src="{{ asset('projects/livechat.png') }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+                    <div class="absolute top-6 right-6">
+                        <div
+                            class="bg-purple-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-purple-400/20 backdrop-blur-md">
+                            Real-time NLP
+                        </div>
+                    </div>
                 </div>
-                <div class="p-8">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
-                        <span class="text-purple-500 text-[10px] font-black tracking-widest uppercase">REALTIME •
-                            NLP</span>
+                <div class="p-8 md:p-10 relative">
+                    <div
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">💬</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-purple-500 transition">LiveChat Event
-                    </h3>
-                    <p class="text-gray-400 mb-8 leading-relaxed text-sm">
-                        Aplikasi chat interaktif event dengan filtering kata kasar berbasis NLP untuk komunitas positif.
-                    </p>
+                    <h3 class="text-3xl font-black text-white mb-4 mt-2 group-hover:text-purple-400 transition-colors">
+                        LiveChat Interaction</h3>
+                    <p class="text-gray-400 mb-8 leading-relaxed font-medium">Filtering kata kasar *real-time* berbasis
+                        pemrosesan bahasa alami.</p>
                     <div class="flex flex-wrap gap-2 mb-10">
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">Socket.io</span>
-                        <span class="px-3 py-1 bg-zinc-800 text-gray-500 rounded-lg text-xs font-bold">NLP.js</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">Socket.io</span>
+                        <span
+                            class="px-4 py-2 bg-zinc-950 text-gray-400 border border-white/5 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors">NLP.js</span>
                     </div>
-                    <a href="https://livechat.jauharfauzi.my.id/"
-                        class="inline-flex items-center text-sm font-black text-white hover:text-purple-400 transition-all group/link">
-                        Open Project <span class="ml-2 transform group-hover/link:translate-x-2 transition">→</span>
+                    <a href="https://livechat.jauharfauzi.my.id/" target="_blank"
+                        class="inline-flex items-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:text-purple-400 transition-all border-b-2 border-white/10 hover:border-purple-500 pb-1">
+                        LIVE DEMO <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
             </div>
-        </div>
         </div>
     </section>
+
 
     <!-- Education Section -->
     <section class="max-w-6xl mx-auto px-6 py-12">
