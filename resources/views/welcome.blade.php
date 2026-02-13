@@ -66,6 +66,36 @@
             scrollbar-width: none;
             /* Firefox */
         }
+
+        .project-card-glow {
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+            z-index: -1;
+            border-radius: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .group:hover .project-card-glow {
+            opacity: 1;
+        }
+
+        .glass-card {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
     </style>
 </head>
 
@@ -346,136 +376,189 @@
         </div>
     </section>
 
-    <!-- Projects Section (Moved Up) -->
-    <section id="projects" class="max-w-6xl mx-auto px-6 py-8 md:py-12">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
-            <div>
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Featured <span class="text-blue-500">Projects</span>
-                </h2>
-                <p class="text-gray-400">Innovative solutions tackling real-world problems.</p>
-            </div>
-            <div class="text-blue-500 font-mono text-sm hidden md:block">03 / WORK</div>
-        </div>
+    <!-- Projects Section -->
+    <section id="projects" class="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
+        <!-- Background Glow -->
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full -z-10"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -z-10"></div>
 
-        <!-- Mobile Swipe Indicator -->
-        <div class="md:hidden flex items-center gap-2 mb-4 text-gray-500 text-xs animate-pulse">
-            <span>Swipe for more</span>
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-        </div>
-
-        <div
-            class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-2 md:gap-8 no-scrollbar pb-6 md:pb-0">
-            <!-- Project 1 -->
-            <div
-                class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-green-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div class="h-40 md:h-56 bg-green-900/20 flex items-center justify-center overflow-hidden">
-                    <img src="{{ asset('projects/kpri.png') }}" alt="KPRI Bakti Mulia"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-20">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-4">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    </span>
+                    Portfolio
                 </div>
-                <div class="p-6 md:p-8">
-                    <span class="text-green-500 text-xs font-bold tracking-wider uppercase mb-2 block">Koperasi •
-                        Kemenag</span>
-                    <h3 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-green-500 transition">KPRI Bakti
-                        Mulia
-                    </h3>
-                    <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">
-                        Sistem digitalisasi <strong>KPRI Kemenag Kota Yogyakarta</strong>. Terintegrasi dengan fitur
-                        simpan
-                        pinjam dan analisis kelayakan kredit menggunakan <strong>C4.5 Algorithm</strong>.
+                <h2 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Featured <span class="text-blue-500">Projects</span></h2>
+                <p class="text-gray-400 text-lg md:text-xl leading-relaxed">Innovative solutions and research tackling real-world problems with modern technology.</p>
+            </div>
+            <div class="text-blue-500 font-mono text-sm hidden md:block border-b border-blue-500/30 pb-2">03 / WORK</div>
+        </div>
+
+        <!-- Mobile Swipe Indicator (Enhanced) -->
+        <div class="md:hidden flex items-center justify-between mb-6 px-1">
+            <div class="flex items-center gap-2 text-gray-300 text-sm font-medium">
+                <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+                <span>Swipe to explore</span>
+            </div>
+            <div class="flex gap-1">
+                <div class="w-8 h-1 bg-blue-500 rounded-full"></div>
+                <div class="w-2 h-1 bg-zinc-800 rounded-full"></div>
+                <div class="w-2 h-1 bg-zinc-800 rounded-full"></div>
+            </div>
+        </div>
+
+        <div class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-2 lg:grid-cols-2 md:gap-10 no-scrollbar pb-10 md:pb-0">
+            
+            <!-- Project 0: Journal Publication (NEW) -->
+            <div class="group relative bg-zinc-950 border border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-blue-500/40 hover:shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] min-w-[88vw] md:min-w-0 snap-center lg:col-span-2">
+                <div class="project-card-glow"></div>
+                <div class="flex flex-col lg:flex-row h-full">
+                    <div class="lg:w-1/2 h-64 lg:h-auto overflow-hidden relative">
+                        <img src="{{ asset('projects/journal.png') }}" alt="Journal Publication"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 lg:bg-gradient-to-r lg:from-transparent lg:to-zinc-950 opacity-60 lg:opacity-100"></div>
+                    </div>
+                    <div class="p-8 lg:w-1/2 flex flex-col justify-center relative z-10">
+                        <div class="flex items-center gap-3 mb-4 text-blue-400">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                            <span class="text-xs font-bold tracking-[0.2em] uppercase">Scientific Publication</span>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-bold mb-4 group-hover:text-blue-400 transition-colors leading-tight">
+                            View of Recommendation System Yogyakarta Tourism Using TF-IDF and Cosine Similarity
+                        </h3>
+                        <p class="text-gray-400 mb-8 leading-relaxed text-base">
+                            Publikasi jurnal ilmiah di <strong>JAIC (Journal of Applied Informatics and Computing)</strong>. Penelitian ini membahas optimasi sistem rekomendasi wisata dengan normalisasi kata untuk meningkatkan akurasi pencarian.
+                        </p>
+                        <div class="flex flex-wrap gap-3 mb-8">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-semibold">Research</span>
+                            <span class="px-3 py-1 bg-zinc-800 text-gray-400 rounded-full text-xs font-semibold">TF-IDF</span>
+                            <span class="px-3 py-1 bg-zinc-800 text-gray-400 rounded-full text-xs font-semibold">NLP</span>
+                            <span class="px-3 py-1 bg-zinc-800 text-gray-400 rounded-full text-xs font-semibold">Scopus Indexed</span>
+                        </div>
+                        <div class="mt-auto">
+                            <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank"
+                                class="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all transform hover:translate-x-2">
+                                Read Publication
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 1 -->
+            <div class="group relative bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-green-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.1)]">
+                <div class="h-48 md:h-64 overflow-hidden">
+                    <img src="{{ asset('projects/kpri.png') }}" alt="KPRI Bakti Mulia"
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                <div class="p-8">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-green-500 text-xs font-bold tracking-widest uppercase">Koperasi • Kemenag</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-green-500 transition">KPRI Bakti Mulia</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Sistem digitalisasi <strong>KPRI Kemenag Kota Yogyakarta</strong>. Fitur simpan pinjam & analisis kelayakan kredit dengan <strong>C4.5 Algorithm</strong>.
                     </p>
-                    <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-6">
-                        <span class="px-2 py-1 bg-zinc-800 rounded">PHP Native</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">MySQL</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">Decision Support</span>
+                    <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-500 mb-8">
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">PHP Native</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">MySQL</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">Decision Support</span>
                     </div>
                     <a href="http://kpribaktimulia.or.id/" target="_blank"
-                        class="inline-flex items-center text-sm font-bold text-white hover:text-green-500 transition">
-                        Visit Website <span class="ml-2">→</span>
+                        class="inline-flex items-center text-sm font-bold text-white hover:text-green-400 transition-all group/link">
+                        Explore Live Site <span class="ml-2 transform group-hover/link:translate-x-1 transition">→</span>
                     </a>
                 </div>
             </div>
 
             <!-- Project 2 -->
-            <div
-                class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-indigo-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div class="h-40 md:h-56 bg-indigo-900/20 flex items-center justify-center overflow-hidden">
+            <div class="group relative bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-indigo-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.1)]">
+                <div class="h-48 md:h-64 overflow-hidden">
                     <img src="{{ asset('projects/jaugjakita.png') }}" alt="JaugjaKita"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                 </div>
-                <div class="p-6 md:p-8">
-                    <span class="text-indigo-500 text-xs font-bold tracking-wider uppercase mb-2 block">Recommendation
-                        System</span>
-                    <h3 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-indigo-500 transition">JaugjaKita
-                    </h3>
-                    <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">
-                        Sistem rekomendasi wisata di Yogyakarta. Menggunakan metode <strong>Cosine Similarity,
-                            TF-IDF</strong>, dan Word Normalizer untuk memberikan saran destinasi yang personal.
+                <div class="p-8">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
+                        <span class="text-indigo-500 text-xs font-bold tracking-widest uppercase">Recommendation System</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-indigo-500 transition">JaugjaKita</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Sistem rekomendasi wisata Yogyakarta. Menggunakan <strong>Cosine Similarity, TF-IDF</strong>, dan Word Normalizer untuk hasil yang personal.
                     </p>
-                    <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-6">
-                        <span class="px-2 py-1 bg-zinc-800 rounded">Python</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">TF-IDF</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">Web App</span>
+                    <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-500 mb-8">
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">Python</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">TF-IDF</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">Web App</span>
                     </div>
                     <a href="http://jaugjakita.jauharfauzi.my.id"
-                        class="inline-flex items-center text-sm font-bold text-white hover:text-indigo-500 transition">
-                        View Details <span class="ml-2">→</span>
+                        class="inline-flex items-center text-sm font-bold text-white hover:text-indigo-400 transition-all group/link">
+                        View Details <span class="ml-2 transform group-hover/link:translate-x-1 transition">→</span>
                     </a>
                 </div>
             </div>
 
             <!-- Project 3 -->
-            <div
-                class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div class="h-40 md:h-56 bg-emerald-900/20 flex items-center justify-center overflow-hidden">
+            <div class="group relative bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.1)]">
+                <div class="h-48 md:h-64 overflow-hidden">
                     <img src="{{ asset('projects/kauiz.png') }}" alt="Kauiz"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                 </div>
-                <div class="p-6 md:p-8">
-                    <span class="text-emerald-500 text-xs font-bold tracking-wider uppercase mb-2 block">Smart
-                        EdTech</span>
-                    <h3 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-emerald-500 transition">Kauiz</h3>
-                    <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">
-                        Sistem cerdas pembuatan kuis otomatis melalui pemrosesan file. Memudahkan pengajar dalam membuat
-                        evaluasi pembelajaran secara instan dan efisien.
+                <div class="p-8">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span class="text-emerald-500 text-xs font-bold tracking-widest uppercase">Smart EdTech</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-emerald-500 transition">Kauiz</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Sistem cerdas pembuatan kuis otomatis melalui pemrosesan file. Memudahkan pengajar dalam membuat evaluasi pembelajaran.
                     </p>
-                    <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-6">
-                        <span class="px-2 py-1 bg-zinc-800 rounded">AI Integration</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">File Processing</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">Automation</span>
+                    <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-500 mb-8">
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">AI Integration</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">File Processing</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">Automation</span>
                     </div>
                     <a href="http://kauiz.jauharfauzi.my.id/"
-                        class="inline-flex items-center text-sm font-bold text-white hover:text-emerald-500 transition">
-                        View Details <span class="ml-2">→</span>
+                        class="inline-flex items-center text-sm font-bold text-white hover:text-emerald-400 transition-all group/link">
+                        View Details <span class="ml-2 transform group-hover/link:translate-x-1 transition">→</span>
                     </a>
                 </div>
             </div>
 
             <!-- Project 4 -->
-            <div
-                class="group bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-purple-500/30 transition duration-500 min-w-[85vw] md:min-w-0 snap-center">
-                <div class="h-40 md:h-56 bg-purple-900/20 flex items-center justify-center overflow-hidden">
+            <div class="group relative bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden hover:border-purple-500/30 transition-all duration-500 min-w-[85vw] md:min-w-0 snap-center hover:shadow-[0_20px_40px_-15px_rgba(168,85,247,0.1)]">
+                <div class="h-48 md:h-64 overflow-hidden">
                     <img src="{{ asset('projects/livechat.png') }}" alt="LiveChat Event"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                 </div>
-                <div class="p-6 md:p-8">
-                    <span class="text-purple-500 text-xs font-bold tracking-wider uppercase mb-2 block">Realtime &
-                        NLP</span>
-                    <h3 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-purple-500 transition">LiveChat Event
-                    </h3>
-                    <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">
-                        Aplikasi live chat untuk event/konser dengan fitur filtering kata kasar berbasis
-                        <strong>NLP</strong> dan Word Normalizer. Menjamin interaksi yang bersih dan positif.
+                <div class="p-8">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
+                        <span class="text-purple-500 text-xs font-bold tracking-widest uppercase">Realtime & NLP</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-purple-500 transition">LiveChat Event</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Aplikasi live chat event dengan filtering kata kasar berbasis <strong>NLP</strong> untuk interaksi yang bersih dan positif.
                     </p>
-                    <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-6">
-                        <span class="px-2 py-1 bg-zinc-800 rounded">WebSockets</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">NLP</span>
-                        <span class="px-2 py-1 bg-zinc-800 rounded">Realtime</span>
+                    <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-500 mb-8">
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">WebSockets</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">NLP</span>
+                        <span class="px-2 py-1 bg-zinc-800 rounded-lg">Realtime</span>
                     </div>
                     <a href="https://livechat.jauharfauzi.my.id/"
-                        class="inline-flex items-center text-sm font-bold text-white hover:text-purple-500 transition">
-                        View Details <span class="ml-2">→</span>
+                        class="inline-flex items-center text-sm font-bold text-white hover:text-purple-400 transition-all group/link">
+                        View Details <span class="ml-2 transform group-hover/link:translate-x-1 transition">→</span>
                     </a>
                 </div>
             </div>
