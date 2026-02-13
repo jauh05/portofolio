@@ -114,16 +114,31 @@
 
 <body class="bg-dark-mesh text-white antialiased">
 
+    <!-- Dark Overlay when Navbar Expanded (Mobile Only) -->
+    <div x-data x-show="$root.__x_data_stack[0].expanded" x-transition:enter="transition opacity-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition opacity-300" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+        @click="$root.__x_data_stack[0].expanded = false" style="display: none;"></div>
+
     <!-- Dynamic Island Navbar -->
-    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit max-w-[95vw] px-4 md:px-0"
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit"
         x-data="{ expanded: false }">
-        <div class="bg-zinc-900/90 backdrop-blur-2xl border border-white/10 rounded-full shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
-            :class="expanded ? 'px-8 py-6 rounded-[2.5rem]' : 'p-2'">
-            <div class="flex items-center" :class="expanded ? 'justify-between' : 'gap-3'">
+        <div class="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
+            :class="expanded ? 'px-8 py-8 rounded-[3rem] w-[90vw] max-w-[400px]' : 'p-2 w-fit pr-4'">
+            <div class="flex items-center" :class="expanded ? 'justify-between mb-8' : 'gap-3'">
                 <!-- Logo / Home Icon -->
-                <div class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-105 transition shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+                <div class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-105 transition shadow-[0_0_20px_rgba(37,99,235,0.5)]"
                     @click="expanded = !expanded">
-                    <span class="font-bold text-white tracking-tighter">JF</span>
+                    <template x-if="!expanded">
+                        <span class="font-bold text-white tracking-tighter">JF</span>
+                    </template>
+                    <template x-if="expanded">
+                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </template>
                 </div>
 
                 <!-- Expanded Menu (Desktop) -->
@@ -138,24 +153,84 @@
                         class="px-5 py-2 text-sm bg-white text-black font-bold rounded-full hover:bg-blue-50 transition ml-2">Contact</a>
                 </div>
 
-                <!-- Mobile Menu Toggle Text (When collapsed on mobile) -->
-                <div class="md:hidden text-xs font-bold text-gray-400 pr-3 uppercase tracking-widest pl-1"
-                    @click="expanded = !expanded" x-show="!expanded">
-                    Menu
+                <!-- Expanded Title (Mobile) -->
+                <div class="md:hidden text-sm font-bold text-white uppercase tracking-widest" x-show="expanded"
+                    x-transition>
+                    Navigation
                 </div>
+
+                <!-- Spacer for balance when expanded -->
+                <div class="md:hidden w-10" x-show="expanded"></div>
             </div>
 
-            <!-- Expanded Content (Mobile & Desktop Full View) -->
-            <div x-show="expanded" x-collapse style="display: none;" class="mt-6 md:hidden">
-                <div class="flex flex-col gap-4 text-center min-w-[200px]">
+            <!-- Expanded Content (Mobile) -->
+            <div x-show="expanded" x-collapse style="display: none;" class="md:hidden">
+                <div class="flex flex-col gap-3">
                     <a href="#about" @click="expanded = false"
-                        class="text-gray-300 hover:text-white text-lg font-medium">About</a>
+                        class="group flex items-center justify-between p-4 bg-white/5 hover:bg-blue-600 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="p-2 bg-blue-500/10 rounded-lg group-hover:bg-white/20 transition-colors text-blue-400 group-hover:text-white">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <span class="font-bold text-gray-300 group-hover:text-white text-base">About Me</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-600 group-hover:text-white/50" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+
                     <a href="#projects" @click="expanded = false"
-                        class="text-gray-300 hover:text-white text-lg font-medium">Projects</a>
+                        class="group flex items-center justify-between p-4 bg-white/5 hover:bg-blue-600 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="p-2 bg-blue-500/10 rounded-lg group-hover:bg-white/20 transition-colors text-blue-400 group-hover:text-white">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                            </div>
+                            <span class="font-bold text-gray-300 group-hover:text-white text-base">Projects</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-600 group-hover:text-white/50" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+
                     <a href="#skills" @click="expanded = false"
-                        class="text-gray-300 hover:text-white text-lg font-medium">Skills</a>
+                        class="group flex items-center justify-between p-4 bg-white/5 hover:bg-blue-600 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="p-2 bg-blue-500/10 rounded-lg group-hover:bg-white/20 transition-colors text-blue-400 group-hover:text-white">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </div>
+                            <span class="font-bold text-gray-300 group-hover:text-white text-base">Technical
+                                Skills</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-600 group-hover:text-white/50" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+
+                    <div class="h-px bg-white/5 my-2"></div>
+
                     <a href="#contact" @click="expanded = false"
-                        class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold">Contact Me</a>
+                        class="flex items-center justify-center gap-3 bg-white text-black p-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 active:scale-95 transition-all">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.827-1.213L3 20l1.391-3.952A9.103 9.103 0 012 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        Contact Me
+                    </a>
                 </div>
             </div>
         </div>
