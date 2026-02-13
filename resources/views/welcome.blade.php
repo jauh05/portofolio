@@ -6,13 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jauhar Ulul Fauzi - Portfolio</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon_jf.png') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
+    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Tailwind Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: 'rgba(var(--primary-rgb), 0.05)',
+                            100: 'rgba(var(--primary-rgb), 0.1)',
+                            200: 'rgba(var(--primary-rgb), 0.2)',
+                            300: 'rgba(var(--primary-rgb), 0.3)',
+                            400: 'rgba(var(--primary-rgb), 0.6)',
+                            500: 'rgba(var(--primary-rgb), 0.8)',
+                            600: 'rgba(var(--primary-rgb), 1)',
+                            700: 'rgba(var(--primary-rgb), 0.9)',
+                            800: 'rgba(var(--primary-rgb), 0.95)',
+                            900: 'rgba(var(--primary-rgb), 1)',
+                        }
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        :root {
+            --primary-rgb: 59, 130, 246;
+            /* Default Blue */
+        }
+
+        /* Smooth Theme Transitions */
+        html,
         body {
-            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         html {
@@ -23,18 +63,19 @@
         }
 
         body {
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             width: 100%;
         }
 
-        .bg-dark-mesh {
-            background-color: #050505;
+        /* Dynamic Mesh Background */
+        .bg-mesh-theme {
             position: relative;
             z-index: 0;
             overflow-x: hidden;
         }
 
-        .bg-dark-mesh::before {
+        .bg-mesh-theme::before {
             content: '';
             position: fixed;
             top: -50%;
@@ -42,12 +83,22 @@
             width: 200%;
             height: 200%;
             background:
-                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+                radial-gradient(circle at 50% 50%, rgba(var(--primary-rgb), 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, rgba(var(--primary-rgb), 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%);
             animation: mesh-rotate 20s linear infinite;
             z-index: -1;
             pointer-events: none;
+            opacity: 0.6;
+            /* Softer in light mode */
+        }
+
+        .dark .bg-mesh-theme::before {
+            opacity: 1;
+            background:
+                radial-gradient(circle at 50% 50%, rgba(var(--primary-rgb), 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, rgba(var(--primary-rgb), 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.15) 0%, transparent 50%);
         }
 
         @keyframes mesh-rotate {
@@ -60,65 +111,48 @@
             }
         }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
 
-        /* Hide scrollbar for IE, Edge and Firefox */
         .no-scrollbar {
             -ms-overflow-style: none;
-            /* IE and Edge */
             scrollbar-width: none;
-            /* Firefox */
-        }
-
-        .project-card-glow {
-            position: absolute;
-            inset: -1px;
-            background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.3), transparent);
-            z-index: -1;
-            border-radius: 1.5rem;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        .group:hover .project-card-glow {
-            opacity: 1;
         }
 
         .glass-card {
-            background: rgba(24, 24, 27, 0.6);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .glass-card {
+            background: rgba(24, 24, 27, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-
-            100% {
-                transform: translateY(0px);
-            }
-        }
-
-        .float {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .fold-effect {
-            clip-path: polygon(0 0, 0% 100%, 100% 100%);
-            background: linear-gradient(135deg, #f3f4f6 45%, #d1d5db 50%, #9ca3af 100%);
         }
     </style>
 </head>
 
-<body class="bg-dark-mesh text-white antialiased">
+<body x-data="{ 
+        darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+        currentColor: localStorage.getItem('color') || '59, 130, 246',
+        initTheme() {
+            if (this.darkMode) document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
+            document.documentElement.style.setProperty('--primary-rgb', this.currentColor);
+        },
+        toggleTheme() {
+            this.darkMode = !this.darkMode;
+            localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+            this.initTheme();
+        },
+        setThemeColor(rgb) {
+            this.currentColor = rgb;
+            localStorage.setItem('color', rgb);
+            this.initTheme();
+        }
+    }" x-init="initTheme()" :class="darkMode ? 'bg-[#050505] text-white' : 'bg-gray-50 text-zinc-900'"
+    class="bg-mesh-theme antialiased transition-colors duration-300">
 
     <!-- Dynamic Navbar Wrapper -->
     <div x-data="{ expanded: false }">
@@ -127,23 +161,26 @@
         <div class="md:hidden">
             <!-- Mobile Toggle Button (Top Left) -->
             <button @click="expanded = !expanded"
-                class="fixed top-6 left-6 z-[60] p-3 rounded-full text-white shadow-2xl transition-all duration-300 group hover:scale-110 active:scale-95"
-                :class="expanded ? 'bg-transparent border-transparent' : 'bg-zinc-900/80 backdrop-blur-xl border border-white/10'">
+                class="fixed top-6 left-6 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300 group hover:scale-110 active:scale-95"
+                :class="[
+                    expanded ? 'bg-transparent border-transparent text-white' : (darkMode ? 'bg-zinc-900/80 border-white/10 text-white' : 'bg-white/80 border-gray-200 text-zinc-900'),
+                    'backdrop-blur-xl border'
+                ]">
                 <!-- Hamburger Icon -->
                 <div class="relative w-6 h-6 flex flex-col justify-center items-center gap-1.5 overflow-hidden">
-                    <span class="w-full h-0.5 bg-white rounded-full transition-all duration-300 group-hover:bg-blue-400"
-                        :class="expanded ? 'rotate-45 translate-y-2' : ''"></span>
-                    <span class="w-full h-0.5 bg-white rounded-full transition-all duration-300 group-hover:bg-blue-400"
-                        :class="expanded ? 'translate-x-full opacity-0' : ''"></span>
-                    <span class="w-full h-0.5 bg-white rounded-full transition-all duration-300 group-hover:bg-blue-400"
-                        :class="expanded ? '-rotate-45 -translate-y-2' : ''"></span>
+                    <span class="w-full h-0.5 rounded-full transition-all duration-300 group-hover:bg-primary-400"
+                        :class="[expanded ? 'rotate-45 translate-y-2 bg-white' : (darkMode ? 'bg-white' : 'bg-zinc-900')]"></span>
+                    <span class="w-full h-0.5 rounded-full transition-all duration-300 group-hover:bg-primary-400"
+                        :class="[expanded ? 'translate-x-full opacity-0 bg-white' : (darkMode ? 'bg-white' : 'bg-zinc-900')]"></span>
+                    <span class="w-full h-0.5 rounded-full transition-all duration-300 group-hover:bg-primary-400"
+                        :class="[expanded ? '-rotate-45 -translate-y-2 bg-white' : (darkMode ? 'bg-white' : 'bg-zinc-900')]"></span>
                 </div>
             </button>
 
             <!-- Brand Logo (Top Right - for balance) -->
-            <div class="fixed top-6 right-6 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300"
-                :class="expanded ? 'bg-transparent border-transparent' : 'bg-zinc-900/80 backdrop-blur-xl border border-white/10'">
-                <div class="w-6 h-6 flex items-center justify-center font-bold text-white tracking-tighter">JF</div>
+            <div class="fixed top-6 right-6 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300 border backdrop-blur-xl"
+                :class="expanded ? 'bg-transparent border-transparent text-white' : (darkMode ? 'bg-zinc-900/80 border-white/10 text-white' : 'bg-white/80 border-gray-200 text-zinc-900')">
+                <div class="w-6 h-6 flex items-center justify-center font-bold tracking-tighter">JF</div>
             </div>
 
             <!-- Fullscreen Overlay Menu -->
@@ -157,7 +194,7 @@
 
                 <!-- Background Gradients -->
                 <div
-                    class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none">
+                    class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-600/10 blur-[120px] rounded-full pointer-events-none">
                 </div>
                 <div
                     class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none">
@@ -165,7 +202,8 @@
 
                 <!-- Menu Links -->
                 <nav class="flex flex-col gap-6 text-center z-10">
-                    <div class="mb-4 text-xs font-bold text-blue-500 uppercase tracking-[0.3em] opacity-80">Navigation
+                    <div class="mb-4 text-xs font-bold text-primary-500 uppercase tracking-[0.3em] opacity-80">
+                        Navigation
                     </div>
 
                     <a href="#about" @click="expanded = false"
@@ -205,25 +243,29 @@
 
         <!-- Desktop Navigation (Cleaned & Static) -->
         <nav class="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit">
-            <div
-                class="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 px-3">
+            <div 
+                :class="darkMode ? 'bg-zinc-900/95 border-white/10' : 'bg-white/90 border-gray-200 shadow-xl'"
+                class="backdrop-blur-2xl border rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-2 px-3 transition-colors duration-300">
                 <div class="flex items-center gap-4">
                     <!-- Logo / Home Icon -->
-                    <div
-                        class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-110 transition shadow-[0_0_20px_rgba(37,99,235,0.5)]">
+                    <div 
+                        class="bg-primary-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-110 transition shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
                         <span class="font-bold text-white tracking-tighter">JF</span>
                     </div>
 
                     <!-- Desktop Menu Links -->
                     <div class="flex items-center gap-1">
                         <a href="#about"
-                            class="px-5 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">About</a>
+                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
+                            class="px-5 py-2 text-sm rounded-full transition-all">About</a>
                         <a href="#projects"
-                            class="px-5 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">Projects</a>
+                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
+                            class="px-5 py-2 text-sm rounded-full transition-all">Projects</a>
                         <a href="#skills"
-                            class="px-5 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">Skills</a>
+                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
+                            class="px-5 py-2 text-sm rounded-full transition-all">Skills</a>
                         <a href="#contact"
-                            class="px-6 py-2 text-sm bg-white text-black font-black rounded-full hover:bg-blue-50 transition-all ml-2">Contact</a>
+                            class="px-6 py-2 text-sm bg-primary-600 text-white font-black rounded-full hover:bg-primary-700 transition-all ml-2 shadow-lg hover:shadow-primary-500/30">Contact</a>
                     </div>
                 </div>
             </div>
@@ -234,7 +276,7 @@
         class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 text-center md:text-left flex flex-col-reverse md:flex-row items-center gap-12">
         <div class="flex-1">
             <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
-                JAUHAR FAUZI <br><span class="text-blue-500">ULUL ALBAB</span>
+                JAUHAR FAUZI <br><span class="text-primary-500">ULUL ALBAB</span>
             </h1>
             <p class="text-xl text-gray-200 font-semibold mb-6">
                 Software Engineer & Fullstack Developer
@@ -246,7 +288,7 @@
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <a href="#projects"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition-all transform hover:scale-105 text-center">
+                    class="bg-primary-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition-all transform hover:scale-105 text-center">
                     View My Projects
                 </a>
                 <a href="#contact"
@@ -263,7 +305,7 @@
                     class="w-full h-full object-cover transition duration-500 hover:scale-105">
             </div>
             <div
-                class="absolute -bottom-6 -left-6 bg-blue-600 p-6 rounded-2xl shadow-xl transform rotate-3 hover:rotate-0 transition duration-300">
+                class="absolute -bottom-6 -left-6 bg-primary-600 p-6 rounded-2xl shadow-xl transform rotate-3 hover:rotate-0 transition duration-300">
                 <p class="text-3xl font-bold">4+</p>
                 <p class="text-xs uppercase font-semibold tracking-wider">Years Experience</p>
             </div>
@@ -273,22 +315,22 @@
     <section class="max-w-6xl mx-auto px-6 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div
-                class="bg-blue-600/10 border border-blue-500/20 p-8 rounded-3xl text-center hover:bg-blue-600/20 transition duration-300">
-                <h3 class="text-3xl font-bold mb-1 text-blue-400">8+</h3>
+                class="bg-primary-600/10 border border-primary-500/20 p-8 rounded-3xl text-center hover:bg-primary-600/20 transition duration-300">
+                <h3 class="text-3xl font-bold mb-1 text-primary-400">8+</h3>
                 <p class="text-sm text-gray-400">Projects Completed</p>
             </div>
             <div
-                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-blue-500/30 transition duration-300">
+                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300">
                 <h3 class="text-3xl font-bold mb-1">10+</h3>
                 <p class="text-sm text-gray-400">Tech Stack</p>
             </div>
             <div
-                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-blue-500/30 transition duration-300">
+                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300">
                 <h3 class="text-3xl font-bold mb-1">4+</h3>
                 <p class="text-sm text-gray-400">Years Exp</p>
             </div>
             <div
-                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-blue-500/30 transition duration-300">
+                class="bg-zinc-900 border border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300">
                 <h3 class="text-3xl font-bold mb-1">100%</h3>
                 <p class="text-sm text-gray-400">Commitment</p>
             </div>
@@ -299,15 +341,16 @@
     <section id="skills" class="max-w-6xl mx-auto px-6 py-8 md:py-20">
         <div
             class="bg-zinc-900/40 border border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 overflow-hidden relative">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-[100px]"></div>
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-600/20 blur-[100px]"></div>
 
             <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Technical <span class="text-blue-500">Skills</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Technical <span
+                            class="text-primary-500">Skills</span>
                     </h2>
                     <p class="text-gray-400 text-sm md:text-base">Expertise in modern web technologies and AI.</p>
                 </div>
-                <div class="text-blue-500 font-mono text-sm hidden md:block">02 / SKILLS</div>
+                <div class="text-primary-500 font-mono text-sm hidden md:block">02 / SKILLS</div>
             </div>
 
             <!-- Mobile Swipe Indicator -->
@@ -341,7 +384,7 @@
                         </div>
                         <div
                             class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
-                            <i class="devicon-mysql-original text-3xl md:text-4xl text-blue-400"></i>
+                            <i class="devicon-mysql-original text-3xl md:text-4xl text-primary-400"></i>
                             <span class="text-[10px] md:text-xs text-gray-400">MySQL</span>
                         </div>
                         <div
@@ -377,7 +420,7 @@
                         </div>
                         <div
                             class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
-                            <i class="devicon-css3-plain text-3xl md:text-4xl text-blue-500"></i>
+                            <i class="devicon-css3-plain text-3xl md:text-4xl text-primary-500"></i>
                             <span class="text-[10px] md:text-xs text-gray-400">CSS3</span>
                         </div>
                         <div
@@ -418,7 +461,7 @@
                         </div>
                         <div
                             class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
-                            <i class="devicon-cplusplus-plain text-3xl md:text-4xl text-blue-600"></i>
+                            <i class="devicon-cplusplus-plain text-3xl md:text-4xl text-primary-600"></i>
                             <span class="text-[10px] md:text-xs text-gray-400">C++</span>
                         </div>
                     </div>
@@ -461,26 +504,27 @@
     <!-- Projects Section -->
     <section id="projects" class="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
         <!-- Background Glow -->
-        <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full -z-10"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full -z-10"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -z-10"></div>
 
         <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16">
             <div class="max-w-2xl">
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black tracking-widest uppercase mb-4">
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4">
                     <span class="relative flex h-2 w-2">
                         <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
                     </span>
                     Work & Research
                 </div>
                 <h2 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Featured <span
-                        class="text-blue-500">Projects</span></h2>
+                        class="text-primary-500">Projects</span></h2>
                 <p class="text-gray-400 text-lg md:text-xl leading-relaxed">Kumpulan solusi digital dan publikasi ilmiah
                     yang berfokus pada inovasi teknologi.</p>
             </div>
-            <div class="text-blue-500 font-mono text-sm hidden md:block border-b border-blue-500/30 pb-2">03 / PORTFOLIO
+            <div class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2">03 /
+                PORTFOLIO
             </div>
         </div>
         </div>
@@ -490,22 +534,22 @@
             <div
                 class="relative w-full max-w-[300px] h-16 bg-zinc-900/80 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
                 <div
-                    class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent animate-[shimmer_2s_infinite]">
+                    class="absolute inset-0 bg-gradient-to-r from-transparent via-primary-500/20 to-transparent animate-[shimmer_2s_infinite]">
                 </div>
                 <div class="flex items-center gap-6 text-white font-black text-[11px] uppercase tracking-[0.4em] z-10">
-                    <svg class="w-5 h-5 text-blue-500 animate-[bounce_1s_infinite] -rotate-90" fill="none"
+                    <svg class="w-5 h-5 text-primary-500 animate-[bounce_1s_infinite] -rotate-90" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
                     </svg>
                     <span class="animate-pulse">Geser Layar</span>
-                    <svg class="w-5 h-5 text-blue-500 animate-[bounce_1s_infinite] rotate-90" fill="none"
+                    <svg class="w-5 h-5 text-primary-500 animate-[bounce_1s_infinite] rotate-90" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
                     </svg>
                 </div>
             </div>
             <div class="mt-4 flex gap-2">
-                <div class="w-12 h-1.5 bg-blue-600 rounded-full"></div>
+                <div class="w-12 h-1.5 bg-primary-600 rounded-full"></div>
                 <div class="w-3 h-1.5 bg-zinc-800 rounded-full"></div>
                 <div class="w-3 h-1.5 bg-zinc-800 rounded-full"></div>
             </div>
@@ -528,14 +572,14 @@
 
             <!-- Project 0: Journal Publication (Real PDF View) -->
             <div
-                class="group relative bg-zinc-950 border border-white/10 rounded-[3rem] overflow-hidden transition-all duration-700 hover:border-blue-500/50 min-w-[92vw] md:min-w-0 snap-center lg:col-span-2 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
+                class="group relative bg-zinc-950 border border-white/10 rounded-[3rem] overflow-hidden transition-all duration-700 hover:border-primary-500/50 min-w-[92vw] md:min-w-0 snap-center lg:col-span-2 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
                 <div class="project-card-glow"></div>
                 <div class="flex flex-col lg:flex-row lg:items-stretch">
                     <!-- Real PDF Canvas Section -->
                     <div
                         class="lg:w-3/5 p-6 lg:p-14 relative bg-zinc-900/40 overflow-hidden flex items-center justify-center">
                         <div
-                            class="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-indigo-600/10">
+                            class="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-indigo-600/10">
                         </div>
 
                         <!-- High Quality Paper Shadow Effect -->
@@ -543,26 +587,16 @@
 
                         <!-- Realistic Paper Container -->
                         <div
-                            class="relative z-10 w-full max-w-[340px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-zoom-in">
-                            <!-- Actual Journal Page Image -->
-                            <img src="{{ asset('projects/journal.png') }}" alt="JAIC Journal Original View"
-                                class="w-full h-auto object-cover border-b border-gray-100">
+                            class="relative z-10 w-full max-w-[400px] h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03]">
+                            <!-- PDF Iframe -->
+                            <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" 
+                                class="w-full h-full border-none bg-white" 
+                                title="JAIC Journal PDF">
+                            </iframe>
 
-                            <!-- PDF Reader Header Simulation -->
+                            <!-- Shimmering Glass Overlay (Pointer events none to allow iframe interaction if needed, or maybe removed appropriately) -->
                             <div
-                                class="absolute top-0 left-0 w-full h-8 bg-zinc-100/90 backdrop-blur border-b border-gray-200 flex items-center px-4 justify-between">
-                                <div class="flex gap-1.5">
-                                    <div class="w-2 h-2 rounded-full bg-red-400"></div>
-                                    <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
-                                    <div class="w-2 h-2 rounded-full bg-green-400"></div>
-                                </div>
-                                <span
-                                    class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Journal_Open.pdf</span>
-                            </div>
-
-                            <!-- Shimmering Glass Overlay -->
-                            <div
-                                class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                                class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
                             </div>
                         </div>
 
@@ -583,15 +617,15 @@
                     <!-- Content Side -->
                     <div
                         class="lg:w-2/5 p-8 lg:p-14 flex flex-col justify-center bg-zinc-950/90 backdrop-blur-3xl border-l border-white/5 relative">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[60px]"></div>
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-primary-600/10 blur-[60px]"></div>
 
                         <div class="mb-8">
                             <span
-                                class="inline-block px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6">
+                                class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6">
                                 JAIC PUBLICATION
                             </span>
                             <h3
-                                class="text-3xl lg:text-5xl font-black mb-8 text-white leading-tight tracking-tighter group-hover:text-blue-400 transition-colors">
+                                class="text-3xl lg:text-5xl font-black mb-8 text-white leading-tight tracking-tighter group-hover:text-primary-400 transition-colors">
                                 Recommendation <br class="hidden lg:block">System Research
                             </h3>
                             <p class="text-gray-400 mb-10 leading-relaxed text-base lg:text-lg font-medium">
@@ -600,25 +634,25 @@
                             </p>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4 mb-10">
+                        <div class="mb-10">
                             <div
-                                class="p-5 bg-white/5 rounded-2xl border border-white/5 group/stat hover:bg-white/10 transition-colors">
+                                class="p-6 bg-gradient-to-r from-zinc-900 to-zinc-900/50 rounded-2xl border border-primary-500/30 group/stat hover:bg-white/5 transition-all relative overflow-hidden">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 p-3 opacity-10">
+                                    <svg class="w-24 h-24 text-primary-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                                </div>
                                 <div
-                                    class="text-blue-500 font-black text-[9px] mb-1 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-                                    Situs Jurnal</div>
-                                <div class="text-white font-bold text-sm">Polibatam</div>
-                            </div>
-                            <div
-                                class="p-5 bg-white/5 rounded-2xl border border-white/5 group/stat hover:bg-white/10 transition-colors">
-                                <div
-                                    class="text-blue-500 font-black text-[9px] mb-1 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-                                    Indexing</div>
-                                <div class="text-white font-bold text-sm">SINTA/Scopus</div>
+                                    class="text-primary-500 font-black text-[12px] mb-2 uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform">
+                                    Terakreditasi</div>
+                                <div class="text-white font-black text-4xl flex items-center gap-3">
+                                    SINTA 3
+                                    <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-2 font-medium">Official National Indexing</p>
                             </div>
                         </div>
 
                         <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank"
-                            class="flex items-center justify-center gap-4 px-10 py-6 bg-blue-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
+                            class="flex items-center justify-center gap-4 px-10 py-6 bg-primary-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
                             View Official PDF
                             <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
@@ -783,19 +817,19 @@
 
     <!-- Education Section -->
     <section class="max-w-6xl mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Education <span class="text-blue-500">&
+        <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Education <span class="text-primary-500">&
                 Training</span></h2>
         <div class="grid md:grid-cols-2 gap-6">
             <!-- Amikom -->
             <div
-                class="bg-zinc-900/50 border border-white/5 p-8 rounded-3xl hover:border-blue-500/50 transition duration-300 flex items-start gap-4">
+                class="bg-zinc-900/50 border border-white/5 p-8 rounded-3xl hover:border-primary-500/50 transition duration-300 flex items-start gap-4">
                 <div
                     class="w-16 h-16 bg-white rounded-xl flex items-center justify-center p-2 flex-shrink-0 overflow-hidden">
                     <img src="{{ asset('logo_amikom.png') }}" alt="Amikom Logo" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <h3 class="text-xl font-bold text-white mb-1">Universitas Amikom Yogyakarta</h3>
-                    <p class="text-blue-400 font-medium mb-1">Program Studi Sistem Informasi</p>
+                    <p class="text-primary-400 font-medium mb-1">Program Studi Sistem Informasi</p>
                     <p class="text-gray-400 text-sm mb-1">Angkatan Tahun 2023 • IPK: 3.91</p>
                     <p class="text-gray-500 text-xs">Agustus 2023 - Sekarang</p>
                 </div>
@@ -821,14 +855,14 @@
     <!-- Experience Section -->
     <section class="max-w-6xl mx-auto px-6 py-12">
         <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Professional <span
-                class="text-blue-500">Experience</span></h2>
+                class="text-primary-500">Experience</span></h2>
         <div class="space-y-6">
             <!-- Asdos -->
             <div class="bg-zinc-900/30 border border-white/5 p-8 rounded-3xl hover:bg-zinc-900/50 transition">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
                     <div>
                         <h3 class="text-2xl font-bold text-white">Asisten Dosen – Struktur Data</h3>
-                        <p class="text-blue-400 text-lg">Informatika Universitas Amikom Yogyakarta</p>
+                        <p class="text-primary-400 text-lg">Informatika Universitas Amikom Yogyakarta</p>
                     </div>
                     <span class="text-gray-500 text-sm mt-2 md:mt-0 bg-zinc-800 px-3 py-1 rounded-full">September 2024 –
                         Sekarang</span>
@@ -877,7 +911,7 @@
     <!-- Additional Info / Soft Skills -->
     <section class="max-w-6xl mx-auto px-6 py-12 mb-12">
         <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Informasi <span
-                class="text-blue-500">Tambahan</span></h2>
+                class="text-primary-500">Tambahan</span></h2>
 
         <!-- Mobile Swipe Indicator -->
         <div class="md:hidden flex items-center gap-2 mb-4 text-gray-500 text-xs animate-pulse">
@@ -917,7 +951,7 @@
     <footer id="contact" class="max-w-6xl mx-auto px-6 py-24 relative overflow-hidden">
         <!-- Glow Effects -->
         <div
-            class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-600/10 blur-[100px] rounded-full pointer-events-none">
+            class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-primary-600/10 blur-[100px] rounded-full pointer-events-none">
         </div>
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none">
         </div>
@@ -926,25 +960,27 @@
             <!-- Left: Call to Action & Contact -->
             <div>
                 <div
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-6">
-                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-6">
+                    <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
                     Get In Touch
                 </div>
 
                 <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
                     Let's build <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">something
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-indigo-500">something
                         extraordinary</span>.
                 </h2>
 
-                <blockquote class="text-xl text-gray-400 font-light italic mb-10 border-l-4 border-blue-500 pl-6 py-2">
+                <blockquote
+                    class="text-xl text-gray-400 font-light italic mb-10 border-l-4 border-primary-500 pl-6 py-2">
                     "Terus belajar, beradaptasi, dan tumbuh bersama teknologi."
                 </blockquote>
 
                 <div class="flex flex-col gap-4 max-w-md">
                     <!-- Email -->
                     <a href="mailto:jauharfua05@gmail.com"
-                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-blue-500/30 rounded-2xl transition-all duration-300">
+                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-primary-500/30 rounded-2xl transition-all duration-300">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -1111,7 +1147,7 @@
             <span>Code + Innovate + Solve • </span>
             <span>Build + Scale + Deploy • </span>
             <span>Code + Innovate + Solve • </span>
-            <span class="text-blue-600">Build + Scale + Deploy • </span>
+            <span class="text-primary-600">Build + Scale + Deploy • </span>
         </div>
     </div>
 
@@ -1130,3 +1166,71 @@
             }
         }
     </style>
+
+    <!-- Theme Settings & Floating Action -->
+    <div x-data="{ openSettings: false }" class="fixed bottom-6 right-6 z-50">
+        <!-- Panel -->
+        <div x-show="openSettings" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 scale-95" @click.outside="openSettings = false"
+            :class="darkMode ? 'bg-zinc-900 border-white/10' : 'bg-white border-gray-200'"
+            class="absolute bottom-16 right-0 mb-2 p-4 rounded-2xl border shadow-2xl w-64 backdrop-blur-xl">
+
+            <!-- Mode Toggle -->
+            <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100 dark:border-white/5">
+                <span class="text-xs font-bold uppercase tracking-wider opacity-70"
+                    :class="darkMode ? 'text-gray-300' : 'text-gray-600'">Theme Mode</span>
+                <button @click="toggleTheme()"
+                    class="relative w-12 h-6 rounded-full bg-gray-200 dark:bg-zinc-700 transition-colors">
+                    <div class="absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform duration-300 flex items-center justify-center"
+                        :class="darkMode ? 'translate-x-6' : 'translate-x-0'">
+                        <span x-show="!darkMode">☀️</span>
+                        <span x-show="darkMode" style="display:none">🌙</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Color Picker -->
+            <div class="space-y-3">
+                <span class="text-xs font-bold uppercase tracking-wider opacity-70"
+                    :class="darkMode ? 'text-gray-300' : 'text-gray-600'">Accent Color</span>
+                <div class="grid grid-cols-5 gap-2">
+                    <!-- Blue -->
+                    <button @click="setThemeColor('59, 130, 246')"
+                        class="w-8 h-8 rounded-full bg-blue-500 hover:scale-110 transition ring-2 ring-offset-2 ring-offset-transparent outline-none"
+                        :class="currentColor === '59, 130, 246' ? 'ring-blue-500' : 'ring-transparent'"></button>
+                    <!-- Purple -->
+                    <button @click="setThemeColor('139, 92, 246')"
+                        class="w-8 h-8 rounded-full bg-purple-500 hover:scale-110 transition ring-2 ring-offset-2 ring-offset-transparent outline-none"
+                        :class="currentColor === '139, 92, 246' ? 'ring-purple-500' : 'ring-transparent'"></button>
+                    <!-- Emerald -->
+                    <button @click="setThemeColor('16, 185, 129')"
+                        class="w-8 h-8 rounded-full bg-emerald-500 hover:scale-110 transition ring-2 ring-offset-2 ring-offset-transparent outline-none"
+                        :class="currentColor === '16, 185, 129' ? 'ring-emerald-500' : 'ring-transparent'"></button>
+                    <!-- Rose -->
+                    <button @click="setThemeColor('244, 63, 94')"
+                        class="w-8 h-8 rounded-full bg-rose-500 hover:scale-110 transition ring-2 ring-offset-2 ring-offset-transparent outline-none"
+                        :class="currentColor === '244, 63, 94' ? 'ring-rose-500' : 'ring-transparent'"></button>
+                    <!-- Amber -->
+                    <button @click="setThemeColor('245, 158, 11')"
+                        class="w-8 h-8 rounded-full bg-amber-500 hover:scale-110 transition ring-2 ring-offset-2 ring-offset-transparent outline-none"
+                        :class="currentColor === '245, 158, 11' ? 'ring-amber-500' : 'ring-transparent'"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle Button -->
+        <button @click="openSettings = !openSettings"
+            class="w-12 h-12 rounded-full shadow-2xl flex items-center justify-center text-white transition-transform hover:scale-110 hover:rotate-90 bg-primary-600">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </button>
+    </div>
+</body>
