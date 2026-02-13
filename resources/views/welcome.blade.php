@@ -914,47 +914,191 @@
     </section>
 
     <!-- Footer -->
-    <footer id="contact" class="max-w-6xl mx-auto px-6 py-20 border-t border-white/5">
-        <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+    <footer id="contact" class="max-w-6xl mx-auto px-6 py-24 relative overflow-hidden">
+        <!-- Glow Effects -->
+        <div
+            class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-600/10 blur-[100px] rounded-full pointer-events-none">
+        </div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none">
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <!-- Left: Call to Action & Contact -->
             <div>
-                <h2 class="text-3xl md:text-4xl font-bold mb-6">Let's build something <br> <span
-                        class="text-blue-500">extraordinary</span> together.</h2>
-                <p class="text-xl text-gray-400 italic mb-8 border-l-4 border-blue-500 pl-4 py-1">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-6">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    Get In Touch
+                </div>
+
+                <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
+                    Let's build <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">something
+                        extraordinary</span>.
+                </h2>
+
+                <blockquote class="text-xl text-gray-400 font-light italic mb-10 border-l-4 border-blue-500 pl-6 py-2">
                     "Terus belajar, beradaptasi, dan tumbuh bersama teknologi."
-                </p>
-                <div class="flex flex-col gap-4">
+                </blockquote>
+
+                <div class="flex flex-col gap-4 max-w-md">
+                    <!-- Email -->
                     <a href="mailto:jauharfua05@gmail.com"
-                        class="bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-gray-200 transition flex items-center gap-3 w-fit">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-blue-500/30 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <!-- Gmail Icon -->
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">Email Me</div>
+                                <div class="text-white font-medium">jauharfua05@gmail.com</div>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 0 00-2 2v10a2 2 0 002 2z" />
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                        jauharfua05@gmail.com
                     </a>
+
+                    <!-- Instagram -->
                     <a href="https://instagram.com/jauhar.fauzi_"
-                        class="bg-zinc-800 text-white px-6 py-3 rounded-full font-bold hover:bg-zinc-700 transition border border-white/10 flex items-center gap-3 w-fit">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-pink-500/30 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <!-- IG Icon -->
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">Instagram</div>
+                                <div class="text-white font-medium">@jauhar.fauzi_</div>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                        @jauhar.fauzi_
                     </a>
+
+                    <!-- WhatsApp -->
                     <a href="https://wa.me/6289529104230"
-                        class="bg-green-600 text-white px-6 py-3 rounded-full font-bold hover:bg-green-500 transition border border-white/10 flex items-center gap-3 w-fit">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                        class="group flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-green-500/30 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-green-500/10 text-green-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <!-- WA Icon -->
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">WhatsApp</div>
+                                <div class="text-white font-medium">+62 895-2910-4230</div>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                        +62 895-2910-4230
                     </a>
                 </div>
             </div>
-            <div class="flex justify-center md:justify-end">
-                <div class="relative w-full max-w-sm p-8 bg-zinc-900 rounded-3xl border border-white/5 text-center">
-                    <p class="text-gray-400 mb-2">Location</p>
-                    <h3 class="text-2xl font-bold mb-8">Yogyakarta, Indonesia 🇮🇩</h3>
-                    <p class="text-gray-400 mb-2">Open For</p>
-                    <h3 class="text-xl font-bold text-white">Freelance & Collaboration</h3>
+
+            <!-- Right: Status Card -->
+            <div class="relative">
+                <!-- Decorative Elements -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl animate-pulse">
+                </div>
+
+                <div
+                    class="bg-zinc-900/80 backdrop-blur-xl border border-white/10 p-8 rounded-[3rem] shadow-2xl relative overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
+                    <!-- Grid Pattern Overlay -->
+                    <div
+                        class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] opacity-20">
+                    </div>
+
+                    <div class="relative z-10 flex flex-col gap-8">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between border-b border-white/5 pb-6">
+                            <div>
+                                <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Current
+                                    Status</div>
+                                <div class="flex items-center gap-2">
+                                    <span class="relative flex h-3 w-3">
+                                        <span
+                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                                    </span>
+                                    <span class="text-green-400 font-bold">Available for Work</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-zinc-800 border border-white/5 flex items-center justify-center text-xl">
+                                👋
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-4 bg-zinc-800/30 rounded-2xl border border-white/5">
+                                <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs font-bold uppercase tracking-wide">Base Location
+                                    </div>
+                                    <div class="text-white text-lg font-bold">Yogyakarta, Indonesia</div>
+                                    <div class="text-gray-500 text-xs mt-1">Remote / On-site capable</div>
+                                </div>
+                            </div>
+
+                            <!-- Open For -->
+                            <div class="flex items-start gap-4 p-4 bg-zinc-800/30 rounded-2xl border border-white/5">
+                                <div class="p-3 bg-purple-500/10 text-purple-400 rounded-xl">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs font-bold uppercase tracking-wide">Open For</div>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        <span
+                                            class="px-3 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/20">Freelance</span>
+                                        <span
+                                            class="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 text-xs font-bold border border-purple-500/20">Collaboration</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Action -->
+                        <a href="https://wa.me/6289529104230"
+                            class="w-full py-4 bg-white text-black rounded-xl font-bold text-center hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.15)] flex justify-center items-center gap-2">
+                            <span>Start a Conversation</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
