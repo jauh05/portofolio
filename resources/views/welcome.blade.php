@@ -382,27 +382,27 @@
                         <div
                             class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-laravel-original text-3xl md:text-4xl text-red-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">Laravel</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Laravel</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-codeigniter-plain text-3xl md:text-4xl text-orange-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">CodeIgniter</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CodeIgniter</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-mysql-original text-3xl md:text-4xl text-primary-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">MySQL</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">MySQL</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <!-- Generic API Icon -->
                             <svg class="w-8 h-8 md:w-9 md:h-9 text-gray-400" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span class="text-[10px] md:text-xs text-gray-400">REST API</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">REST API</span>
                         </div>
                     </div>
                 </div>
@@ -417,27 +417,27 @@
                         <div
                             class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-tailwindcss-original text-3xl md:text-4xl text-cyan-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">Tailwind</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Tailwind</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-bootstrap-plain text-3xl md:text-4xl text-purple-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">Bootstrap</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Bootstrap</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-css3-plain text-3xl md:text-4xl text-primary-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">CSS3</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CSS3</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <!-- Blade approximate icon (HTML5 or generic code) -->
                             <svg class="w-8 h-8 md:w-9 md:h-9 text-red-500" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                             </svg>
-                            <span class="text-[10px] md:text-xs text-gray-400">Blade</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Blade</span>
                         </div>
                     </div>
                 </div>
@@ -453,22 +453,22 @@
                         <div
                             class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-php-plain text-3xl md:text-4xl text-indigo-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">PHP</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">PHP</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-python-plain text-3xl md:text-4xl text-yellow-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">Python</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Python</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-javascript-plain text-3xl md:text-4xl text-yellow-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">JavaScript</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">JavaScript</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <i class="devicon-cplusplus-plain text-3xl md:text-4xl text-primary-600"></i>
-                            <span class="text-[10px] md:text-xs text-gray-400">C++</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">C++</span>
                         </div>
                     </div>
                 </div>
@@ -484,22 +484,25 @@
                         <div
                             class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <span class="text-2xl md:text-3xl">🧩</span>
-                            <span class="text-[10px] md:text-xs text-gray-400 text-center">Prompt Eng.</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Prompt
+                                Eng.</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <span class="text-2xl md:text-3xl">🚀</span>
-                            <span class="text-[10px] md:text-xs text-gray-400 text-center">Few-shot</span>
+                            <span
+                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Few-shot</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <span class="text-2xl md:text-3xl">🧠</span>
-                            <span class="text-[10px] md:text-xs text-gray-400 text-center">NLP</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">NLP</span>
                         </div>
                         <div
-                            class="flex flex-col items-center gap-2 bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-zinc-800 transition">
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
                             <span class="text-2xl md:text-3xl">🛸</span>
-                            <span class="text-[10px] md:text-xs text-gray-400 text-center">Antigravity</span>
+                            <span
+                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Antigravity</span>
                         </div>
                     </div>
                 </div>
