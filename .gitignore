@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+*cPanel*
+*_files
+*.html
+*.png [0-9][0-9]*
