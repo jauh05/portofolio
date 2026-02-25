@@ -136,6 +136,7 @@
 <body x-data="{ 
         darkMode: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : true,
         currentColor: localStorage.getItem('color') || '59, 130, 246',
+        lang: 'id',
         initTheme() {
             if (this.darkMode) document.documentElement.classList.add('dark');
             else document.documentElement.classList.remove('dark');
@@ -284,23 +285,39 @@
             <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
                 JAUHAR FAUZI <br><span class="text-primary-500">ULUL ALBAB</span>
             </h1>
-            <p class="text-xl text-gray-500 dark:text-gray-200 font-semibold mb-6">
-                Software Engineer & Fullstack Developer
+            <p class="text-xl text-primary-500 dark:text-primary-400 font-bold mb-6">
+                Digital Solutions Engineer & Tech Problem Solver
             </p>
-            <p class="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-lg leading-relaxed">
-                Pemuda yang antusias dengan perkembangan teknologi 💻 dan sangat mencintai coding & algoritma 🧠✨.
-                Senang belajar hal baru, membangun solusi, dan mengeksplorasi teknologi untuk masa depan yang lebih baik
-                🚀.
+            <p class="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-2xl leading-relaxed">
+                Seorang profesional teknologi yang berfokus pada pengembangan solusi digital yang inovatif, efisien, dan berdampak. Memiliki ketertarikan besar pada pemanfaatan teknologi modern, AI, serta rekayasa perangkat lunak untuk menyelesaikan masalah nyata. Senang belajar hal baru, membangun sistem end-to-end, dan mengubah ide menjadi produk yang bernilai bagi masa depan.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <a href="#projects"
-                    class="bg-primary-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition-all transform hover:scale-105 text-center">
-                    View My Projects
-                </a>
-                <a href="#contact"
-                    class="bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-4 rounded-full font-semibold transition-all border border-white/10 text-center">
-                    Contact Me
-                </a>
+            <div class="flex flex-col gap-6">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center">
+                    <a href="#projects"
+                        class="bg-primary-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition-all transform hover:scale-105 text-center min-w-[200px]">
+                        <span x-show="lang === 'id'">Lihat Projek Saya</span>
+                        <span x-show="lang === 'en'" style="display:none">View My Projects</span>
+                    </a>
+                    <a href="#contact"
+                        class="bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-4 rounded-full font-semibold transition-all border border-white/10 text-center min-w-[200px]">
+                        <span x-show="lang === 'id'">Hubungi Saya</span>
+                        <span x-show="lang === 'en'" style="display:none">Contact Me</span>
+                    </a>
+
+                    <!-- Language Selector -->
+                    <div class="flex items-center gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-full border border-gray-200 dark:border-white/10 ml-0 md:ml-4">
+                        <button @click="lang = 'id'" 
+                            :class="lang === 'id' ? 'bg-primary-600 text-white shadow-lg' : 'text-gray-500 hover:text-primary-500'"
+                            class="px-3 py-1.5 rounded-full text-[10px] font-black tracking-tighter transition-all uppercase">
+                            ID
+                        </button>
+                        <button @click="lang = 'en'" 
+                            :class="lang === 'en' ? 'bg-primary-600 text-white shadow-lg' : 'text-gray-500 hover:text-primary-500'"
+                            class="px-3 py-1.5 rounded-full text-[10px] font-black tracking-tighter transition-all uppercase">
+                            EN
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -343,172 +360,7 @@
         </div>
     </section>
 
-    <!-- Technical Skills Section (Moved Up) -->
-    <section id="skills" class="max-w-6xl mx-auto px-6 py-8 md:py-20">
-        <div
-            class="bg-white/50 dark:bg-zinc-900/40 border border-gray-200 dark:border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 overflow-hidden relative shadow-xl dark:shadow-none backdrop-blur-sm">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-600/20 blur-[100px]"></div>
 
-            <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
-                <div>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-zinc-900 dark:text-white">Technical <span
-                            class="text-primary-600 dark:text-primary-500">Skills</span>
-                    </h2>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base">Expertise in modern web
-                        technologies and AI.</p>
-                </div>
-                <div class="text-primary-500 font-mono text-sm hidden md:block">02 / SKILLS</div>
-            </div>
-
-            <!-- Mobile Swipe Indicator -->
-            <div class="md:hidden flex items-center gap-2 mb-4 text-gray-500 text-xs animate-pulse">
-                <span>Swipe to explore</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-            </div>
-
-            <div
-                class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 md:grid md:grid-cols-2 md:gap-6 no-scrollbar pb-6 md:pb-0">
-                <!-- Backend -->
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">⚙️</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Backend</h3>
-                    </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-laravel-original text-3xl md:text-4xl text-red-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Laravel</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-codeigniter-plain text-3xl md:text-4xl text-orange-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CodeIgniter</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-mysql-original text-3xl md:text-4xl text-primary-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">MySQL</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <!-- Generic API Icon -->
-                            <svg class="w-8 h-8 md:w-9 md:h-9 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">REST API</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">🎨</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Frontend</h3>
-                    </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-tailwindcss-original text-3xl md:text-4xl text-cyan-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Tailwind</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-bootstrap-plain text-3xl md:text-4xl text-purple-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Bootstrap</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-css3-plain text-3xl md:text-4xl text-primary-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CSS3</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <!-- Blade approximate icon (HTML5 or generic code) -->
-                            <svg class="w-8 h-8 md:w-9 md:h-9 text-red-500" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                            </svg>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Blade</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Languages -->
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">💻</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Languages</h3>
-                    </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-php-plain text-3xl md:text-4xl text-indigo-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">PHP</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-python-plain text-3xl md:text-4xl text-yellow-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Python</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-javascript-plain text-3xl md:text-4xl text-yellow-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">JavaScript</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-cplusplus-plain text-3xl md:text-4xl text-primary-600"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">C++</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AI -->
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">🤖</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">AI & Tech</h3>
-                    </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🧩</span>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Prompt
-                                Eng.</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🚀</span>
-                            <span
-                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Few-shot</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🧠</span>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">NLP</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🛸</span>
-                            <span
-                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Antigravity</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Projects Section -->
     <section id="projects" class="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
@@ -844,6 +696,173 @@
         </div>
     </section>
 
+    <!-- Technical Skills Section (Moved Below Projects) -->
+    <section id="skills" class="max-w-6xl mx-auto px-6 py-8 md:py-20">
+        <div
+            class="bg-white/50 dark:bg-zinc-900/40 border border-gray-200 dark:border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 overflow-hidden relative shadow-xl dark:shadow-none backdrop-blur-sm">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-600/20 blur-[100px]"></div>
+
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-zinc-900 dark:text-white">Technical <span
+                            class="text-primary-600 dark:text-primary-500">Skills</span>
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base">Expertise in modern web
+                        technologies and AI.</p>
+                </div>
+                <div class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2">02 / SKILLS</div>
+            </div>
+
+            <!-- Mobile Swipe Indicator -->
+            <div class="md:hidden flex items-center gap-2 mb-4 text-gray-500 text-xs animate-pulse">
+                <span>Swipe to explore</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </div>
+
+            <div
+                class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 md:grid md:grid-cols-2 md:gap-6 no-scrollbar pb-6 md:pb-0">
+                <!-- Backend -->
+                <div
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
+                    <div class="flex items-center gap-3 mb-4 md:mb-6">
+                        <span class="text-2xl">⚙️</span>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Backend</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-3 md:gap-4">
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-laravel-original text-3xl md:text-4xl text-red-500"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Laravel</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-codeigniter-plain text-3xl md:text-4xl text-orange-500"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CodeIgniter</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-mysql-original text-3xl md:text-4xl text-primary-400"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">MySQL</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <!-- Generic API Icon -->
+                            <svg class="w-8 h-8 md:w-9 md:h-9 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">REST API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
+                    <div class="flex items-center gap-3 mb-4 md:mb-6">
+                        <span class="text-2xl">🎨</span>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Frontend</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-3 md:gap-4">
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-tailwindcss-original text-3xl md:text-4xl text-cyan-400"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Tailwind</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-bootstrap-plain text-3xl md:text-4xl text-purple-500"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Bootstrap</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-css3-plain text-3xl md:text-4xl text-primary-500"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CSS3</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <!-- Blade approximate icon (HTML5 or generic code) -->
+                            <svg class="w-8 h-8 md:w-9 md:h-9 text-red-500" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Blade</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Languages -->
+                <div
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
+                    <div class="flex items-center gap-3 mb-4 md:mb-6">
+                        <span class="text-2xl">💻</span>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Languages</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-3 md:gap-4">
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-php-plain text-3xl md:text-4xl text-indigo-400"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">PHP</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-python-plain text-3xl md:text-4xl text-yellow-500"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Python</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-javascript-plain text-3xl md:text-4xl text-yellow-400"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">JavaScript</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <i class="devicon-cplusplus-plain text-3xl md:text-4xl text-primary-600"></i>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">C++</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI -->
+                <div
+                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
+                    <div class="flex items-center gap-3 mb-4 md:mb-6">
+                        <span class="text-2xl">🤖</span>
+                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">AI & Tech</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-3 md:gap-4">
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <span class="text-2xl md:text-3xl">🧩</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Prompt
+                                Eng.</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <span class="text-2xl md:text-3xl">🚀</span>
+                            <span
+                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Few-shot</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <span class="text-2xl md:text-3xl">🧠</span>
+                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">NLP</span>
+                        </div>
+                        <div
+                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                            <span class="text-2xl md:text-3xl">🛸</span>
+                            <span
+                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Antigravity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Education Section -->
     <section class="max-w-6xl mx-auto px-6 py-12">
@@ -884,49 +903,47 @@
         </div>
     </section>
 
-    <!-- Experience Section -->
     <section class="max-w-6xl mx-auto px-6 py-12">
         <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Professional <span
                 class="text-primary-500">Experience</span></h2>
         <div class="space-y-6">
-            <!-- Asdos -->
             <!-- Asdos -->
             <div
                 class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
                     <div>
                         <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Asisten Dosen – Struktur Data</h3>
-                        <p class="text-primary-600 dark:text-primary-400 text-lg">Informatika Universitas Amikom
-                            Yogyakarta</p>
+                        <p class="text-primary-600 dark:text-primary-400 text-lg">Universitas Amikom Yogyakarta</p>
                     </div>
                     <span
-                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">September
-                        2024 –
-                        Sekarang</span>
+                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">September 2024 – Sekarang</span>
                 </div>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Membantu dosen dalam pengajaran dan asistensi praktikum pemrograman struktural. Membimbing mahasiswa
-                    dalam memahami konsep struktur data.
-                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
+                    <li>Mendukung proses pembelajaran mata kuliah Struktur Data dan pemrograman struktural.</li>
+                    <li>Membimbing mahasiswa dalam memahami konsep fundamental seperti array, linked list, stack, queue, tree, dan algoritma dasar.</li>
+                    <li>Memberikan asistensi praktikum serta membantu penyusunan dan evaluasi tugas pemrograman.</li>
+                    <li>Berperan sebagai fasilitator diskusi teknis untuk meningkatkan pemahaman konseptual dan problem-solving mahasiswa.</li>
+                </ul>
             </div>
 
-            <!-- Founder Jauki -->
+            <!-- Team Leader Jauki -->
             <div
                 class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
                     <div>
-                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Founder – Jauki Academy</h3>
+                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Tim Leader – Jauki Academy</h3>
                         <p class="text-purple-600 dark:text-purple-400 text-lg">Software House & Education</p>
                     </div>
                     <span
-                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">November
-                        2022 –
-                        Sekarang</span>
+                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">November 2022 – Sekarang</span>
                 </div>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                    Mengembangkan layanan jasa pembuatan website, prompting AI, dan portofolio digital. Memimpin tim
-                    kecil dan berperan langsung dalam desain, implementasi, dan strategi pemasaran.
-                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
+                    <li>Memimpin tim dalam pengembangan layanan pembuatan website, digital portfolio, dan AI prompting solutions.</li>
+                    <li>Terlibat langsung dalam perancangan arsitektur sistem, pengembangan backend & frontend, serta deployment.</li>
+                    <li>Menyusun strategi pemasaran digital dan branding untuk meningkatkan visibilitas serta akuisisi klien.</li>
+                    <li>Mengelola proyek end-to-end mulai dari requirement gathering, development, hingga maintenance.</li>
+                    <li>Berhasil membangun sistem kerja tim yang agile dan berorientasi pada hasil.</li>
+                </ul>
             </div>
 
             <!-- Waroeng Steak -->
@@ -934,20 +951,38 @@
                 class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
                     <div>
-                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Magang – Waroeng Steak Indonesia
-                        </h3>
-                        <p class="text-yellow-600 dark:text-yellow-500 text-lg">Asisten Programmer - Divisi Marketing
-                        </p>
+                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Magang – Asisten Programmer (Divisi Marketing)</h3>
+                        <p class="text-yellow-600 dark:text-yellow-500 text-lg">Waroeng Steak Indonesia</p>
                     </div>
                     <span
-                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">Agustus
-                        2024 –
-                        September 2024</span>
+                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">Agustus 2024 – September 2024</span>
                 </div>
                 <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
-                    <li>Berkontribusi dalam pengembangan sistem loyalitas pelanggan berbasis website.</li>
-                    <li>Mendalami framework Laravel dan PHP lanjutan.</li>
-                    <li>Terlibat langsung dalam pemecahan masalah teknis dan presentasi solusi kepada tim.</li>
+                    <li>Berkontribusi dalam pengembangan sistem loyalitas pelanggan berbasis website untuk meningkatkan retensi dan engagement.</li>
+                    <li>Mengimplementasikan fitur berbasis Laravel dan PHP lanjutan sesuai kebutuhan bisnis.</li>
+                    <li>Terlibat dalam troubleshooting teknis serta mempresentasikan solusi kepada tim marketing dan manajemen.</li>
+                    <li>Mengembangkan sistem loyalty yang dirancang untuk mendukung pertumbuhan bisnis dan peningkatan repeat order.</li>
+                </ul>
+            </div>
+
+            <!-- Freedomspace -->
+            <div
+                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
+                <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Team Leader & System Innovator – Freedomspace</h3>
+                        <p class="text-indigo-600 dark:text-indigo-400 text-lg">Live Chat System – Konser Skala Besar</p>
+                    </div>
+                    <!-- Date not provided in text, but context from Rev 4 implies recent/events -->
+                    <span
+                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">Mei 2025</span>
+                </div>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
+                    <li>Menginisiasi dan mengembangkan sistem live chat berbasis web dengan 10.000+ pengguna aktif dalam satu event.</li>
+                    <li>Sistem dirancang sebagai solusi interaktif untuk mengisi jeda pergantian musisi dalam konser.</li>
+                    <li>Diimplementasikan pada event Perantara Fest (11 Mei 2025) dan Lane of Koplo (24 Mei 2025).</li>
+                    <li>Memimpin operasional tim secara real-time di tengah keterbatasan jaringan dan tantangan teknis di lokasi acara.</li>
+                    <li>Bertanggung jawab penuh atas stabilitas sistem selama konser berlangsung, memastikan performa optimal di kondisi high traffic.</li>
                 </ul>
             </div>
         </div>
