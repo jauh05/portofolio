@@ -133,10 +133,14 @@
     </style>
 </head>
 
-<body x-data="{ 
+<body
+    x-data="{ 
         lang: 'id',
         darkMode: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : true,
         currentColor: localStorage.getItem('color') || '59, 130, 246',
+        showMoreProjects: false,
+        selectedProject: null,
+        selectedCert: null,
         t: {
             id: {
                 nav: { about: 'Tentang', projects: 'Projek', skills: 'Keahlian', contact: 'Kontak', talk: 'Bicara' },
@@ -210,6 +214,9 @@
                     open: 'BUKA PROJEK',
                     explore: 'EKSPLOR APLIKASI',
                     demo: 'LIVE DEMO',
+                    more: 'Lihat Selengkapnya',
+                    less: 'Tutup',
+                    details_label: { bg: 'Latar Belakang', problem: 'Masalah yang Diselesaikan', result: 'Apa yang Dihasilkan' },
                     journal: {
                         tag: 'JAIC PUBLICATION',
                         title: 'Recommendation System Research',
@@ -217,12 +224,77 @@
                         badge: 'SINTA 3',
                         accredited: 'Terakreditasi',
                         official: 'Official National Indexing',
-                        cta: 'View Official PDF'
+                        cta: 'View Official PDF',
+                        details: {
+                            bg: 'Riset ini dilatarbelakangi oleh melimpahnya data informasi pariwisata yang tidak terstruktur, sehingga menyulitkan wisatawan untuk menemukan destinasi yang relevan.',
+                            problem: 'Sistem rekomendasi konvensional seringkali kurang akurat dalam menangani teks deskripsi destinasi yang panjang dan beragam.',
+                            result: 'Algoritma yang dioptimasi dengan TF-IDF dan Cosine Similarity mampu memberikan rekomendasi dengan tingkat akurasi yang lebih tinggi dan waktu pemrosesan yang efisien.'
+                        }
                     },
-                    kpri: { tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalization of savings & loans and credit analysis using C4.5 Algorithm.' },
-                    jaugja: { tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Sistem cerdas rekomendasi wisata di Yogyakarta berbasis Machine Learning.' },
-                    kauiz: { tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automatisasi pembuatan kuis cerdas berbasis AI untuk pengajar modern.' },
-                    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Filtering kata kasar real-time berbasis pemrosesan bahasa alami.' }
+                    kpri: { 
+                        tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalisasi simpan pinjam & analisis kredit menggunakan C4.5 Algorithm.',
+                        details: {
+                            bg: 'Koperasi KPRI Bakti Mulia membutuhkan sistem digital untuk mengelola simpan pinjam anggota yang sebelumnya masih manual.',
+                            problem: 'Proses administrasi yang lambat dan kesulitan dalam menentukan kelayakan kredit anggota secara objektif.',
+                            result: 'Sistem admin fintech yang terintegrasi dengan algoritma C4.5 untuk memberikan rekomendasi keputusan kredit secara otomatis dan akurat.'
+                        }
+                    },
+                    jaugja: { 
+                        tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Sistem cerdas rekomendasi wisata di Yogyakarta berbasis Machine Learning.',
+                        details: {
+                            bg: 'Yogyakarta memiliki ribuan destinasi wisata, namun wisatawan seringkali bingung memilih tempat yang sesuai dengan minat mereka.',
+                            problem: 'Kurangnya platform yang memberikan rekomendasi personal berdasarkan preferensi pengguna secara real-time.',
+                            result: 'Aplikasi mobile dengan integrasi model Machine Learning yang memberikan saran destinasi kustom berdasarkan input preferensi pengguna.'
+                        }
+                    },
+                    kauiz: { 
+                        tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automatisasi pembuatan kuis cerdas berbasis AI untuk pengajar modern.',
+                        details: {
+                            bg: 'Pengajar menghabiskan waktu berjam-jam untuk membuat kuis evaluasi dari materi pembelajaran yang panjang.',
+                            problem: 'Proses pembuatan soal yang repetitive dan kurangnya variasi pertanyaan yang berkualitas tinggi secara cepat.',
+                            result: 'Platform SaaS berbasis AI yang mampu mengonversi dokumen atau teks menjadi kuis interaktif dalam hitungan detik.'
+                        }
+                    },
+                    livechat: { 
+                        tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Filtering kata kasar real-time berbasis pemrosesan bahasa alami.',
+                        details: {
+                            bg: 'Interaksi publik secara real-time seringkali terganggu oleh penggunaan kata-kata tidak pantas atau kasar.',
+                            problem: 'Sistem filter konvensional mudah dikelabui dan seringkali kurang responsif terhadap variasi kata kasar baru.',
+                            result: 'Mesin filtering NLP real-time yang mampu mendeteksi dan menyaring konten negatif dengan akurasi tinggi pada trafik besar.'
+                        }
+                    }
+                },
+                certs: {
+                    title: 'Sertifikasi',
+                    subtitle: '& Penghargaan',
+                    desc: 'Pengakuan formal atas keahlian dan pencapaian dalam bidang teknologi dan akademik.',
+                    view: 'Lihat Sertifikat',
+                    items: {
+                        asdos: {
+                            title: 'ASISTEN PRAKTIKUM',
+                            issuer: 'AMIKOM Creative Economy Park',
+                            no: 'NO. 0486',
+                            desc: 'Penghargaan sebagai ASISTEN PRAKTIKUM mata kuliah Struktur Data S1-Informatika TA. 2024/2025 dengan predikat BAIK.',
+                            date: '25-02-2026',
+                            image: 'Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf'
+                        },
+                        fis: {
+                            title: 'FISCREATION 2023',
+                            issuer: 'Universitas Negeri Yogyakarta',
+                            no: 'NO: 014/Pan-FISCREATION/BEM',
+                            desc: 'Peserta Futuristic Exploration Workshop yang diselenggarakan oleh BEM FISHIPOL UNY.',
+                            date: '18-11-2023',
+                            image: 'Jauhar Fauzi Ulul Albab (1).pdf'
+                        },
+                        karya: {
+                            title: 'Karya Tulis Islami',
+                            issuer: 'Kemenag Kota Yogyakarta',
+                            no: 'NO: 2670/Kk.12.05/6/BA.00/09/2025',
+                            desc: 'Juara III Lomba Karya Tulis Islami Putra Tingkat Kota Yogyakarta Tahun 2025.',
+                            date: '29-09-2025',
+                            image: 'JAUHAR FAUZI ULUL ALBAB.pdf'
+                        }
+                    }
                 },
                 skills: { 
                     title: 'Technical', subtitle: 'Skills', desc: 'Keahlian dalam teknologi web modern dan AI.', 
@@ -328,6 +400,9 @@
                     open: 'OPEN PROJECT',
                     explore: 'EXPLORE APP',
                     demo: 'LIVE DEMO',
+                    more: 'See More',
+                    less: 'Close',
+                    details_label: { bg: 'Background', problem: 'Problems Solved', result: 'What was Produced' },
                     journal: {
                         tag: 'JAIC PUBLICATION',
                         title: 'Recommendation System Research',
@@ -335,62 +410,134 @@
                         badge: 'SINTA 3',
                         accredited: 'Accredited',
                         official: 'Official National Indexing',
-                        cta: 'View Official PDF'
+                        cta: 'View Official PDF',
+                        details: {
+                            bg: 'This research was motivated by the abundance of unstructured tourism information data, making it difficult for tourists to find relevant destinations.',
+                            problem: 'Conventional recommendation systems are often less accurate in handling varied and long destination description texts.',
+                            result: 'Algorithms optimized with TF-IDF and Cosine Similarity are able to provide recommendations with a higher level of accuracy and efficient processing time.'
+                        }
                     },
-                    kpri: { tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalization of savings & loans and credit analysis using C4.5 Algorithm.' },
-                    jaugja: { tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Intelligent tourism recommendation system in Yogyakarta based on Machine Learning.' },
-                    kauiz: { tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automation of intelligent AI-based quiz creation for modern educators.' },
-                    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Real-time coarse word filtering based on natural language processing.' }
+                    kpri: { 
+                        tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalization of savings & loans and credit analysis using C4.5 Algorithm.',
+                        details: {
+                            bg: 'KPRI Bakti Mulia Cooperative needed a digital system to manage member savings and loans which were previously still manual.',
+                            problem: 'Slow administrative processes and difficulties in objectively determining member credit eligibility.',
+                            result: 'An integrated fintech admin system with the C4.5 algorithm to provide automated and accurate credit decision recommendations.'
+                        }
+                    },
+                    jaugja: { 
+                        tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Intelligent tourism recommendation system in Yogyakarta based on Machine Learning.',
+                        details: {
+                            bg: 'Yogyakarta has thousands of tourist destinations, but tourists are often confused about choosing places that suit their interests.',
+                            problem: 'Lack of platforms that provide personal recommendations based on user preferences in real-time.',
+                            result: 'A mobile application with integration of Machine Learning models that provides custom destination suggestions based on user preference input.'
+                        }
+                    },
+                    kauiz: { 
+                        tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automation of intelligent AI-based quiz creation for modern educators.',
+                        details: {
+                            bg: 'Educators spend hours creating evaluation quizzes from long learning materials.',
+                            problem: 'Repetitive question creation processes and a lack of high-quality question variations quickly.',
+                            result: 'An AI-based SaaS platform capable of converting documents or text into interactive quizzes in seconds.'
+                        }
+                    },
+                    livechat: { 
+                        tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Real-time coarse word filtering based on natural language processing.',
+                        details: {
+                            bg: 'Real-time public interactions are often disrupted by the use of inappropriate or coarse words.',
+                            problem: 'Conventional filter systems are easily tricked and often lack responsiveness to new variations of coarse words.',
+                            result: 'A real-time NLP filtering engine capable of detecting and filtering negative content with high accuracy on large traffic.'
+                        }
+                    }
                 },
-                skills: {
-                    title: 'Technical', subtitle: 'Skills', desc: 'Expertise in modern web technologies and AI.',
-                    swipe: 'Swipe to explore', categories: { backend: 'Backend', frontend: 'Frontend', mobile: 'Mobile', tools: 'Tools' }
+                certs: {
+                    title: 'Certifications',
+                    subtitle: '& Awards',
+                    desc: 'Formal recognition of expertise and achievements in technology and academics.',
+                    view: 'View Certificate',
+                    items: {
+                        asdos: {
+                            title: 'Teaching Assistant',
+                            issuer: 'Amikom Creative Economy Park',
+                            no: 'NO. 0486',
+                            desc: 'Recognition for the role as Teaching Assistant for the Data Structures course, S1-Informatics, AY 2024/2025 with a "GOOD" predicate.',
+                            date: '2026-02-25',
+                            image: 'Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf'
+                        },
+                        fis: { 
+                            title: 'FISCREATION 2023', 
+                            issuer: 'Yogyakarta State University', 
+                            no: 'NO: 014/Pan-FISCREATION/BEM',
+                            desc: 'Participant of the Futuristic Exploration Workshop organized by BEM FISHIPOL UNY.', 
+                            date: '2023-11-18',
+                            image: 'Jauhar Fauzi Ulul Albab (1).pdf' 
+                        }, 
+                        karya: { 
+                            title: 'Islamic Writing',
+                            issuer: 'Ministry of Religion Yogyakarta', 
+                            no: 'NO: 2670/Kk.12.05/6/BA.00/09/2025',
+                            desc: '3rd Winner of the Islamic Paper Competition for Boys at the Yogyakarta City Level, 2025.',
+                            date: '2025-09-29', 
+                            image: 'JAUHAR FAUZI ULUL ALBAB.pdf' 
+                        } 
+                    } 
+                }, 
+                skills: { 
+                    title: 'Technical', 
+                    subtitle: 'Skills',
+                    desc: 'Expertise in modern web technologies and AI.', 
+                    swipe: 'Swipe to explore', 
+                    categories: { backend: 'Backend', frontend: 'Frontend', mobile: 'Mobile', tools: 'Tools' } 
+                }, 
+                education: { 
+                    title: 'Education',
+                    subtitle: '& Training', 
+                    amikom: { name: 'Amikom University Yogyakarta', major: 'Information Systems', info: 'Class of 2023 • GPA: 3.91', date: 'August 2023 - Present' }, 
+                    trainit: { name: 'TrainIT Jogja', major: 'Fullstack Developer', info: 'Laravel & Machine Learning (K-Means)', date: 'February 2025 - Present' } 
                 },
-                education: {
-                    title: 'Education', subtitle: '& Training',
-                    amikom: { name: 'Amikom University Yogyakarta', major: 'Information Systems', info: 'Class of 2023 • GPA: 3.91', date: 'August 2023 - Present' },
-                    trainit: { name: 'TrainIT Jogja', major: 'Fullstack Developer', info: 'Laravel & Machine Learning (K-Means)', date: 'February 2025 - Present' }
-                },
-                soft: {
-                    title: 'Additional', subtitle: 'Information', swipe: 'Swipe for more',
-                    team: { title: 'Solid Teamwork', desc: 'Used to working in cross-functional teams and effective communication.' },
-                    time: { title: 'Time Discipline', desc: 'Completing tasks according to targets with good time management.' },
-                    comm: { title: 'Communicative', desc: 'Conveying ideas and presentations clearly and confidently.' }
-                },
-                footer: {
+                soft: { 
+                    title: 'Additional', 
+                    subtitle: 'Information', 
+                    swipe: 'Swipe for more', 
+                    team: { title: 'Solid Teamwork', desc: 'Used to working in cross-functional teams and effective communication.' }, 
+                    time: { title: 'Time Discipline', desc: 'Completing tasks according to targets with good time management.' }, 
+                    comm: { title: 'Communicative', desc: 'Conveying ideas and presentations clearly and confidently.' } 
+                }, 
+                footer: { 
                     tag: 'Get In Touch',
-                    title: 'Let\'s build',
+                    title: 'Let\'s build', 
                     subtitle: 'something extraordinary',
-                    quote: 'Keep learning, adapting, and growing with technology.',
+                    quote: 'Keep learning, adapting, and growing with technology.', 
                     email_label: 'Email Me',
-                    status_label: 'Current Status',
-                    available: 'Available for Work',
+                    status_label: 'Current Status', 
+                    available: 'Available for Work', 
                     loc_label: 'Base Location',
-                    location: 'Yogyakarta, Indonesia',
-                    remote: 'Remote / On-site capable',
+                    location: 'Yogyakarta, Indonesia', 
+                    remote: 'Remote / On-site capable', 
                     open_label: 'Open For',
-                    freelance: 'Freelance',
-                    collab: 'Collaboration',
-                    cta: 'Start a Conversation'
-                }
-            }
-        },
-        initTheme() {
-            if (this.darkMode) document.documentElement.classList.add('dark');
-            else document.documentElement.classList.remove('dark');
-            document.documentElement.style.setProperty('--primary-rgb', this.currentColor);
-        },
-        toggleTheme() {
-            this.darkMode = !this.darkMode;
-            localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
-            this.initTheme();
-        },
-        setThemeColor(rgb) {
-            this.currentColor = rgb;
-            localStorage.setItem('color', rgb);
-            this.initTheme();
-        }
-    }" x-init="initTheme()" :class="darkMode ? 'bg-[#050505] text-white' : 'bg-slate-50 text-zinc-900'"
+                    freelance: 'Freelance', 
+                    collab: 'Collaboration', 
+                    cta: 'Start a Conversation' 
+                } 
+            } 
+        }, 
+        initTheme() { 
+            if (this.darkMode) document.documentElement.classList.add('dark'); 
+            else document.documentElement.classList.remove('dark'); 
+            document.documentElement.style.setProperty('--primary-rgb', this.currentColor); 
+        }, 
+        toggleTheme() { 
+            this.darkMode = !this.darkMode; 
+            localStorage.setItem('theme', this.darkMode ? 'dark' : 'light'); 
+            this.initTheme(); 
+        }, 
+        setThemeColor(rgb) { 
+            this.currentColor = rgb; 
+            localStorage.setItem('color', rgb); 
+            this.initTheme(); 
+        } 
+    }" x-init="initTheme()"
+    :class="darkMode ? 'bg-[#050505] text-white' : 'bg-slate-50 text-zinc-900'"
     class="bg-mesh-theme antialiased transition-colors duration-300">
 
     <!-- Dynamic Navbar Wrapper -->
@@ -462,6 +609,12 @@
                         x-text="t[lang].nav.skills">
                     </a>
 
+                    <a href="#certs" @click="expanded = false"
+                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
+                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
+                        x-text="t[lang].nav.certs">
+                    </a>
+
                     <div class="w-12 h-1 mx-auto my-4 rounded-full" :class="darkMode ? 'bg-white/10' : 'bg-black/10'">
                     </div>
 
@@ -522,6 +675,10 @@
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
                             class="px-5 py-2 text-sm rounded-full transition-all font-bold"
                             x-text="t[lang].nav.skills"></a>
+                        <a href="#certs"
+                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
+                            class="px-5 py-2 text-sm rounded-full transition-all font-bold"
+                            x-text="t[lang].nav.certs"></a>
 
                         <!-- Mini Lang Toggle -->
                         <div
@@ -936,14 +1093,25 @@
                             </div>
                         </div>
 
-                        <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank"
-                            class="flex items-center justify-center gap-4 px-10 py-6 bg-primary-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
-                            <span x-text="t[lang].projects.journal.cta"></span>
-                            <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                        </a>
+                        <div class="flex items-center justify-between gap-4">
+                            <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
+                                target="_blank"
+                                class="flex-1 flex items-center justify-center gap-4 px-10 py-6 bg-primary-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
+                                <span x-text="t[lang].projects.journal.cta"></span>
+                                <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                            <button @click="selectedProject = 'journal'; showMoreProjects = true"
+                                class="w-16 h-16 flex items-center justify-center bg-zinc-900 border border-white/10 rounded-[2rem] text-primary-500 hover:bg-primary-500 hover:text-white transition-all">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -982,11 +1150,17 @@
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Decision
                             Support System</span>
                     </div>
-                    <a href="http://kpribaktimulia.or.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-green-500 dark:hover:text-green-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-green-500 pb-1">
-                        <span x-text="t[lang].projects.visit"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center justify-between gap-4">
+                        <a href="http://kpribaktimulia.or.id/" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-green-500 dark:hover:text-green-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-green-500 pb-1">
+                            <span x-text="t[lang].projects.visit"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                        <button @click="selectedProject = 'kpri'; showMoreProjects = true"
+                            class="text-[10px] font-black text-primary-500 uppercase tracking-widest hover:opacity-70 transition-all">
+                            <span x-text="t[lang].projects.more"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1022,11 +1196,17 @@
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Streamlit</span>
                     </div>
-                    <a href="http://jaugjakita.jauharfauzi.my.id" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-indigo-500 dark:hover:text-indigo-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-indigo-500 pb-1">
-                        <span x-text="t[lang].projects.open"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center justify-between gap-4">
+                        <a href="http://jaugjakita.jauharfauzi.my.id" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-indigo-500 dark:hover:text-indigo-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-indigo-500 pb-1">
+                            <span x-text="t[lang].projects.open"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                        <button @click="selectedProject = 'jaugja'; showMoreProjects = true"
+                            class="text-[10px] font-black text-primary-500 uppercase tracking-widest hover:opacity-70 transition-all">
+                            <span x-text="t[lang].projects.more"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1063,11 +1243,17 @@
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">OpenAI
                             API</span>
                     </div>
-                    <a href="http://kauiz.jauharfauzi.my.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-emerald-500 dark:hover:text-emerald-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-emerald-500 pb-1">
-                        <span x-text="t[lang].projects.explore"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center justify-between gap-4">
+                        <a href="http://kauiz.jauharfauzi.my.id/" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-emerald-500 dark:hover:text-emerald-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-emerald-500 pb-1">
+                            <span x-text="t[lang].projects.explore"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                        <button @click="selectedProject = 'kauiz'; showMoreProjects = true"
+                            class="text-[10px] font-black text-primary-500 uppercase tracking-widest hover:opacity-70 transition-all">
+                            <span x-text="t[lang].projects.more"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1103,14 +1289,247 @@
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">NLP.js</span>
                     </div>
-                    <a href="https://livechat.jauharfauzi.my.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-purple-500 dark:hover:text-purple-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-purple-500 pb-1">
-                        <span x-text="t[lang].projects.demo"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center justify-between gap-4">
+                        <a href="https://livechat.jauharfauzi.my.id/" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-purple-500 dark:hover:text-purple-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-purple-500 pb-1">
+                            <span x-text="t[lang].projects.demo"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                        <button @click="selectedProject = 'livechat'; showMoreProjects = true"
+                            class="text-[10px] font-black text-primary-500 uppercase tracking-widest hover:opacity-70 transition-all">
+                            <span x-text="t[lang].projects.more"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Project Detail Modal -->
+        <template x-if="showMoreProjects">
+            <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+                <div @click="showMoreProjects = false"
+                    class="absolute inset-0 bg-black/80 backdrop-blur-xl transition-opacity"></div>
+                <div
+                    class="bg-white dark:bg-zinc-950 w-full max-w-4xl max-h-[90vh] rounded-[2.5rem] overflow-hidden relative shadow-2xl border border-white/10 flex flex-col animate-[message-in_0.5s_ease-out]">
+                    <!-- Modal Header -->
+                    <div
+                        class="p-6 md:p-10 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-zinc-50/50 dark:bg-zinc-900/50">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-primary-500/10 rounded-2xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-primary-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-black dark:text-white"
+                                    x-text="t[lang].projects[selectedProject].title"></h4>
+                                <p class="text-xs font-bold text-primary-500 uppercase tracking-widest"
+                                    x-text="t[lang].projects[selectedProject].tag"></p>
+                            </div>
+                        </div>
+                        <button @click="showMoreProjects = false"
+                            class="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all group">
+                            <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Content -->
+                    <div class="flex-1 overflow-y-auto p-6 md:p-10 space-y-10 custom-scrollbar">
+                        <div class="grid md:grid-cols-2 gap-10">
+                            <!-- Left Column: Details -->
+                            <div class="space-y-8">
+                                <div class="group">
+                                    <h5
+                                        class="flex items-center gap-2 text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.3em] mb-4 group-hover:text-primary-500 transition-colors">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                                        <span x-text="t[lang].projects.details_label.bg"></span>
+                                    </h5>
+                                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed font-medium"
+                                        x-text="t[lang].projects[selectedProject].details.bg"></p>
+                                </div>
+                                <div class="group">
+                                    <h5
+                                        class="flex items-center gap-2 text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.3em] mb-4 group-hover:text-primary-500 transition-colors">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                                        <span x-text="t[lang].projects.details_label.problem"></span>
+                                    </h5>
+                                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed font-medium"
+                                        x-text="t[lang].projects[selectedProject].details.problem"></p>
+                                </div>
+                                <div class="group">
+                                    <h5
+                                        class="flex items-center gap-2 text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.3em] mb-4 group-hover:text-primary-500 transition-colors">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                                        <span x-text="t[lang].projects.details_label.result"></span>
+                                    </h5>
+                                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed font-medium font-bold"
+                                        x-text="t[lang].projects[selectedProject].details.result"></p>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Visual Info -->
+                            <div class="space-y-6">
+                                <div
+                                    class="rounded-3xl overflow-hidden bg-zinc-900 border border-white/10 aspect-video relative group/img">
+                                    <img :src="'/projects/' + selectedProject + '.png'"
+                                        class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                </div>
+                                <div
+                                    class="p-6 bg-zinc-50 dark:bg-white/5 rounded-3xl border border-gray-100 dark:border-white/5">
+                                    <h6 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">
+                                        Quick Insights</h6>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span
+                                            class="px-3 py-1 bg-white dark:bg-white/10 text-[10px] font-bold dark:text-white rounded-lg border border-gray-100 dark:border-white/10">Architecture:
+                                            Monolith/Micro</span>
+                                        <span
+                                            class="px-3 py-1 bg-white dark:bg-white/10 text-[10px] font-bold dark:text-white rounded-lg border border-gray-100 dark:border-white/10">Platform:
+                                            Web App</span>
+                                        <span
+                                            class="px-3 py-1 bg-white dark:bg-white/10 text-[10px] font-bold dark:text-white rounded-lg border border-gray-100 dark:border-white/10">Stack:
+                                            Fullstack</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div
+                        class="p-6 md:p-10 border-t border-gray-100 dark:border-white/5 flex gap-4 bg-zinc-50/50 dark:bg-zinc-900/50">
+                        <button @click="showMoreProjects = false"
+                            class="flex-1 px-8 py-4 bg-gray-100 dark:bg-white/5 dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-white/10 transition-all">
+                            <span x-text="t[lang].projects.less"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- Certifications Section -->
+    <section id="certs" class="max-w-6xl mx-auto px-6 py-16 md:py-24 relative overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full -z-10"></div>
+        
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 px-4">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4">
+                    CERTIFICATES & AWARDS
+                </div>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tight">
+                    <span class="text-zinc-900 dark:text-white" x-text="t[lang].certs.title"></span>
+                    <span class="text-primary-500" x-text="t[lang].certs.subtitle"></span>
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400 text-lg md:text-xl leading-relaxed font-medium" x-text="t[lang].certs.desc"></p>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 px-4">
+            <template x-for="(cert, key) in t[lang].certs.items" :key="key">
+                <div class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] p-8 transition-all duration-500 hover:border-primary-500/50 hover:shadow-2xl hover:shadow-primary-500/10">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary-600/5 blur-[60px] -z-0"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-primary-500/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <span class="text-2xl">📜</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-black text-zinc-900 dark:text-white mb-3 group-hover:text-primary-500 transition-colors" x-text="cert.title"></h3>
+                        <div class="flex flex-col gap-1 mb-6">
+                            <span class="text-primary-500 font-black text-[10px] uppercase tracking-widest" x-text="cert.issuer"></span>
+                            <span class="text-gray-400 dark:text-gray-500 font-mono text-[10px]" x-text="cert.no"></span>
+                        </div>
+                        
+                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8 line-clamp-3 font-medium" x-text="cert.desc"></p>
+                        
+                        <div class="flex items-center justify-between pt-6 border-t border-gray-100 dark:border-white/5">
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest" x-text="cert.date"></span>
+                            <button @click="selectedCert = key; $nextTick(() => { document.body.style.overflow = 'hidden' })" 
+                                class="p-4 bg-primary-500 text-white rounded-2xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/30 group-hover:scale-110">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Certificate Viewer Modal -->
+        <template x-if="selectedCert">
+            <div class="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-8">
+                <div @click="selectedCert = null; document.body.style.overflow = 'auto'" class="absolute inset-0 bg-black/90 backdrop-blur-2xl transition-opacity"></div>
+                
+                <div class="bg-white dark:bg-zinc-950 w-full max-w-5xl max-h-[95vh] rounded-[3rem] overflow-hidden relative shadow-2xl border border-white/10 flex flex-col animate-[message-in_0.5s_ease-out]">
+                    <!-- Modal Header -->
+                    <div class="p-6 md:p-10 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-zinc-50/50 dark:bg-zinc-900/50">
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 h-16 bg-primary-500/10 rounded-2xl flex items-center justify-center">
+                                <span class="text-3xl">🏆</span>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black dark:text-white leading-none mb-1" x-text="t[lang].certs.items[selectedCert].title"></h4>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em]" x-text="t[lang].certs.items[selectedCert].issuer"></span>
+                                    <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                                    <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest" x-text="t[lang].certs.items[selectedCert].no"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <button @click="selectedCert = null; document.body.style.overflow = 'auto'" 
+                            class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all group shadow-sm">
+                            <svg class="w-6 h-6 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Content (PDF/Image Viewer) -->
+                    <div class="flex-1 bg-zinc-100 dark:bg-black p-4 md:p-10 flex items-center justify-center overflow-auto custom-scrollbar">
+                        <div class="relative w-full h-full flex items-center justify-center min-h-[400px]">
+                            <!-- PDF iframe for certificates -->
+                            <iframe 
+                                :src="'/serti/' + t[lang].certs.items[selectedCert].image" 
+                                class="w-full h-full min-h-[70vh] rounded-xl shadow-2xl bg-white border-none"
+                                title="Certificate View">
+                            </iframe>
+                            
+                            <!-- Fallback or decoration -->
+                            <div class="absolute inset-0 pointer-events-none border-[20px] border-transparent shadow-[inset_0_0_100px_rgba(0,0,0,0.2)] rounded-xl"></div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="p-6 md:p-8 bg-white dark:bg-zinc-900 border-t border-gray-100 dark:border-white/5 flex flex-col md:flex-row gap-6 md:items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <span class="text-xs font-black dark:text-gray-400 uppercase tracking-widest">Verified Accreditation</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a :href="'/serti/' + t[lang].certs.items[selectedCert].image" target="_blank"
+                                class="px-8 py-4 bg-primary-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20 flex items-center gap-3">
+                                <span x-text="t[lang].certs.view"></span>
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
     </section>
 
     <!-- Technical Skills Section (Moved Below Projects) -->
