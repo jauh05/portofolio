@@ -136,22 +136,270 @@
 <body x-data="{ 
         darkMode: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : true,
         currentColor: localStorage.getItem('color') || '59, 130, 246',
-        lang: 'id',
-        initTheme() {
-            if (this.darkMode) document.documentElement.classList.add('dark');
-            else document.documentElement.classList.remove('dark');
-            document.documentElement.style.setProperty('--primary-rgb', this.currentColor);
-        },
-        toggleTheme() {
-            this.darkMode = !this.darkMode;
-            localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
-            this.initTheme();
-        },
-        setThemeColor(rgb) {
-            this.currentColor = rgb;
-            localStorage.setItem('color', rgb);
-            this.initTheme();
-        }
+        t: {
+            id: {
+                nav: { about: 'Tentang', projects: 'Projek', skills: 'Keahlian', contact: 'Kontak', talk: 'Bicara' },
+                hero: {
+                    title: 'JAUHAR FAUZI',
+                    subtitle: 'ULUL ALBAB',
+                    tagline: 'Digital Solutions Engineer & Tech Problem Solver',
+                    desc: 'Seorang profesional teknologi yang berfokus pada pengembangan solusi digital yang inovatif, efisien, dan berdampak. Memiliki ketertarikan besar pada pemanfaatan teknologi modern, AI, serta rekayasa perangkat lunak untuk menyelesaikan masalah nyata.',
+                    cta_projects: 'Lihat Projek Saya',
+                    cta_contact: 'Hubungi Saya',
+                    years_exp: '4+ Tahun Pengalaman'
+                },
+                stats: { completed: 'Projek Selesai', stack: 'Tech Stack', exp: 'Tahun Exp', commit: 'Komitmen' },
+                experience: {
+                    title: 'Professional',
+                    subtitle: 'Experience',
+                    asdos: {
+                        role: 'Asisten Dosen – Struktur Data',
+                        company: 'Universitas Amikom Yogyakarta',
+                        date: 'September 2024 – Sekarang',
+                        points: [
+                            'Mendukung proses pembelajaran mata kuliah Struktur Data dan pemrograman struktural.',
+                            'Membimbing mahasiswa dalam memahami konsep fundamental seperti array, linked list, stack, queue, tree, dan algoritma dasar.',
+                            'Memberikan asistensi praktikum serta membantu penyusunan dan evaluasi tugas pemrograman.',
+                            'Berperan sebagai fasilitator diskusi teknis untuk meningkatkan pemahaman konseptual dan problem-solving mahasiswa.'
+                        ]
+                    },
+                    jauki: {
+                        role: 'Tim Leader – Jauki Academy',
+                        company: 'Software House & Education',
+                        date: 'November 2022 – Sekarang',
+                        points: [
+                            'Memimpin tim dalam pengembangan layanan pembuatan website, digital portfolio, dan AI prompting solutions.',
+                            'Terlibat langsung dalam perancangan arsitektur sistem, pengembangan backend & frontend, serta deployment.',
+                            'Menyusun strategi pemasaran digital dan branding untuk meningkatkan visibilitas serta akuisisi klien.',
+                            'Mengelola proyek end-to-end mulai dari requirement gathering, development, hingga maintenance.',
+                            'Berhasil membangun sistem kerja tim yang agile dan berorientasi pada hasil.'
+                        ]
+                    },
+                    magang: {
+                        role: 'Magang – Asisten Programmer',
+                        company: 'Waroeng Steak Indonesia',
+                        date: 'Agustus 2024 – September 2024',
+                        points: [
+                            'Berkontribusi dalam pengembangan sistem loyalitas pelanggan berbasis website.',
+                            'Mengimplementasikan fitur berbasis Laravel dan PHP lanjutan sesuai kebutuhan bisnis.',
+                            'Terlibat dalam troubleshooting teknis serta mempresentasikan solusi kepada tim marketing.',
+                            'Mengembangkan sistem loyalty yang dirancang untuk mendukung pertumbuhan bisnis.'
+                        ]
+                    },
+                    freedom: {
+                        role: 'Team Leader & System Innovator',
+                        company: 'Freedomspace – Live Chat System',
+                        date: 'Mei 2025',
+                        points: [
+                            'Menginisiasi sistem live chat berbasis web dengan 10.000+ pengguna aktif.',
+                            'Solusi interaktif untuk mengisi jeda pergantian musisi dalam konser.',
+                            'Diimplementasikan pada Perantara Fest dan Lane of Koplo.',
+                            'Memimpin operasional tim secara real-time di lokasi acara.',
+                            'Bertanggung jawab atas stabilitas sistem selama kondisi high traffic.'
+                        ]
+                    }
+                },
+                projects: {
+                    tag: 'Work & Research',
+                    title: 'Featured',
+                    subtitle: 'Projects',
+                    desc: 'Kumpulan solusi digital dan publikasi ilmiah yang berfokus pada inovasi teknologi.',
+                    swipe: 'Geser Layar',
+                    visit: 'KUNJUNGI WEB',
+                    open: 'BUKA PROJEK',
+                    explore: 'EKSPLOR APLIKASI',
+                    demo: 'LIVE DEMO',
+                    journal: {
+                        tag: 'JAIC PUBLICATION',
+                        title: 'Recommendation System Research',
+                        desc: 'Publikasi ilmiah resmi pada Journal of Applied Informatics and Computing (JAIC). Membahas optimasi TF-IDF & Cosine Similarity untuk pariwisata.',
+                        badge: 'SINTA 3',
+                        accredited: 'Terakreditasi',
+                        official: 'Official National Indexing',
+                        cta: 'View Official PDF'
+                    },
+                    kpri: { tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalisasi simpan pinjam & analisis kredit menggunakan C4.5 Algorithm.' },
+                    jaugja: { tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Sistem cerdas rekomendasi wisata di Yogyakarta berbasis Machine Learning.' },
+                    kauiz: { tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automatisasi pembuatan kuis cerdas berbasis AI untuk pengajar modern.' },
+                    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Filtering kata kasar real-time berbasis pemrosesan bahasa alami.' }
+                },
+                skills: { 
+                    title: 'Technical', subtitle: 'Skills', desc: 'Keahlian dalam teknologi web modern dan AI.', 
+                    swipe: 'Geser untuk eksplorasi', categories: { backend: 'Backend', frontend: 'Frontend', mobile: 'Mobile', tools: 'Tools' }
+                },
+                education: {
+                    title: 'Education', subtitle: '& Training',
+                    amikom: { name: 'Universitas Amikom Yogyakarta', major: 'Sistem Informasi', info: 'Angkatan 2023 • IPK: 3.91', date: 'Agustus 2023 - Sekarang' },
+                    trainit: { name: 'TrainIT Jogja', major: 'Fullstack Developer', info: 'Laravel & Machine Learning (K-Means)', date: 'Febuari 2025 - Sekarang' }
+                },
+                soft: {
+                    title: 'Informasi', subtitle: 'Tambahan', swipe: 'Geser untuk lainnya',
+                    team: { title: 'Kerja Tim Solid', desc: 'Terbiasa bekerja dalam tim lintas bidang dan komunikasi efektif.' },
+                    time: { title: 'Disiplin Waktu', desc: 'Menyelesaikan tugas sesuai target dengan manajemen waktu baik.' },
+                    comm: { title: 'Komunikatif', desc: 'Menyampaikan ide dan presentasi dengan jelas dan percaya diri.' }
+                },
+                footer: {
+                    tag: 'Get In Touch',
+                    title: 'Ayo bangun',
+                    subtitle: 'sesuatu yang luar biasa',
+                    quote: '"Terus belajar, beradaptasi, dan tumbuh bersama teknologi."',
+                    email_label: 'Email Saya',
+                    status_label: 'Status Saat Ini',
+                    available: 'Tersedia untuk Pekerjaan',
+                    loc_label: 'Lokasi Utama',
+                    location: 'Yogyakarta, Indonesia',
+                    remote: 'Remote / On-site capable',
+                    open_label: 'Terbuka Untuk',
+                    freelance: 'Freelance',
+                    collab: 'Kolaborasi',
+                    cta: 'Mulai Percakapan'
+                }
+    },
+    en: {
+    nav: { about: 'About', projects: 'Projects', skills: 'Skills', contact: 'Contact', talk: 'Let\'s Talk' },
+    hero: {
+    title: 'JAUHAR FAUZI',
+    subtitle: 'ULUL ALBAB',
+    tagline: 'Digital Solutions Engineer & Tech Problem Solver',
+    desc: 'A technology professional focused on developing innovative, efficient, and impactful digital solutions.
+    Passionate about modern technology, AI, and software engineering to solve real-world problems.',
+    cta_projects: 'View My Projects',
+    cta_contact: 'Contact Me',
+    years_exp: '4+ Years Experience'
+    },
+    stats: { completed: 'Projects Completed', stack: 'Tech Stack', exp: 'Years Exp', commit: 'Commitment' },
+    experience: {
+    title: 'Professional',
+    subtitle: 'Experience',
+    asdos: {
+    role: 'Teaching Assistant – Data Structures',
+    company: 'Amikom University Yogyakarta',
+    date: 'September 2024 – Present',
+    points: [
+    'Supported the learning process for Data Structures and structural programming courses.',
+    'Guided students in understanding fundamental concepts like arrays, linked lists, stacks, queues, trees, and basic
+    algorithms.',
+    'Provided lab assistance and helped in drafting and evaluating programming assignments.',
+    'Acted as a technical discussion facilitator to improve students\' conceptual understanding and problem-solving
+    skills.'
+    ]
+    },
+    jauki: {
+    role: 'Team Leader – Jauki Academy',
+    company: 'Software House & Education',
+    date: 'November 2022 – Present',
+    points: [
+    'Led the team in developing website creation services, digital portfolios, and AI prompting solutions.',
+    'Directly involved in system architecture design, backend & frontend development, and deployment.',
+    'Developed digital marketing and branding strategies to increase visibility and client acquisition.',
+    'Managed projects end-to-end from requirement gathering, development, to maintenance.',
+    'Successfully built an agile and result-oriented team work system.'
+    ]
+    },
+    magang: {
+    role: 'Intern – Assistant Programmer',
+    company: 'Waroeng Steak Indonesia',
+    date: 'August 2024 – September 2024',
+    points: [
+    'Contributed to the development of a website-based customer loyalty system.',
+    'Implemented Laravel and advanced PHP features according to business needs.',
+    'Involved in technical troubleshooting and presented solutions to the marketing team.',
+    'Developed a loyalty system designed to support business growth.'
+    ]
+    },
+    freedom: {
+    role: 'Team Leader & System Innovator',
+    company: 'Freedomspace – Live Chat System',
+    date: 'May 2025',
+    points: [
+    'Initiated and developed a web-based live chat system with 10,000+ active users.',
+    'Interactive solution to fill the musician changeover gap in concerts.',
+    'Implemented at Perantara Fest and Lane of Koplo events.',
+    'Led the team operationally in real-time at the event location.',
+    'Fully responsible for system stability during high traffic conditions.'
+    ]
+    }
+    },
+    projects: {
+    tag: 'Work & Research',
+    title: 'Featured',
+    subtitle: 'Projects',
+    desc: 'A collection of digital solutions and scientific publications focused on technological innovation.',
+    swipe: 'Swipe Screen',
+    visit: 'VISIT WEBSITE',
+    open: 'OPEN PROJECT',
+    explore: 'EXPLORE APP',
+    demo: 'LIVE DEMO',
+    journal: {
+    tag: 'JAIC PUBLICATION',
+    title: 'Recommendation System Research',
+    desc: 'Official scientific publication in the Journal of Applied Informatics and Computing (JAIC). Discusses TF-IDF
+    & Cosine Similarity optimization for tourism.',
+    badge: 'SINTA 3',
+    accredited: 'Accredited',
+    official: 'Official National Indexing',
+    cta: 'View Official PDF'
+    },
+    kpri: { tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalization of savings & loans and credit
+    analysis using C4.5 Algorithm.' },
+    jaugja: { tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Intelligent tourism recommendation system in
+    Yogyakarta based on Machine Learning.' },
+    kauiz: { tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automation of intelligent AI-based quiz creation
+    for modern educators.' },
+    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Real-time coarse word filtering based on
+    natural language processing.' }
+    },
+    skills: {
+    title: 'Technical', subtitle: 'Skills', desc: 'Expertise in modern web technologies and AI.',
+    swipe: 'Swipe to explore', categories: { backend: 'Backend', frontend: 'Frontend', mobile: 'Mobile', tools: 'Tools'
+    }
+    },
+    education: {
+    title: 'Education', subtitle: '& Training',
+    amikom: { name: 'Amikom University Yogyakarta', major: 'Information Systems', info: 'Class of 2023 • GPA: 3.91',
+    date: 'August 2023 - Present' },
+    trainit: { name: 'TrainIT Jogja', major: 'Fullstack Developer', info: 'Laravel & Machine Learning (K-Means)', date:
+    'February 2025 - Present' }
+    },
+    soft: {
+    title: 'Additional', subtitle: 'Information', swipe: 'Swipe for more',
+    team: { title: 'Solid Teamwork', desc: 'Used to working in cross-functional teams and effective communication.' },
+    time: { title: 'Time Discipline', desc: 'Completing tasks according to targets with good time management.' },
+    comm: { title: 'Communicative', desc: 'Conveying ideas and presentations clearly and confidently.' }
+    },
+                    footer: {
+                        tag: 'Get In Touch',
+                        title: "Let's build",
+                        subtitle: 'something extraordinary',
+                        quote: '"Keep learning, adapting, and growing with technology."',
+                        email_label: 'Email Me',
+                        status_label: 'Current Status',
+                        available: 'Available for Work',
+                        loc_label: 'Base Location',
+                        location: 'Yogyakarta, Indonesia',
+                        remote: 'Remote / On-site capable',
+                        open_label: 'Open For',
+                        freelance: 'Freelance',
+                        collab: 'Collaboration',
+                        cta: 'Start a Conversation'
+                    }
+    }
+    },
+    initTheme() {
+    if (this.darkMode) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    document.documentElement.style.setProperty('--primary-rgb', this.currentColor);
+    },
+    toggleTheme() {
+    this.darkMode = !this.darkMode;
+    localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+    this.initTheme();
+    },
+    setThemeColor(rgb) {
+    this.currentColor = rgb;
+    localStorage.setItem('color', rgb);
+    this.initTheme();
+    }
     }" x-init="initTheme()" :class="darkMode ? 'bg-[#050505] text-white' : 'bg-slate-50 text-zinc-900'"
     class="bg-mesh-theme antialiased transition-colors duration-300">
 
@@ -210,18 +458,18 @@
 
                     <a href="#about" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
-                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'">
-                        About
+                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
+                        x-text="t[lang].nav.about">
                     </a>
                     <a href="#projects" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
-                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'">
-                        Projects
+                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
+                        x-text="t[lang].nav.projects">
                     </a>
                     <a href="#skills" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
-                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'">
-                        Skills
+                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
+                        x-text="t[lang].nav.skills">
                     </a>
 
                     <div class="w-12 h-1 mx-auto my-4 rounded-full" :class="darkMode ? 'bg-white/10' : 'bg-black/10'">
@@ -229,9 +477,19 @@
 
                     <a href="#contact" @click="expanded = false"
                         class="px-8 py-4 rounded-full font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                        :class="darkMode ? 'bg-white text-black hover:bg-blue-50' : 'bg-zinc-900 text-white hover:bg-zinc-800'">
-                        Let's Talk
+                        :class="darkMode ? 'bg-white text-black hover:bg-blue-50' : 'bg-zinc-900 text-white hover:bg-zinc-800'"
+                        x-text="t[lang].nav.talk">
                     </a>
+                    <!-- Lang Toggle Mobile -->
+                    <div class="flex items-center gap-4 mt-4 mx-auto">
+                        <button @click="lang = 'id'"
+                            :class="lang === 'id' ? 'text-primary-500 font-bold scale-110' : 'text-gray-500'"
+                            class="text-sm transition-all">INDONESIA</button>
+                        <div class="w-1 h-1 rounded-full bg-gray-500"></div>
+                        <button @click="lang = 'en'"
+                            :class="lang === 'en' ? 'text-primary-500 font-bold scale-110' : 'text-gray-500'"
+                            class="text-sm transition-all">ENGLISH</button>
+                    </div>
                 </nav>
 
                 <!-- Socials/Extra (Bottom) -->
@@ -264,15 +522,31 @@
                     <div class="flex items-center gap-1">
                         <a href="#about"
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
-                            class="px-5 py-2 text-sm rounded-full transition-all">About</a>
+                            class="px-5 py-2 text-sm rounded-full transition-allfont-bold"
+                            x-text="t[lang].nav.about"></a>
                         <a href="#projects"
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
-                            class="px-5 py-2 text-sm rounded-full transition-all">Projects</a>
+                            class="px-5 py-2 text-sm rounded-full transition-all font-bold"
+                            x-text="t[lang].nav.projects"></a>
                         <a href="#skills"
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
-                            class="px-5 py-2 text-sm rounded-full transition-all">Skills</a>
+                            class="px-5 py-2 text-sm rounded-full transition-all font-bold"
+                            x-text="t[lang].nav.skills"></a>
+
+                        <!-- Mini Lang Toggle -->
+                        <div
+                            class="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-full border border-black/5 dark:border-white/5 ml-2">
+                            <button @click="lang = 'id'"
+                                :class="lang === 'id' ? 'bg-primary-600 text-white' : 'text-gray-400 hover:text-primary-500'"
+                                class="w-8 h-8 rounded-full text-[10px] font-black transition-all">ID</button>
+                            <button @click="lang = 'en'"
+                                :class="lang === 'en' ? 'bg-primary-600 text-white' : 'text-gray-400 hover:text-primary-500'"
+                                class="w-8 h-8 rounded-full text-[10px] font-black transition-all">EN</button>
+                        </div>
+
                         <a href="#contact"
-                            class="px-6 py-2 text-sm bg-primary-600 text-white font-black rounded-full hover:bg-primary-700 transition-all ml-2 shadow-lg hover:shadow-primary-500/30">Contact</a>
+                            class="px-6 py-2 text-sm bg-primary-600 text-white font-black rounded-full hover:bg-primary-700 transition-all ml-2 shadow-lg hover:shadow-primary-500/30"
+                            x-text="t[lang].nav.contact"></a>
                     </div>
                 </div>
             </div>
@@ -282,41 +556,30 @@
     <header id="about"
         class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 text-center md:text-left flex flex-col-reverse md:flex-row items-center gap-12">
         <div class="flex-1">
-            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
-                JAUHAR FAUZI <br><span class="text-primary-500">ULUL ALBAB</span>
+            <h1 class="text-5xl md:text-8xl font-black leading-[0.9] mb-6 tracking-tighter">
+                <span
+                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-bold tracking-[0.2em] mb-4 uppercase"
+                    x-text="t[lang].hero.title"></span>
+                <span class="text-zinc-900 dark:text-white" x-text="t[lang].hero.subtitle"></span>
             </h1>
-            <p class="text-xl text-primary-500 dark:text-primary-400 font-bold mb-6">
-                Digital Solutions Engineer & Tech Problem Solver
+            <p class="text-xl md:text-2xl text-primary-500 dark:text-primary-400 font-black mb-8 tracking-tight"
+                x-text="t[lang].hero.tagline">
             </p>
-            <p class="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-2xl leading-relaxed">
-                Seorang profesional teknologi yang berfokus pada pengembangan solusi digital yang inovatif, efisien, dan berdampak. Memiliki ketertarikan besar pada pemanfaatan teknologi modern, AI, serta rekayasa perangkat lunak untuk menyelesaikan masalah nyata. Senang belajar hal baru, membangun sistem end-to-end, dan mengubah ide menjadi produk yang bernilai bagi masa depan.
+            <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium"
+                x-text="t[lang].hero.desc">
             </p>
             <div class="flex flex-col gap-6">
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center">
                     <a href="#projects"
-                        class="bg-primary-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition-all transform hover:scale-105 text-center min-w-[200px]">
-                        <span x-show="lang === 'id'">Lihat Projek Saya</span>
-                        <span x-show="lang === 'en'" style="display:none">View My Projects</span>
+                        class="bg-primary-600 hover:bg-blue-700 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all transform hover:scale-105 text-center min-w-[220px] shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.4)]"
+                        x-text="t[lang].hero.cta_projects">
                     </a>
                     <a href="#contact"
-                        class="bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-4 rounded-full font-semibold transition-all border border-white/10 text-center min-w-[200px]">
-                        <span x-show="lang === 'id'">Hubungi Saya</span>
-                        <span x-show="lang === 'en'" style="display:none">Contact Me</span>
+                        class="bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all border border-gray-200 dark:border-white/10 text-center min-w-[220px]"
+                        x-text="t[lang].hero.cta_contact">
                     </a>
 
-                    <!-- Language Selector -->
-                    <div class="flex items-center gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-full border border-gray-200 dark:border-white/10 ml-0 md:ml-4">
-                        <button @click="lang = 'id'" 
-                            :class="lang === 'id' ? 'bg-primary-600 text-white shadow-lg' : 'text-gray-500 hover:text-primary-500'"
-                            class="px-3 py-1.5 rounded-full text-[10px] font-black tracking-tighter transition-all uppercase">
-                            ID
-                        </button>
-                        <button @click="lang = 'en'" 
-                            :class="lang === 'en' ? 'bg-primary-600 text-white shadow-lg' : 'text-gray-500 hover:text-primary-500'"
-                            class="px-3 py-1.5 rounded-full text-[10px] font-black tracking-tighter transition-all uppercase">
-                            EN
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -329,8 +592,9 @@
             </div>
             <div
                 class="absolute -bottom-6 -left-6 bg-primary-600 p-6 rounded-2xl shadow-xl transform rotate-3 hover:rotate-0 transition duration-300">
-                <p class="text-3xl font-bold">4+</p>
-                <p class="text-xs uppercase font-semibold tracking-wider">Years Experience</p>
+                <p class="text-3xl font-black text-white">4+</p>
+                <p class="text-[10px] uppercase font-black text-white/80 tracking-widest"
+                    x-text="t[lang].hero.years_exp"></p>
             </div>
         </div>
     </header>
@@ -339,23 +603,195 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div
                 class="bg-primary-600/10 border border-primary-500/20 p-8 rounded-3xl text-center hover:bg-primary-600/20 transition duration-300">
-                <h3 class="text-3xl font-bold mb-1 text-primary-600 dark:text-primary-400">8+</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Projects Completed</p>
+                <h3 class="text-3xl font-black mb-1 text-primary-600 dark:text-primary-400">8+</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.completed"></p>
             </div>
             <div
                 class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
-                <h3 class="text-3xl font-bold mb-1 text-zinc-900 dark:text-white">10+</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Tech Stack</p>
+                <h3 class="text-3xl font-black mb-1 text-zinc-900 dark:text-white">10+</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.stack"></p>
             </div>
             <div
                 class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
-                <h3 class="text-3xl font-bold mb-1 text-zinc-900 dark:text-white">4+</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Years Exp</p>
+                <h3 class="text-3xl font-black mb-1 text-zinc-900 dark:text-white">4+</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.exp"></p>
             </div>
             <div
                 class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
-                <h3 class="text-3xl font-bold mb-1 text-zinc-900 dark:text-white">100%</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Commitment</p>
+                <h3 class="text-3xl font-black mb-1 text-zinc-900 dark:text-white">100%</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.commit"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Experience (Moved Up & Enhanced) -->
+    <section class="max-w-6xl mx-auto px-6 py-12">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black mb-4 tracking-tight">
+                    <span class="text-primary-500" x-text="t[lang].experience.title"></span>
+                    <span class="text-zinc-900 dark:text-white" x-text="t[lang].experience.subtitle"></span>
+                </h2>
+                <div class="w-20 h-1.5 bg-primary-600 rounded-full"></div>
+            </div>
+            <div
+                class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2 uppercase tracking-widest">
+                Career Timeline
+            </div>
+        </div>
+
+        <div class="relative space-y-8">
+            <!-- Timeline Line -->
+            <div
+                class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary-600 via-gray-200 dark:via-white/10 to-transparent hidden md:block select-none pointer-events-none">
+            </div>
+
+            <!-- Asdos -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="md:w-[45%] order-2 md:order-1">
+                    <div
+                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-primary-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center text-2xl">
+                                🎓</div>
+                            <div>
+                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
+                                    x-text="t[lang].experience.asdos.role"></h3>
+                                <p class="text-primary-600 dark:text-primary-400 font-bold"
+                                    x-text="t[lang].experience.asdos.company"></p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3">
+                            <template x-for="point in t[lang].experience.asdos.points">
+                                <li
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-primary-500 mt-1.5 flex-shrink-0"></span>
+                                    <span x-text="point"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-primary-600 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] group-hover:scale-150 transition-transform">
+                </div>
+                <div class="md:w-[45%] order-1 md:order-2 mb-4 md:mb-0">
+                    <span
+                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pl-8"
+                        x-text="t[lang].experience.asdos.date"></span>
+                </div>
+            </div>
+
+            <!-- Team Leader Jauki -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="md:w-[45%] order-1 text-right mb-4 md:mb-0">
+                    <span
+                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pr-8"
+                        x-text="t[lang].experience.jauki.date"></span>
+                </div>
+                <div
+                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-600 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(139,92,246,0.5)] group-hover:scale-150 transition-transform">
+                </div>
+                <div class="md:w-[45%] order-2">
+                    <div
+                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-purple-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-2xl">
+                                🚀</div>
+                            <div>
+                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
+                                    x-text="t[lang].experience.jauki.role"></h3>
+                                <p class="text-purple-600 dark:text-purple-400 font-bold"
+                                    x-text="t[lang].experience.jauki.company"></p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3">
+                            <template x-for="point in t[lang].experience.jauki.points">
+                                <li
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0"></span>
+                                    <span x-text="point"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Waroeng Steak -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="md:w-[45%] order-2 md:order-1">
+                    <div
+                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-yellow-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-2xl">
+                                🍔</div>
+                            <div>
+                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
+                                    x-text="t[lang].experience.magang.role"></h3>
+                                <p class="text-yellow-600 dark:text-yellow-500 font-bold"
+                                    x-text="t[lang].experience.magang.company"></p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3">
+                            <template x-for="point in t[lang].experience.magang.points">
+                                <li
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1.5 flex-shrink-0"></span>
+                                    <span x-text="point"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-yellow-500 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(245,158,11,0.5)] group-hover:scale-150 transition-transform">
+                </div>
+                <div class="md:w-[45%] order-1 md:order-2 mb-4 md:mb-0">
+                    <span
+                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pl-8"
+                        x-text="t[lang].experience.magang.date"></span>
+                </div>
+            </div>
+
+            <!-- Freedomspace -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="md:w-[45%] order-1 text-right mb-4 md:mb-0">
+                    <span
+                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pr-8"
+                        x-text="t[lang].experience.freedom.date"></span>
+                </div>
+                <div
+                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-indigo-600 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(79,70,229,0.5)] group-hover:scale-150 transition-transform">
+                </div>
+                <div class="md:w-[45%] order-2">
+                    <div
+                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-indigo-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-2xl">
+                                🎸</div>
+                            <div>
+                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
+                                    x-text="t[lang].experience.freedom.role"></h3>
+                                <p class="text-indigo-600 dark:text-indigo-400 font-bold"
+                                    x-text="t[lang].experience.freedom.company"></p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3">
+                            <template x-for="point in t[lang].experience.freedom.points">
+                                <li
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0"></span>
+                                    <span x-text="point"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -370,22 +806,19 @@
 
         <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16">
             <div class="max-w-2xl">
-                <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4">
-                    <span class="relative flex h-2 w-2">
-                        <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
-                    </span>
-                    Work & Research
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4"
+                    x-text="t[lang].projects.tag">
                 </div>
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Featured <span
-                        class="text-primary-500">Projects</span></h2>
-                <p class="text-gray-400 text-lg md:text-xl leading-relaxed">Kumpulan solusi digital dan publikasi ilmiah
-                    yang berfokus pada inovasi teknologi.</p>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tight">
+                    <span class="text-zinc-900 dark:text-white" x-text="t[lang].projects.title"></span>
+                    <span class="text-primary-500" x-text="t[lang].projects.subtitle"></span>
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400 text-lg md:text-xl leading-relaxed font-medium"
+                    x-text="t[lang].projects.desc"></p>
             </div>
-            <div class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2">03 /
-                PORTFOLIO
+            <div
+                class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2 uppercase tracking-widest">
+                Portfolio 03
             </div>
         </div>
         </div>
@@ -402,7 +835,7 @@
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
                     </svg>
-                    <span class="animate-pulse">Geser Layar</span>
+                    <span class="animate-pulse" x-text="t[lang].projects.swipe"></span>
                     <svg class="w-5 h-5 text-primary-500 animate-[bounce_1s_infinite] rotate-90" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
@@ -482,17 +915,14 @@
 
                         <div class="mb-8">
                             <span
-                                class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6">
-                                JAIC PUBLICATION
+                                class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6"
+                                x-text="t[lang].projects.journal.tag">
                             </span>
-                            <h3
-                                class="text-3xl lg:text-5xl font-black mb-8 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                                Recommendation <br class="hidden lg:block">System Research
+                            <h3 class="text-3xl lg:text-5xl font-black mb-8 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+                                x-text="t[lang].projects.journal.title">
                             </h3>
-                            <p
-                                class="text-gray-600 dark:text-gray-400 mb-10 leading-relaxed text-base lg:text-lg font-medium">
-                                Publikasi ilmiah resmi pada <strong>Journal of Applied Informatics and Computing
-                                    (JAIC)</strong>. Membahas optimasi TF-IDF & Cosine Similarity untuk pariwisata.
+                            <p class="text-gray-600 dark:text-gray-400 mb-10 leading-relaxed text-base lg:text-lg font-medium"
+                                x-text="t[lang].projects.journal.desc">
                             </p>
                         </div>
 
@@ -505,21 +935,20 @@
                                             d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
                                     </svg>
                                 </div>
-                                <div
-                                    class="text-primary-600 dark:text-primary-500 font-black text-[12px] mb-2 uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform">
-                                    Terakreditasi</div>
+                                <div class="text-primary-600 dark:text-primary-500 font-black text-[12px] mb-2 uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform"
+                                    x-text="t[lang].projects.journal.accredited"></div>
                                 <div class="text-zinc-900 dark:text-white font-black text-4xl flex items-center gap-3">
-                                    SINTA 3
+                                    <span x-text="t[lang].projects.journal.badge"></span>
                                     <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
                                 </div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Official National
-                                    Indexing</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium"
+                                    x-text="t[lang].projects.journal.official"></p>
                             </div>
                         </div>
 
                         <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank"
                             class="flex items-center justify-center gap-4 px-10 py-6 bg-primary-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
-                            View Official PDF
+                            <span x-text="t[lang].projects.journal.cta"></span>
                             <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -550,12 +979,11 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💰</span>
                     </div>
-                    <h3
-                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-green-500 transition-colors">
-                        KPRI Bakti Mulia</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Digitalisasi simpan
-                        pinjam & analisis
-                        kredit menggunakan **C4.5 Algorithm**.</p>
+                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-green-500 transition-colors"
+                        x-text="t[lang].projects.kpri.title">
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                        x-text="t[lang].projects.kpri.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">PHP
@@ -566,7 +994,7 @@
                     </div>
                     <a href="http://kpribaktimulia.or.id/" target="_blank"
                         class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-green-500 dark:hover:text-green-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-green-500 pb-1">
-                        VISIT WEBSITE <span
+                        <span x-text="t[lang].projects.visit"></span> <span
                             class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
@@ -593,12 +1021,11 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🤖</span>
                     </div>
-                    <h3
-                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
-                        JaugjaKita App</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Sistem cerdas
-                        rekomendasi wisata di
-                        Yogyakarta berbasis Machine Learning.</p>
+                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors"
+                        x-text="t[lang].projects.jaugja.title">
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                        x-text="t[lang].projects.jaugja.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Python</span>
@@ -607,7 +1034,7 @@
                     </div>
                     <a href="http://jaugjakita.jauharfauzi.my.id" target="_blank"
                         class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-indigo-500 dark:hover:text-indigo-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-indigo-500 pb-1">
-                        OPEN PROJECT <span
+                        <span x-text="t[lang].projects.open"></span> <span
                             class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
@@ -634,12 +1061,11 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🎓</span>
                     </div>
-                    <h3
-                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
-                        Kauiz Ai Platform</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Automatisasi pembuatan
-                        kuis cerdas
-                        berbasis AI untuk pengajar modern.</p>
+                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors"
+                        x-text="t[lang].projects.kauiz.title">
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                        x-text="t[lang].projects.kauiz.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Laravel</span>
@@ -649,7 +1075,8 @@
                     </div>
                     <a href="http://kauiz.jauharfauzi.my.id/" target="_blank"
                         class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-emerald-500 dark:hover:text-emerald-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-emerald-500 pb-1">
-                        EXPLORE APP <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        <span x-text="t[lang].projects.explore"></span> <span
+                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
             </div>
@@ -675,12 +1102,11 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💬</span>
                     </div>
-                    <h3
-                        class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors">
-                        LiveChat Interaction</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium">Filtering kata kasar
-                        *real-time* berbasis
-                        pemrosesan bahasa alami.</p>
+                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors"
+                        x-text="t[lang].projects.livechat.title">
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                        x-text="t[lang].projects.livechat.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Socket.io</span>
@@ -689,7 +1115,8 @@
                     </div>
                     <a href="https://livechat.jauharfauzi.my.id/" target="_blank"
                         class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-purple-500 dark:hover:text-purple-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-purple-500 pb-1">
-                        LIVE DEMO <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        <span x-text="t[lang].projects.demo"></span> <span
+                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
             </div>
@@ -704,18 +1131,22 @@
 
             <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-zinc-900 dark:text-white">Technical <span
-                            class="text-primary-600 dark:text-primary-500">Skills</span>
+                    <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tight">
+                        <span class="text-zinc-900 dark:text-white" x-text="t[lang].skills.title"></span>
+                        <span class="text-primary-600 dark:text-primary-500" x-text="t[lang].skills.subtitle"></span>
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base">Expertise in modern web
-                        technologies and AI.</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base font-medium"
+                        x-text="t[lang].skills.desc"></p>
                 </div>
-                <div class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2">02 / SKILLS</div>
+                <div
+                    class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2 uppercase tracking-widest">
+                    Expertise 02
+                </div>
             </div>
 
             <!-- Mobile Swipe Indicator -->
             <div class="md:hidden flex items-center gap-2 mb-4 text-gray-500 text-xs animate-pulse">
-                <span>Swipe to explore</span>
+                <span x-text="t[lang].skills.swipe"></span>
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -864,138 +1295,63 @@
     </section>
 
 
-    <!-- Education Section -->
     <section class="max-w-6xl mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Education <span class="text-primary-500">&
-                Training</span></h2>
+        <h2 class="text-3xl md:text-4xl font-black mb-8 text-center md:text-left tracking-tight">
+            <span class="text-zinc-900 dark:text-white" x-text="t[lang].education.title"></span>
+            <span class="text-primary-500" x-text="t[lang].education.subtitle"></span>
+        </h2>
         <div class="grid md:grid-cols-2 gap-6">
             <!-- Amikom -->
             <div
-                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:border-primary-500/50 transition duration-300 flex items-start gap-4 hover:shadow-lg dark:hover:shadow-none">
+                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-[2.5rem] hover:border-primary-500/50 transition duration-300 flex items-start gap-6 hover:shadow-xl dark:hover:shadow-none group">
                 <div
-                    class="w-16 h-16 bg-gray-50 dark:bg-white rounded-xl flex items-center justify-center p-2 flex-shrink-0 overflow-hidden shadow-sm">
+                    class="w-20 h-20 bg-gray-50 dark:bg-white rounded-2xl flex items-center justify-center p-3 flex-shrink-0 overflow-hidden shadow-sm group-hover:scale-110 transition-transform">
                     <img src="{{ asset('logo_amikom.png') }}" alt="Amikom Logo" class="w-full h-full object-contain">
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-1">Universitas Amikom Yogyakarta</h3>
-                    <p class="text-primary-600 dark:text-primary-400 font-medium mb-1">Program Studi Sistem Informasi
-                    </p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Angkatan Tahun 2023 • IPK: 3.91</p>
-                    <p class="text-gray-500 text-xs">Agustus 2023 - Sekarang</p>
+                    <h3 class="text-xl font-black text-zinc-900 dark:text-white mb-1"
+                        x-text="t[lang].education.amikom.name"></h3>
+                    <p class="text-primary-600 dark:text-primary-400 font-bold mb-1"
+                        x-text="t[lang].education.amikom.major"></p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium"
+                        x-text="t[lang].education.amikom.info"></p>
+                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest"
+                        x-text="t[lang].education.amikom.date"></p>
                 </div>
             </div>
 
             <!-- Trainit -->
             <div
-                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:border-purple-500/50 transition duration-300 flex items-start gap-4 hover:shadow-lg dark:hover:shadow-none">
+                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-[2.5rem] hover:border-purple-500/50 transition duration-300 flex items-start gap-6 hover:shadow-xl dark:hover:shadow-none group">
                 <div
-                    class="w-12 h-12 bg-purple-50 dark:bg-purple-600/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                    class="w-20 h-20 bg-purple-50 dark:bg-purple-600/20 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">
                     💻
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-1">Pelatihan – TrainIT Jogja</h3>
-                    <p class="text-purple-600 dark:text-purple-400 font-medium mb-1">Fullstack Developer</p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Materi: Laravel & Machine Learning
-                        (K-Means)</p>
-                    <p class="text-gray-500 text-xs">Febuari 2025 - Sekarang</p>
+                    <h3 class="text-xl font-black text-zinc-900 dark:text-white mb-1"
+                        x-text="t[lang].education.trainit.name"></h3>
+                    <p class="text-purple-600 dark:text-purple-400 font-bold mb-1"
+                        x-text="t[lang].education.trainit.major"></p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium"
+                        x-text="t[lang].education.trainit.info"></p>
+                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest"
+                        x-text="t[lang].education.trainit.date"></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="max-w-6xl mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Professional <span
-                class="text-primary-500">Experience</span></h2>
-        <div class="space-y-6">
-            <!-- Asdos -->
-            <div
-                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
-                <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
-                    <div>
-                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Asisten Dosen – Struktur Data</h3>
-                        <p class="text-primary-600 dark:text-primary-400 text-lg">Universitas Amikom Yogyakarta</p>
-                    </div>
-                    <span
-                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">September 2024 – Sekarang</span>
-                </div>
-                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
-                    <li>Mendukung proses pembelajaran mata kuliah Struktur Data dan pemrograman struktural.</li>
-                    <li>Membimbing mahasiswa dalam memahami konsep fundamental seperti array, linked list, stack, queue, tree, dan algoritma dasar.</li>
-                    <li>Memberikan asistensi praktikum serta membantu penyusunan dan evaluasi tugas pemrograman.</li>
-                    <li>Berperan sebagai fasilitator diskusi teknis untuk meningkatkan pemahaman konseptual dan problem-solving mahasiswa.</li>
-                </ul>
-            </div>
 
-            <!-- Team Leader Jauki -->
-            <div
-                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
-                <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
-                    <div>
-                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Tim Leader – Jauki Academy</h3>
-                        <p class="text-purple-600 dark:text-purple-400 text-lg">Software House & Education</p>
-                    </div>
-                    <span
-                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">November 2022 – Sekarang</span>
-                </div>
-                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
-                    <li>Memimpin tim dalam pengembangan layanan pembuatan website, digital portfolio, dan AI prompting solutions.</li>
-                    <li>Terlibat langsung dalam perancangan arsitektur sistem, pengembangan backend & frontend, serta deployment.</li>
-                    <li>Menyusun strategi pemasaran digital dan branding untuk meningkatkan visibilitas serta akuisisi klien.</li>
-                    <li>Mengelola proyek end-to-end mulai dari requirement gathering, development, hingga maintenance.</li>
-                    <li>Berhasil membangun sistem kerja tim yang agile dan berorientasi pada hasil.</li>
-                </ul>
-            </div>
 
-            <!-- Waroeng Steak -->
-            <div
-                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
-                <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
-                    <div>
-                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Magang – Asisten Programmer (Divisi Marketing)</h3>
-                        <p class="text-yellow-600 dark:text-yellow-500 text-lg">Waroeng Steak Indonesia</p>
-                    </div>
-                    <span
-                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">Agustus 2024 – September 2024</span>
-                </div>
-                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
-                    <li>Berkontribusi dalam pengembangan sistem loyalitas pelanggan berbasis website untuk meningkatkan retensi dan engagement.</li>
-                    <li>Mengimplementasikan fitur berbasis Laravel dan PHP lanjutan sesuai kebutuhan bisnis.</li>
-                    <li>Terlibat dalam troubleshooting teknis serta mempresentasikan solusi kepada tim marketing dan manajemen.</li>
-                    <li>Mengembangkan sistem loyalty yang dirancang untuk mendukung pertumbuhan bisnis dan peningkatan repeat order.</li>
-                </ul>
-            </div>
-
-            <!-- Freedomspace -->
-            <div
-                class="bg-white dark:bg-zinc-900/30 border border-gray-200 dark:border-white/5 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition">
-                <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
-                    <div>
-                        <h3 class="text-2xl font-bold text-zinc-900 dark:text-white">Team Leader & System Innovator – Freedomspace</h3>
-                        <p class="text-indigo-600 dark:text-indigo-400 text-lg">Live Chat System – Konser Skala Besar</p>
-                    </div>
-                    <!-- Date not provided in text, but context from Rev 4 implies recent/events -->
-                    <span
-                        class="text-gray-500 text-sm mt-2 md:mt-0 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full border border-gray-200 dark:border-transparent">Mei 2025</span>
-                </div>
-                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
-                    <li>Menginisiasi dan mengembangkan sistem live chat berbasis web dengan 10.000+ pengguna aktif dalam satu event.</li>
-                    <li>Sistem dirancang sebagai solusi interaktif untuk mengisi jeda pergantian musisi dalam konser.</li>
-                    <li>Diimplementasikan pada event Perantara Fest (11 Mei 2025) dan Lane of Koplo (24 Mei 2025).</li>
-                    <li>Memimpin operasional tim secara real-time di tengah keterbatasan jaringan dan tantangan teknis di lokasi acara.</li>
-                    <li>Bertanggung jawab penuh atas stabilitas sistem selama konser berlangsung, memastikan performa optimal di kondisi high traffic.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Additional Info / Soft Skills -->
     <section class="max-w-6xl mx-auto px-6 py-12 mb-12">
-        <h2 class="text-3xl font-bold mb-8 text-center md:text-left">Informasi <span
-                class="text-primary-500">Tambahan</span></h2>
+        <h2 class="text-3xl md:text-4xl font-black mb-8 text-center md:text-left tracking-tight">
+            <span class="text-zinc-900 dark:text-white" x-text="t[lang].soft.title"></span>
+            <span class="text-primary-500" x-text="t[lang].soft.subtitle"></span>
+        </h2>
 
         <!-- Mobile Swipe Indicator -->
         <div class="md:hidden flex items-center gap-2 mb-4 text-gray-500 text-xs animate-pulse">
-            <span>Swipe for more</span>
+            <span x-text="t[lang].soft.swipe"></span>
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
@@ -1006,26 +1362,20 @@
             <div
                 class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
                 <div class="text-4xl mb-4">🤝</div>
-                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2">Kerja Tim yang Solid</h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm">Terbiasa bekerja sama dalam tim lintas bidang dan
-                    menjaga komunikasi
-                    yang efektif.</p>
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.team.title"></h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.team.desc"></p>
             </div>
             <div
                 class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
                 <div class="text-4xl mb-4">⏱️</div>
-                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2">Disiplin & Tepat Waktu</h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm">Mampu menyelesaikan tugas sesuai target dengan
-                    manajemen waktu yang
-                    baik.</p>
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.time.title"></h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.time.desc"></p>
             </div>
             <div
                 class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
                 <div class="text-4xl mb-4">📢</div>
-                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2">Komunikatif & Percaya Diri</h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm">Mampu menyampaikan ide dan presentasi dengan jelas,
-                    baik dalam diskusi
-                    maupun forum formal.</p>
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.comm.title"></h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.comm.desc"></p>
             </div>
         </div>
     </section>
@@ -1045,19 +1395,18 @@
                 <div
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-6">
                     <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-                    Get In Touch
+                    <span x-text="t[lang].footer.tag"></span>
                 </div>
 
                 <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
-                    Let's build <br>
-                    <span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-indigo-500">something
-                        extraordinary</span>.
+                    <span class="text-zinc-900 dark:text-white" x-text="t[lang].footer.title"></span> <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-indigo-500"
+                        x-text="t[lang].footer.subtitle"></span>
                 </h2>
 
                 <blockquote
-                    class="text-xl text-gray-600 dark:text-gray-400 font-light italic mb-10 border-l-4 border-primary-500 pl-6 py-2">
-                    "Terus belajar, beradaptasi, dan tumbuh bersama teknologi."
+                    class="text-xl text-gray-600 dark:text-gray-400 font-light italic mb-10 border-l-4 border-primary-500 pl-6 py-2"
+                    x-text="t[lang].footer.quote">
                 </blockquote>
 
                 <div class="flex flex-col gap-4 max-w-md">
@@ -1074,7 +1423,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">Email Me</div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider font-bold"
+                                    x-text="t[lang].footer.email_label"></div>
                                 <div class="text-zinc-900 dark:text-white font-medium">jauharfua05@gmail.com</div>
                             </div>
                         </div>
@@ -1152,17 +1502,16 @@
                         <!-- Header -->
                         <div class="flex items-center justify-between border-b border-white/5 pb-6">
                             <div>
-                                <div
-                                    class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">
-                                    Current
-                                    Status</div>
+                                <div class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest mb-1"
+                                    x-text="t[lang].footer.status_label">
+                                </div>
                                 <div class="flex items-center gap-2">
                                     <span class="relative flex h-3 w-3">
                                         <span
                                             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                         <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                                     </span>
-                                    <span class="text-green-400 font-bold">Available for Work</span>
+                                    <span class="text-green-400 font-bold" x-text="t[lang].footer.available"></span>
                                 </div>
                             </div>
                             <div
@@ -1184,13 +1533,13 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <div
-                                        class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
-                                        Base Location
+                                    <div class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wide"
+                                        x-text="t[lang].footer.loc_label">
                                     </div>
-                                    <div class="text-zinc-900 dark:text-white text-lg font-bold">Yogyakarta, Indonesia
+                                    <div class="text-zinc-900 dark:text-white text-lg font-bold"
+                                        x-text="t[lang].footer.location">
                                     </div>
-                                    <div class="text-gray-500 text-xs mt-1">Remote / On-site capable</div>
+                                    <div class="text-gray-500 text-xs mt-1" x-text="t[lang].footer.remote"></div>
                                 </div>
                             </div>
 
@@ -1204,14 +1553,15 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <div
-                                        class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
-                                        Open For</div>
+                                    <div class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wide"
+                                        x-text="t[lang].footer.open_label"></div>
                                     <div class="flex flex-wrap gap-2 mt-2">
                                         <span
-                                            class="px-3 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/20">Freelance</span>
+                                            class="px-3 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/20"
+                                            x-text="t[lang].footer.freelance"></span>
                                         <span
-                                            class="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 text-xs font-bold border border-purple-500/20">Collaboration</span>
+                                            class="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 text-xs font-bold border border-purple-500/20"
+                                            x-text="t[lang].footer.collab"></span>
                                     </div>
                                 </div>
                             </div>
@@ -1220,10 +1570,10 @@
                         <!-- Bottom Action -->
                         <a href="https://wa.me/6289529104230"
                             class="w-full py-4 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-xl font-bold text-center hover:bg-zinc-800 dark:hover:bg-gray-200 transition shadow-[0_0_20px_rgba(0,0,0,0.15)] dark:shadow-[0_0_20px_rgba(255,255,255,0.15)] flex justify-center items-center gap-2">
-                            <span>Start a Conversation</span>
+                            <span x-text="t[lang].footer.cta"></span>
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    d="M14 5l7 7m0 0l-4 4m4-4H3" />
                             </svg>
                         </a>
                     </div>
