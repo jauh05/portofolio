@@ -477,7 +477,7 @@
                         :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
                         x-text="t[lang].nav.skills">
                     </a>
-                    <a href="{{ url('/certificates') }}" @click="expanded = false"
+                    <a href="#certifications" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
                         :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
                         x-text="t[lang].nav.serti">
@@ -543,7 +543,7 @@
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
                             class="px-5 py-2 text-sm rounded-full transition-all font-bold"
                             x-text="t[lang].nav.skills"></a>
-                        <a href="{{ url('/certificates') }}"
+                        <a href="#certifications"
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
                             class="px-5 py-2 text-sm rounded-full transition-all font-bold"
                             x-text="t[lang].nav.serti"></a>
@@ -813,6 +813,75 @@
 
 
 
+    <!-- Certificates Highlights -->
+    <section id="certifications" class="max-w-7xl mx-auto px-6 py-20 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-primary-600/5 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="mb-16">
+            <p class="text-primary-500 font-black text-xs uppercase tracking-[0.4em] mb-4" x-text="t[lang].certs.tag"></p>
+            <h2 class="text-5xl md:text-7xl font-black dark:text-white tracking-tighter mb-8 italic">
+                <span x-text="t[lang].certs.title"></span><br>
+                <span class="text-primary-500" x-text="t[lang].certs.subtitle"></span>
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium" x-text="t[lang].certs.desc"></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <!-- Cert Card 1 -->
+            <div class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-primary-500/50 transition-all duration-500 shadow-xl dark:shadow-none">
+                <div class="w-12 h-12 bg-primary-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">🎓</div>
+                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Asisten Praktikum</h4>
+                <p class="text-xs text-primary-500 font-bold uppercase tracking-widest mb-4">Struktur Data</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Amikom Creative Economy Park</p>
+                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+            </div>
+
+            <!-- Cert Card 2 -->
+            <div class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-pink-500/50 transition-all duration-500 shadow-xl dark:shadow-none md:mt-8">
+                <div class="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">🏆</div>
+                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Juara III Nasional</h4>
+                <p class="text-xs text-pink-500 font-bold uppercase tracking-widest mb-4">Karya Tulis Islami</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Kemenag RI</p>
+                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+            </div>
+
+            <!-- Cert Card 3 -->
+            <div class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-yellow-500/50 transition-all duration-500 shadow-xl dark:shadow-none">
+                <div class="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">💻</div>
+                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Assistant Programmer</h4>
+                <p class="text-xs text-yellow-500 font-bold uppercase tracking-widest mb-4">Internship</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Waroeng Steak Indonesia</p>
+                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+            </div>
+
+            <!-- Cert Card 4 -->
+            <div class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-indigo-500/50 transition-all duration-500 shadow-xl dark:shadow-none md:mt-8">
+                <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">🌟</div>
+                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Futuristic Workshop</h4>
+                <p class="text-xs text-indigo-500 font-bold uppercase tracking-widest mb-4">Fiscreation 2023</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Universitas Negeri Yogyakarta</p>
+                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center md:justify-start">
+            <a href="{{ url('/certificates') }}" 
+                class="group flex items-center gap-6 px-10 py-6 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white dark:hover:text-white transition-all shadow-2xl">
+                <span x-text="t[lang].certs.cta"></span>
+                <div class="w-10 h-10 rounded-full bg-white/10 dark:bg-black/5 flex items-center justify-center group-hover:translate-x-2 transition-transform">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                </div>
+            </a>
+        </div>
+    </section>
     <!-- Projects Section -->
     <section id="projects" class="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
         <!-- Background Glow -->
