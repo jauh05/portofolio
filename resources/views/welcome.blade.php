@@ -222,7 +222,8 @@
                     kpri: { tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalization of savings & loans and credit analysis using C4.5 Algorithm.' },
                     jaugja: { tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Sistem cerdas rekomendasi wisata di Yogyakarta berbasis Machine Learning.' },
                     kauiz: { tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automatisasi pembuatan kuis cerdas berbasis AI untuk pengajar modern.' },
-                    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Filtering kata kasar real-time berbasis pemrosesan bahasa alami.' }
+                    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Filtering kata kasar real-time berbasis pemrosesan bahasa alami.' },
+                    jokitugas: { tag: 'Academic Service', title: 'JokiTugas Jogja', desc: 'Platform layanan bantuan akademik terintegrasi untuk mahasiswa.' }
                 },
                 skills: { 
                     title: 'Technical', subtitle: 'Skills', desc: 'Keahlian dalam teknologi web modern dan AI.', 
@@ -254,6 +255,13 @@
                     freelance: 'Freelance',
                     collab: 'Kolaborasi',
                     cta: 'Mulai Percakapan'
+                },
+                certs: {
+                    tag: 'Recognitions',
+                    title: 'Featured',
+                    subtitle: 'Certifications',
+                    desc: 'Penghargaan dan sertifikasi profesional dalam bidang teknologi dan akademik.',
+                    cta: 'Lihat Semua Sertifikat'
                 }
             },
             en: {
@@ -340,7 +348,8 @@
                     kpri: { tag: 'Fintech Admin', title: 'KPRI Bakti Mulia', desc: 'Digitalization of savings & loans and credit analysis using C4.5 Algorithm.' },
                     jaugja: { tag: 'AI Recommendation', title: 'JaugjaKita App', desc: 'Intelligent tourism recommendation system in Yogyakarta based on Machine Learning.' },
                     kauiz: { tag: 'Ed-Tech SaaS', title: 'Kauiz Ai Platform', desc: 'Automation of intelligent AI-based quiz creation for modern educators.' },
-                    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Real-time coarse word filtering based on natural language processing.' }
+                    livechat: { tag: 'Real-time NLP', title: 'LiveChat Interaction', desc: 'Real-time coarse word filtering based on natural language processing.' },
+                    jokitugas: { tag: 'Academic Service', title: 'JokiTugas Jogja', desc: 'Integrated academic assistance service platform for students.' }
                 },
                 skills: {
                     title: 'Technical', subtitle: 'Skills', desc: 'Expertise in modern web technologies and AI.',
@@ -372,6 +381,13 @@
                     freelance: 'Freelance',
                     collab: 'Collaboration',
                     cta: 'Start a Conversation'
+                },
+                certs: {
+                    tag: 'Recognitions',
+                    title: 'Featured',
+                    subtitle: 'Certifications',
+                    desc: 'Professional awards and certifications in technology and academics.',
+                    cta: 'View All Certificates'
                 }
             }
         },
@@ -955,14 +971,21 @@
                             </div>
                         </div>
 
-                        <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank"
-                            class="flex items-center justify-center gap-4 px-10 py-6 bg-primary-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
-                            <span x-text="t[lang].projects.journal.cta"></span>
-                            <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                        </a>
+                        <div class="flex items-center gap-4">
+                            <a href="{{ url('/projects?id=journal') }}"
+                                class="px-8 py-5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-3xl font-bold text-xs uppercase tracking-widest hover:bg-primary-600 dark:hover:bg-primary-600 hover:text-white dark:hover:text-white transition-all shadow-xl">Lihat
+                                Detail</a>
+                            <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
+                                target="_blank"
+                                class="flex-1 flex items-center justify-center gap-4 px-10 py-5 bg-primary-600 hover:bg-blue-700 text-white rounded-3xl font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
+                                <span x-text="t[lang].projects.journal.cta"></span>
+                                <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -971,7 +994,7 @@
             <div
                 class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
                 <div class="h-72 overflow-hidden relative">
-                    <img src="{{ asset('projects/kpri.png') }}"
+                    <img src="{{ asset('project-media/kpri.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
@@ -1001,11 +1024,16 @@
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Decision
                             Support System</span>
                     </div>
-                    <a href="http://kpribaktimulia.or.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-green-500 dark:hover:text-green-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-green-500 pb-1">
-                        <span x-text="t[lang].projects.visit"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ url('/projects?id=kpri') }}"
+                            class="px-5 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-green-600 dark:hover:bg-green-600 hover:text-white dark:hover:text-white transition-all">Lihat
+                            Detail</a>
+                        <a href="http://kpribaktimulia.or.id/" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-green-500 dark:hover:text-green-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-green-500 pb-1">
+                            <span x-text="t[lang].projects.visit"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -1013,7 +1041,7 @@
             <div
                 class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-indigo-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)]">
                 <div class="h-72 overflow-hidden relative">
-                    <img src="{{ asset('projects/jaugjakita.png') }}"
+                    <img src="{{ asset('project-media/jaugjakita.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
@@ -1041,11 +1069,16 @@
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Streamlit</span>
                     </div>
-                    <a href="http://jaugjakita.jauharfauzi.my.id" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-indigo-500 dark:hover:text-indigo-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-indigo-500 pb-1">
-                        <span x-text="t[lang].projects.open"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ url('/projects?id=jaugja') }}"
+                            class="px-5 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:text-white dark:hover:text-white transition-all">Lihat
+                            Detail</a>
+                        <a href="http://jaugjakita.jauharfauzi.my.id" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-indigo-500 dark:hover:text-indigo-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-indigo-500 pb-1">
+                            <span x-text="t[lang].projects.open"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -1053,7 +1086,7 @@
             <div
                 class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
                 <div class="h-72 overflow-hidden relative">
-                    <img src="{{ asset('projects/kauiz.png') }}"
+                    <img src="{{ asset('project-media/kauiz.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
@@ -1082,11 +1115,16 @@
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">OpenAI
                             API</span>
                     </div>
-                    <a href="http://kauiz.jauharfauzi.my.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-emerald-500 dark:hover:text-emerald-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-emerald-500 pb-1">
-                        <span x-text="t[lang].projects.explore"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ url('/projects?id=kauiz') }}"
+                            class="px-5 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-emerald-600 dark:hover:bg-emerald-600 hover:text-white dark:hover:text-white transition-all">Lihat
+                            Detail</a>
+                        <a href="http://kauiz.jauharfauzi.my.id/" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-emerald-500 dark:hover:text-emerald-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-emerald-500 pb-1">
+                            <span x-text="t[lang].projects.explore"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -1094,7 +1132,7 @@
             <div
                 class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)]">
                 <div class="h-72 overflow-hidden relative">
-                    <img src="{{ asset('projects/livechat.png') }}"
+                    <img src="{{ asset('project-media/livechat.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
@@ -1122,11 +1160,61 @@
                         <span
                             class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">NLP.js</span>
                     </div>
-                    <a href="https://livechat.jauharfauzi.my.id/" target="_blank"
-                        class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-purple-500 dark:hover:text-purple-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-purple-500 pb-1">
-                        <span x-text="t[lang].projects.demo"></span> <span
-                            class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ url('/projects?id=livechat') }}"
+                            class="px-5 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-purple-600 dark:hover:bg-purple-600 hover:text-white dark:hover:text-white transition-all">Lihat
+                            Detail</a>
+                        <a href="https://livechat.jauharfauzi.my.id/" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-purple-500 dark:hover:text-purple-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-purple-500 pb-1">
+                            <span x-text="t[lang].projects.demo"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 5 (New: JokiTugas Jogja) -->
+            <div
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-blue-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(59,130,246,0.2)]">
+                <div class="h-72 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 via-white/40 dark:via-zinc-900/40 to-transparent">
+                    </div>
+                    <div class="absolute top-6 right-6">
+                        <div
+                            class="bg-blue-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg uppercase tracking-widest border border-blue-400/20 backdrop-blur-md">
+                            WEB SERVICE
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 md:p-10 relative">
+                    <div
+                        class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">📚</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"
+                        x-text="t[lang].projects.jokitugas.title">
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                        x-text="t[lang].projects.jokitugas.desc"></p>
+                    <div class="flex flex-wrap gap-2 mb-10">
+                        <span
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Laravel</span>
+                        <span
+                            class="px-4 py-2 bg-gray-50 dark:bg-zinc-950 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/5 rounded-xl text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">Tailwind</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ url('/projects?id=jokitugas') }}"
+                            class="px-5 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white transition-all">Lihat
+                            Detail</a>
+                        <a href="http://jokitugas-jogja.my.id/" target="_blank"
+                            class="inline-flex items-center gap-3 text-zinc-900 dark:text-white font-black text-xs uppercase tracking-widest hover:text-blue-500 dark:hover:text-blue-400 transition-all border-b-2 border-gray-200 dark:border-white/10 hover:border-blue-500 pb-1">
+                            <span x-text="t[lang].projects.visit"></span> <span
+                                class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

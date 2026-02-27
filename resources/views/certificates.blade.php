@@ -78,6 +78,16 @@
             number: 'Nomor: 2670/Kk.12.05/6/BA.00/09/2025',
             predicate: 'JUARA III',
             file: 'Jauhar Fauzi Ulul Albab (1).pdf'
+        },
+        {
+            id: 4,
+            title: 'Waroeng Steak & Shake',
+            organization: 'PT. WAROENG STEAK INDONESIA',
+            role: 'Asisten Programmer – Internship Program',
+            date: 'September 2024',
+            number: 'NO: WS/INTERN/2024/001',
+            predicate: 'ASSISTANT PROGRAMMER',
+            file: 'ws.pdf'
         }
     ],
     init() {
