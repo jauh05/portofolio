@@ -91,7 +91,7 @@
     <!-- Header Navigation -->
     <nav class="sticky top-0 z-40 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="/" class="flex items-center gap-4 group">
+            <a href="{{ url('/') }}" class="flex items-center gap-4 group">
                 <div
                     class="bg-primary-600 rounded-full w-10 h-10 flex items-center justify-center shadow-lg shadow-primary-500/30 group-hover:scale-110 transition">
                     <span class="font-bold text-white tracking-tighter">JF</span>
@@ -136,7 +136,7 @@
                     <!-- PDF Preview Container -->
                     <div
                         class="w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 relative mb-6">
-                        <iframe :src="'/serti/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0'"
+                        <iframe :src="'{{ asset('serti') }}/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0'"
                             class="w-full h-full pointer-events-none" frameborder="0"></iframe>
                         <div class="absolute inset-0 bg-transparent"></div> <!-- Blocking interaction with iframe -->
                         <div
@@ -182,7 +182,8 @@
             class="relative w-full max-w-6xl h-full bg-white dark:bg-zinc-950 rounded-[3rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/10">
             <!-- Left Side: Digital Certificate -->
             <div class="w-full md:w-[70%] h-[50vh] md:h-auto bg-zinc-800 relative">
-                <iframe :src="'/serti/' + selectedCert?.file" class="w-full h-full" frameborder="0"></iframe>
+                <iframe :src="'{{ asset('serti') }}/' + selectedCert?.file" class="w-full h-full"
+                    frameborder="0"></iframe>
                 <button @click="selectedCert = null"
                     class="absolute top-6 left-6 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition md:hidden">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -238,7 +239,7 @@
                     </div>
 
                     <div class="pt-8 flex flex-col gap-4">
-                        <a :href="'/serti/' + selectedCert?.file" download
+                        <a :href="'{{ asset('serti') }}/' + selectedCert?.file" download
                             class="w-full py-4 bg-primary-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-primary-700 transition shadow-xl shadow-primary-500/20">
                             Download PDF
                         </a>

@@ -461,7 +461,7 @@
                         :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
                         x-text="t[lang].nav.skills">
                     </a>
-                    <a href="/certificates" @click="expanded = false"
+                    <a href="{{ url('/certificates') }}" @click="expanded = false"
                         class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
                         :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
                         x-text="t[lang].nav.serti">
@@ -527,7 +527,7 @@
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
                             class="px-5 py-2 text-sm rounded-full transition-all font-bold"
                             x-text="t[lang].nav.skills"></a>
-                        <a href="/certificates"
+                        <a href="{{ url('/certificates') }}"
                             :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
                             class="px-5 py-2 text-sm rounded-full transition-all font-bold"
                             x-text="t[lang].nav.serti"></a>
@@ -815,7 +815,7 @@
                 <p class="text-gray-600 dark:text-gray-400 text-lg md:text-xl leading-relaxed font-medium mb-8"
                     x-text="t[lang].projects.desc"></p>
 
-                <a href="/projects"
+                <a href="{{ url('/projects') }}"
                     class="inline-flex items-center gap-3 px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary-500/20 group">
                     <span x-text="lang === 'id' ? 'Lihat Selengkapnya' : 'View All Projects'"></span>
                     <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24"

@@ -113,7 +113,7 @@
     <!-- Header Navigation -->
     <nav class="sticky top-0 z-40 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="/" class="flex items-center gap-4 group">
+            <a href="{{ url('/') }}" class="flex items-center gap-4 group">
                 <div
                     class="bg-primary-600 rounded-full w-10 h-10 flex items-center justify-center shadow-lg shadow-primary-500/30 group-hover:scale-110 transition">
                     <span class="font-bold text-white tracking-tighter">JF</span>
