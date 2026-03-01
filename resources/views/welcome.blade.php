@@ -814,99 +814,179 @@
 
 
     <!-- Certificates Highlights -->
-    <section id="certifications" class="max-w-7xl mx-auto px-6 py-20 relative overflow-hidden">
+    <section id="certifications" class="max-w-7xl mx-auto px-6 py-24 relative overflow-hidden">
+        <!-- Premium Background Elements -->
         <div
-            class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-primary-600/5 rounded-full blur-[120px] pointer-events-none">
+            class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[140px] pointer-events-none opacity-50">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[120px] pointer-events-none opacity-30">
         </div>
 
-        <div class="mb-16">
-            <p class="text-primary-500 font-black text-xs uppercase tracking-[0.4em] mb-4" x-text="t[lang].certs.tag">
-            </p>
-            <h2 class="text-5xl md:text-7xl font-black dark:text-white tracking-tighter mb-8 italic">
-                <span x-text="t[lang].certs.title"></span><br>
+        <div class="mb-20 relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-6"
+                x-text="t[lang].certs.tag">
+            </div>
+            <h2 class="text-5xl md:text-8xl font-black dark:text-white tracking-tighter mb-8 leading-[0.85]">
+                <span
+                    class="text-zinc-400 dark:text-zinc-700 block text-3xl md:text-4xl font-light tracking-[0.1em] mb-4 uppercase"
+                    x-text="t[lang].certs.title"></span>
                 <span class="text-primary-500" x-text="t[lang].certs.subtitle"></span>
             </h2>
             <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium"
                 x-text="t[lang].certs.desc"></p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            <!-- Cert Card 1 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 relative z-10">
+            <!-- Cert Card 1: Asisten Praktikum -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-primary-500/50 transition-all duration-500 shadow-xl dark:shadow-none">
+                class="group relative bg-white dark:bg-zinc-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/5 rounded-[3rem] p-5 transition-all duration-700 hover:border-primary-500/50 hover:-translate-y-3 shadow-2xl shadow-black/5 dark:shadow-none">
                 <div
-                    class="w-12 h-12 bg-primary-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                    🎓</div>
-                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Asisten Praktikum</h4>
-                <p class="text-xs text-primary-500 font-bold uppercase tracking-widest mb-4">Struktur Data</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Amikom Creative Economy Park</p>
-                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg class="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    class="relative aspect-[4/5] rounded-[2.2rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 mb-6 shadow-inner">
+                    <!-- PDF Preview with Scaling -->
+                    <iframe
+                        src="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
+                        class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                        frameborder="0"></iframe>
+                    <div class="absolute inset-0 bg-transparent"></div>
+                    <!-- Hover Overlay -->
+                    <div
+                        class="absolute inset-0 bg-primary-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                        <div
+                            class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-500">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-3 pb-3">
+                    <span class="text-[10px] font-black tracking-[0.3em] text-primary-500 uppercase mb-3 block">ASISTEN
+                        PRAKTIKUM</span>
+                    <h4 class="text-xl font-black dark:text-white mb-2 leading-tight">Data Structures</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-1">Amikom Creative Economy
+                        Park</p>
+                </div>
+                <!-- Accent Glow -->
+                <div
+                    class="absolute -bottom-1 -right-1 w-20 h-20 bg-primary-600/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 </div>
             </div>
 
-            <!-- Cert Card 2 -->
+            <!-- Cert Card 2: Juara III Nasional -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-pink-500/50 transition-all duration-500 shadow-xl dark:shadow-none md:mt-8">
+                class="group relative bg-white dark:bg-zinc-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/5 rounded-[3rem] p-5 transition-all duration-700 hover:border-pink-500/50 hover:-translate-y-3 shadow-2xl shadow-black/5 dark:shadow-none lg:mt-12">
                 <div
-                    class="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                    🏆</div>
-                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Juara III Nasional</h4>
-                <p class="text-xs text-pink-500 font-bold uppercase tracking-widest mb-4">Karya Tulis Islami</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Kemenag RI</p>
-                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    class="relative aspect-[4/5] rounded-[2.2rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 mb-6 shadow-inner">
+                    <iframe src="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
+                        class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                        frameborder="0"></iframe>
+                    <div class="absolute inset-0 bg-transparent"></div>
+                    <div
+                        class="absolute inset-0 bg-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                        <div
+                            class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-500">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-3 pb-3">
+                    <span class="text-[10px] font-black tracking-[0.3em] text-pink-500 uppercase mb-3 block">JUARA III
+                        NASIONAL</span>
+                    <h4 class="text-xl font-black dark:text-white mb-2 leading-tight">Karya Tulis Islami</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-1">Kementerian Agama RI
+                    </p>
+                </div>
+                <div
+                    class="absolute -bottom-1 -right-1 w-20 h-20 bg-pink-600/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 </div>
             </div>
 
-            <!-- Cert Card 3 -->
+            <!-- Cert Card 3: Waroeng Steak -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-yellow-500/50 transition-all duration-500 shadow-xl dark:shadow-none">
+                class="group relative bg-white dark:bg-zinc-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/5 rounded-[3rem] p-5 transition-all duration-700 hover:border-yellow-500/50 hover:-translate-y-3 shadow-2xl shadow-black/5 dark:shadow-none">
                 <div
-                    class="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                    💻</div>
-                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Assistant Programmer</h4>
-                <p class="text-xs text-yellow-500 font-bold uppercase tracking-widest mb-4">Internship</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Waroeng Steak Indonesia</p>
-                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    class="relative aspect-[4/5] rounded-[2.2rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 mb-6 shadow-inner">
+                    <iframe src="{{ asset('serti/ws.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
+                        class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                        frameborder="0"></iframe>
+                    <div class="absolute inset-0 bg-transparent"></div>
+                    <div
+                        class="absolute inset-0 bg-yellow-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                        <div
+                            class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-500">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-3 pb-3">
+                    <span class="text-[10px] font-black tracking-[0.3em] text-yellow-500 uppercase mb-3 block">ASSISTANT
+                        PROGRAMMER</span>
+                    <h4 class="text-xl font-black dark:text-white mb-2 leading-tight">Internship Program</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-1">Waroeng Steak Indonesia
+                    </p>
+                </div>
+                <div
+                    class="absolute -bottom-1 -right-1 w-20 h-20 bg-yellow-600/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 </div>
             </div>
 
-            <!-- Cert Card 4 -->
+            <!-- Cert Card 4: UNY -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2rem] p-8 hover:border-indigo-500/50 transition-all duration-500 shadow-xl dark:shadow-none md:mt-8">
+                class="group relative bg-white dark:bg-zinc-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/5 rounded-[3rem] p-5 transition-all duration-700 hover:border-indigo-500/50 hover:-translate-y-3 shadow-2xl shadow-black/5 dark:shadow-none lg:mt-12">
                 <div
-                    class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                    🌟</div>
-                <h4 class="text-lg font-black dark:text-white mb-2 leading-tight">Futuristic Workshop</h4>
-                <p class="text-xs text-indigo-500 font-bold uppercase tracking-widest mb-4">Fiscreation 2023</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Universitas Negeri Yogyakarta</p>
-                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    class="relative aspect-[4/5] rounded-[2.2rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 mb-6 shadow-inner">
+                    <iframe src="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
+                        class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                        frameborder="0"></iframe>
+                    <div class="absolute inset-0 bg-transparent"></div>
+                    <div
+                        class="absolute inset-0 bg-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                        <div
+                            class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-500">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-3 pb-3">
+                    <span
+                        class="text-[10px] font-black tracking-[0.3em] text-indigo-500 uppercase mb-3 block">FUTURISTIC
+                        WORKSHOP</span>
+                    <h4 class="text-xl font-black dark:text-white mb-2 leading-tight">Fiscreation 2023</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-1">Universitas Negeri
+                        Yogyakarta</p>
+                </div>
+                <div
+                    class="absolute -bottom-1 -right-1 w-20 h-20 bg-indigo-600/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 </div>
             </div>
         </div>
 
-        <div class="flex justify-center md:justify-start">
+        <div class="flex justify-center md:justify-start relative z-10">
             <a href="{{ url('/certificates') }}"
-                class="group flex items-center gap-6 px-10 py-6 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white dark:hover:text-white transition-all shadow-2xl">
+                class="group flex items-center gap-6 px-12 py-7 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-[2.5rem] font-black text-sm uppercase tracking-[0.25em] hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white dark:hover:text-white transition-all shadow-2xl hover:scale-105 active:scale-95">
                 <span x-text="t[lang].certs.cta"></span>
                 <div
-                    class="w-10 h-10 rounded-full bg-white/10 dark:bg-black/5 flex items-center justify-center group-hover:translate-x-2 transition-transform">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    class="w-12 h-12 rounded-full bg-white/10 dark:bg-black/5 flex items-center justify-center group-hover:translate-x-3 transition-transform duration-500">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                             d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
