@@ -141,11 +141,11 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <template x-for="cert in certs" :key="cert.id">
                 <div @click="selectedCert = cert"
-                    class="group bg-white dark:bg-zinc-900 rounded-[2.5rem] p-4 border border-gray-200 dark:border-white/10 shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer">
+                    class="group bg-white dark:bg-zinc-900 rounded-[2.5rem] p-4 border border-gray-200 dark:border-white/10 shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer h-full flex flex-col">
 
                     <!-- PDF Preview Container -->
                     <div
-                        class="w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 relative mb-6">
+                        class="w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 relative mb-6 shrink-0">
                         <iframe :src="'{{ asset('serti') }}/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0'"
                             class="w-full h-full pointer-events-none" frameborder="0"></iframe>
                         <div class="absolute inset-0 bg-transparent"></div> <!-- Blocking interaction with iframe -->
@@ -157,13 +157,13 @@
                         </div>
                     </div>
 
-                    <div class="px-4 pb-4">
+                    <div class="px-4 pb-4 flex flex-col flex-grow">
                         <span class="text-[10px] font-black tracking-[0.2em] text-primary-500 uppercase mb-2 block"
                             x-text="cert.predicate"></span>
                         <h3 class="text-xl font-bold dark:text-white mb-2 line-clamp-1" x-text="cert.title"></h3>
-                        <p class="text-gray-500 text-sm mb-4 line-clamp-2" x-text="cert.organization"></p>
+                        <p class="text-gray-500 text-sm mb-4 line-clamp-2 flex-grow" x-text="cert.organization"></p>
                         <div
-                            class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5">
+                            class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
                             <span class="text-xs font-mono text-gray-400" x-text="cert.date"></span>
                             <svg class="w-5 h-5 text-primary-500 transform group-hover:translate-x-1 transition"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
