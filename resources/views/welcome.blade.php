@@ -581,7 +581,7 @@
     </div>
 
     <header id="about"
-        class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 text-center md:text-left flex flex-col-reverse md:flex-row items-center gap-12">
+        class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 text-left flex flex-col-reverse md:flex-row items-center gap-12">
         <div class="flex-1">
             <h1 class="text-5xl md:text-8xl font-black leading-[0.9] mb-6 tracking-tighter">
                 <span
@@ -596,7 +596,7 @@
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-6">
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center">
+                <div class="flex flex-col sm:flex-row gap-4 justify-start items-center">
                     <a href="#projects"
                         class="bg-primary-600 hover:bg-blue-700 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all transform hover:scale-105 text-center min-w-[220px] shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.4)]"
                         x-text="t[lang].hero.cta_projects">
@@ -913,7 +913,7 @@
                                 <!-- Premium PDF Preview with Scaling -->
                                 <iframe
                                     src="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
                                     frameborder="0"></iframe>
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
@@ -972,7 +972,7 @@
                                 class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-6 shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_20px_rgba(255,255,255,0.02)] border border-gray-200/50 dark:border-white/5">
                                 <iframe
                                     src="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
                                     frameborder="0"></iframe>
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
@@ -1029,7 +1029,7 @@
                             <div
                                 class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-6 shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_20px_rgba(255,255,255,0.02)] border border-gray-200/50 dark:border-white/5">
                                 <iframe src="{{ asset('serti/ws.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
                                     frameborder="0"></iframe>
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
@@ -1086,7 +1086,7 @@
                                 class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-6 shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_20px_rgba(255,255,255,0.02)] border border-gray-200/50 dark:border-white/5">
                                 <iframe
                                     src="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-[200%] h-[200%] absolute top-0 left-0 origin-top-left scale-[0.5] pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
                                     frameborder="0"></iframe>
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
