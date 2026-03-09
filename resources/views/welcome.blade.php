@@ -91,7 +91,7 @@
                 radial-gradient(circle at 100% 0%, rgba(var(--primary-rgb), 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%);
             animation: mesh-rotate 20s linear infinite;
-            z-index: -1;
+            z-index: -10;
             pointer-events: none;
             opacity: 0.6;
             /* Softer in light mode */
@@ -415,7 +415,7 @@
     class="bg-mesh-theme antialiased transition-colors duration-300">
 
     <!-- React App Container -->
-    <div id="react-background-particles" class="fixed inset-0 z-[-100] w-full h-full pointer-events-none"></div>
+    <div id="react-background-particles" class="fixed inset-0 z-[-5] w-full h-full pointer-events-none"></div>
 
     <!-- Dynamic Navbar Wrapper -->
     <div x-data="{ expanded: false }">

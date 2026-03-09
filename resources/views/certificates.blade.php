@@ -45,6 +45,7 @@
             background-image:
                 radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.1) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.1) 0px, transparent 50%);
+            z-index: -10;
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -111,7 +112,7 @@
     class="min-h-screen transition-colors duration-300">
 
     <!-- React App Container -->
-    <div id="react-background-particles" class="fixed inset-0 z-[-100] w-full h-full pointer-events-none"></div>
+    <div id="react-background-particles" class="fixed inset-0 z-[-5] w-full h-full pointer-events-none"></div>
 
     <div class="bg-mesh fixed inset-0 pointer-events-none opacity-50"></div>
 

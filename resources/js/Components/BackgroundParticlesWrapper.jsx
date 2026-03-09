@@ -65,9 +65,13 @@ const BackgroundParticlesWrapper = () => {
 
 // Mount utility
 export const mountBackgroundParticles = (elementId) => {
+    console.log('Attempting to mount particles on:', elementId);
     const el = document.getElementById(elementId);
     if (el) {
+        console.log('Container found, creating root...');
         const root = createRoot(el);
         root.render(<BackgroundParticlesWrapper />);
+    } else {
+        console.warn('Particle container not found:', elementId);
     }
 };
