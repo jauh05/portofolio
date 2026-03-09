@@ -41,6 +41,15 @@
                 radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.1) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.1) 0px, transparent 50%);
         }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 
@@ -138,42 +147,70 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-            <template x-for="cert in certs" :key="cert.id">
-                <div @click="selectedCert = cert"
-                    class="group bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer h-full flex flex-col">
+        <div class="relative w-full" x-data="{
+            scrollLeft() { $refs.slider.scrollBy({ left: -window.innerWidth / 2, behavior: 'smooth' }); },
+            scrollRight() { $refs.slider.scrollBy({ left: window.innerWidth / 2, behavior: 'smooth' }); }
+        }">
+            <!-- Navigation Arrows (Mobile Only) -->
+            <button @click="scrollLeft"
+                class="md:hidden absolute -left-3 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-2 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition">
+                <svg class="w-4 h-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button @click="scrollRight"
+                class="md:hidden absolute -right-3 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-2 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition">
+                <svg class="w-4 h-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
 
-                    <!-- PDF Preview Container -->
-                    <div
-                        class="w-full aspect-[4/3] rounded-xl md:rounded-[1.5rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 relative mb-3 md:mb-6 shrink-0">
-                        <iframe :src="'{{ asset('serti') }}/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0'"
-                            class="w-full h-full pointer-events-none" frameborder="0"></iframe>
-                        <div class="absolute inset-0 bg-transparent"></div> <!-- Blocking interaction with iframe -->
-                        <div
-                            class="absolute inset-x-0 bottom-0 h-16 md:h-24 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-2 md:pb-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span
-                                class="text-white text-[8px] md:text-[10px] font-black tracking-widest uppercase bg-primary-600 px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">View
-                                <span class="hidden md:inline">Full Protocol</span></span>
+            <!-- Container for Slider (Mobile) / Grid (Desktop) -->
+            <div x-ref="slider"
+                class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible pb-6 pt-2">
+                <template x-for="cert in certs" :key="cert.id">
+                    <div class="w-[calc(50%-6px)] md:w-auto shrink-0 snap-start h-full">
+                        <div @click="selectedCert = cert"
+                            class="group bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer h-[100%] flex flex-col">
+
+                            <!-- PDF Preview Container -->
+                            <div
+                                class="w-full aspect-[4/3] rounded-xl md:rounded-[1.5rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 relative mb-3 md:mb-6 shrink-0">
+                                <iframe :src="'{{ asset('serti') }}/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0'"
+                                    class="w-full h-full pointer-events-none" frameborder="0"></iframe>
+                                <div class="absolute inset-0 bg-transparent"></div>
+                                <!-- Blocking interaction with iframe -->
+                                <div
+                                    class="absolute inset-x-0 bottom-0 h-16 md:h-24 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-2 md:pb-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span
+                                        class="text-white text-[8px] md:text-[10px] font-black tracking-widest uppercase bg-primary-600 px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">View
+                                        <span class="hidden md:inline">Full Protocol</span></span>
+                                </div>
+                            </div>
+
+                            <div class="px-2 pb-2 md:px-4 md:pb-4 flex flex-col flex-grow">
+                                <span
+                                    class="text-[8px] md:text-[10px] font-black tracking-[0.2em] text-primary-500 uppercase mb-1.5 md:mb-2 block truncate"
+                                    x-text="cert.predicate"></span>
+                                <h3 class="text-sm md:text-xl font-bold dark:text-white mb-1.5 md:mb-2 line-clamp-2 md:line-clamp-1 leading-tight"
+                                    x-text="cert.title"></h3>
+                                <p class="text-gray-500 text-[10px] md:text-sm mb-2 md:mb-4 line-clamp-2 flex-grow leading-snug"
+                                    x-text="cert.organization"></p>
+                                <div
+                                    class="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
+                                    <span class="text-[8px] md:text-xs font-mono text-gray-400"
+                                        x-text="cert.date"></span>
+                                    <svg class="w-3.5 h-3.5 md:w-5 md:h-5 text-primary-500 transform group-hover:translate-x-1 transition hidden md:block"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="px-2 pb-2 md:px-4 md:pb-4 flex flex-col flex-grow">
-                        <span class="text-[8px] md:text-[10px] font-black tracking-[0.2em] text-primary-500 uppercase mb-1.5 md:mb-2 block truncate"
-                            x-text="cert.predicate"></span>
-                        <h3 class="text-sm md:text-xl font-bold dark:text-white mb-1.5 md:mb-2 line-clamp-2 md:line-clamp-1 leading-tight" x-text="cert.title"></h3>
-                        <p class="text-gray-500 text-[10px] md:text-sm mb-2 md:mb-4 line-clamp-2 flex-grow leading-snug" x-text="cert.organization"></p>
-                        <div
-                            class="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
-                            <span class="text-[8px] md:text-xs font-mono text-gray-400" x-text="cert.date"></span>
-                            <svg class="w-3.5 h-3.5 md:w-5 md:h-5 text-primary-500 transform group-hover:translate-x-1 transition hidden md:block"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </template>
+                </template>
+            </div>
         </div>
     </main>
 
