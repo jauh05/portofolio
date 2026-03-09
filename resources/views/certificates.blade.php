@@ -142,19 +142,20 @@
             canScrollRight: true,
             checkScroll() {
                 const slider = this.$refs.slider;
+                if (!slider) return;
                 this.canScrollLeft = slider.scrollLeft > 0;
-                this.canScrollRight = Math.ceil(slider.scrollLeft) < (slider.scrollWidth - slider.clientWidth);
+                this.canScrollRight = Math.ceil(slider.scrollLeft) < (slider.scrollWidth - slider.clientWidth - 5);
             },
             slideLeft() { 
-                this.$refs.slider.scrollBy({ left: -window.innerWidth * 0.85, behavior: 'smooth' }); 
-                setTimeout(() => this.checkScroll(), 400);
+                this.$refs.slider.scrollBy({ left: -window.innerWidth * 0.5, behavior: 'smooth' }); 
+                setTimeout(() => this.checkScroll(), 500);
             },
             slideRight() { 
-                this.$refs.slider.scrollBy({ left: window.innerWidth * 0.85, behavior: 'smooth' }); 
-                setTimeout(() => this.checkScroll(), 400);
+                this.$refs.slider.scrollBy({ left: window.innerWidth * 0.5, behavior: 'smooth' }); 
+                setTimeout(() => this.checkScroll(), 500);
             }
         }"
-            x-init="$nextTick(() => checkScroll()); $refs.slider.addEventListener('scroll', () => { setTimeout(() => checkScroll(), 50); })">
+            x-init="setTimeout(() => checkScroll(), 200); setTimeout(() => checkScroll(), 1000); window.addEventListener('resize', () => checkScroll()); $refs.slider.addEventListener('scroll', () => checkScroll())">
 
             <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between">
                 <div>
@@ -192,7 +193,7 @@
                 class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-8 md:overflow-visible pb-6 pt-2 items-stretch h-full">
                 <template x-for="cert in certs" :key="cert.id">
                     <div
-                        class="w-[85vw] sm:w-[90vw] md:w-[calc(50%-1rem)] shrink-0 snap-center md:snap-start h-auto flex pb-2">
+                        class="w-[85vw] sm:w-[400px] md:w-[380px] lg:w-[450px] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
                         <div @click="selectedCert = cert"
                             class="group bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer h-[100%] flex flex-col">
 
