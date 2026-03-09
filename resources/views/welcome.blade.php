@@ -146,8 +146,10 @@
                 nav: { about: 'Tentang', projects: 'Projek', skills: 'Keahlian', contact: 'Kontak', talk: 'Bicara', serti: 'Sertifikasi' },
                 hero: {
                     title: 'ULUL ALBAB',
-                    subtitle: 'JAUHAR FAUZI',
-                    tagline: 'Digital Solutions Engineer & Tech Problem Solver',
+                    subtitle_first: 'JAUHAR',
+                    subtitle_second: 'FAUZI',
+                    tagline_line1: 'Digital Solutions Engineer',
+                    tagline_rotating: ['Tech Problem Solver', 'Full Stack Developer', 'System Architect', 'AI Enthusiast'],
                     desc: 'Seorang profesional teknologi yang berfokus pada pengembangan solusi digital yang inovatif, efisien, dan berdampak. Memiliki ketertarikan besar pada pemanfaatan teknologi modern, AI, serta rekayasa perangkat lunak untuk menyelesaikan masalah nyata.',
                     cta_projects: 'Lihat Projek Saya',
                     cta_contact: 'Hubungi Saya',
@@ -272,8 +274,10 @@
                 nav: { about: 'About', projects: 'Projects', skills: 'Skills', contact: 'Contact', talk: 'Let\'s Talk', serti: 'Certifications' },
                 hero: {
                     title: 'ULUL ALBAB',
-                    subtitle: 'JAUHAR FAUZI',
-                    tagline: 'Digital Solutions Engineer & Tech Problem Solver',
+                    subtitle_first: 'JAUHAR',
+                    subtitle_second: 'FAUZI',
+                    tagline_line1: 'Digital Solutions Engineer',
+                    tagline_rotating: ['Tech Problem Solver', 'Full Stack Developer', 'System Architect', 'AI Enthusiast'],
                     desc: 'A technology professional focused on developing innovative, efficient, and impactful digital solutions. Passionate about modern technology, AI, and software engineering to solve real-world problems.',
                     cta_projects: 'View My Projects',
                     cta_contact: 'Contact Me',
@@ -582,17 +586,31 @@
     </div>
 
     <header id="about"
-        class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 flex flex-col-reverse md:flex-row items-start md:items-center gap-12">
+        class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 flex flex-col-reverse md:flex-row items-center md:items-start gap-12">
         <div class="flex-1">
-            <h1 class="text-5xl md:text-8xl font-black leading-[0.9] mb-6 tracking-tighter text-left">
+            <h1
+                class="text-5xl md:text-9xl font-black leading-[0.85] mb-8 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
                 <span
-                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.2em] mb-4 uppercase text-left"
+                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.3em] mb-4"
                     x-text="t[lang].hero.title" data-split-text></span>
-                <span class="text-zinc-900 dark:text-white block" x-text="t[lang].hero.subtitle" data-split-text></span>
+                <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_first"
+                    data-split-text></span>
+                <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_second"
+                    data-split-text></span>
             </h1>
-            <p class="text-xl md:text-2xl text-primary-500 dark:text-primary-400 font-black mb-8 tracking-tight text-left"
-                x-text="t[lang].hero.tagline" data-split-text>
-            </p>
+
+            <div class="flex flex-col mb-10 text-left items-start">
+                <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-2"
+                    x-text="t[lang].hero.tagline_line1" data-split-text></p>
+
+                <div class="flex items-center gap-3 text-2xl md:text-4xl">
+                    <span class="text-primary-500 font-black">&</span>
+                    <div data-rotating-text :data-rotating-texts="JSON.stringify(t[lang].hero.tagline_rotating)"
+                        data-rotating-main-class="px-4 bg-primary-500/10 text-primary-500 dark:text-primary-400 py-1.5 rounded-2xl border border-primary-500/20 font-black tracking-tight">
+                    </div>
+                </div>
+            </div>
+
             <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium text-left"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
