@@ -531,7 +531,8 @@
         </div>
 
         <!-- Desktop Navigation (Cleaned & Static) -->
-        <nav class="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-fit">
+        <nav
+            class="hidden md:flex fixed top-6 inset-x-0 mx-auto z-50 transition-all duration-300 w-max pointer-events-auto">
             <div :class="darkMode ? 'bg-zinc-900/95 border-white/10' : 'bg-white/90 border-gray-200 shadow-xl'"
                 class="backdrop-blur-2xl border rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-2 px-3 transition-colors duration-300">
                 <div class="flex items-center gap-4">
@@ -581,18 +582,18 @@
     </div>
 
     <header id="about"
-        class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 text-left flex flex-col-reverse md:flex-row items-center gap-12">
+        class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 flex flex-col-reverse md:flex-row items-start md:items-center gap-12">
         <div class="flex-1">
-            <h1 class="text-5xl md:text-8xl font-black leading-[0.9] mb-6 tracking-tighter">
+            <h1 class="text-5xl md:text-8xl font-black leading-[0.9] mb-6 tracking-tighter text-left">
                 <span
-                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.2em] mb-4 uppercase"
+                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.2em] mb-4 uppercase text-left"
                     x-text="t[lang].hero.title" data-split-text></span>
-                <span class="text-zinc-900 dark:text-white" x-text="t[lang].hero.subtitle" data-split-text></span>
+                <span class="text-zinc-900 dark:text-white block" x-text="t[lang].hero.subtitle" data-split-text></span>
             </h1>
-            <p class="text-xl md:text-2xl text-primary-500 dark:text-primary-400 font-black mb-8 tracking-tight"
+            <p class="text-xl md:text-2xl text-primary-500 dark:text-primary-400 font-black mb-8 tracking-tight text-left"
                 x-text="t[lang].hero.tagline" data-split-text>
             </p>
-            <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium"
+            <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium text-left"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-6">

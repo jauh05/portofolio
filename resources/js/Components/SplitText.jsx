@@ -74,18 +74,27 @@ const SplitText = ({
                 <span
                     key={i}
                     className="split-item inline-block"
-                    style={{ whiteSpace: char === ' ' ? 'pre' : 'normal' }}
+                    style={{ whiteSpace: 'pre' }}
                 >
                     {char}
                 </span>
             ));
         }
         if (splitType === 'words') {
-            return text.split(' ').map((word, i) => (
-                <span key={i} className="split-item inline-block mr-[0.2em]">
-                    {word}
-                </span>
-            ));
+            return text.split(/(\s+)/).map((word, i) => {
+                if (word.trim() === '') {
+                    return (
+                        <span key={i} className="inline-block" style={{ whiteSpace: 'pre' }}>
+                            {word}
+                        </span>
+                    );
+                }
+                return (
+                    <span key={i} className="split-item inline-block">
+                        {word}
+                    </span>
+                );
+            });
         }
         return text;
     };
