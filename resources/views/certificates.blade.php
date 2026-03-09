@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sertifikasi - Jauhar Fauzi</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Vite & React -->
+    @viteReactRefresh
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -104,6 +109,9 @@
     }
 }" x-init="init()" :class="darkMode ? 'dark bg-[#050505]' : 'bg-slate-50'"
     class="min-h-screen transition-colors duration-300">
+
+    <!-- React App Container -->
+    <div id="react-background-particles" class="fixed inset-0 z-[-100] w-full h-full pointer-events-none"></div>
 
     <div class="bg-mesh fixed inset-0 pointer-events-none opacity-50"></div>
 

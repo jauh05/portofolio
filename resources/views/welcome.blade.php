@@ -11,6 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 
+    <!-- Vite & React -->
+    @viteReactRefresh
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -405,9 +409,13 @@
             this.currentColor = rgb;
             localStorage.setItem('color', rgb);
             this.initTheme();
+        window.dispatchEvent(new CustomEvent('color-change', { detail: { color: rgb } }));
         }
     }" x-init="initTheme()" :class="darkMode ? 'bg-[#050505] text-white' : 'bg-slate-50 text-zinc-900'"
     class="bg-mesh-theme antialiased transition-colors duration-300">
+
+    <!-- React App Container -->
+    <div id="react-background-particles" class="fixed inset-0 z-[-100] w-full h-full pointer-events-none"></div>
 
     <!-- Dynamic Navbar Wrapper -->
     <div x-data="{ expanded: false }">
