@@ -167,9 +167,9 @@
 
             <!-- Container for Slider (Mobile) / Grid (Desktop) -->
             <div x-ref="slider"
-                class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible pb-6 pt-2">
+                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible pb-6 pt-2 items-stretch h-full">
                 <template x-for="cert in certs" :key="cert.id">
-                    <div class="w-[calc(50%-6px)] md:w-auto shrink-0 snap-start h-full">
+                    <div class="w-[45vw] sm:w-[48vw] md:w-auto shrink-0 snap-center md:snap-start h-auto flex pb-2">
                         <div @click="selectedCert = cert"
                             class="group bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer h-[100%] flex flex-col">
 
