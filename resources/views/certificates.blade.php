@@ -193,9 +193,9 @@
                 class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-8 pb-6 pt-2 items-stretch h-full">
                 <template x-for="cert in certs" :key="cert.id">
                     <div
-                        class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
+                        class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                         <div @click="selectedCert = cert"
-                            class="group bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer h-[100%] flex flex-col">
+                            class="group w-full flex-1 bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer flex flex-col">
 
                             <!-- PDF Preview Container -->
                             <div

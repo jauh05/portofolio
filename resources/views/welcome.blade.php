@@ -881,9 +881,9 @@
                 class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-8 mb-20 relative z-10 items-stretch pb-6 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
-                        class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
+                        class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
                         <div
                             class="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-primary-600 via-primary-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
@@ -941,9 +941,9 @@
 
                 <!-- Cert Card 2: Juara III Nasional -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10 lg:mt-16">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
-                        class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
+                        class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
                         <div
                             class="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-pink-600 via-pink-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
@@ -999,9 +999,9 @@
 
                 <!-- Cert Card 3: Waroeng Steak -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
-                        class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
+                        class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
                         <div
                             class="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
@@ -1055,9 +1055,9 @@
 
                 <!-- Cert Card 4: UNY -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10 lg:mt-16">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
-                        class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(79,70,229,0.3)] flex flex-col">
+                        class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(79,70,229,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
                         <div
                             class="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-indigo-600 via-indigo-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
