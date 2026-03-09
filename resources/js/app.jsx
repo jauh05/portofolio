@@ -37,6 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Vite App Initializing...');
     initParticles();
 
-    // Minimal delay to let layouts settle if needed
-    setTimeout(initTextAnimations, 100);
+    // Higher delay to ensure Alpine.js x-text is fully rendered by the browser
+    setTimeout(initTextAnimations, 800);
 });

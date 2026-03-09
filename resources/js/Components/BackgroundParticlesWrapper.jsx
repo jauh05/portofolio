@@ -8,17 +8,12 @@ const BackgroundParticlesWrapper = () => {
     });
 
     useEffect(() => {
-        // We observe the localStorage changing color if possible,
-        // Or we observe a custom event 'color-changed' that we can dispatch.
-
-        // To handle custom event:
         const handleColorChange = (e) => {
             if (e.detail && e.detail.color) {
                 setColor(e.detail.color);
             }
         };
 
-        // Fallback: check localStorage periodically or handle storage events
         const handleStorage = () => {
             const stored = localStorage.getItem('color');
             if (stored) setColor(stored);
@@ -33,10 +28,9 @@ const BackgroundParticlesWrapper = () => {
         };
     }, []);
 
-    // Convert "r, g, b" string to "#rrggbb" for the Particles component
     const rgbToHex = (rgbString) => {
         const coords = rgbString.split(',').map(s => parseInt(s.trim(), 10));
-        if (coords.length !== 3) return '#ffffff'; // Fallback
+        if (coords.length !== 3) return '#ffffff';
         return '#' + coords.map(x => {
             const hex = x.toString(16);
             return hex.length === 1 ? '0' + hex : hex;
@@ -49,10 +43,10 @@ const BackgroundParticlesWrapper = () => {
         <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 0, pointerEvents: 'none' }}>
             <Particles
                 particleColors={['#ffffff', hexColor, '#60a5fa', '#a855f7']}
-                particleCount={800}
+                particleCount={1000}
                 particleSpread={15}
-                speed={0.2}
-                particleBaseSize={40}
+                speed={0.3}
+                particleBaseSize={60}
                 moveParticlesOnHover={true}
                 particleHoverFactor={1.5}
                 alphaParticles={true}
@@ -63,7 +57,6 @@ const BackgroundParticlesWrapper = () => {
     );
 };
 
-// Mount utility
 export const mountBackgroundParticles = (elementId) => {
     console.log('Attempting to mount particles on:', elementId);
     const el = document.getElementById(elementId);
