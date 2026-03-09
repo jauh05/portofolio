@@ -13,7 +13,7 @@
 
     <!-- Vite & React -->
     @viteReactRefresh
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -586,14 +586,14 @@
             <h1 class="text-5xl md:text-8xl font-black leading-[0.9] mb-6 tracking-tighter">
                 <span
                     class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.2em] mb-4 uppercase"
-                    x-text="t[lang].hero.title"></span>
-                <span class="text-zinc-900 dark:text-white" x-text="t[lang].hero.subtitle"></span>
+                    x-text="t[lang].hero.title" data-split-text></span>
+                <span class="text-zinc-900 dark:text-white" x-text="t[lang].hero.subtitle" data-split-text></span>
             </h1>
             <p class="text-xl md:text-2xl text-primary-500 dark:text-primary-400 font-black mb-8 tracking-tight"
-                x-text="t[lang].hero.tagline">
+                x-text="t[lang].hero.tagline" data-split-text>
             </p>
             <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium"
-                x-text="t[lang].hero.desc">
+                x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-6">
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center">
@@ -863,8 +863,8 @@
                     <h2 class="text-5xl md:text-8xl font-black dark:text-white tracking-tighter mb-8 leading-[0.85]">
                         <span
                             class="text-zinc-400 dark:text-zinc-700 block text-3xl md:text-4xl font-light tracking-[0.1em] mb-4 uppercase"
-                            x-text="t[lang].certs.title"></span>
-                        <span class="text-primary-500" x-text="t[lang].certs.subtitle"></span>
+                            x-text="t[lang].certs.title" data-split-text></span>
+                        <span class="text-primary-500" x-text="t[lang].certs.subtitle" data-split-text></span>
                     </h2>
                     <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium"
                         x-text="t[lang].certs.desc"></p>
@@ -1151,8 +1151,8 @@
                     x-text="t[lang].projects.tag">
                 </div>
                 <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tight">
-                    <span class="text-zinc-900 dark:text-white" x-text="t[lang].projects.title"></span>
-                    <span class="text-primary-500" x-text="t[lang].projects.subtitle"></span>
+                    <span class="text-zinc-900 dark:text-white" x-text="t[lang].projects.title" data-split-text></span>
+                    <span class="text-primary-500" x-text="t[lang].projects.subtitle" data-split-text></span>
                 </h2>
                 <p class="text-gray-600 dark:text-gray-400 text-lg md:text-xl leading-relaxed font-medium mb-8"
                     x-text="t[lang].projects.desc"></p>
@@ -1555,8 +1555,10 @@
             <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
                 <div>
                     <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tight">
-                        <span class="text-zinc-900 dark:text-white" x-text="t[lang].skills.title"></span>
-                        <span class="text-primary-600 dark:text-primary-500" x-text="t[lang].skills.subtitle"></span>
+                        <span class="text-zinc-900 dark:text-white" x-text="t[lang].skills.title"
+                            data-split-text></span>
+                        <span class="text-primary-600 dark:text-primary-500" x-text="t[lang].skills.subtitle"
+                            data-split-text></span>
                     </h2>
                     <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base font-medium"
                         x-text="t[lang].skills.desc"></p>

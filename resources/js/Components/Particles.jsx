@@ -107,9 +107,12 @@ const Particles = ({
 
         const renderer = new Renderer({ dpr: pixelRatio, depth: false, alpha: true });
         const gl = renderer.gl;
+
+        // Ensure canvas style
         gl.canvas.style.width = '100%';
         gl.canvas.style.height = '100%';
         gl.canvas.style.display = 'block';
+
         container.appendChild(gl.canvas);
         gl.clearColor(0, 0, 0, 0);
 

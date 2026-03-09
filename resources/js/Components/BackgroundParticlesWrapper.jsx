@@ -48,13 +48,13 @@ const BackgroundParticlesWrapper = () => {
     return (
         <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 0, pointerEvents: 'none' }}>
             <Particles
-                particleColors={[hexColor, '#ffffff']}
-                particleCount={300}
-                particleSpread={10}
-                speed={0.1}
-                particleBaseSize={100}
+                particleColors={['#ffffff', hexColor, '#60a5fa', '#a855f7']}
+                particleCount={800}
+                particleSpread={15}
+                speed={0.2}
+                particleBaseSize={40}
                 moveParticlesOnHover={true}
-                particleHoverFactor={2}
+                particleHoverFactor={1.5}
                 alphaParticles={true}
                 disableRotation={false}
                 pixelRatio={window.devicePixelRatio || 1}

@@ -9,7 +9,7 @@
 
     <!-- Vite & React -->
     @viteReactRefresh
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -108,8 +108,7 @@
     init() {
         document.documentElement.style.setProperty('--primary-rgb', this.currentColor);
     }
-}" x-init="init()" :class="darkMode ? 'dark' : ''"
-    class="min-h-screen transition-colors duration-300">
+}" x-init="init()" :class="darkMode ? 'dark' : ''" class="min-h-screen transition-colors duration-300">
 
     <!-- Global Background Color Layer -->
     <div class="fixed inset-0 z-[-20] transition-colors duration-500"
@@ -174,7 +173,7 @@
                 <div>
                     <p class="text-primary-500 font-black text-xs uppercase tracking-[0.4em] mb-4">Recognitions & Awards
                     </p>
-                    <h1 class="text-5xl md:text-7xl font-black dark:text-white tracking-tighter mb-6">
+                    <h1 class="text-5xl md:text-7xl font-black dark:text-white tracking-tighter mb-6" data-split-text>
                         Official <span class="text-primary-500">Certifications</span>
                     </h1>
                     <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium">
