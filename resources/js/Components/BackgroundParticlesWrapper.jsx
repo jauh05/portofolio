@@ -46,7 +46,7 @@ const BackgroundParticlesWrapper = () => {
                 particleCount={1000}
                 particleSpread={15}
                 speed={0.3}
-                particleBaseSize={60}
+                particleBaseSize={120}
                 moveParticlesOnHover={true}
                 particleHoverFactor={1.5}
                 alphaParticles={true}

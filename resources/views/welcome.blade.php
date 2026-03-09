@@ -589,17 +589,17 @@
         class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 flex flex-col-reverse md:flex-row items-center md:items-start gap-12">
         <div class="flex-1">
             <h1
-                class="text-5xl md:text-9xl font-black leading-[0.85] mb-8 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
+                class="text-5xl md:text-8xl font-black leading-[0.85] mb-8 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
                 <span
                     class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.3em] mb-4"
                     x-text="t[lang].hero.title" data-split-text></span>
                 <div class="flex flex-row flex-wrap md:flex-col gap-x-4 md:gap-0">
-                    <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_first"
-                        data-split-text></span>
-                    <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_second"
-                        data-split-text></span>
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden"
+                        x-text="t[lang].hero.subtitle_first" data-split-text></span>
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden"
+                        x-text="t[lang].hero.subtitle_second" data-split-text></span>
                 </div>
-</h1>
+            </h1>
 
             <div class="flex flex-col mb-10 text-left items-start">
                 <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-2"
@@ -676,7 +676,7 @@
     <section class="max-w-6xl mx-auto px-6 py-12">
         <div class="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
-                <h2 class="text-4xl md:text-5xl font-black mb-4 tracking-tight">
+                <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tight">
                     <span class="text-primary-500" x-text="t[lang].experience.title"></span>
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].experience.subtitle"></span>
                 </h2>
@@ -688,78 +688,81 @@
             </div>
         </div>
 
-        <div class="relative space-y-8">
-            <!-- Timeline Line -->
-            <div
-                class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary-600 via-gray-200 dark:via-white/10 to-transparent hidden md:block select-none pointer-events-none">
-            </div>
-
+        <div class="relative space-y-4" x-data="{ activeExp: null }">
             <!-- Asdos -->
-            <div class="relative flex flex-col md:flex-row items-center justify-between group">
-                <div class="md:w-[45%] order-2 md:order-1">
-                    <div
-                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-primary-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center text-2xl">
-                                🎓</div>
-                            <div>
-                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
-                                    x-text="t[lang].experience.asdos.role"></h3>
-                                <p class="text-primary-600 dark:text-primary-400 font-bold"
-                                    x-text="t[lang].experience.asdos.company"></p>
-                            </div>
+            <div
+                class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
+                <button @click="activeExp = (activeExp === 'asdos' ? null : 'asdos')"
+                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 rounded-2xl bg-primary-500/10 flex items-center justify-center text-2xl">
+                            🎓</div>
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-black text-zinc-900 dark:text-white"
+                                x-text="t[lang].experience.asdos.role"></h3>
+                            <p class="text-primary-600 dark:text-primary-400 font-bold"
+                                x-text="t[lang].experience.asdos.company"></p>
                         </div>
-                        <ul class="space-y-3">
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="hidden md:block text-xs font-black uppercase tracking-widest text-gray-400"
+                            x-text="t[lang].experience.asdos.date"></span>
+                        <svg class="w-6 h-6 text-primary-500 transition-transform duration-300"
+                            :class="activeExp === 'asdos' ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </button>
+                <div x-show="activeExp === 'asdos'" x-collapse>
+                    <div class="px-6 md:px-8 pb-8 pt-2">
+                        <ul class="space-y-4 bg-primary-500/5 p-6 rounded-2xl border border-primary-500/10">
                             <template x-for="point in t[lang].experience.asdos.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-primary-500 mt-1.5 flex-shrink-0"></span>
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    <span class="w-2 h-2 rounded-full bg-primary-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
                             </template>
                         </ul>
                     </div>
                 </div>
-                <div
-                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-primary-600 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] group-hover:scale-150 transition-transform">
-                </div>
-                <div class="md:w-[45%] order-1 md:order-2 mb-4 md:mb-0">
-                    <span
-                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pl-8"
-                        x-text="t[lang].experience.asdos.date"></span>
-                </div>
             </div>
 
-            <!-- Team Leader Jauki -->
-            <div class="relative flex flex-col md:flex-row items-center justify-between group">
-                <div class="md:w-[45%] order-1 text-right mb-4 md:mb-0">
-                    <span
-                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pr-8"
-                        x-text="t[lang].experience.jauki.date"></span>
-                </div>
-                <div
-                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-600 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(139,92,246,0.5)] group-hover:scale-150 transition-transform">
-                </div>
-                <div class="md:w-[45%] order-2">
-                    <div
-                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-purple-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-2xl">
-                                🚀</div>
-                            <div>
-                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
-                                    x-text="t[lang].experience.jauki.role"></h3>
-                                <p class="text-purple-600 dark:text-purple-400 font-bold"
-                                    x-text="t[lang].experience.jauki.company"></p>
-                            </div>
+            <!-- Jauki -->
+            <div
+                class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
+                <button @click="activeExp = (activeExp === 'jauki' ? null : 'jauki')"
+                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-2xl">🚀
                         </div>
-                        <ul class="space-y-3">
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-black text-zinc-900 dark:text-white"
+                                x-text="t[lang].experience.jauki.role"></h3>
+                            <p class="text-purple-600 dark:text-purple-400 font-bold"
+                                x-text="t[lang].experience.jauki.company"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="hidden md:block text-xs font-black uppercase tracking-widest text-gray-400"
+                            x-text="t[lang].experience.jauki.date"></span>
+                        <svg class="w-6 h-6 text-purple-500 transition-transform duration-300"
+                            :class="activeExp === 'jauki' ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </button>
+                <div x-show="activeExp === 'jauki'" x-collapse>
+                    <div class="px-6 md:px-8 pb-8 pt-2">
+                        <ul class="space-y-4 bg-purple-500/5 p-6 rounded-2xl border border-purple-500/10">
                             <template x-for="point in t[lang].experience.jauki.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0"></span>
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    <span class="w-2 h-2 rounded-full bg-purple-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
                             </template>
@@ -768,72 +771,80 @@
                 </div>
             </div>
 
-            <!-- Waroeng Steak -->
-            <div class="relative flex flex-col md:flex-row items-center justify-between group">
-                <div class="md:w-[45%] order-2 md:order-1">
-                    <div
-                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-yellow-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-2xl">
-                                🍔</div>
-                            <div>
-                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
-                                    x-text="t[lang].experience.magang.role"></h3>
-                                <p class="text-yellow-600 dark:text-yellow-500 font-bold"
-                                    x-text="t[lang].experience.magang.company"></p>
-                            </div>
+            <!-- Magang -->
+            <div
+                class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
+                <button @click="activeExp = (activeExp === 'magang' ? null : 'magang')"
+                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-2xl">🍔
                         </div>
-                        <ul class="space-y-3">
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-black text-zinc-900 dark:text-white"
+                                x-text="t[lang].experience.magang.role"></h3>
+                            <p class="text-yellow-600 dark:text-yellow-500 font-bold"
+                                x-text="t[lang].experience.magang.company"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="hidden md:block text-xs font-black uppercase tracking-widest text-gray-400"
+                            x-text="t[lang].experience.magang.date"></span>
+                        <svg class="w-6 h-6 text-yellow-500 transition-transform duration-300"
+                            :class="activeExp === 'magang' ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </button>
+                <div x-show="activeExp === 'magang'" x-collapse>
+                    <div class="px-6 md:px-8 pb-8 pt-2">
+                        <ul class="space-y-4 bg-yellow-500/5 p-6 rounded-2xl border border-yellow-500/10">
                             <template x-for="point in t[lang].experience.magang.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1.5 flex-shrink-0"></span>
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
                             </template>
                         </ul>
                     </div>
                 </div>
-                <div
-                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-yellow-500 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(245,158,11,0.5)] group-hover:scale-150 transition-transform">
-                </div>
-                <div class="md:w-[45%] order-1 md:order-2 mb-4 md:mb-0">
-                    <span
-                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pl-8"
-                        x-text="t[lang].experience.magang.date"></span>
-                </div>
             </div>
 
-            <!-- Freedomspace -->
-            <div class="relative flex flex-col md:flex-row items-center justify-between group">
-                <div class="md:w-[45%] order-1 text-right mb-4 md:mb-0">
-                    <span
-                        class="text-xs font-black uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-600 block md:pr-8"
-                        x-text="t[lang].experience.freedom.date"></span>
-                </div>
-                <div
-                    class="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-indigo-600 rounded-full border-4 border-white dark:border-zinc-950 z-10 hidden md:block shadow-[0_0_15px_rgba(79,70,229,0.5)] group-hover:scale-150 transition-transform">
-                </div>
-                <div class="md:w-[45%] order-2">
-                    <div
-                        class="bg-white dark:bg-zinc-900/40 border border-gray-100 dark:border-white/5 p-8 rounded-[2rem] hover:border-indigo-500/50 transition-all duration-500 shadow-xl dark:shadow-none group-hover:-translate-y-1">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-2xl">
-                                🎸</div>
-                            <div>
-                                <h3 class="text-xl font-black text-zinc-900 dark:text-white"
-                                    x-text="t[lang].experience.freedom.role"></h3>
-                                <p class="text-indigo-600 dark:text-indigo-400 font-bold"
-                                    x-text="t[lang].experience.freedom.company"></p>
-                            </div>
+            <!-- Freedom -->
+            <div
+                class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
+                <button @click="activeExp = (activeExp === 'freedom' ? null : 'freedom')"
+                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-2xl">🎸
                         </div>
-                        <ul class="space-y-3">
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-black text-zinc-900 dark:text-white"
+                                x-text="t[lang].experience.freedom.role"></h3>
+                            <p class="text-indigo-600 dark:text-indigo-400 font-bold"
+                                x-text="t[lang].experience.freedom.company"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="hidden md:block text-xs font-black uppercase tracking-widest text-gray-400"
+                            x-text="t[lang].experience.freedom.date"></span>
+                        <svg class="w-6 h-6 text-indigo-500 transition-transform duration-300"
+                            :class="activeExp === 'freedom' ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </button>
+                <div x-show="activeExp === 'freedom'" x-collapse>
+                    <div class="px-6 md:px-8 pb-8 pt-2">
+                        <ul class="space-y-4 bg-indigo-500/5 p-6 rounded-2xl border border-indigo-500/10">
                             <template x-for="point in t[lang].experience.freedom.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0"></span>
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    <span class="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
                             </template>
@@ -910,11 +921,11 @@
                 </div>
             </div>
 
-            <div x-ref="featuredSlider"
+            <div x-ref="slider"
                 class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-8 mb-20 relative z-10 items-stretch pb-6 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[400px] md:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -1166,33 +1177,51 @@
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full -z-10"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -z-10"></div>
 
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16" x-data="{ 
+            canScrollLeft: false, 
+            canScrollRight: true,
+            checkScroll() {
+                const el = this.$refs.projectSlider;
+                this.canScrollLeft = el.scrollLeft > 10;
+                this.canScrollRight = el.scrollLeft < (el.scrollWidth - el.clientWidth - 10);
+            },
+            slideLeft() {
+                const el = this.$refs.projectSlider;
+                el.scrollBy({ left: -400, behavior: 'smooth' });
+            },
+            slideRight() {
+                const el = this.$refs.projectSlider;
+                el.scrollBy({ left: 400, behavior: 'smooth' });
+            }
+        }" @scroll.window.debounce.100ms="checkScroll()">
             <div class="max-w-2xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4"
                     x-text="t[lang].projects.tag">
                 </div>
-                <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tight">
+                <h2 class="text-4xl md:text-5xl font-black mb-6 tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].projects.title" data-split-text></span>
                     <span class="text-primary-500" x-text="t[lang].projects.subtitle" data-split-text></span>
                 </h2>
-                <p class="text-gray-600 dark:text-gray-400 text-lg md:text-xl leading-relaxed font-medium mb-8"
+                <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed font-medium mb-8"
                     x-text="t[lang].projects.desc"></p>
+            </div>
 
-                <a href="{{ url('/projects') }}"
-                    class="inline-flex items-center gap-3 px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary-500/20 group">
-                    <span x-text="lang === 'id' ? 'Lihat Selengkapnya' : 'View All Projects'"></span>
-                    <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            <div class="flex gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
+                <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
+                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                    :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
                     </svg>
-                </a>
+                </button>
+                <button type="button" @click="slideRight" :disabled="!canScrollRight"
+                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                    :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
             </div>
-            <div
-                class="text-primary-500 font-mono text-sm hidden md:block border-b border-primary-500/30 pb-2 uppercase tracking-widest">
-                Portfolio 03
-            </div>
-        </div>
         </div>
 
         <!-- Mobile Swipe Indicator (Masif & Jelas) -->
@@ -1233,8 +1262,8 @@
             }
         </style>
 
-        <div
-            class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-2 lg:grid-cols-2 lg:gap-16 no-scrollbar pb-24 md:pb-0">
+        <div x-ref="projectSlider" @scroll="checkScroll()"
+            class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 no-scrollbar pb-24 h-full">
 
             <!-- Project 0: Journal Publication (Real PDF View) -->
             <div
@@ -1339,7 +1368,7 @@
 
             <!-- Project Cards (Generic Update for Light Mode) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 min-w-[320px] md:min-w-[400px] snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
                 <div class="h-72 overflow-hidden relative">
                     <img src="{{ asset('project-media/kpri.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1590,150 +1619,45 @@
                 </div>
             </div>
 
-            <!-- Mobile Swipe Indicator -->
-            <div class="md:hidden flex items-center gap-2 mb-4 text-gray-500 text-xs animate-pulse">
-                <span x-text="t[lang].skills.swipe"></span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-            </div>
-
-            <div
-                class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 md:grid md:grid-cols-2 md:gap-6 no-scrollbar pb-6 md:pb-0">
-                <!-- Backend -->
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">⚙️</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Backend</h3>
+            <div class="mt-8">
+                <div class="flex flex-wrap gap-4 md:gap-6 justify-center">
+                    <!-- Backend -->
+                    <div
+                        class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                        <i class="devicon-laravel-original text-4xl md:text-5xl text-red-500"></i>
+                        <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Laravel</span>
                     </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-laravel-original text-3xl md:text-4xl text-red-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Laravel</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-codeigniter-plain text-3xl md:text-4xl text-orange-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CodeIgniter</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-mysql-original text-3xl md:text-4xl text-primary-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">MySQL</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <!-- Generic API Icon -->
-                            <svg class="w-8 h-8 md:w-9 md:h-9 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">REST API</span>
-                        </div>
+                    <div
+                        class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                        <i class="devicon-codeigniter-plain text-4xl md:text-5xl text-orange-500"></i>
+                        <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">CodeIgniter</span>
                     </div>
-                </div>
-
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">🎨</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Frontend</h3>
+                    <div
+                        class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                        <i class="devicon-mysql-original text-4xl md:text-5xl text-primary-400"></i>
+                        <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">MySQL</span>
                     </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-tailwindcss-original text-3xl md:text-4xl text-cyan-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Tailwind</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-bootstrap-plain text-3xl md:text-4xl text-purple-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Bootstrap</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-css3-plain text-3xl md:text-4xl text-primary-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">CSS3</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <!-- Blade approximate icon (HTML5 or generic code) -->
-                            <svg class="w-8 h-8 md:w-9 md:h-9 text-red-500" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                            </svg>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Blade</span>
-                        </div>
+                    <!-- Frontend -->
+                    <div
+                        class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                        <i class="devicon-tailwindcss-original text-4xl md:text-5xl text-cyan-400"></i>
+                        <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Tailwind</span>
                     </div>
-                </div>
-
-                <!-- Languages -->
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">💻</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">Languages</h3>
+                    <div
+                        class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                        <i class="devicon-react-original text-4xl md:text-5xl text-blue-400"></i>
+                        <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">React</span>
                     </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-php-plain text-3xl md:text-4xl text-indigo-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">PHP</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-python-plain text-3xl md:text-4xl text-yellow-500"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">Python</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-javascript-plain text-3xl md:text-4xl text-yellow-400"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">JavaScript</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <i class="devicon-cplusplus-plain text-3xl md:text-4xl text-primary-600"></i>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">C++</span>
-                        </div>
+                    <!-- Tools/Others -->
+                    <div
+                        class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                        <i class="devicon-git-plain text-4xl md:text-5xl text-orange-600"></i>
+                        <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Git</span>
                     </div>
-                </div>
-
-                <!-- AI -->
-                <div
-                    class="p-6 md:p-8 bg-white dark:bg-zinc-900/40 rounded-3xl border border-gray-200 dark:border-white/5 min-w-[85vw] md:min-w-0 snap-center shadow-sm dark:shadow-none">
-                    <div class="flex items-center gap-3 mb-4 md:mb-6">
-                        <span class="text-2xl">🤖</span>
-                        <h3 class="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">AI & Tech</h3>
-                    </div>
-                    <div class="flex flex-wrap gap-3 md:gap-4">
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🧩</span>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Prompt
-                                Eng.</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🚀</span>
-                            <span
-                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Few-shot</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🧠</span>
-                            <span class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">NLP</span>
-                        </div>
-                        <div
-                            class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-4 rounded-xl min-w-[80px] md:min-w-[100px] hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
-                            <span class="text-2xl md:text-3xl">🛸</span>
-                            <span
-                                class="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 text-center">Antigravity</span>
-                        </div>
+                    <div
+                        class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                        <i class="devicon-python-plain text-4xl md:text-5xl text-yellow-500"></i>
+                        <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Python</span>
                     </div>
                 </div>
             </div>
