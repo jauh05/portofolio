@@ -602,21 +602,21 @@
             </h1>
 
             <div class="flex flex-col mb-10 text-left items-start">
-                <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-2"
+                <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-1"
                     x-text="t[lang].hero.tagline_line1" data-split-text></p>
 
-                <div class="flex items-center gap-3 text-xl md:text-3xl">
+                <div class="flex items-center gap-2 text-xl md:text-3xl">
                     <span class="text-primary-500 font-black">&</span>
                     <div data-rotating-text :data-rotating-texts="JSON.stringify(t[lang].hero.tagline_rotating)"
-                        data-rotating-main-class="px-4 bg-primary-500/10 text-primary-500 dark:text-primary-400 py-1 rounded-xl border border-primary-500/20 font-black tracking-tight">
+                        data-rotating-main-class="px-3 bg-primary-500/10 text-primary-500 dark:text-primary-400 py-0.5 rounded-lg border border-primary-500/20 font-black tracking-tight">
                     </div>
                 </div>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium text-justify"
+            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-8 max-w-2xl leading-relaxed font-medium text-justify"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
-            <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-4">
                 <div class="flex flex-col sm:flex-row gap-4 justify-start items-center">
                     <a href="#projects"
                         class="bg-primary-600 hover:bg-blue-700 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all transform hover:scale-105 text-center min-w-[220px] shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.4)]"
@@ -892,13 +892,22 @@
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-6"
                         x-text="t[lang].certs.tag">
                     </div>
-                    <h2 class="text-5xl md:text-8xl font-black dark:text-white tracking-tighter mb-8 leading-[0.85]">
-                        <span
-                            class="text-zinc-400 dark:text-zinc-700 block text-3xl md:text-4xl font-light tracking-[0.1em] mb-4 uppercase"
-                            x-text="t[lang].certs.title" data-split-text></span>
-                        <span class="text-primary-500" x-text="t[lang].certs.subtitle" data-split-text></span>
+                    <div class="flex flex-col md:flex-row md:items-center gap-4 mb-4 uppercase">
+                        <span class="text-zinc-400 dark:text-zinc-700 text-2xl md:text-3xl font-light tracking-[0.1em]"
+                            x-text="t[lang].certs.title"></span>
+                        <a href="{{ url('/certificates') }}"
+                            class="text-primary-500 font-black text-sm hover:underline flex items-center gap-2">
+                            Lihat Semua Sertifikat
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                    <h2 class="text-4xl md:text-6xl font-black dark:text-white tracking-tighter mb-4 leading-tight">
+                        <span class="text-primary-500" x-text="t[lang].certs.subtitle"></span>
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium"
+                    <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-relaxed font-medium"
                         x-text="t[lang].certs.desc"></p>
                 </div>
 
@@ -934,50 +943,29 @@
                         </div>
                         <!-- Inner Container -->
                         <div
-                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[calc(3rem-2px)] p-6 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
+                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[2.5rem] p-5 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
                             <!-- Tech Accents -->
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 blur-[50px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-150">
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-6 shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_20px_rgba(255,255,255,0.02)] border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-video rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <!-- Premium PDF Preview with Scaling -->
                                 <iframe
                                     src="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                                </div>
-                                <!-- Interactive Hover Overlay -->
-                                <div
-                                    class="absolute inset-0 bg-primary-600/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center">
-                                    <div
-                                        class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/40 shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center transform scale-50 group-hover:scale-100 transition-all duration-500 delay-100">
-                                        <svg class="w-7 h-7 text-white drop-shadow-lg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="px-2 pb-2 relative z-10 flex-1 flex flex-col justify-end">
-                                <div class="inline-flex items-center gap-2 mb-3">
-                                    <span class="w-2 h-2 rounded-full bg-primary-500 group-hover:animate-ping"></span>
-                                    <span
-                                        class="text-[10px] font-black tracking-[0.4em] text-primary-500 uppercase">ASISTEN
-                                        PRAKTIKUM</span>
-                                </div>
+                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
+                                <span
+                                    class="text-[9px] font-black tracking-[0.3em] text-primary-500 uppercase mb-2">ASISTEN
+                                    PRAKTIKUM</span>
                                 <h4
-                                    class="text-2xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
                                     Data Structures</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-2">Amikom
-                                    Creative
-                                    Economy Park</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Amikom Creative Economy
+                                    Park</p>
                             </div>
                         </div>
                     </div>
@@ -1370,9 +1358,10 @@
             class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 no-scrollbar pb-24 h-full">
 
             <!-- Project Cards (Generic Update for Light Mode) -->
+            <!-- Project Cards -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 min-w-[320px] md:min-w-[400px] snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
-                <div class="h-72 overflow-hidden relative">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
+                <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/kpri.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
@@ -1675,6 +1664,32 @@
                     class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
                     <i class="devicon-javascript-plain text-4xl md:text-5xl text-yellow-400"></i>
                     <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">JS</span>
+                </div>
+                <!-- Extra Skills Added -->
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <i class="devicon-nodejs-plain text-4xl md:text-5xl text-green-500"></i>
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Node.js</span>
+                </div>
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <i class="devicon-alpinejs-plain text-4xl md:text-5xl text-cyan-400"></i>
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Alpine.js</span>
+                </div>
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <i class="devicon-docker-plain text-4xl md:text-5xl text-blue-500"></i>
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Docker</span>
+                </div>
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <i class="devicon-figma-plain text-4xl md:text-5xl text-purple-400"></i>
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Figma</span>
+                </div>
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <i class="devicon-sass-original text-4xl md:text-5xl text-pink-400"></i>
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">SASS</span>
                 </div>
             </div>
         </div>
