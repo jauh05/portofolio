@@ -91,7 +91,7 @@
                 radial-gradient(circle at 100% 0%, rgba(var(--primary-rgb), 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%);
             animation: mesh-rotate 20s linear infinite;
-            z-index: -10;
+            z-index: -15;
             pointer-events: none;
             opacity: 0.6;
             /* Softer in light mode */
@@ -411,11 +411,15 @@
             this.initTheme();
         window.dispatchEvent(new CustomEvent('color-change', { detail: { color: rgb } }));
         }
-    }" x-init="initTheme()" :class="darkMode ? 'bg-[#050505] text-white' : 'bg-slate-50 text-zinc-900'"
+    }" x-init="initTheme()" :class="darkMode ? 'text-white' : 'text-zinc-900'"
     class="bg-mesh-theme antialiased transition-colors duration-300">
 
+    <!-- Global Background Color Layer -->
+    <div class="fixed inset-0 z-[-20] transition-colors duration-500"
+        :class="darkMode ? 'bg-[#050505]' : 'bg-slate-50'"></div>
+
     <!-- React App Container -->
-    <div id="react-background-particles" class="fixed inset-0 z-[-5] w-full h-full pointer-events-none"></div>
+    <div id="react-background-particles" class="fixed inset-0 z-[-10] w-full h-full pointer-events-none"></div>
 
     <!-- Dynamic Navbar Wrapper -->
     <div x-data="{ expanded: false }">

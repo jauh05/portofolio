@@ -45,7 +45,7 @@
             background-image:
                 radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.1) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.1) 0px, transparent 50%);
-            z-index: -10;
+            z-index: -15;
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -108,11 +108,15 @@
     init() {
         document.documentElement.style.setProperty('--primary-rgb', this.currentColor);
     }
-}" x-init="init()" :class="darkMode ? 'dark bg-[#050505]' : 'bg-slate-50'"
+}" x-init="init()" :class="darkMode ? 'dark' : ''"
     class="min-h-screen transition-colors duration-300">
 
+    <!-- Global Background Color Layer -->
+    <div class="fixed inset-0 z-[-20] transition-colors duration-500"
+        :class="darkMode ? 'bg-[#050505]' : 'bg-slate-50'"></div>
+
     <!-- React App Container -->
-    <div id="react-background-particles" class="fixed inset-0 z-[-5] w-full h-full pointer-events-none"></div>
+    <div id="react-background-particles" class="fixed inset-0 z-[-10] w-full h-full pointer-events-none"></div>
 
     <div class="bg-mesh fixed inset-0 pointer-events-none opacity-50"></div>
 
