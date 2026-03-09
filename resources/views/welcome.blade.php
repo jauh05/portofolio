@@ -831,11 +831,11 @@
                 this.canScrollLeft = slider.scrollLeft > 0;
                 this.canScrollRight = Math.ceil(slider.scrollLeft) < (slider.scrollWidth - slider.clientWidth);
             },
-            scrollLeft() { 
+            slideLeft() { 
                 this.$refs.featuredSlider.scrollBy({ left: -window.innerWidth * 0.85, behavior: 'smooth' }); 
                 setTimeout(() => this.checkScroll(), 400);
             },
-            scrollRight() { 
+            slideRight() { 
                 this.$refs.featuredSlider.scrollBy({ left: window.innerWidth * 0.85, behavior: 'smooth' }); 
                 setTimeout(() => this.checkScroll(), 400);
             }
@@ -857,17 +857,17 @@
                         x-text="t[lang].certs.desc"></p>
                 </div>
 
-                <!-- Navigation Arrows (Mobile Only, Above Slider) -->
-                <div class="flex gap-4 md:hidden mt-8 justify-end">
-                    <button @click="scrollLeft" :disabled="!canScrollLeft"
-                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300"
+                <!-- Navigation Arrows -->
+                <div class="flex gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
+                    <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
+                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
                         :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <button @click="scrollRight" :disabled="!canScrollRight"
-                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300"
+                    <button type="button" @click="slideRight" :disabled="!canScrollRight"
+                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
                         :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
@@ -877,10 +877,10 @@
             </div>
 
             <div x-ref="featuredSlider"
-                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-2 md:gap-8 mb-20 relative z-10 items-stretch md:overflow-visible pb-6 pt-2 h-full">
+                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-8 mb-20 relative z-10 items-stretch md:overflow-visible pb-6 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
-                    class="w-[85vw] sm:w-[90vw] md:w-auto shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[90vw] md:w-[calc(50%-1rem)] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
                     <div
                         class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -940,7 +940,7 @@
 
                 <!-- Cert Card 2: Juara III Nasional -->
                 <div
-                    class="w-[85vw] sm:w-[90vw] md:w-auto shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10 lg:mt-16">
+                    class="w-[85vw] sm:w-[90vw] md:w-[calc(50%-1rem)] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10 lg:mt-16">
                     <div
                         class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -998,7 +998,7 @@
 
                 <!-- Cert Card 3: Waroeng Steak -->
                 <div
-                    class="w-[85vw] sm:w-[90vw] md:w-auto shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[90vw] md:w-[calc(50%-1rem)] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10">
                     <div
                         class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -1054,7 +1054,7 @@
 
                 <!-- Cert Card 4: UNY -->
                 <div
-                    class="w-[85vw] sm:w-[90vw] md:w-auto shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10 lg:mt-16">
+                    class="w-[85vw] sm:w-[90vw] md:w-[calc(50%-1rem)] shrink-0 snap-center md:snap-start h-auto flex pb-2 relative z-10 lg:mt-16">
                     <div
                         class="w-full h-full group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(79,70,229,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->

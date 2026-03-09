@@ -145,51 +145,54 @@
                 this.canScrollLeft = slider.scrollLeft > 0;
                 this.canScrollRight = Math.ceil(slider.scrollLeft) < (slider.scrollWidth - slider.clientWidth);
             },
-            scrollLeft() { 
+            slideLeft() { 
                 this.$refs.slider.scrollBy({ left: -window.innerWidth * 0.85, behavior: 'smooth' }); 
                 setTimeout(() => this.checkScroll(), 400);
             },
-            scrollRight() { 
+            slideRight() { 
                 this.$refs.slider.scrollBy({ left: window.innerWidth * 0.85, behavior: 'smooth' }); 
                 setTimeout(() => this.checkScroll(), 400);
             }
-        }" x-init="$nextTick(() => checkScroll()); $refs.slider.addEventListener('scroll', () => { setTimeout(() => checkScroll(), 50); })">
+        }"
+            x-init="$nextTick(() => checkScroll()); $refs.slider.addEventListener('scroll', () => { setTimeout(() => checkScroll(), 50); })">
 
-        <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between">
-            <div>
-                <p class="text-primary-500 font-black text-xs uppercase tracking-[0.4em] mb-4">Recognitions & Awards</p>
-                <h1 class="text-5xl md:text-7xl font-black dark:text-white tracking-tighter mb-6">
-                    Official <span class="text-primary-500">Certifications</span>
-                </h1>
-                <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium">
-                    Pencapaian dan sertifikasi profesional dalam bidang teknologi dan akademik.
-                </p>
-            </div>
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between">
+                <div>
+                    <p class="text-primary-500 font-black text-xs uppercase tracking-[0.4em] mb-4">Recognitions & Awards
+                    </p>
+                    <h1 class="text-5xl md:text-7xl font-black dark:text-white tracking-tighter mb-6">
+                        Official <span class="text-primary-500">Certifications</span>
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium">
+                        Pencapaian dan sertifikasi profesional dalam bidang teknologi dan akademik.
+                    </p>
+                </div>
 
-            <!-- Navigation Arrows (Mobile Only, Above Slider) -->
-            <div class="flex gap-4 md:hidden mt-8 justify-end">
-                <button @click="scrollLeft" :disabled="!canScrollLeft"
-                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300"
-                    :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <button @click="scrollRight" :disabled="!canScrollRight"
-                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300"
-                    :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
+                <!-- Navigation Arrows -->
+                <div class="flex gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
+                    <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
+                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                        :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button type="button" @click="slideRight" :disabled="!canScrollRight"
+                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                        :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
             </div>
-        </div>
 
             <!-- Container for Slider (Mobile) / Grid (Desktop) -->
             <div x-ref="slider"
-                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-2 md:gap-8 md:overflow-visible pb-6 pt-2 items-stretch h-full">
+                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-8 md:overflow-visible pb-6 pt-2 items-stretch h-full">
                 <template x-for="cert in certs" :key="cert.id">
-                    <div class="w-[85vw] sm:w-[90vw] md:w-auto shrink-0 snap-center md:snap-start h-auto flex pb-2">
+                    <div
+                        class="w-[85vw] sm:w-[90vw] md:w-[calc(50%-1rem)] shrink-0 snap-center md:snap-start h-auto flex pb-2">
                         <div @click="selectedCert = cert"
                             class="group bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer h-[100%] flex flex-col">
 
