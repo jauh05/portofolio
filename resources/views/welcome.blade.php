@@ -593,11 +593,13 @@
                 <span
                     class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.3em] mb-4"
                     x-text="t[lang].hero.title" data-split-text></span>
-                <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_first"
-                    data-split-text></span>
-                <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_second"
-                    data-split-text></span>
-            </h1>
+                <div class="flex flex-row flex-wrap md:flex-col gap-x-4 md:gap-0">
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_first"
+                        data-split-text></span>
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden" x-text="t[lang].hero.subtitle_second"
+                        data-split-text></span>
+                </div>
+</h1>
 
             <div class="flex flex-col mb-10 text-left items-start">
                 <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-2"
@@ -611,7 +613,7 @@
                 </div>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium text-left"
+            <p class="text-gray-600 dark:text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed font-medium text-justify"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-6">
