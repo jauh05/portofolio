@@ -141,6 +141,7 @@
         lang: 'id',
         darkMode: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : true,
         currentColor: localStorage.getItem('color') || '59, 130, 246',
+        selectedJournal: false,
         t: {
             id: {
                 nav: { about: 'Tentang', projects: 'Projek', skills: 'Keahlian', contact: 'Kontak', talk: 'Bicara', serti: 'Sertifikasi' },
@@ -932,11 +933,11 @@
                 </div>
             </div>
 
-            <div x-ref="featuredSlider"
+            <div x-ref="featuredSlider" @scroll="checkScroll()"
                 class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-6 mb-10 relative z-10 items-stretch pb-6 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
-                    class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -984,7 +985,7 @@
 
                 <!-- Cert Card 2: Juara III Nasional -->
                 <div
-                    class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -1033,7 +1034,7 @@
 
                 <!-- Cert Card 3: Waroeng Steak -->
                 <div
-                    class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -1079,7 +1080,7 @@
 
                 <!-- Cert Card 4: Futuristic Tech -->
                 <div
-                    class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -1131,8 +1132,8 @@
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full -z-10"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -z-10"></div>
 
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16" x-data="{ 
-            canScrollLeft: false, 
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16" x-data="{
+            canScrollLeft: false,
             canScrollRight: true,
             checkScroll() {
                 const el = this.$refs.projectSlider;
@@ -1147,7 +1148,8 @@
                 const el = this.$refs.projectSlider;
                 el.scrollBy({ left: 480, behavior: 'smooth' });
             }
-        }" @scroll.window.debounce.100ms="checkScroll()">
+        }" @scroll.window.debounce.100ms="checkScroll()"
+            x-init="setTimeout(() => checkScroll(), 500); $refs.projectSlider.addEventListener('scroll', () => checkScroll())">
             <div class="max-w-2xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4"
                     x-text="t[lang].projects.tag">
@@ -1161,31 +1163,6 @@
             </div>
         </div>
 
-        <!-- Mobile Swipe Indicator (Masif & Jelas) -->
-        <div class="md:hidden flex flex-col items-center justify-center mb-12 mt-6">
-            <div
-                class="relative w-full max-w-[300px] h-16 bg-zinc-900/80 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
-                <div
-                    class="absolute inset-0 bg-gradient-to-r from-transparent via-primary-500/20 to-transparent animate-[shimmer_2s_infinite]">
-                </div>
-                <div class="flex items-center gap-6 text-white font-black text-[11px] uppercase tracking-[0.4em] z-10">
-                    <svg class="w-5 h-5 text-primary-500 animate-[bounce_1s_infinite] -rotate-90" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
-                    </svg>
-                    <span class="animate-pulse" x-text="t[lang].projects.swipe"></span>
-                    <svg class="w-5 h-5 text-primary-500 animate-[bounce_1s_infinite] rotate-90" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </div>
-            </div>
-            <div class="mt-4 flex gap-2">
-                <div class="w-12 h-1.5 bg-primary-600 rounded-full"></div>
-                <div class="w-3 h-1.5 bg-zinc-800 rounded-full"></div>
-                <div class="w-3 h-1.5 bg-zinc-800 rounded-full"></div>
-            </div>
-        </div>
 
         <style>
             @keyframes shimmer {
@@ -1217,8 +1194,8 @@
                         <div class="absolute w-[80%] h-[90%] bg-black/40 blur-[40px] rotate-2 -z-0"></div>
 
                         <!-- Realistic Paper Container -->
-                        <div
-                            class="relative z-10 w-full max-w-[400px] h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03]">
+                        <div @click="selectedJournal = true"
+                            class="relative z-10 w-full max-w-[320px] lg:max-w-[400px] h-[400px] lg:h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-pointer group/journal">
                             <!-- PDF Iframe -->
                             <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
                                 class="w-full h-full border-none bg-white pointer-events-none" title="JAIC Journal PDF"
@@ -1228,6 +1205,19 @@
                             <!-- Shimmering Glass Overlay -->
                             <div
                                 class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
+                            </div>
+
+                            <!-- Click to Expand Overlay -->
+                            <div
+                                class="absolute inset-0 bg-primary-600/20 backdrop-blur-sm opacity-0 group-hover/journal:opacity-100 transition-all duration-500 flex items-center justify-center">
+                                <div
+                                    class="bg-white/10 backdrop-blur-xl border border-white/30 p-4 rounded-full scale-50 group-hover/journal:scale-100 transition-transform duration-500">
+                                    <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
 
@@ -1304,23 +1294,34 @@
         </div>
 
         <!-- Project Slider Navigation Buttons (Specifically for and below the slider content) -->
-        <div class="flex gap-4 mb-10 mt-6 justify-end md:justify-start relative z-50 pointer-events-auto">
-            <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
-                class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
-                :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+        <div class="flex flex-wrap items-center gap-6 mb-10 mt-6 relative z-50 pointer-events-auto">
+            <div class="flex gap-4">
+                <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
+                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                    :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button type="button" @click="slideRight" :disabled="!canScrollRight"
+                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                    :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+            <a href="{{ url('/projects') }}"
+                class="group flex items-center gap-3 bg-primary-600/10 hover:bg-primary-600 px-6 py-4 rounded-2xl transition-all duration-300 border border-primary-500/20 hover:border-primary-500">
+                <span
+                    class="text-xs font-black text-primary-600 group-hover:text-white uppercase tracking-widest transition-colors">Lihat
+                    Project Selengkapnya</span>
+                <svg class="w-5 h-5 text-primary-500 group-hover:text-white group-hover:translate-x-1 transition-all"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-            </button>
-            <button type="button" @click="slideRight" :disabled="!canScrollRight"
-                class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
-                :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-            <span class="ml-4 text-xs font-black text-gray-400 uppercase tracking-widest flex items-center">More
-                Projects</span>
+            </a>
         </div>
 
         <div x-ref="projectSlider" @scroll="checkScroll()"
@@ -1620,54 +1621,60 @@
                     <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Git</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-python-plain text-4xl md:text-5xl text-yellow-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Python</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+                        class="w-8 h-8 md:w-12 md:h-12" alt="Python">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Python</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-php-plain text-4xl md:text-5xl text-indigo-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">PHP</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg"
+                        class="w-8 h-8 md:w-12 md:h-12" alt="PHP">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">PHP</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-javascript-plain text-4xl md:text-5xl text-yellow-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">JS</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+                        class="w-8 h-8 md:w-12 md:h-12" alt="JS">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">JS</span>
                 </div>
                 <!-- Updated Extra Skills -->
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
                     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg"
-                        class="w-10 h-10 md:w-12 md:h-12" alt="C++">
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">C++</span>
+                        class="w-8 h-8 md:w-12 md:h-12" alt="C++">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">C++</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://icons.iconarchive.com/icons/google/google-colab/128/Google-Colab-icon.png"
-                        class="w-10 h-10 md:w-12 md:h-12" alt="Colab">
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Google Colab</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://www.gstatic.com/images/branding/product/2x/colab_96dp.png"
+                        class="w-8 h-8 md:w-12 md:h-12" alt="Colab">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Google Colab</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Claude_AI_logo.svg"
-                        class="w-10 h-10 md:w-12 md:h-12" alt="Claude">
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Claude Code</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://www.vectorlogo.zone/logos/anthropic/anthropic-icon.svg"
+                        class="w-8 h-8 md:w-12 md:h-12" alt="Claude">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Claude Code</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-trello-plain text-4xl md:text-5xl text-blue-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Trello</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trello/trello-plain.svg"
+                        class="w-8 h-8 md:w-12 md:h-12" alt="Trello">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Trello</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-androidstudio-plain text-4xl md:text-5xl text-green-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Android Studio</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg"
+                        class="w-8 h-8 md:w-12 md:h-12" alt="Android Studio">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Android
+                        Studio</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://app.diagrams.net/images/logo-net.png" class="w-10 h-10 md:w-12 md:h-12"
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://www.vectorlogo.zone/logos/drawio/drawio-icon.svg" class="w-8 h-8 md:w-12 md:h-12"
                         alt="Draw.io">
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Draw.io</span>
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Draw.io</span>
                 </div>
             </div>
         </div>
@@ -1779,8 +1786,9 @@
 
                 <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].footer.title"></span> <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-indigo-500"
-                        x-text="t[lang].footer.subtitle"></span>
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 via-indigo-500 to-primary-400 animate-[shine_3s_linear_infinite]"
+                        style="background-size: 200% auto;" x-text="t[lang].footer.subtitle"></span>
                 </h2>
 
                 <blockquote
@@ -2053,6 +2061,46 @@
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
         </button>
+    </div>
+
+    <!-- Journal Modal -->
+    <div x-show="selectedJournal" style="display: none;"
+        class="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-10"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+
+        <!-- Backdrop -->
+        <div @click="selectedJournal = false" class="absolute inset-0 bg-black/95 backdrop-blur-xl"></div>
+
+        <!-- Content -->
+        <div class="relative w-full max-w-6xl h-full bg-white rounded-[2rem] overflow-hidden shadow-2xl flex flex-col">
+            <div class="p-6 bg-zinc-900 text-white flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-primary-600 rounded-xl">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-black text-xs md:text-sm uppercase tracking-widest">Journal Publication</h3>
+                        <p class="text-white/60 text-[10px] md:text-xs">Recommendation System Research</p>
+                    </div>
+                </div>
+                <button @click="selectedJournal = false"
+                    class="p-3 bg-white/10 hover:bg-white/20 rounded-full transition duration-300">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="flex-grow bg-white relative">
+                <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
+                    class="w-full h-full border-none" title="Journal PDF"></iframe>
+            </div>
+        </div>
     </div>
 </body>
 
