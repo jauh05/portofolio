@@ -3,7 +3,7 @@ import Lenis from 'lenis';
 
 export const ScrollStackItem = ({ children, itemClassName = '' }) => (
     <div
-        className={`scroll-stack-card relative w-full h-auto my-8 p-12 rounded-[40px] shadow-[0_0_30px_rgba(0,0,0,0.1)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
+        className={`scroll-stack-card relative w-full h-auto my-4 p-6 md:p-12 rounded-[2rem] md:rounded-[40px] shadow-[0_0_30px_rgba(0,0,0,0.1)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
         style={{
             backfaceVisibility: 'hidden',
             transformStyle: 'preserve-3d'
@@ -16,9 +16,9 @@ export const ScrollStackItem = ({ children, itemClassName = '' }) => (
 const ScrollStack = ({
     children,
     className = '',
-    itemDistance = 100,
+    itemDistance = 60,
     itemScale = 0.03,
-    itemStackDistance = 30,
+    itemStackDistance = 25,
     stackPosition = '20%',
     scaleEndPosition = '10%',
     baseScale = 0.85,
@@ -324,11 +324,11 @@ const ScrollStack = ({
 
     const containerClassName = useWindowScroll
         ? `relative w-full ${className}`.trim()
-        : `relative w-full h-full overflow-y-auto overflow-x-visible ${className}`.trim();
+        : `relative w-full h-full overflow-hidden overflow-x-visible ${className}`.trim();
 
     return (
         <div className={containerClassName} ref={scrollerRef} style={containerStyles}>
-            <div className="scroll-stack-inner pt-[10vh] px-4 md:px-20 pb-[50rem] min-h-screen">
+            <div className="scroll-stack-inner pt-[5vh] px-4 md:px-20 pb-[20rem] min-h-full">
                 {children}
                 <div className="scroll-stack-end w-full h-px" />
             </div>

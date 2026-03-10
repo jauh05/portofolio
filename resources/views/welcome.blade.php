@@ -1438,7 +1438,7 @@
                 </div>
             </div>
 
-            <div data-logo-loop data-speed="80" data-logo-height="60" data-gap="80" data-fade-out="true" :data-logos="JSON.stringify([
+            <div data-logo-loop data-speed="80" data-logo-height="40" data-gap="60" data-fade-out="true" :data-logos="JSON.stringify([
                     { icon: 'SiLaravel', title: 'Laravel' },
                     { icon: 'SiCodeigniter', title: 'CodeIgniter' },
                     { icon: 'SiMysql', title: 'MySQL' },

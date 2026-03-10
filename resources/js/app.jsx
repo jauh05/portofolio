@@ -111,8 +111,9 @@ const initLogoLoop = () => {
     elements.forEach(el => {
         const speed = parseInt(el.getAttribute('data-speed') || "120", 10);
         const direction = el.getAttribute('data-direction') || "left";
-        const logoHeight = parseInt(el.getAttribute('data-logo-height') || "40", 10);
-        const gap = parseInt(el.getAttribute('data-gap') || "40", 10);
+        const isMobile = window.innerWidth < 768;
+        const logoHeight = isMobile ? 32 : parseInt(el.getAttribute('data-logo-height') || "40", 10);
+        const gap = isMobile ? 32 : parseInt(el.getAttribute('data-gap') || "40", 10);
         const fadeOut = el.getAttribute('data-fade-out') === "true";
         const fadeOutColor = el.getAttribute('data-fade-color');
 
