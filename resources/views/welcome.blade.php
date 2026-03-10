@@ -1459,38 +1459,45 @@
             <span class="text-zinc-900 dark:text-white" x-text="t[lang].education.title"></span>
             <span class="text-primary-500" x-text="t[lang].education.subtitle"></span>
         </h2>
-        <div data-scroll-stack data-use-window="false" class="h-[600px] w-full" :data-items="JSON.stringify([
-                { 
-                    className: 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5',
-                    content: `
-                        <div class='flex items-start gap-6'>
-                            <div class='w-20 h-20 bg-white rounded-2xl flex items-center justify-center p-3 flex-shrink-0 overflow-hidden shadow-sm'>
-                                <img src='{{ asset('logo_amikom.png') }}' class='w-full h-full object-contain'>
-                            </div>
-                            <div>
-                                <h3 class='text-xl font-black text-zinc-900 dark:text-white mb-1'>${t[lang].education.amikom.name}</h3>
-                                <p class='text-primary-600 dark:text-primary-400 font-bold mb-1'>${t[lang].education.amikom.major}</p>
-                                <p class='text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium'>${t[lang].education.amikom.info}</p>
-                                <p class='text-gray-400 text-[10px] font-black uppercase tracking-widest'>${t[lang].education.amikom.date}</p>
-                            </div>
-                        </div>
-                    `
-                },
-                { 
-                    className: 'bg-white dark:bg-zinc-900 border border-purple-500/20 dark:border-white/5',
-                    content: `
-                        <div class='flex items-start gap-6'>
-                            <div class='w-20 h-20 bg-purple-50 dark:bg-purple-600/20 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0'>💻</div>
-                            <div>
-                                <h3 class='text-xl font-black text-zinc-900 dark:text-white mb-1'>${t[lang].education.trainit.name}</h3>
-                                <p class='text-purple-600 dark:text-purple-400 font-bold mb-1'>${t[lang].education.trainit.major}</p>
-                                <p class='text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium'>${t[lang].education.trainit.info}</p>
-                                <p class='text-gray-400 text-[10px] font-black uppercase tracking-widest'>${t[lang].education.trainit.date}</p>
-                            </div>
-                        </div>
-                    `
-                }
-            ])"></div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Amikom -->
+            <div
+                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-[2.5rem] hover:border-primary-500/50 transition duration-300 flex items-start gap-6 hover:shadow-xl dark:hover:shadow-none group">
+                <div
+                    class="w-20 h-20 bg-gray-50 dark:bg-white rounded-2xl flex items-center justify-center p-3 flex-shrink-0 overflow-hidden shadow-sm group-hover:scale-110 transition-transform">
+                    <img src="{{ asset('logo_amikom.png') }}" alt="Amikom Logo" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h3 class="text-xl font-black text-zinc-900 dark:text-white mb-1"
+                        x-text="t[lang].education.amikom.name"></h3>
+                    <p class="text-primary-600 dark:text-primary-400 font-bold mb-1"
+                        x-text="t[lang].education.amikom.major"></p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium"
+                        x-text="t[lang].education.amikom.info"></p>
+                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest"
+                        x-text="t[lang].education.amikom.date"></p>
+                </div>
+            </div>
+
+            <!-- Trainit -->
+            <div
+                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-[2.5rem] hover:border-purple-500/50 transition duration-300 flex items-start gap-6 hover:shadow-xl dark:hover:shadow-none group">
+                <div
+                    class="w-20 h-20 bg-purple-50 dark:bg-purple-600/20 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">
+                    💻
+                </div>
+                <div>
+                    <h3 class="text-xl font-black text-zinc-900 dark:text-white mb-1"
+                        x-text="t[lang].education.trainit.name"></h3>
+                    <p class="text-purple-600 dark:text-purple-400 font-bold mb-1"
+                        x-text="t[lang].education.trainit.major"></p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium"
+                        x-text="t[lang].education.trainit.info"></p>
+                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest"
+                        x-text="t[lang].education.trainit.date"></p>
+                </div>
+            </div>
+        </div>
     </section>
 
 
@@ -1509,38 +1516,27 @@
             </svg>
         </div>
 
-        <div data-scroll-stack data-use-window="false" class="h-[600px] w-full" :data-items="JSON.stringify([
-                { 
-                    className: 'bg-white dark:bg-zinc-900 border border-blue-500/20 dark:border-white/5',
-                    content: `
-                        <div class='text-center p-4'>
-                            <div class='text-6xl mb-6'>🤝</div>
-                            <h3 class='text-3xl font-black text-zinc-900 dark:text-white mb-4'>${t[lang].soft.team.title}</h3>
-                            <p class='text-gray-600 dark:text-gray-400 text-lg leading-relaxed'>${t[lang].soft.team.desc}</p>
-                        </div>
-                    `
-                },
-                { 
-                    className: 'bg-white dark:bg-zinc-900 border border-amber-500/20 dark:border-white/5',
-                    content: `
-                        <div class='text-center p-4'>
-                            <div class='text-6xl mb-6'>⏱️</div>
-                            <h3 class='text-3xl font-black text-zinc-900 dark:text-white mb-4'>${t[lang].soft.time.title}</h3>
-                            <p class='text-gray-600 dark:text-gray-400 text-lg leading-relaxed'>${t[lang].soft.time.desc}</p>
-                        </div>
-                    `
-                },
-                { 
-                    className: 'bg-white dark:bg-zinc-900 border border-red-500/20 dark:border-white/5',
-                    content: `
-                        <div class='text-center p-4'>
-                            <div class='text-6xl mb-6'>📢</div>
-                            <h3 class='text-3xl font-black text-zinc-900 dark:text-white mb-4'>${t[lang].soft.comm.title}</h3>
-                            <p class='text-gray-600 dark:text-gray-400 text-lg leading-relaxed'>${t[lang].soft.comm.desc}</p>
-                        </div>
-                    `
-                }
-            ])"></div>
+        <div
+            class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-3 md:gap-6 no-scrollbar pb-6 md:pb-0">
+            <div
+                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
+                <div class="text-4xl mb-4">🤝</div>
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.team.title"></h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.team.desc"></p>
+            </div>
+            <div
+                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
+                <div class="text-4xl mb-4">⏱️</div>
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.time.title"></h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.time.desc"></p>
+            </div>
+            <div
+                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
+                <div class="text-4xl mb-4">📢</div>
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.comm.title"></h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.comm.desc"></p>
+            </div>
+        </div>
     </section>
 
     <!-- Footer -->
