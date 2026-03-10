@@ -633,14 +633,12 @@
             </div>
         </div>
 
-        <div class="flex-1 relative">
-            <div class="w-full aspect-square rounded-[3rem] overflow-hidden relative group">
-                <!-- Placeholder for profile image, using a tech-abstract one for now -->
-                <img src="{{ asset('foto.png') }}" alt="Profile"
-                    class="w-full h-full object-cover transition duration-500 hover:scale-105">
+        <div class="flex-1 relative flex items-center justify-center">
+            <div class="w-full h-screen min-h-[500px] md:min-h-[700px] relative">
+                <div data-lanyard class="w-full h-full absolute inset-0"></div>
             </div>
             <div
-                class="absolute -bottom-6 -left-6 bg-primary-600 p-6 rounded-2xl shadow-xl transform rotate-3 hover:rotate-0 transition duration-300">
+                class="absolute -bottom-6 -left-6 bg-primary-600 p-6 rounded-2xl shadow-xl transform rotate-3 hover:rotate-0 transition duration-300 z-10">
                 <p class="text-3xl font-black text-white">4+</p>
                 <p class="text-[10px] uppercase font-black text-white/80 tracking-widest"
                     x-text="t[lang].hero.years_exp"></p>

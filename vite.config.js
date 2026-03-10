@@ -12,6 +12,7 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
+    assetsInclude: ['**/*.glb'],
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

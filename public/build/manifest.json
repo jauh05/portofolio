@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-2dwauu1J.css",
+    "file": "assets/app-BUtx91J_.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -8,10 +8,22 @@
       "app.css"
     ]
   },
+  "resources/js/Components/Lanyard/card.glb": {
+    "file": "assets/card-BP4TWJmK.glb",
+    "src": "resources/js/Components/Lanyard/card.glb"
+  },
+  "resources/js/Components/Lanyard/lanyard.png": {
+    "file": "assets/lanyard-BQfo1yFS.png",
+    "src": "resources/js/Components/Lanyard/lanyard.png"
+  },
   "resources/js/app.jsx": {
-    "file": "assets/app-Dcjv3G8D.js",
+    "file": "assets/app-DG7m4HM2.js",
     "name": "app",
     "src": "resources/js/app.jsx",
-    "isEntry": true
+    "isEntry": true,
+    "assets": [
+      "assets/card-BP4TWJmK.glb",
+      "assets/lanyard-BQfo1yFS.png"
+    ]
   }
 }

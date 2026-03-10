@@ -4,6 +4,7 @@ import React from 'react';
 import { mountBackgroundParticles } from './Components/BackgroundParticlesWrapper.jsx';
 import SplitText from './Components/SplitText.jsx';
 import RotatingText from './Components/RotatingText.jsx';
+import Lanyard from './Components/Lanyard.jsx';
 
 // Mounting function for Particles
 const initParticles = () => {
@@ -63,6 +64,15 @@ const initRotatingText = () => {
     });
 };
 
+// Automatic mounting for Lanyard
+const initLanyard = () => {
+    const elements = document.querySelectorAll('[data-lanyard]');
+    elements.forEach(el => {
+        const root = createRoot(el);
+        root.render(<Lanyard />);
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Vite App Initializing...');
     initParticles();
@@ -71,5 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         initTextAnimations();
         initRotatingText();
+        initLanyard();
     }, 800);
 });
