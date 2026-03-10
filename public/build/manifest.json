@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-CrdUEWP0.css",
+    "file": "assets/app-DiR-wTE0.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -21,7 +21,7 @@
     "src": "resources/js/Components/Lanyard/lanyard.png"
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-CXMaMxbh.js",
+    "file": "assets/app-Kig5fUR9.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
