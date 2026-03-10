@@ -601,7 +601,7 @@
                 </div>
             </h1>
 
-            <div class="flex flex-col mb-10 text-left items-start">
+            <div class="flex flex-col mb-6 text-left items-start">
                 <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-1"
                     x-text="t[lang].hero.tagline_line1" data-split-text></p>
 
@@ -613,10 +613,10 @@
                 </div>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-8 max-w-2xl leading-relaxed font-medium text-justify"
+            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-4 max-w-2xl leading-relaxed font-medium text-justify"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-3">
                 <div class="flex flex-col sm:flex-row gap-4 justify-start items-center">
                     <a href="#projects"
                         class="bg-primary-600 hover:bg-blue-700 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all transform hover:scale-105 text-center min-w-[220px] shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.4)]"
@@ -931,7 +931,7 @@
             </div>
 
             <div x-ref="slider"
-                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-6 mb-20 relative z-10 items-stretch pb-6 pt-2 h-full">
+                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-6 mb-10 relative z-10 items-stretch pb-6 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
                     class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
@@ -950,7 +950,7 @@
                             </div>
 
                             <div
-                                class="relative aspect-video rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <!-- Premium PDF Preview with Scaling -->
                                 <iframe
                                     src="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
@@ -1144,23 +1144,9 @@
                 </div>
             </div>
         </div>
-
-        <div class="flex justify-center md:justify-start relative z-10">
-            <a href="{{ url('/certificates') }}"
-                class="group flex items-center gap-6 px-12 py-7 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-[2.5rem] font-black text-sm uppercase tracking-[0.25em] hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white dark:hover:text-white transition-all shadow-2xl hover:scale-105 active:scale-95">
-                <span x-text="t[lang].certs.cta"></span>
-                <div
-                    class="w-12 h-12 rounded-full bg-white/10 dark:bg-black/5 flex items-center justify-center group-hover:translate-x-3 transition-transform duration-500">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                            d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                </div>
-            </a>
-        </div>
     </section>
     <!-- Projects Section -->
-    <section id="projects" class="max-w-6xl mx-auto px-6 py-16 md:py-24 relative">
+    <section id="projects" class="max-w-6xl mx-auto px-6 py-10 md:py-16 relative">
         <!-- Background Glow -->
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full -z-10"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -z-10"></div>
@@ -1175,11 +1161,11 @@
             },
             slideLeft() {
                 const el = this.$refs.projectSlider;
-                el.scrollBy({ left: -400, behavior: 'smooth' });
+                el.scrollBy({ left: -480, behavior: 'smooth' });
             },
             slideRight() {
                 const el = this.$refs.projectSlider;
-                el.scrollBy({ left: 400, behavior: 'smooth' });
+                el.scrollBy({ left: 480, behavior: 'smooth' });
             }
         }" @scroll.window.debounce.100ms="checkScroll()">
             <div class="max-w-2xl">
@@ -1407,8 +1393,8 @@
 
             <!-- Project 2 (Modern Card) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-indigo-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)]">
-                <div class="h-72 overflow-hidden relative">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-indigo-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)] flex flex-col">
+                <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/jaugjakita.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
@@ -1452,8 +1438,8 @@
 
             <!-- Project 3 (Modern Layout) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)]">
-                <div class="h-72 overflow-hidden relative">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
+                <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/kauiz.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
@@ -1498,8 +1484,8 @@
 
             <!-- Project 4 (Modern Layout) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)]">
-                <div class="h-72 overflow-hidden relative">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)] flex flex-col">
+                <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/livechat.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
@@ -1543,8 +1529,8 @@
 
             <!-- Project 5 (New: JokiTugas Jogja) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-blue-500/40 min-w-[88vw] md:min-w-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(59,130,246,0.2)]">
-                <div class="h-72 overflow-hidden relative">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-blue-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(59,130,246,0.2)] flex flex-col">
+                <div class="h-64 overflow-hidden relative">
                     <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div
