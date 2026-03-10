@@ -959,15 +959,24 @@
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
                             </div>
-                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
+                            <div class="px-2 pb-2 md:px-4 md:pb-4 flex flex-col flex-1 h-full">
                                 <span
-                                    class="text-[9px] font-black tracking-[0.3em] text-primary-500 uppercase mb-2">ASISTEN
+                                    class="text-[9px] font-black tracking-[0.2em] text-primary-500 uppercase mb-2 block truncate">ASISTEN
                                     PRAKTIKUM</span>
                                 <h4
                                     class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
                                     Data Structures</h4>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Amikom Creative Economy
-                                    Park</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-4 line-clamp-2">Amikom
+                                    Creative Economy Park</p>
+                                <div
+                                    class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
+                                    <span class="text-[10px] font-mono text-gray-400">25-02-2026</span>
+                                    <svg class="w-5 h-5 text-primary-500 transform group-hover:translate-x-1 transition hidden md:block"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -997,17 +1006,26 @@
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
                             </div>
-                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
-                                <div class="inline-flex items-center gap-2 mb-3">
-                                    <span class="w-2 h-2 rounded-full bg-pink-500 group-hover:animate-ping"></span>
-                                    <span class="text-[9px] font-black tracking-[0.4em] text-pink-500 uppercase">JUARA
+                            <div class="px-2 pb-2 md:px-4 md:pb-4 flex flex-col flex-1 h-full">
+                                <div class="inline-flex items-center gap-2 mb-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span>
+                                    <span class="text-[9px] font-black tracking-[0.2em] text-pink-500 uppercase">JUARA
                                         III NASIONAL</span>
                                 </div>
                                 <h4
-                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
+                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-pink-600 transition-colors">
                                     Karya Tulis Islami</h4>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Universitas Gadjah Mada
-                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-4 line-clamp-2">
+                                    Universitas Gadjah Mada</p>
+                                <div
+                                    class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
+                                    <span class="text-[10px] font-mono text-gray-400">29-09-2025</span>
+                                    <svg class="w-5 h-5 text-pink-500 transform group-hover:translate-x-1 transition hidden md:block"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1036,18 +1054,24 @@
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
                             </div>
-                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
-                                <div class="inline-flex items-center gap-2 mb-3">
-                                    <span class="w-2 h-2 rounded-full bg-yellow-500 group-hover:animate-ping"></span>
-                                    <span
-                                        class="text-[9px] font-black tracking-[0.4em] text-yellow-500 uppercase">PROFESSIONAL
-                                        WORKSHOP</span>
-                                </div>
+                            <div class="px-2 pb-2 md:px-4 md:pb-4 flex flex-col flex-1 h-full">
+                                <span
+                                    class="text-[9px] font-black tracking-[0.2em] text-yellow-600 dark:text-yellow-500 uppercase mb-2 block truncate">PROFESSIONAL
+                                    WORKSHOP</span>
                                 <h4
-                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
+                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-yellow-600 transition-colors">
                                     Waroeng Steak</h4>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Entrepreneurship &
-                                    Digitalization</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-4 line-clamp-2">
+                                    Entrepreneurship & Digitalization</p>
+                                <div
+                                    class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
+                                    <span class="text-[10px] font-mono text-gray-400">September 2024</span>
+                                    <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-500 transform group-hover:translate-x-1 transition hidden md:block"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1076,17 +1100,24 @@
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
                             </div>
-                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
-                                <div class="inline-flex items-center gap-2 mb-3">
-                                    <span class="w-2 h-2 rounded-full bg-primary-500 group-hover:animate-ping"></span>
-                                    <span
-                                        class="text-[9px] font-black tracking-[0.4em] text-primary-500 uppercase">FUTURISTIC
-                                        WORKSHOP</span>
-                                </div>
+                            <div class="px-2 pb-2 md:px-4 md:pb-4 flex flex-col flex-1 h-full">
+                                <span
+                                    class="text-[9px] font-black tracking-[0.2em] text-primary-500 uppercase mb-2 block truncate">FUTURISTIC
+                                    WORKSHOP</span>
                                 <h4
                                     class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
                                     Tech Innovations</h4>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Yogyakarta Tech Hub</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-4 line-clamp-2">
+                                    Yogyakarta Tech Hub</p>
+                                <div
+                                    class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
+                                    <span class="text-[10px] font-mono text-gray-400">18-11-2023</span>
+                                    <svg class="w-5 h-5 text-primary-500 transform group-hover:translate-x-1 transition hidden md:block"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
