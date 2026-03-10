@@ -423,6 +423,9 @@
     <div class="fixed inset-0 z-[-20] transition-colors duration-500"
         :class="darkMode ? 'bg-[#050505]' : 'bg-slate-50'"></div>
 
+    <!-- React App Container (Galaxy Background) -->
+    <div id="react-background-particles" class="fixed inset-0 z-[-10] w-full h-full pointer-events-none"></div>
+
     <!-- Dynamic Navbar Bubble Menu -->
     <div data-bubble-menu data-logo="JF" :data-items="JSON.stringify([
             { label: t[lang].nav.about, href: '#about', rotation: -8, hoverStyles: { bgColor: 'rgba(var(--primary-rgb), 1)', textColor: '#fff' } },
@@ -486,7 +489,7 @@
 
             <!-- 3D Interactive Lanyard (Positioned at top-right side) -->
             <div
-                class="absolute -top-32 -right-16 md:-right-24 w-[350px] h-[700px] z-30 pointer-events-none drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                class="absolute -top-40 -right-16 md:-right-24 w-[400px] h-[900px] z-30 pointer-events-none drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                 <div data-lanyard class="w-full h-full pointer-events-auto"></div>
             </div>
         </div>

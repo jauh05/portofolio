@@ -24,7 +24,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     }, []);
 
     return (
-        <div className="relative z-0 w-full h-[500px] md:h-screen flex justify-center items-center transform scale-100 origin-center bg-transparent">
+        <div className="relative z-0 w-full h-full flex justify-center items-center transform scale-100 origin-center bg-transparent">
             <Canvas
                 camera={{ position: position, fov: fov }}
                 dpr={[1, isMobile ? 1.5 : 2]}
@@ -36,34 +36,10 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
                     <Band isMobile={isMobile} />
                 </Physics>
                 <Environment blur={0.75}>
-                    <Lightformer
-                        intensity={2}
-                        color="white"
-                        position={[0, -1, 5]}
-                        rotation={[0, 0, Math.PI / 3]}
-                        scale={[100, 0.1, 1]}
-                    />
-                    <Lightformer
-                        intensity={3}
-                        color="white"
-                        position={[-1, -1, 1]}
-                        rotation={[0, 0, Math.PI / 3]}
-                        scale={[100, 0.1, 1]}
-                    />
-                    <Lightformer
-                        intensity={3}
-                        color="white"
-                        position={[1, 1, 1]}
-                        rotation={[0, 0, Math.PI / 3]}
-                        scale={[100, 0.1, 1]}
-                    />
-                    <Lightformer
-                        intensity={10}
-                        color="white"
-                        position={[-10, 0, 14]}
-                        rotation={[0, Math.PI / 2, Math.PI / 3]}
-                        scale={[100, 10, 1]}
-                    />
+                    <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+                    <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+                    <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+                    <Lightformer intensity={10} color="white" position={[-10, 0, 14]} rotation={[0, Math.PI / 2, Math.PI / 3]} scale={[100, 10, 1]} />
                 </Environment>
             </Canvas>
         </div>
@@ -71,68 +47,55 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
 }
 
 function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
-    const band = useRef(),
-        fixed = useRef(),
-        j1 = useRef(),
-        j2 = useRef(),
-        j3 = useRef(),
-        card = useRef();
-    const vec = new THREE.Vector3(),
-        ang = new THREE.Vector3(),
-        rot = new THREE.Vector3(),
-        dir = new THREE.Vector3();
+    const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef();
+    const vec = new THREE.Vector3(), ang = new THREE.Vector3(), rot = new THREE.Vector3(), dir = new THREE.Vector3();
     const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
     const { nodes, materials } = useGLTF(cardGLB);
     const texture = useTexture(lanyard);
 
-    // Generate a premium texture for the card with "4+ TAHUN PENGALAMAN"
+    // Dynamic card texture with theme color and split text
     const cardTexture = useMemo(() => {
         const canvas = document.createElement('canvas');
         canvas.width = 1024;
         canvas.height = 1024;
         const ctx = canvas.getContext('2d');
 
-        // Background Gradient (Deep Blue Premium)
-        const gradient = ctx.createLinearGradient(0, 0, 1024, 1024);
-        gradient.addColorStop(0, '#1e3a8a');
-        gradient.addColorStop(1, '#1e40af');
-        ctx.fillStyle = gradient;
+        // Get theme color
+        const rootStyle = getComputedStyle(document.documentElement);
+        const primaryColorStr = rootStyle.getPropertyValue('--primary-600').trim() || '#2563eb';
+
+        // Background
+        ctx.fillStyle = primaryColorStr;
         ctx.fillRect(0, 0, 1024, 1024);
 
-        // Decorative Borders
-        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-        ctx.lineWidth = 40;
-        ctx.strokeRect(40, 40, 944, 944);
-
-        // Header Text
+        // Subtle Pattern
+        ctx.globalAlpha = 0.1;
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 60px Inter, system-ui, sans-serif';
+        for (let i = 0; i < 30; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random() * 1024, Math.random() * 1024, Math.random() * 100, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        // Front: 4+
+        ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.globalAlpha = 0.7;
-        ctx.fillText('PROFESSIONAL RECORD', 512, 180);
-        ctx.globalAlpha = 1.0;
+        ctx.font = '900 500px Inter, system-ui, sans-serif';
+        ctx.fillText('4+', 512, 450);
 
-        // The "4+"
-        ctx.font = '900 320px Inter, system-ui, sans-serif';
-        ctx.fillText('4+', 512, 480);
+        // Separator logic for front/back (if UVs are split)
+        // If UVs are overlaid, we can't show different text easily without UV manipulation.
+        // But for many lanyard models, top/bottom half works.
 
-        // Experience Text
-        ctx.font = 'bold 100px Inter, system-ui, sans-serif';
-        ctx.fillText('TAHUN', 512, 620);
+        // Back: Pengalaman
+        ctx.font = '900 120px Inter, system-ui, sans-serif';
+        ctx.fillText('PENGALAMAN', 512, 850);
 
-        ctx.font = '900 90px Inter, system-ui, sans-serif';
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText('PENGALAMAN', 512, 750);
-
-        // Divider
-        ctx.fillStyle = '#ffffff';
-        ctx.globalAlpha = 0.3;
-        ctx.fillRect(200, 820, 624, 4);
-        ctx.globalAlpha = 1.0;
-
-        // Footer
-        ctx.font = 'bold 40px Inter, system-ui, sans-serif';
-        ctx.fillText('VERIFIED SOLUTIONS ENGINEER', 512, 900);
+        // Decorative borders
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 15;
+        ctx.strokeRect(50, 50, 924, 924);
 
         const tex = new THREE.CanvasTexture(canvas);
         tex.flipY = false;
@@ -140,20 +103,14 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         return tex;
     }, []);
 
-    const [curve] = useState(
-        () =>
-            new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
-    );
+    const [curve] = useState(() => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]));
     const [dragged, drag] = useState(false);
     const [hovered, hover] = useState(false);
 
     useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
     useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
     useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
-    useSphericalJoint(j3, card, [
-        [0, 0, 0],
-        [0, 1.5, 0]
-    ]);
+    useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.5, 0]]);
 
     useEffect(() => {
         if (hovered) {
@@ -174,10 +131,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
             [j1, j2].forEach(ref => {
                 if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
                 const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
-                ref.current.lerped.lerp(
-                    ref.current.translation(),
-                    delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
-                );
+                ref.current.lerped.lerp(ref.current.translation(), delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)));
             });
             curve.points[0].copy(j3.current.translation());
             curve.points[1].copy(j2.current.lerped);
@@ -197,15 +151,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         <>
             <group position={[0, 4, 0]}>
                 <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-                <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
-                    <BallCollider args={[0.1]} />
-                </RigidBody>
-                <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
-                    <BallCollider args={[0.1]} />
-                </RigidBody>
-                <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
-                    <BallCollider args={[0.1]} />
-                </RigidBody>
+                <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
+                <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
+                <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
                 <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
                     <CuboidCollider args={[0.8, 1.125, 0.01]} />
                     <group
@@ -214,20 +162,10 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
                         onPointerOver={() => hover(true)}
                         onPointerOut={() => hover(false)}
                         onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
-                        onPointerDown={e => (
-                            e.target.setPointerCapture(e.pointerId),
-                            drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
-                        )}
+                        onPointerDown={e => (e.target.setPointerCapture(e.pointerId), drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation()))))}
                     >
                         <mesh geometry={nodes.card.geometry}>
-                            <meshPhysicalMaterial
-                                map={cardTexture}
-                                map-anisotropy={16}
-                                clearcoat={isMobile ? 0 : 1}
-                                clearcoatRoughness={0.15}
-                                roughness={0.9}
-                                metalness={0.8}
-                            />
+                            <meshPhysicalMaterial map={cardTexture} map-anisotropy={16} clearcoat={isMobile ? 0 : 1} clearcoatRoughness={0.15} roughness={0.9} metalness={0.8} />
                         </mesh>
                         <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
                         <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
@@ -236,15 +174,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
             </group>
             <mesh ref={band}>
                 <meshLineGeometry />
-                <meshLineMaterial
-                    color="white"
-                    depthTest={false}
-                    resolution={isMobile ? [1000, 2000] : [1000, 1000]}
-                    useMap
-                    map={texture}
-                    repeat={[-4, 1]}
-                    lineWidth={1}
-                />
+                <meshLineMaterial color="white" depthTest={false} resolution={isMobile ? [1000, 2000] : [1000, 1000]} useMap map={texture} repeat={[-4, 1]} lineWidth={1} />
             </mesh>
         </>
     );

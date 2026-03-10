@@ -105,7 +105,7 @@ const initProfileCard = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Vite App Initializing...');
-    // initParticles(); // Disabled background particles as per request
+    initParticles();
 
     // Higher delay to ensure Alpine.js x-text is fully rendered by the browser
     setTimeout(() => {
