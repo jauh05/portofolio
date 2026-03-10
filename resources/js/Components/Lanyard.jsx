@@ -9,6 +9,7 @@ import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 // Asset imports
 import cardGLB from './Lanyard/card.glb';
 import lanyard from './Lanyard/lanyard.png';
+import userFoto from './Lanyard/foto.png';
 
 import * as THREE from 'three';
 
@@ -83,6 +84,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
     const { nodes, materials } = useGLTF(cardGLB);
     const texture = useTexture(lanyard);
+    const cardTexture = useTexture(userFoto);
     const [curve] = useState(
         () =>
             new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -135,6 +137,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
 
     curve.curveType = 'chordal';
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    cardTexture.flipY = false;
 
     return (
         <>
@@ -164,12 +167,12 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
                     >
                         <mesh geometry={nodes.card.geometry}>
                             <meshPhysicalMaterial
-                                map={materials.base.map}
+                                map={cardTexture}
                                 map-anisotropy={16}
                                 clearcoat={isMobile ? 0 : 1}
                                 clearcoatRoughness={0.15}
-                                roughness={0.9}
-                                metalness={0.8}
+                                roughness={0.3}
+                                metalness={0.5}
                             />
                         </mesh>
                         <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
