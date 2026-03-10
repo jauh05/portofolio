@@ -1,16 +1,12 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-BgpP9rZ3.css",
+    "file": "assets/app-Cy_RGbR-.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
     "names": [
       "app.css"
     ]
-  },
-  "resources/js/Components/Lanyard/badge.png": {
-    "file": "assets/badge-CzjCille.png",
-    "src": "resources/js/Components/Lanyard/badge.png"
   },
   "resources/js/Components/Lanyard/card.glb": {
     "file": "assets/card-BP4TWJmK.glb",
@@ -21,14 +17,13 @@
     "src": "resources/js/Components/Lanyard/lanyard.png"
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-BiILLnV2.js",
+    "file": "assets/app-DUhna0nD.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
     "assets": [
       "assets/card-BP4TWJmK.glb",
-      "assets/lanyard-BQfo1yFS.png",
-      "assets/badge-CzjCille.png"
+      "assets/lanyard-BQfo1yFS.png"
     ]
   }
 }

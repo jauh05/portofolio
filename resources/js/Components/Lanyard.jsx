@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
@@ -9,7 +9,6 @@ import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 // Asset imports
 import cardGLB from './Lanyard/card.glb';
 import lanyard from './Lanyard/lanyard.png';
-import badgePhoto from './Lanyard/badge.png';
 
 import * as THREE from 'three';
 
@@ -25,7 +24,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     }, []);
 
     return (
-        <div className="relative z-0 w-full h-[600px] md:h-screen flex justify-center items-center transform scale-100 origin-center bg-transparent">
+        <div className="relative z-0 w-full h-[500px] md:h-screen flex justify-center items-center transform scale-100 origin-center bg-transparent">
             <Canvas
                 camera={{ position: position, fov: fov }}
                 dpr={[1, isMobile ? 1.5 : 2]}
@@ -70,6 +69,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         </div>
     );
 }
+
 function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     const band = useRef(),
         fixed = useRef(),
@@ -84,13 +84,61 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
     const { nodes, materials } = useGLTF(cardGLB);
     const texture = useTexture(lanyard);
-    const cardTexture = useTexture(badgePhoto);
 
-    useEffect(() => {
-        if (cardTexture) {
-            cardTexture.flipY = false;
-        }
-    }, [cardTexture]);
+    // Generate a premium texture for the card with "4+ TAHUN PENGALAMAN"
+    const cardTexture = useMemo(() => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024;
+        canvas.height = 1024;
+        const ctx = canvas.getContext('2d');
+
+        // Background Gradient (Deep Blue Premium)
+        const gradient = ctx.createLinearGradient(0, 0, 1024, 1024);
+        gradient.addColorStop(0, '#1e3a8a');
+        gradient.addColorStop(1, '#1e40af');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1024, 1024);
+
+        // Decorative Borders
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 40;
+        ctx.strokeRect(40, 40, 944, 944);
+
+        // Header Text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 60px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.globalAlpha = 0.7;
+        ctx.fillText('PROFESSIONAL RECORD', 512, 180);
+        ctx.globalAlpha = 1.0;
+
+        // The "4+"
+        ctx.font = '900 320px Inter, system-ui, sans-serif';
+        ctx.fillText('4+', 512, 480);
+
+        // Experience Text
+        ctx.font = 'bold 100px Inter, system-ui, sans-serif';
+        ctx.fillText('TAHUN', 512, 620);
+
+        ctx.font = '900 90px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('PENGALAMAN', 512, 750);
+
+        // Divider
+        ctx.fillStyle = '#ffffff';
+        ctx.globalAlpha = 0.3;
+        ctx.fillRect(200, 820, 624, 4);
+        ctx.globalAlpha = 1.0;
+
+        // Footer
+        ctx.font = 'bold 40px Inter, system-ui, sans-serif';
+        ctx.fillText('VERIFIED SOLUTIONS ENGINEER', 512, 900);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.flipY = false;
+        tex.anisotropy = 16;
+        return tex;
+    }, []);
 
     const [curve] = useState(
         () =>
@@ -144,7 +192,6 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
 
     curve.curveType = 'chordal';
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    cardTexture.flipY = false;
 
     return (
         <>
@@ -178,8 +225,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
                                 map-anisotropy={16}
                                 clearcoat={isMobile ? 0 : 1}
                                 clearcoatRoughness={0.15}
-                                roughness={0.3}
-                                metalness={0.5}
+                                roughness={0.9}
+                                metalness={0.8}
                             />
                         </mesh>
                         <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
