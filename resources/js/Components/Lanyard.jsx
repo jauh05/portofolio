@@ -9,7 +9,7 @@ import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 // Asset imports
 import cardGLB from './Lanyard/card.glb';
 import lanyard from './Lanyard/lanyard.png';
-import userFoto from './Lanyard/foto.png';
+import badgePhoto from './Lanyard/badge.png';
 
 import * as THREE from 'three';
 
@@ -84,41 +84,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
     const { nodes, materials } = useGLTF(cardGLB);
     const texture = useTexture(lanyard);
+    const cardTexture = useTexture(badgePhoto);
 
-    // Create text texture for the card
-    const cardTexture = useMemo(() => {
-        const canvas = document.createElement('canvas');
-        canvas.width = 1024;
-        canvas.height = 1024;
-        const ctx = canvas.getContext('2d');
-
-        // Background
-        ctx.fillStyle = '#2563eb'; // Blue
-        ctx.fillRect(0, 0, 1024, 1024);
-
-        // Header
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 80px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('PROFESSIONAL', 512, 200);
-
-        // Big Text
-        ctx.font = 'black 160px Inter, sans-serif';
-        ctx.fillText('4+', 512, 450);
-
-        // Subtext
-        ctx.font = 'bold 80px Inter, sans-serif';
-        ctx.fillText('TAHUN', 512, 600);
-        ctx.fillText('PENGALAMAN', 512, 720);
-
-        // Footer decoration
-        ctx.fillStyle = '#1e40af';
-        ctx.fillRect(0, 900, 1024, 124);
-
-        const tex = new THREE.CanvasTexture(canvas);
-        tex.flipY = false;
-        return tex;
-    }, []);
+    useEffect(() => {
+        if (cardTexture) {
+            cardTexture.flipY = false;
+        }
+    }, [cardTexture]);
 
     const [curve] = useState(
         () =>

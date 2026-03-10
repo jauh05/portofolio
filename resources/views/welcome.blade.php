@@ -480,35 +480,18 @@
             </div>
         </div>
 
-        <div class="flex-1 relative flex items-center justify-centermin-h-[400px] md:min-h-[500px]">
+        <div class="flex-1 relative flex items-center justify-center min-h-[400px] md:min-h-[500px]">
             <!-- Main Photo Container -->
-            <div class="relative z-10 w-full max-w-[450px] aspect-[0.85] rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/10 group bg-zinc-800">
-                <img src="/foto.png" alt="Jauhar Fauzi" class="w-full h-full object-cover transition-all duration-700 scale-110 group-hover:scale-100">
-                
-                <!-- Simple Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
-                
-                <!-- Header Overlay for the Photo -->
-                <div class="absolute bottom-10 left-10 right-10 text-left">
-                    <p class="text-white font-black text-3xl tracking-tighter uppercase leading-none mb-2">Jauhar Fauzi</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-[2px] bg-primary-500"></div>
-                        <p class="text-white/60 text-xs font-bold uppercase tracking-[0.2em]">Digital Engineer</p>
-                    </div>
-                </div>
+            <div
+                class="relative z-10 w-full max-w-[450px] aspect-[0.85] rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/10 group bg-zinc-800">
+                <img src="/foto.png" alt="Jauhar Fauzi"
+                    class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100">
             </div>
 
-            <!-- 3D Interactive Lanyard (Hanging next to the photo) -->
-            <div class="absolute -top-32 -right-20 md:-right-32 w-[350px] h-[700px] z-30 pointer-events-none drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <!-- 3D Interactive Lanyard (Hanging at top-right of the photo) -->
+            <div
+                class="absolute -top-32 -right-16 md:-right-24 w-[350px] h-[700px] z-30 pointer-events-none drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                 <div data-lanyard class="w-full h-full pointer-events-auto"></div>
-            </div>
-
-            <!-- Decorative Floating Badge -->
-            <div class="absolute -bottom-10 -left-10 bg-primary-600 p-8 rounded-[35px] shadow-[0_25px_50px_-12px_rgba(var(--primary-rgb),0.5)] transform -rotate-12 hover:rotate-0 transition-all duration-500 z-40 border-4 border-white/10">
-                <div class="text-center">
-                    <p class="text-5xl font-black text-white leading-none mb-1">4+</p>
-                    <p class="text-[9px] text-white/70 font-black uppercase tracking-[0.25em] whitespace-nowrap">Years Experience</p>
-                </div>
             </div>
         </div>
     </header>
