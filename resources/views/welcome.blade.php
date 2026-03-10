@@ -1003,7 +1003,7 @@
                             <div
                                 class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <iframe
-                                    src="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
+                                    src="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
                             </div>
@@ -1097,7 +1097,8 @@
 
                             <div
                                 class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
-                                <iframe src="{{ asset('serti/futuristic.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
+                                <iframe
+                                    src="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
                             </div>
@@ -1127,29 +1128,38 @@
         </div>
     </section>
     <!-- Projects Section -->
-    <section id="projects" class="max-w-6xl mx-auto px-6 py-10 md:py-16 relative">
+    <section id="projects" class="max-w-6xl mx-auto px-6 py-10 md:py-16 relative" x-data="{
+        canScrollLeft: false,
+        canScrollRight: true,
+        selectedJournal: false,
+        checkScroll() {
+            const el = this.$refs.projectSlider;
+            if(!el) return;
+            this.canScrollLeft = el.scrollLeft > 10;
+            this.canScrollRight = el.scrollLeft < (el.scrollWidth - el.clientWidth - 15);
+        },
+        slideLeft() {
+            const el = this.$refs.projectSlider;
+            const step = window.innerWidth < 768 ? el.clientWidth * 0.8 : 480;
+            el.scrollBy({ left: -step, behavior: 'smooth' });
+            setTimeout(() => this.checkScroll(), 500);
+        },
+        slideRight() {
+            const el = this.$refs.projectSlider;
+            const step = window.innerWidth < 768 ? el.clientWidth * 0.8 : 480;
+            el.scrollBy({ left: step, behavior: 'smooth' });
+            setTimeout(() => this.checkScroll(), 500);
+        }
+    }" x-init="
+        setTimeout(() => checkScroll(), 800);
+        $refs.projectSlider.addEventListener('scroll', () => checkScroll());
+        window.addEventListener('resize', () => checkScroll());
+    ">
         <!-- Background Glow -->
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full -z-10"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -z-10"></div>
 
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16" x-data="{
-            canScrollLeft: false,
-            canScrollRight: true,
-            checkScroll() {
-                const el = this.$refs.projectSlider;
-                this.canScrollLeft = el.scrollLeft > 10;
-                this.canScrollRight = el.scrollLeft < (el.scrollWidth - el.clientWidth - 10);
-            },
-            slideLeft() {
-                const el = this.$refs.projectSlider;
-                el.scrollBy({ left: -480, behavior: 'smooth' });
-            },
-            slideRight() {
-                const el = this.$refs.projectSlider;
-                el.scrollBy({ left: 480, behavior: 'smooth' });
-            }
-        }" @scroll.window.debounce.100ms="checkScroll()"
-            x-init="setTimeout(() => checkScroll(), 500); $refs.projectSlider.addEventListener('scroll', () => checkScroll())">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16">
             <div class="max-w-2xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4"
                     x-text="t[lang].projects.tag">
@@ -1228,7 +1238,7 @@
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
-                                    <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 0 01-2-2V8z" />
+                                    <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
                                 </svg>
                                 AUTHENTIC PAPER
                             </div>
@@ -1581,100 +1591,79 @@
                 </div>
             </div>
 
-            <div class="flex flex-wrap gap-4 md:gap-6 justify-center">
+            <div class="grid grid-cols-4 md:flex md:flex-wrap gap-2 md:gap-6 justify-center">
                 <!-- Backend -->
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-laravel-original text-4xl md:text-5xl text-red-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Laravel</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <i
+                        class="devicon-laravel-original text-2xl md:text-5xl text-red-500 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Laravel</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-codeigniter-plain text-4xl md:text-5xl text-orange-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">CodeIgniter</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <i
+                        class="devicon-codeigniter-plain text-2xl md:text-5xl text-orange-500 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">CI</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-mysql-original text-4xl md:text-5xl text-primary-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">MySQL</span>
-                </div>
-                <!-- Frontend -->
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-tailwindcss-original text-4xl md:text-5xl text-cyan-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Tailwind</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <i
+                        class="devicon-mysql-original text-2xl md:text-5xl text-primary-400 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">MySQL</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-react-original text-4xl md:text-5xl text-blue-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">React</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <i
+                        class="devicon-tailwindcss-original text-2xl md:text-5xl text-cyan-400 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Tailwind</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-bootstrap-plain text-4xl md:text-5xl text-purple-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Bootstrap</span>
-                </div>
-                <!-- Tools/Others -->
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-git-plain text-4xl md:text-5xl text-orange-600"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Git</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <i
+                        class="devicon-react-original text-2xl md:text-5xl text-blue-400 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">React</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <i
+                        class="devicon-git-plain text-2xl md:text-5xl text-orange-600 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Git</span>
+                </div>
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
                     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="Python">
+                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Python">
                     <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Python</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="PHP">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">PHP</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="JS">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">JS</span>
-                </div>
-                <!-- Updated Extra Skills -->
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="C++">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">C++</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-1 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
                     <img src="https://www.gstatic.com/images/branding/product/2x/colab_96dp.png"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="Colab">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Google Colab</span>
+                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Colab">
+                    <span class="text-[9px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Colab</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://www.vectorlogo.zone/logos/anthropic/anthropic-icon.svg"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="Claude">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Claude Code</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-1 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <img src="https://avatars.githubusercontent.com/u/74381831?s=200&v=4"
+                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Claude">
+                    <span class="text-[9px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Claude</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trello/trello-plain.svg"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="Trello">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Trello</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
                     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg"
-                        class="w-8 h-8 md:w-12 md:h-12" alt="Android Studio">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Android
-                        Studio</span>
+                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Android">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Android</span>
                 </div>
                 <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-3 md:p-6 rounded-2xl min-w-[85px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <img src="https://www.vectorlogo.zone/logos/drawio/drawio-icon.svg" class="w-8 h-8 md:w-12 md:h-12"
-                        alt="Draw.io">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Draw.io</span>
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-1 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <img src="https://www.vectorlogo.zone/logos/drawio/drawio-icon.svg"
+                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Draw.io">
+                    <span class="text-[9px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Draw.io</span>
+                </div>
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="JS">
+                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">JS</span>
                 </div>
             </div>
         </div>
@@ -1787,7 +1776,7 @@
                 <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].footer.title"></span> <br>
                     <span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 via-indigo-500 to-primary-400 animate-[shine_3s_linear_infinite]"
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary-300 to-indigo-400 animate-[shine_3s_linear_infinite] drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
                         style="background-size: 200% auto;" x-text="t[lang].footer.subtitle"></span>
                 </h2>
 
