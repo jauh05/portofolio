@@ -893,8 +893,9 @@
                         x-text="t[lang].certs.tag">
                     </div>
                     <div class="flex flex-col md:flex-row md:items-center gap-4 mb-4 uppercase">
-                        <span class="text-zinc-400 dark:text-zinc-700 text-2xl md:text-3xl font-light tracking-[0.1em]"
-                            x-text="t[lang].certs.title"></span>
+                        <span
+                            class="text-zinc-400 dark:text-zinc-700 text-2xl md:text-3xl font-light tracking-[0.1em]">Recognitions
+                            & Awards</span>
                         <a href="{{ url('/certificates') }}"
                             class="text-primary-500 font-black text-sm hover:underline flex items-center gap-2">
                             Lihat Semua Sertifikat
@@ -905,16 +906,17 @@
                         </a>
                     </div>
                     <h2 class="text-4xl md:text-6xl font-black dark:text-white tracking-tighter mb-4 leading-tight">
-                        <span class="text-primary-500" x-text="t[lang].certs.subtitle"></span>
+                        <span class="text-primary-500">Official Certifications</span>
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-relaxed font-medium"
-                        x-text="t[lang].certs.desc"></p>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-relaxed font-medium">
+                        Pencapaian dan sertifikasi profesional dalam bidang teknologi dan akademik.
+                    </p>
                 </div>
 
                 <!-- Navigation Arrows -->
-                <div class="flex gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
+                <div class="flex gap-4 mt-8 md:mt-0 justify-end md:justify-center relative z-[60] pointer-events-auto">
                     <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
-                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
                         :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
@@ -930,7 +932,7 @@
                 </div>
             </div>
 
-            <div x-ref="slider"
+            <div x-ref="featuredSlider"
                 class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-6 mb-10 relative z-10 items-stretch pb-6 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
@@ -973,57 +975,39 @@
 
                 <!-- Cert Card 2: Juara III Nasional -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
-                        class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
+                        class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
                         <div
-                            class="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-pink-600 via-pink-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
+                            class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-pink-600 via-pink-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
                         </div>
                         <!-- Inner Container -->
                         <div
-                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[calc(3rem-2px)] p-6 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
+                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[calc(2.5rem-2px)] p-5 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
                             <!-- Tech Accents -->
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 blur-[50px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-150">
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-6 shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_20px_rgba(255,255,255,0.02)] border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <iframe
                                     src="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                                </div>
-                                <div
-                                    class="absolute inset-0 bg-pink-600/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center">
-                                    <div
-                                        class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/40 shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center transform scale-50 group-hover:scale-100 transition-all duration-500 delay-100">
-                                        <svg class="w-7 h-7 text-white drop-shadow-lg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="px-2 pb-2 relative z-10 flex-1 flex flex-col justify-end">
+                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
                                 <div class="inline-flex items-center gap-2 mb-3">
                                     <span class="w-2 h-2 rounded-full bg-pink-500 group-hover:animate-ping"></span>
-                                    <span class="text-[10px] font-black tracking-[0.4em] text-pink-500 uppercase">JUARA
-                                        III
-                                        NASIONAL</span>
+                                    <span class="text-[9px] font-black tracking-[0.4em] text-pink-500 uppercase">JUARA
+                                        III NASIONAL</span>
                                 </div>
                                 <h4
-                                    class="text-2xl font-black dark:text-white mb-2 leading-tight group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors duration-300">
+                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
                                     Karya Tulis Islami</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-2">Kementerian
-                                    Agama
-                                    RI</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Universitas Gadjah Mada
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -1031,113 +1015,78 @@
 
                 <!-- Cert Card 3: Waroeng Steak -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
-                        class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
+                        class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
                         <div
-                            class="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
+                            class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
                         </div>
                         <!-- Inner Container -->
                         <div
-                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[calc(3rem-2px)] p-6 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
+                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[calc(2.5rem-2px)] p-5 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
                             <!-- Tech Accents -->
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-[50px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-150">
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-6 shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_20px_rgba(255,255,255,0.02)] border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <iframe src="{{ asset('serti/ws.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                                </div>
-                                <div
-                                    class="absolute inset-0 bg-yellow-600/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center">
-                                    <div
-                                        class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/40 shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center transform scale-50 group-hover:scale-100 transition-all duration-500 delay-100">
-                                        <svg class="w-7 h-7 text-white drop-shadow-lg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="px-2 pb-2 relative z-10 flex-1 flex flex-col justify-end">
+                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
                                 <div class="inline-flex items-center gap-2 mb-3">
                                     <span class="w-2 h-2 rounded-full bg-yellow-500 group-hover:animate-ping"></span>
                                     <span
-                                        class="text-[10px] font-black tracking-[0.4em] text-yellow-600 dark:text-yellow-500 uppercase">PROGRAMMER</span>
+                                        class="text-[9px] font-black tracking-[0.4em] text-yellow-500 uppercase">PROFESSIONAL
+                                        WORKSHOP</span>
                                 </div>
                                 <h4
-                                    class="text-2xl font-black dark:text-white mb-2 leading-tight group-hover:text-yellow-600 dark:group-hover:text-yellow-500 transition-colors duration-300">
-                                    Internship Program</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-2">Waroeng
-                                    Steak
-                                    Indonesia</p>
+                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
+                                    Waroeng Steak</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Entrepreneurship &
+                                    Digitalization</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Cert Card 4: UNY -->
+                <!-- Cert Card 4: Futuristic Tech -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[350px] md:w-[280px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
-                        class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-6 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(79,70,229,0.3)] flex flex-col">
+                        class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
                         <div
-                            class="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-indigo-600 via-indigo-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
+                            class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-primary-600 via-primary-400 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-700">
                         </div>
                         <!-- Inner Container -->
                         <div
-                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[calc(3rem-2px)] p-6 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
+                            class="relative bg-white/90 dark:bg-zinc-900/80 backdrop-blur-3xl rounded-[calc(2.5rem-2px)] p-5 h-full border border-white/20 dark:border-white/5 flex flex-col z-10 overflow-hidden">
                             <!-- Tech Accents -->
                             <div
-                                class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-[50px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-150">
+                                class="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 blur-[50px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-150">
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-6 shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_20px_rgba(255,255,255,0.02)] border border-gray-200/50 dark:border-white/5">
-                                <iframe
-                                    src="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
-                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700 filter group-hover:contrast-110"
+                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
+                                <iframe src="{{ asset('serti/futuristic.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
+                                    class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                                </div>
-                                <div
-                                    class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center">
-                                    <div
-                                        class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/40 shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center transform scale-50 group-hover:scale-100 transition-all duration-500 delay-100">
-                                        <svg class="w-7 h-7 text-white drop-shadow-lg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="px-2 pb-2 relative z-10 flex-1 flex flex-col justify-end">
+                            <div class="px-1 pb-1 relative z-10 flex-1 flex flex-col justify-end">
                                 <div class="inline-flex items-center gap-2 mb-3">
-                                    <span class="w-2 h-2 rounded-full bg-indigo-500 group-hover:animate-ping"></span>
+                                    <span class="w-2 h-2 rounded-full bg-primary-500 group-hover:animate-ping"></span>
                                     <span
-                                        class="text-[10px] font-black tracking-[0.4em] text-indigo-500 uppercase">FUTURISTIC
+                                        class="text-[9px] font-black tracking-[0.4em] text-primary-500 uppercase">FUTURISTIC
                                         WORKSHOP</span>
                                 </div>
                                 <h4
-                                    class="text-2xl font-black dark:text-white mb-2 leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
-                                    Fiscreation 2023</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-2">Universitas
-                                    Negeri
-                                    Yogyakarta</p>
+                                    class="text-xl font-black dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors">
+                                    Tech Innovations</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Yogyakarta Tech Hub</p>
                             </div>
                         </div>
                     </div>
@@ -1178,23 +1127,6 @@
                 </h2>
                 <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed font-medium mb-8"
                     x-text="t[lang].projects.desc"></p>
-            </div>
-
-            <div class="flex gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
-                <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
-                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
-                    :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <button type="button" @click="slideRight" :disabled="!canScrollRight"
-                    class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
-                    :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
             </div>
         </div>
 
@@ -1338,6 +1270,26 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Project Slider Navigation Buttons (Specifically for and below the slider content) -->
+        <div class="flex gap-4 mb-10 mt-6 justify-end md:justify-start relative z-50 pointer-events-auto">
+            <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
+                class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button type="button" @click="slideRight" :disabled="!canScrollRight"
+                class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
+                :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+            <span class="ml-4 text-xs font-black text-gray-400 uppercase tracking-widest flex items-center">More
+                Projects</span>
         </div>
 
         <div x-ref="projectSlider" @scroll="checkScroll()"
@@ -1651,31 +1603,40 @@
                     <i class="devicon-javascript-plain text-4xl md:text-5xl text-yellow-400"></i>
                     <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">JS</span>
                 </div>
-                <!-- Extra Skills Added -->
+                <!-- Updated Extra Skills -->
                 <div
                     class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-nodejs-plain text-4xl md:text-5xl text-green-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Node.js</span>
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg"
+                        class="w-10 h-10 md:w-12 md:h-12" alt="C++">
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">C++</span>
                 </div>
                 <div
                     class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-alpinejs-plain text-4xl md:text-5xl text-cyan-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Alpine.js</span>
+                    <img src="https://icons.iconarchive.com/icons/google/google-colab/128/Google-Colab-icon.png"
+                        class="w-10 h-10 md:w-12 md:h-12" alt="Colab">
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Google Colab</span>
                 </div>
                 <div
                     class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-docker-plain text-4xl md:text-5xl text-blue-500"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Docker</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Claude_AI_logo.svg"
+                        class="w-10 h-10 md:w-12 md:h-12" alt="Claude">
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Claude Code</span>
                 </div>
                 <div
                     class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-figma-plain text-4xl md:text-5xl text-purple-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Figma</span>
+                    <i class="devicon-trello-plain text-4xl md:text-5xl text-blue-500"></i>
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Trello</span>
                 </div>
                 <div
                     class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
-                    <i class="devicon-sass-original text-4xl md:text-5xl text-pink-400"></i>
-                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">SASS</span>
+                    <i class="devicon-androidstudio-plain text-4xl md:text-5xl text-green-500"></i>
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Android Studio</span>
+                </div>
+                <div
+                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-4 md:p-6 rounded-2xl min-w-[100px] md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl">
+                    <img src="https://app.diagrams.net/images/logo-net.png" class="w-10 h-10 md:w-12 md:h-12"
+                        alt="Draw.io">
+                    <span class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400">Draw.io</span>
                 </div>
             </div>
         </div>
