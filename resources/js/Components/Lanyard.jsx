@@ -53,7 +53,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     const { nodes, materials } = useGLTF(cardGLB);
     const texture = useTexture(lanyard);
 
-    // Dynamic card texture with theme color and split text
+    // Dynamic card texture with theme color and split text FRONT/BACK
     const cardTexture = useMemo(() => {
         const canvas = document.createElement('canvas');
         canvas.width = 1024;
@@ -69,33 +69,35 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         ctx.fillRect(0, 0, 1024, 1024);
 
         // Subtle Pattern
-        ctx.globalAlpha = 0.1;
+        ctx.globalAlpha = 0.15;
         ctx.fillStyle = '#ffffff';
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
             ctx.beginPath();
-            ctx.arc(Math.random() * 1024, Math.random() * 1024, Math.random() * 100, 0, Math.PI * 2);
+            ctx.arc(Math.random() * 1024, Math.random() * 1024, Math.random() * 120, 0, Math.PI * 2);
             ctx.fill();
         }
         ctx.globalAlpha = 1.0;
 
-        // Front: 4+
+        // Most ID card GLB UVs split the front and back horizontally or vertically.
+        // Assuming top half is FRONT and bottom half is BACK for a common card layout.
+
+        // FRONT SIDE (Top half: 0 to 512)
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.font = '900 500px Inter, system-ui, sans-serif';
-        ctx.fillText('4+', 512, 450);
+        ctx.font = '900 350px Inter, system-ui, sans-serif';
+        ctx.fillText('4+', 512, 380);
 
-        // Separator logic for front/back (if UVs are split)
-        // If UVs are overlaid, we can't show different text easily without UV manipulation.
-        // But for many lanyard models, top/bottom half works.
-
-        // Back: Pengalaman
-        ctx.font = '900 120px Inter, system-ui, sans-serif';
+        // BACK SIDE (Bottom half: 512 to 1024)
+        ctx.font = '900 110px Inter, system-ui, sans-serif';
+        // Draw slightly lower and potentially rotated if UV demands, 
+        // but standard is usually upright.
         ctx.fillText('PENGALAMAN', 512, 850);
 
-        // Decorative borders
-        ctx.strokeStyle = 'white';
+        // Professional Borders
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
         ctx.lineWidth = 15;
-        ctx.strokeRect(50, 50, 924, 924);
+        ctx.strokeRect(40, 40, 944, 432); // Front border
+        ctx.strokeRect(40, 552, 944, 432); // Back border
 
         const tex = new THREE.CanvasTexture(canvas);
         tex.flipY = false;

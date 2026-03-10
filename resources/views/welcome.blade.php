@@ -1438,81 +1438,18 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-4 md:flex md:flex-wrap gap-2 md:gap-6 justify-center">
-                <!-- Backend -->
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <i
-                        class="devicon-laravel-original text-2xl md:text-5xl text-red-500 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Laravel</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <i
-                        class="devicon-codeigniter-plain text-2xl md:text-5xl text-orange-500 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">CI</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <i
-                        class="devicon-mysql-original text-2xl md:text-5xl text-primary-400 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">MySQL</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <i
-                        class="devicon-tailwindcss-original text-2xl md:text-5xl text-cyan-400 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Tailwind</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <i
-                        class="devicon-react-original text-2xl md:text-5xl text-blue-400 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">React</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <i
-                        class="devicon-git-plain text-2xl md:text-5xl text-orange-600 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Git</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
-                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Python">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Python</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-1 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <img src="https://www.gstatic.com/images/branding/product/2x/colab_96dp.png"
-                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Colab">
-                    <span class="text-[9px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Colab</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-1 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <img src="https://avatars.githubusercontent.com/u/74381831?s=200&v=4"
-                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Claude">
-                    <span class="text-[9px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Claude</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg"
-                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Android">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Android</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-1 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <img src="https://www.vectorlogo.zone/logos/drawio/drawio-icon.svg"
-                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="Draw.io">
-                    <span class="text-[9px] md:text-sm font-bold text-gray-600 dark:text-gray-400">Draw.io</span>
-                </div>
-                <div
-                    class="flex flex-col items-center gap-2 bg-gray-50 dark:bg-zinc-800/50 p-2 md:p-6 rounded-2xl md:min-w-[120px] hover:bg-primary-500/10 border border-transparent hover:border-primary-500/30 transition shadow-sm hover:shadow-xl group">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-                        class="w-6 h-6 md:w-12 md:h-12 group-hover:scale-110 transition-transform" alt="JS">
-                    <span class="text-[10px] md:text-sm font-bold text-gray-600 dark:text-gray-400">JS</span>
-                </div>
-            </div>
+            <div data-logo-loop data-speed="80" data-logo-height="60" data-gap="80" data-fade-out="true" :data-logos="JSON.stringify([
+                    { icon: 'SiLaravel', title: 'Laravel' },
+                    { icon: 'SiCodeigniter', title: 'CodeIgniter' },
+                    { icon: 'SiMysql', title: 'MySQL' },
+                    { icon: 'SiTailwindcss', title: 'Tailwind' },
+                    { icon: 'SiReact', title: 'React' },
+                    { icon: 'SiGit', title: 'Git' },
+                    { icon: 'SiPython', title: 'Python' },
+                    { icon: 'SiGooglecolab', title: 'Colab' },
+                    { icon: 'SiClaude', title: 'Claude' },
+                    { icon: 'SiAndroidstudio', title: 'Android' }
+                ])" class="w-full"></div>
         </div>
     </section>
 
@@ -1522,45 +1459,38 @@
             <span class="text-zinc-900 dark:text-white" x-text="t[lang].education.title"></span>
             <span class="text-primary-500" x-text="t[lang].education.subtitle"></span>
         </h2>
-        <div class="grid md:grid-cols-2 gap-6">
-            <!-- Amikom -->
-            <div
-                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-[2.5rem] hover:border-primary-500/50 transition duration-300 flex items-start gap-6 hover:shadow-xl dark:hover:shadow-none group">
-                <div
-                    class="w-20 h-20 bg-gray-50 dark:bg-white rounded-2xl flex items-center justify-center p-3 flex-shrink-0 overflow-hidden shadow-sm group-hover:scale-110 transition-transform">
-                    <img src="{{ asset('logo_amikom.png') }}" alt="Amikom Logo" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <h3 class="text-xl font-black text-zinc-900 dark:text-white mb-1"
-                        x-text="t[lang].education.amikom.name"></h3>
-                    <p class="text-primary-600 dark:text-primary-400 font-bold mb-1"
-                        x-text="t[lang].education.amikom.major"></p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium"
-                        x-text="t[lang].education.amikom.info"></p>
-                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest"
-                        x-text="t[lang].education.amikom.date"></p>
-                </div>
-            </div>
-
-            <!-- Trainit -->
-            <div
-                class="bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 p-8 rounded-[2.5rem] hover:border-purple-500/50 transition duration-300 flex items-start gap-6 hover:shadow-xl dark:hover:shadow-none group">
-                <div
-                    class="w-20 h-20 bg-purple-50 dark:bg-purple-600/20 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">
-                    💻
-                </div>
-                <div>
-                    <h3 class="text-xl font-black text-zinc-900 dark:text-white mb-1"
-                        x-text="t[lang].education.trainit.name"></h3>
-                    <p class="text-purple-600 dark:text-purple-400 font-bold mb-1"
-                        x-text="t[lang].education.trainit.major"></p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium"
-                        x-text="t[lang].education.trainit.info"></p>
-                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest"
-                        x-text="t[lang].education.trainit.date"></p>
-                </div>
-            </div>
-        </div>
+        <div data-scroll-stack data-use-window="false" class="h-[600px] w-full" :data-items="JSON.stringify([
+                { 
+                    className: 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5',
+                    content: `
+                        <div class='flex items-start gap-6'>
+                            <div class='w-20 h-20 bg-white rounded-2xl flex items-center justify-center p-3 flex-shrink-0 overflow-hidden shadow-sm'>
+                                <img src='{{ asset('logo_amikom.png') }}' class='w-full h-full object-contain'>
+                            </div>
+                            <div>
+                                <h3 class='text-xl font-black text-zinc-900 dark:text-white mb-1'>${t[lang].education.amikom.name}</h3>
+                                <p class='text-primary-600 dark:text-primary-400 font-bold mb-1'>${t[lang].education.amikom.major}</p>
+                                <p class='text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium'>${t[lang].education.amikom.info}</p>
+                                <p class='text-gray-400 text-[10px] font-black uppercase tracking-widest'>${t[lang].education.amikom.date}</p>
+                            </div>
+                        </div>
+                    `
+                },
+                { 
+                    className: 'bg-white dark:bg-zinc-900 border border-purple-500/20 dark:border-white/5',
+                    content: `
+                        <div class='flex items-start gap-6'>
+                            <div class='w-20 h-20 bg-purple-50 dark:bg-purple-600/20 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0'>💻</div>
+                            <div>
+                                <h3 class='text-xl font-black text-zinc-900 dark:text-white mb-1'>${t[lang].education.trainit.name}</h3>
+                                <p class='text-purple-600 dark:text-purple-400 font-bold mb-1'>${t[lang].education.trainit.major}</p>
+                                <p class='text-gray-600 dark:text-gray-400 text-sm mb-1 font-medium'>${t[lang].education.trainit.info}</p>
+                                <p class='text-gray-400 text-[10px] font-black uppercase tracking-widest'>${t[lang].education.trainit.date}</p>
+                            </div>
+                        </div>
+                    `
+                }
+            ])"></div>
     </section>
 
 
@@ -1579,27 +1509,38 @@
             </svg>
         </div>
 
-        <div
-            class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 md:grid md:grid-cols-3 md:gap-6 no-scrollbar pb-6 md:pb-0">
-            <div
-                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
-                <div class="text-4xl mb-4">🤝</div>
-                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.team.title"></h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.team.desc"></p>
-            </div>
-            <div
-                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
-                <div class="text-4xl mb-4">⏱️</div>
-                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.time.title"></h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.time.desc"></p>
-            </div>
-            <div
-                class="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-gray-200 dark:border-white/5 text-center hover:-translate-y-1 transition min-w-[75vw] md:min-w-0 snap-center shadow-lg dark:shadow-none">
-                <div class="text-4xl mb-4">📢</div>
-                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mb-2" x-text="t[lang].soft.comm.title"></h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="t[lang].soft.comm.desc"></p>
-            </div>
-        </div>
+        <div data-scroll-stack data-use-window="false" class="h-[600px] w-full" :data-items="JSON.stringify([
+                { 
+                    className: 'bg-white dark:bg-zinc-900 border border-blue-500/20 dark:border-white/5',
+                    content: `
+                        <div class='text-center p-4'>
+                            <div class='text-6xl mb-6'>🤝</div>
+                            <h3 class='text-3xl font-black text-zinc-900 dark:text-white mb-4'>${t[lang].soft.team.title}</h3>
+                            <p class='text-gray-600 dark:text-gray-400 text-lg leading-relaxed'>${t[lang].soft.team.desc}</p>
+                        </div>
+                    `
+                },
+                { 
+                    className: 'bg-white dark:bg-zinc-900 border border-amber-500/20 dark:border-white/5',
+                    content: `
+                        <div class='text-center p-4'>
+                            <div class='text-6xl mb-6'>⏱️</div>
+                            <h3 class='text-3xl font-black text-zinc-900 dark:text-white mb-4'>${t[lang].soft.time.title}</h3>
+                            <p class='text-gray-600 dark:text-gray-400 text-lg leading-relaxed'>${t[lang].soft.time.desc}</p>
+                        </div>
+                    `
+                },
+                { 
+                    className: 'bg-white dark:bg-zinc-900 border border-red-500/20 dark:border-white/5',
+                    content: `
+                        <div class='text-center p-4'>
+                            <div class='text-6xl mb-6'>📢</div>
+                            <h3 class='text-3xl font-black text-zinc-900 dark:text-white mb-4'>${t[lang].soft.comm.title}</h3>
+                            <p class='text-gray-600 dark:text-gray-400 text-lg leading-relaxed'>${t[lang].soft.comm.desc}</p>
+                        </div>
+                    `
+                }
+            ])"></div>
     </section>
 
     <!-- Footer -->
@@ -1623,8 +1564,8 @@
                 <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].footer.title"></span> <br>
                     <span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary-300 to-indigo-400 animate-[shine_3s_linear_infinite] drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
-                        style="background-size: 200% auto;" x-text="t[lang].footer.subtitle"></span>
+                        class="block text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 via-primary-600 to-zinc-900 dark:from-white dark:via-primary-300 dark:to-white animate-[shine_3s_linear_infinite] drop-shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)] bg-[size:200%_auto]"
+                        x-text="t[lang].footer.subtitle" data-split-text></span>
                 </h2>
 
                 <blockquote

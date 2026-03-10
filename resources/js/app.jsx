@@ -7,6 +7,9 @@ import RotatingText from './Components/RotatingText.jsx';
 import Lanyard from './Components/Lanyard.jsx';
 import BubbleMenu from './Components/BubbleMenu.jsx';
 import ProfileCard from './Components/ProfileCard.jsx';
+import LogoLoop from './Components/LogoLoop.jsx';
+import ScrollStack, { ScrollStackItem } from './Components/ScrollStack.jsx';
+import * as SiIcons from 'react-icons/si';
 
 // Mounting function for Particles
 const initParticles = () => {
@@ -103,6 +106,60 @@ const initProfileCard = () => {
     });
 };
 
+const initLogoLoop = () => {
+    const elements = document.querySelectorAll('[data-logo-loop]');
+    elements.forEach(el => {
+        const speed = parseInt(el.getAttribute('data-speed') || "120", 10);
+        const direction = el.getAttribute('data-direction') || "left";
+        const logoHeight = parseInt(el.getAttribute('data-logo-height') || "40", 10);
+        const gap = parseInt(el.getAttribute('data-gap') || "40", 10);
+        const fadeOut = el.getAttribute('data-fade-out') === "true";
+        const fadeOutColor = el.getAttribute('data-fade-color');
+
+        // Use icons from react-icons/si if the logo has an 'icon' property
+        const rawLogos = JSON.parse(el.getAttribute('data-logos') || '[]');
+        const processedLogos = rawLogos.map(l => {
+            if (l.icon && SiIcons[l.icon]) {
+                const Icon = SiIcons[l.icon];
+                return { ...l, node: <Icon /> };
+            }
+            return l;
+        });
+
+        const root = createRoot(el);
+        root.render(
+            <LogoLoop
+                logos={processedLogos}
+                speed={speed}
+                direction={direction}
+                logoHeight={logoHeight}
+                gap={gap}
+                fadeOut={fadeOut}
+                fadeOutColor={fadeOutColor}
+                scaleOnHover={true}
+            />
+        );
+    });
+};
+
+const initScrollStack = () => {
+    const elements = document.querySelectorAll('[data-scroll-stack]');
+    elements.forEach(el => {
+        const rawItems = JSON.parse(el.getAttribute('data-items') || '[]');
+        const useWindow = el.getAttribute('data-use-window') === "true";
+        const root = createRoot(el);
+        root.render(
+            <ScrollStack useWindowScroll={useWindow}>
+                {rawItems.map((item, i) => (
+                    <ScrollStackItem key={i} itemClassName={item.className || "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5"}>
+                        <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                    </ScrollStackItem>
+                ))}
+            </ScrollStack>
+        );
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Vite App Initializing...');
     initParticles();
@@ -114,5 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initLanyard();
         initBubbleMenu();
         initProfileCard();
+        initLogoLoop();
+        initScrollStack();
     }, 800);
 });
