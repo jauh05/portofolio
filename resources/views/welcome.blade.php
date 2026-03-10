@@ -426,168 +426,17 @@
     <!-- React App Container -->
     <div id="react-background-particles" class="fixed inset-0 z-[-10] w-full h-full pointer-events-none"></div>
 
-    <!-- Dynamic Navbar Wrapper -->
-    <div x-data="{ expanded: false }">
-
-        <!-- Mobile Navigation (New Design) -->
-        <div class="md:hidden">
-            <!-- Mobile Toggle Button (Top Left) -->
-            <button @click="expanded = !expanded"
-                class="fixed top-6 left-6 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300 group hover:scale-110 active:scale-95"
-                :class="[
-                    expanded ? 'bg-transparent border-transparent text-white' : (darkMode ? 'bg-zinc-900/80 border-white/10 text-white' : 'bg-white/80 border-gray-200 text-zinc-900'),
-                    'backdrop-blur-xl border'
-                ]">
-                <!-- Hamburger Icon -->
-                <div class="relative w-6 h-6 flex flex-col justify-center items-center gap-1.5 overflow-hidden">
-                    <span class="w-full h-0.5 rounded-full transition-all duration-300 group-hover:bg-primary-400"
-                        :class="[expanded ? 'rotate-45 translate-y-2 bg-white' : (darkMode ? 'bg-white' : 'bg-zinc-900')]"></span>
-                    <span class="w-full h-0.5 rounded-full transition-all duration-300 group-hover:bg-primary-400"
-                        :class="[expanded ? 'translate-x-full opacity-0 bg-white' : (darkMode ? 'bg-white' : 'bg-zinc-900')]"></span>
-                    <span class="w-full h-0.5 rounded-full transition-all duration-300 group-hover:bg-primary-400"
-                        :class="[expanded ? '-rotate-45 -translate-y-2 bg-white' : (darkMode ? 'bg-white' : 'bg-zinc-900')]"></span>
-                </div>
-            </button>
-
-            <!-- Brand Logo (Top Right - for balance) -->
-            <div class="fixed top-6 right-6 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300 border backdrop-blur-xl"
-                :class="expanded ? 'bg-transparent border-transparent text-white' : (darkMode ? 'bg-zinc-900/80 border-white/10 text-white' : 'bg-white/80 border-gray-200 text-zinc-900')">
-                <div class="w-6 h-6 flex items-center justify-center font-bold tracking-tighter">JF</div>
-            </div>
-
-            <!-- Fullscreen Overlay Menu -->
-            <div x-show="expanded" style="display: none;" x-transition:enter="transition ease-out duration-500"
-                x-transition:enter-start="opacity-0 translate-y-full rounded-t-[100%]"
-                x-transition:enter-end="opacity-100 translate-y-0 rounded-t-0"
-                x-transition:leave="transition ease-in duration-300"
-                x-transition:leave-start="opacity-100 translate-y-0 rounded-t-0"
-                x-transition:leave-end="opacity-0 translate-y-full rounded-t-[100%]"
-                :class="darkMode ? 'bg-[#050505]' : 'bg-white'"
-                class="fixed inset-0 z-50 flex flex-col justify-center items-center">
-
-                <!-- Background Gradients -->
-                <div
-                    class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-600/10 blur-[120px] rounded-full pointer-events-none">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none">
-                </div>
-
-                <!-- Menu Links -->
-                <nav class="flex flex-col gap-6 text-center z-10">
-                    <div class="mb-4 text-xs font-bold text-primary-500 uppercase tracking-[0.3em] opacity-80">
-                        Navigation
-                    </div>
-
-                    <a href="#about" @click="expanded = false"
-                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
-                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
-                        x-text="t[lang].nav.about">
-                    </a>
-                    <a href="#projects" @click="expanded = false"
-                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
-                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
-                        x-text="t[lang].nav.projects">
-                    </a>
-                    <a href="#skills" @click="expanded = false"
-                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
-                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
-                        x-text="t[lang].nav.skills">
-                    </a>
-                    <a href="#certifications" @click="expanded = false"
-                        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br hover:scale-110 transition-all duration-300"
-                        :class="darkMode ? 'from-white to-gray-500 hover:to-white' : 'from-zinc-900 to-gray-400 hover:to-black'"
-                        x-text="t[lang].nav.serti">
-                    </a>
-
-                    <div class="w-12 h-1 mx-auto my-4 rounded-full" :class="darkMode ? 'bg-white/10' : 'bg-black/10'">
-                    </div>
-
-                    <a href="#contact" @click="expanded = false"
-                        class="px-8 py-4 rounded-full font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                        :class="darkMode ? 'bg-white text-black hover:bg-blue-50' : 'bg-zinc-900 text-white hover:bg-zinc-800'"
-                        x-text="t[lang].nav.talk">
-                    </a>
-                    <!-- Lang Toggle Mobile -->
-                    <div class="flex items-center gap-4 mt-4 mx-auto">
-                        <button @click="lang = 'id'"
-                            :class="lang === 'id' ? 'text-primary-500 font-bold scale-110' : 'text-gray-500'"
-                            class="text-sm transition-all">INDONESIA</button>
-                        <div class="w-1 h-1 rounded-full bg-gray-500"></div>
-                        <button @click="lang = 'en'"
-                            :class="lang === 'en' ? 'text-primary-500 font-bold scale-110' : 'text-gray-500'"
-                            class="text-sm transition-all">ENGLISH</button>
-                    </div>
-                </nav>
-
-                <!-- Socials/Extra (Bottom) -->
-                <div class="absolute bottom-12 flex gap-6 text-gray-500">
-                    <!-- GitHub -->
-                    <a href="#" class="transition-colors group"
-                        :class="darkMode ? 'hover:text-white' : 'hover:text-black'">
-                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor"
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Desktop Navigation (Cleaned & Static) -->
-        <nav
-            class="hidden md:flex fixed top-6 inset-x-0 mx-auto z-50 transition-all duration-300 w-max pointer-events-auto">
-            <div :class="darkMode ? 'bg-zinc-900/95 border-white/10' : 'bg-white/90 border-gray-200 shadow-xl'"
-                class="backdrop-blur-2xl border rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-2 px-3 transition-colors duration-300">
-                <div class="flex items-center gap-4">
-                    <!-- Logo / Home Icon -->
-                    <div
-                        class="bg-primary-600 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer hover:scale-110 transition shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
-                        <span class="font-bold text-white tracking-tighter">JF</span>
-                    </div>
-
-                    <!-- Desktop Menu Links -->
-                    <div class="flex items-center gap-1">
-                        <a href="#about"
-                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
-                            class="px-5 py-2 text-sm rounded-full transition-all font-bold"
-                            x-text="t[lang].nav.about"></a>
-                        <a href="#projects"
-                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
-                            class="px-5 py-2 text-sm rounded-full transition-all font-bold"
-                            x-text="t[lang].nav.projects"></a>
-                        <a href="#skills"
-                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
-                            class="px-5 py-2 text-sm rounded-full transition-all font-bold"
-                            x-text="t[lang].nav.skills"></a>
-                        <a href="#certifications"
-                            :class="darkMode ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/5'"
-                            class="px-5 py-2 text-sm rounded-full transition-all font-bold"
-                            x-text="t[lang].nav.serti"></a>
-
-                        <!-- Mini Lang Toggle -->
-                        <div
-                            class="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-full border border-black/5 dark:border-white/5 ml-2">
-                            <button @click="lang = 'id'"
-                                :class="lang === 'id' ? 'bg-primary-600 text-white' : 'text-gray-400 hover:text-primary-500'"
-                                class="w-8 h-8 rounded-full text-[10px] font-black transition-all">ID</button>
-                            <button @click="lang = 'en'"
-                                :class="lang === 'en' ? 'bg-primary-600 text-white' : 'text-gray-400 hover:text-primary-500'"
-                                class="w-8 h-8 rounded-full text-[10px] font-black transition-all">EN</button>
-                        </div>
-
-                        <a href="#contact"
-                            class="px-6 py-2 text-sm bg-primary-600 text-white font-black rounded-full hover:bg-primary-700 transition-all ml-2 shadow-lg hover:shadow-primary-500/30"
-                            x-text="t[lang].nav.contact"></a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <!-- Dynamic Navbar Bubble Menu -->
+    <div data-bubble-menu data-logo="JF" :data-items="JSON.stringify([
+            { label: t[lang].nav.about, href: '#about', rotation: -8, hoverStyles: { bgColor: 'rgba(var(--primary-rgb), 1)', textColor: '#fff' } },
+            { label: t[lang].nav.projects, href: '#projects', rotation: 8, hoverStyles: { bgColor: '#f59e0b', textColor: '#fff' } },
+            { label: t[lang].nav.skills, href: '#skills', rotation: -8, hoverStyles: { bgColor: '#10b981', textColor: '#fff' } },
+            { label: t[lang].nav.serti, href: '#certifications', rotation: 8, hoverStyles: { bgColor: '#8b5cf6', textColor: '#fff' } },
+            { label: t[lang].nav.contact, href: '#contact', rotation: -8, hoverStyles: { bgColor: '#ef4444', textColor: '#fff' } }
+        ])"></div>
 
     <header id="about"
-        class="max-w-6xl mx-auto px-6 pt-24 md:pt-40 pb-16 md:pb-24 flex flex-col-reverse md:flex-row items-center md:items-start gap-12">
+        class="max-w-6xl mx-auto px-6 pt-32 md:pt-48 pb-16 md:pb-24 flex flex-col-reverse md:flex-row items-center md:items-start gap-12">
         <div class="flex-1">
             <h1
                 class="text-5xl md:text-7xl font-black leading-[0.85] mb-8 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
@@ -614,7 +463,7 @@
                 </div>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-4 max-w-2xl leading-relaxed font-medium text-justify"
+            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-8 max-w-2xl leading-relaxed font-medium text-justify"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-3">
@@ -627,21 +476,18 @@
                         class="bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all border border-gray-200 dark:border-white/10 text-center min-w-[220px]"
                         x-text="t[lang].hero.cta_contact">
                     </a>
-
-
                 </div>
             </div>
         </div>
 
-        <div class="flex-1 relative flex items-center justify-center">
-            <div class="w-full h-screen min-h-[500px] md:min-h-[700px] relative">
-                <div data-lanyard class="w-full h-full absolute inset-0"></div>
-            </div>
-            <div
-                class="absolute -bottom-6 -left-6 bg-primary-600 p-6 rounded-2xl shadow-xl transform rotate-3 hover:rotate-0 transition duration-300 z-10">
-                <p class="text-3xl font-black text-white">4+</p>
-                <p class="text-[10px] uppercase font-black text-white/80 tracking-widest"
-                    x-text="t[lang].hero.years_exp"></p>
+        <div class="flex-1 relative w-full max-w-[500px]">
+            <!-- Profile Card for the Main Photo -->
+            <div class="w-full relative z-10" data-profile-card data-name="JAUHAR FAUZI"
+                data-title="Digital Solutions Engineer"></div>
+
+            <!-- Hanging Lanyard for the 4+ Years Experience -->
+            <div class="absolute -top-32 -right-16 w-[300px] h-[600px] z-20 pointer-events-none">
+                <div data-lanyard class="w-full h-full pointer-events-auto"></div>
             </div>
         </div>
     </header>

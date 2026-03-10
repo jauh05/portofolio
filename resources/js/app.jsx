@@ -5,6 +5,8 @@ import { mountBackgroundParticles } from './Components/BackgroundParticlesWrappe
 import SplitText from './Components/SplitText.jsx';
 import RotatingText from './Components/RotatingText.jsx';
 import Lanyard from './Components/Lanyard.jsx';
+import BubbleMenu from './Components/BubbleMenu.jsx';
+import ProfileCard from './Components/ProfileCard.jsx';
 
 // Mounting function for Particles
 const initParticles = () => {
@@ -73,6 +75,34 @@ const initLanyard = () => {
     });
 };
 
+const initBubbleMenu = () => {
+    const elements = document.querySelectorAll('[data-bubble-menu]');
+    elements.forEach(el => {
+        const items = JSON.parse(el.getAttribute('data-items') || '[]');
+        const logo = el.getAttribute('data-logo') || 'JF';
+        const root = createRoot(el);
+        root.render(
+            <BubbleMenu
+                items={items}
+                logo={<span className="font-black text-xl tracking-tighter">{logo}</span>}
+                menuBg="rgba(24, 24, 27, 0.8)"
+                menuContentColor="#ffffff"
+                useFixedPosition={true}
+            />
+        );
+    });
+};
+
+const initProfileCard = () => {
+    const elements = document.querySelectorAll('[data-profile-card]');
+    elements.forEach(el => {
+        const name = el.getAttribute('data-name');
+        const title = el.getAttribute('data-title');
+        const root = createRoot(el);
+        root.render(<ProfileCard name={name} title={title} avatarUrl="/foto.png" />);
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Vite App Initializing...');
     initParticles();
@@ -82,5 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initTextAnimations();
         initRotatingText();
         initLanyard();
+        initBubbleMenu();
+        initProfileCard();
     }, 800);
 });

@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-CdcbWK4I.css",
+    "file": "assets/app-CrdUEWP0.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -21,14 +21,13 @@
     "src": "resources/js/Components/Lanyard/lanyard.png"
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-m8UngkWc.js",
+    "file": "assets/app-CXMaMxbh.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
     "assets": [
       "assets/card-BP4TWJmK.glb",
-      "assets/lanyard-BQfo1yFS.png",
-      "assets/foto-D3YN-yib.png"
+      "assets/lanyard-BQfo1yFS.png"
     ]
   }
 }
