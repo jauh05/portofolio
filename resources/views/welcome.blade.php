@@ -463,7 +463,7 @@
                 </div>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-8 max-w-2xl leading-relaxed font-medium text-justify"
+            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-8 max-w-2xl leading-snug font-medium text-justify"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-3">
@@ -565,10 +565,10 @@
                 </button>
                 <div x-show="activeExp === 'asdos'" x-collapse>
                     <div class="px-6 md:px-8 pb-8 pt-2">
-                        <ul class="space-y-4 bg-primary-500/5 p-6 rounded-2xl border border-primary-500/10">
+                        <ul class="space-y-2 bg-primary-500/5 p-6 rounded-2xl border border-primary-500/10">
                             <template x-for="point in t[lang].experience.asdos.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-snug">
                                     <span class="w-2 h-2 rounded-full bg-primary-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
@@ -606,10 +606,10 @@
                 </button>
                 <div x-show="activeExp === 'jauki'" x-collapse>
                     <div class="px-6 md:px-8 pb-8 pt-2">
-                        <ul class="space-y-4 bg-purple-500/5 p-6 rounded-2xl border border-purple-500/10">
+                        <ul class="space-y-2 bg-purple-500/5 p-6 rounded-2xl border border-purple-500/10">
                             <template x-for="point in t[lang].experience.jauki.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-snug">
                                     <span class="w-2 h-2 rounded-full bg-purple-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
@@ -647,10 +647,10 @@
                 </button>
                 <div x-show="activeExp === 'magang'" x-collapse>
                     <div class="px-6 md:px-8 pb-8 pt-2">
-                        <ul class="space-y-4 bg-yellow-500/5 p-6 rounded-2xl border border-yellow-500/10">
+                        <ul class="space-y-2 bg-yellow-500/5 p-6 rounded-2xl border border-yellow-500/10">
                             <template x-for="point in t[lang].experience.magang.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-snug">
                                     <span class="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
@@ -688,10 +688,10 @@
                 </button>
                 <div x-show="activeExp === 'freedom'" x-collapse>
                     <div class="px-6 md:px-8 pb-8 pt-2">
-                        <ul class="space-y-4 bg-indigo-500/5 p-6 rounded-2xl border border-indigo-500/10">
+                        <ul class="space-y-2 bg-indigo-500/5 p-6 rounded-2xl border border-indigo-500/10">
                             <template x-for="point in t[lang].experience.freedom.points">
                                 <li
-                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                    class="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-base leading-snug">
                                     <span class="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0"></span>
                                     <span x-text="point"></span>
                                 </li>
