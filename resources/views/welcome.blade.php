@@ -436,17 +436,17 @@
         ])"></div>
 
     <header id="about"
-        class="max-w-6xl mx-auto px-6 pt-32 md:pt-48 pb-16 md:pb-24 flex flex-col-reverse md:flex-row items-center md:items-start gap-12">
+        class="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-12 md:pb-16 flex flex-col-reverse md:flex-row items-center md:items-start gap-8">
         <div class="flex-1">
             <h1
-                class="text-5xl md:text-7xl font-black leading-[0.85] mb-8 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
+                class="text-5xl md:text-7xl font-black leading-[0.85] mb-6 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
                 <span
-                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.3em] mb-4"
+                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.3em] mb-2 leading-none"
                     x-text="t[lang].hero.title" data-split-text></span>
-                <div class="flex flex-row flex-wrap md:flex-col gap-x-4 md:gap-0">
-                    <span class="text-zinc-900 dark:text-white block overflow-hidden"
+                <div class="flex flex-row flex-wrap md:flex-col gap-x-4 md:gap-0 leading-none">
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden leading-tight"
                         x-text="t[lang].hero.subtitle_first" data-split-text></span>
-                    <span class="text-zinc-900 dark:text-white block overflow-hidden"
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden leading-tight"
                         x-text="t[lang].hero.subtitle_second" data-split-text></span>
                 </div>
             </h1>
@@ -463,7 +463,7 @@
                 </div>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-8 max-w-2xl leading-snug font-medium text-justify"
+            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-6 max-w-2xl leading-snug font-medium text-justify"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-3">
@@ -495,7 +495,7 @@
         </div>
     </header>
 
-    <section class="max-w-6xl mx-auto px-6 py-12">
+    <section class="max-w-6xl mx-auto px-6 py-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div
                 class="bg-primary-600/10 border border-primary-500/20 p-8 rounded-3xl text-center hover:bg-primary-600/20 transition duration-300">
@@ -521,8 +521,8 @@
     </section>
 
     <!-- Professional Experience (Moved Up & Enhanced) -->
-    <section class="max-w-6xl mx-auto px-6 py-12">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+    <section class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-8">
             <div>
                 <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tight">
                     <span class="text-primary-500" x-text="t[lang].experience.title"></span>
@@ -541,7 +541,7 @@
             <div
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'asdos' ? null : 'asdos')"
-                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    class="w-full flex items-center justify-between p-5 md:p-6 text-left">
                     <div class="flex items-center gap-6">
                         <div class="w-12 h-12 rounded-2xl bg-primary-500/10 flex items-center justify-center text-2xl">
                             🎓</div>
@@ -582,7 +582,7 @@
             <div
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'jauki' ? null : 'jauki')"
-                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    class="w-full flex items-center justify-between p-5 md:p-6 text-left">
                     <div class="flex items-center gap-6">
                         <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-2xl">🚀
                         </div>
@@ -623,7 +623,7 @@
             <div
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'magang' ? null : 'magang')"
-                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    class="w-full flex items-center justify-between p-5 md:p-6 text-left">
                     <div class="flex items-center gap-6">
                         <div class="w-12 h-12 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-2xl">🍔
                         </div>
@@ -664,7 +664,7 @@
             <div
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'freedom' ? null : 'freedom')"
-                    class="w-full flex items-center justify-between p-6 md:p-8 text-left">
+                    class="w-full flex items-center justify-between p-5 md:p-6 text-left">
                     <div class="flex items-center gap-6">
                         <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-2xl">🎸
                         </div>
@@ -706,7 +706,7 @@
 
 
     <!-- Certificates Highlights -->
-    <section id="certifications" class="max-w-7xl mx-auto px-6 py-24 relative overflow-hidden">
+    <section id="certifications" class="max-w-7xl mx-auto px-6 py-16 relative overflow-hidden">
         <!-- Premium Background Elements -->
         <div
             class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[140px] pointer-events-none opacity-50">
@@ -756,7 +756,7 @@
                     <h2 class="text-4xl md:text-6xl font-black dark:text-white tracking-tighter mb-4 leading-tight">
                         <span class="text-primary-500">Official Certifications</span>
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-relaxed font-medium">
+                    <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-snug font-medium">
                         Pencapaian dan sertifikasi profesional dalam bidang teknologi dan akademik.
                     </p>
                 </div>
@@ -1006,7 +1006,7 @@
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full -z-10"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -z-10"></div>
 
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-16">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-8">
             <div class="max-w-2xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4"
                     x-text="t[lang].projects.tag">
@@ -1015,7 +1015,7 @@
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].projects.title" data-split-text></span>
                     <span class="text-primary-500" x-text="t[lang].projects.subtitle" data-split-text></span>
                 </h2>
-                <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed font-medium mb-8"
+                <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-snug font-medium mb-8"
                     x-text="t[lang].projects.desc"></p>
             </div>
         </div>
@@ -1034,7 +1034,7 @@
         </style>
 
         <!-- Dedicated Journal Section (Top Priority) -->
-        <div class="mb-16">
+        <div class="mb-12">
             <!-- Project 0: Journal Publication (Real PDF View) -->
             <div
                 class="group relative bg-zinc-950 border border-white/10 rounded-[3rem] overflow-hidden transition-all duration-700 hover:border-primary-500/50 w-full shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
@@ -1042,7 +1042,7 @@
                 <div class="flex flex-col lg:flex-row lg:items-stretch">
                     <!-- Real PDF Canvas Section -->
                     <div
-                        class="lg:w-1/2 p-6 lg:p-14 relative bg-zinc-900/40 overflow-hidden flex items-center justify-center">
+                        class="lg:w-1/2 p-6 lg:p-10 relative bg-zinc-900/40 overflow-hidden flex items-center justify-center">
                         <div
                             class="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-indigo-600/10">
                         </div>
@@ -1094,23 +1094,23 @@
 
                     <!-- Content Side -->
                     <div
-                        class="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center bg-white/95 dark:bg-zinc-950/90 backdrop-blur-3xl border-l border-gray-200 dark:border-white/5 relative">
+                        class="lg:w-1/2 p-8 lg:p-10 flex flex-col justify-center bg-white/95 dark:bg-zinc-950/90 backdrop-blur-3xl border-l border-gray-200 dark:border-white/5 relative">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-primary-600/10 blur-[60px]"></div>
 
-                        <div class="mb-8">
+                        <div class="mb-6">
                             <span
                                 class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6"
                                 x-text="t[lang].projects.journal.tag">
                             </span>
-                            <h3 class="text-3xl lg:text-5xl font-black mb-8 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+                            <h3 class="text-3xl lg:text-5xl font-black mb-6 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
                                 x-text="t[lang].projects.journal.title">
                             </h3>
-                            <p class="text-gray-600 dark:text-gray-400 mb-10 leading-relaxed text-base lg:text-lg font-medium"
+                            <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug text-base lg:text-lg font-medium"
                                 x-text="t[lang].projects.journal.desc">
                             </p>
                         </div>
 
-                        <div class="mb-10">
+                        <div class="mb-8">
                             <div
                                 class="p-6 bg-gradient-to-r from-gray-100 to-white dark:from-zinc-900 dark:to-zinc-900/50 rounded-2xl border border-primary-500/30 group/stat hover:shadow-lg transition-all relative overflow-hidden">
                                 <div class="absolute right-0 top-1/2 -translate-y-1/2 p-3 opacity-10">
@@ -1151,7 +1151,7 @@
         </div>
 
         <!-- Project Slider Navigation Buttons (Specifically for and below the slider content) -->
-        <div class="flex flex-wrap items-center gap-6 mb-10 mt-6 relative z-50 pointer-events-auto">
+        <div class="flex flex-wrap items-center gap-6 mb-8 mt-4 relative z-50 pointer-events-auto">
             <div class="flex gap-4">
                 <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
                     class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
@@ -1201,7 +1201,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-8 md:p-10 relative">
+                <div class="p-6 md:p-8 relative">
                     <div
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💰</span>
@@ -1209,7 +1209,7 @@
                     <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-green-500 transition-colors"
                         x-text="t[lang].projects.kpri.title">
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
                         x-text="t[lang].projects.kpri.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
@@ -1248,7 +1248,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-8 md:p-10 relative">
+                <div class="p-6 md:p-8 relative">
                     <div
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🤖</span>
@@ -1256,7 +1256,7 @@
                     <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors"
                         x-text="t[lang].projects.jaugja.title">
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
                         x-text="t[lang].projects.jaugja.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
@@ -1293,7 +1293,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-8 md:p-10 relative">
+                <div class="p-6 md:p-8 relative">
                     <div
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🎓</span>
@@ -1301,7 +1301,7 @@
                     <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors"
                         x-text="t[lang].projects.kauiz.title">
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
                         x-text="t[lang].projects.kauiz.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
@@ -1339,7 +1339,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-8 md:p-10 relative">
+                <div class="p-6 md:p-8 relative">
                     <div
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💬</span>
@@ -1347,7 +1347,7 @@
                     <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors"
                         x-text="t[lang].projects.livechat.title">
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
                         x-text="t[lang].projects.livechat.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
@@ -1384,7 +1384,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-8 md:p-10 relative">
+                <div class="p-6 md:p-8 relative">
                     <div
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">📚</span>
@@ -1392,7 +1392,7 @@
                     <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"
                         x-text="t[lang].projects.jokitugas.title">
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed font-medium"
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
                         x-text="t[lang].projects.jokitugas.desc"></p>
                     <div class="flex flex-wrap gap-2 mb-10">
                         <span
@@ -1416,14 +1416,14 @@
     </section>
 
     <!-- Technical Skills Section (Moved Below Projects) -->
-    <section id="skills" class="max-w-6xl mx-auto px-6 py-8 md:py-20">
+    <section id="skills" class="max-w-6xl mx-auto px-6 py-6 md:py-12">
         <div
             class="bg-white/50 dark:bg-zinc-900/40 border border-gray-200 dark:border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 overflow-hidden relative shadow-xl dark:shadow-none backdrop-blur-sm">
             <div class="absolute top-0 right-0 w-64 h-64 bg-primary-600/20 blur-[100px]"></div>
 
-            <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-6">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tight">
+                    <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">
                         <span class="text-zinc-900 dark:text-white" x-text="t[lang].skills.title"
                             data-split-text></span>
                         <span class="text-primary-600 dark:text-primary-500" x-text="t[lang].skills.subtitle"
@@ -1454,8 +1454,8 @@
     </section>
 
 
-    <section class="max-w-6xl mx-auto px-6 py-12">
-        <h2 class="text-3xl md:text-4xl font-black mb-8 text-center md:text-left tracking-tight">
+    <section class="max-w-6xl mx-auto px-6 py-8">
+        <h2 class="text-3xl md:text-4xl font-black mb-6 text-center md:text-left tracking-tight">
             <span class="text-zinc-900 dark:text-white" x-text="t[lang].education.title"></span>
             <span class="text-primary-500" x-text="t[lang].education.subtitle"></span>
         </h2>
@@ -1502,8 +1502,8 @@
 
 
 
-    <section class="max-w-6xl mx-auto px-6 py-12 mb-12">
-        <h2 class="text-3xl md:text-4xl font-black mb-8 text-center md:text-left tracking-tight">
+    <section class="max-w-6xl mx-auto px-6 py-8 mb-8">
+        <h2 class="text-3xl md:text-4xl font-black mb-6 text-center md:text-left tracking-tight">
             <span class="text-zinc-900 dark:text-white" x-text="t[lang].soft.title"></span>
             <span class="text-primary-500" x-text="t[lang].soft.subtitle"></span>
         </h2>
@@ -1540,7 +1540,7 @@
     </section>
 
     <!-- Footer -->
-    <footer id="contact" class="max-w-6xl mx-auto px-6 py-24 relative overflow-hidden">
+    <footer id="contact" class="max-w-6xl mx-auto px-6 py-16 relative overflow-hidden">
         <!-- Glow Effects -->
         <div
             class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-primary-600/10 blur-[100px] rounded-full pointer-events-none">
@@ -1548,7 +1548,7 @@
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none">
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-16 items-center relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center relative z-10">
             <!-- Left: Call to Action & Contact -->
             <div>
                 <div
@@ -1557,7 +1557,7 @@
                     <span x-text="t[lang].footer.tag"></span>
                 </div>
 
-                <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
+                <h2 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].footer.title"></span> <br>
                     <span
                         class="block text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 via-primary-600 to-zinc-900 dark:from-white dark:via-primary-300 dark:to-white animate-[shine_3s_linear_infinite] drop-shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)] bg-[size:200%_auto]"
