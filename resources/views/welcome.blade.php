@@ -18,6 +18,9 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <!-- Tailwind Config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -435,7 +438,7 @@
             { label: t[lang].nav.contact, href: '#contact', rotation: -8, hoverStyles: { bgColor: '#ef4444', textColor: '#fff' } }
         ])"></div>
 
-    <header id="about"
+    <header id="about" data-aos="fade-up"
         class="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-12 md:pb-16 flex flex-col-reverse md:flex-row items-center md:items-start gap-8">
         <div class="flex-1">
             <h1
@@ -495,7 +498,7 @@
         </div>
     </header>
 
-    <section class="max-w-6xl mx-auto px-6 py-8">
+    <section class="max-w-6xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-delay="100">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div
                 class="bg-primary-600/10 border border-primary-500/20 p-8 rounded-3xl text-center hover:bg-primary-600/20 transition duration-300">
@@ -521,7 +524,7 @@
     </section>
 
     <!-- Professional Experience (Moved Up & Enhanced) -->
-    <section class="max-w-6xl mx-auto px-6 py-8">
+    <section class="max-w-6xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-delay="200">
         <div class="flex flex-col md:flex-row justify-between items-end mb-8">
             <div>
                 <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tight">
@@ -706,7 +709,7 @@
 
 
     <!-- Certificates Highlights -->
-    <section id="certifications" class="max-w-7xl mx-auto px-6 py-16 relative overflow-hidden">
+    <section id="certifications" class="max-w-7xl mx-auto px-6 py-16 relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
         <!-- Premium Background Elements -->
         <div
             class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[140px] pointer-events-none opacity-50">
@@ -975,7 +978,7 @@
         </div>
     </section>
     <!-- Projects Section -->
-    <section id="projects" class="max-w-6xl mx-auto px-6 py-10 md:py-16 relative" x-data="{
+    <section id="projects" data-aos="fade-up" data-aos-delay="100" class="max-w-6xl mx-auto px-6 py-10 md:py-16 relative" x-data="{
         canScrollLeft: false,
         canScrollRight: true,
         selectedJournal: false,
@@ -1416,7 +1419,7 @@
     </section>
 
     <!-- Technical Skills Section (Moved Below Projects) -->
-    <section id="skills" class="max-w-6xl mx-auto px-6 py-6 md:py-12">
+    <section id="skills" data-aos="fade-up" data-aos-delay="100" class="max-w-6xl mx-auto px-6 py-6 md:py-12">
         <div
             class="bg-white/50 dark:bg-zinc-900/40 border border-gray-200 dark:border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 overflow-hidden relative shadow-xl dark:shadow-none backdrop-blur-sm">
             <div class="absolute top-0 right-0 w-64 h-64 bg-primary-600/20 blur-[100px]"></div>
@@ -1454,7 +1457,7 @@
     </section>
 
 
-    <section class="max-w-6xl mx-auto px-6 py-8">
+    <section class="max-w-6xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-delay="100">
         <h2 class="text-3xl md:text-4xl font-black mb-6 text-center md:text-left tracking-tight">
             <span class="text-zinc-900 dark:text-white" x-text="t[lang].education.title"></span>
             <span class="text-primary-500" x-text="t[lang].education.subtitle"></span>
@@ -1502,7 +1505,7 @@
 
 
 
-    <section class="max-w-6xl mx-auto px-6 py-8 mb-8">
+    <section class="max-w-6xl mx-auto px-6 py-8 mb-8" data-aos="fade-up" data-aos-delay="100">
         <h2 class="text-3xl md:text-4xl font-black mb-6 text-center md:text-left tracking-tight">
             <span class="text-zinc-900 dark:text-white" x-text="t[lang].soft.title"></span>
             <span class="text-primary-500" x-text="t[lang].soft.subtitle"></span>
@@ -1540,7 +1543,7 @@
     </section>
 
     <!-- Footer -->
-    <footer id="contact" class="max-w-6xl mx-auto px-6 py-16 relative overflow-hidden">
+    <footer id="contact" data-aos="fade-up" data-aos-delay="100" class="max-w-6xl mx-auto px-6 py-16 relative overflow-hidden">
         <!-- Glow Effects -->
         <div
             class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-primary-600/10 blur-[100px] rounded-full pointer-events-none">
@@ -1875,6 +1878,19 @@
             </div>
         </div>
     </div>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                once: true,
+                offset: 50,
+                duration: 800,
+                easing: 'ease-out-cubic',
+            });
+        });
+    </script>
 </body>
 
 </html>
