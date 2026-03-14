@@ -1645,6 +1645,52 @@
                                 d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                     </a>
+
+                    <!-- TikTok -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900/50 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-white/5 hover:border-zinc-500/30 rounded-2xl transition-all duration-300 shadow-md dark:shadow-none">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-zinc-900/10 dark:bg-white/10 text-zinc-900 dark:text-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <!-- TikTok Icon -->
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.47-.13-.09-.26-.18-.38-.28.01 1.05.01 2.1.01 3.15 0 2.64-.17 5.28-1.57 7.56-1.55 2.51-4.22 4.15-7.14 4.39-2.92.24-5.91-.83-7.85-3.04-1.92-2.18-2.61-5.26-1.87-8.08.74-2.83 3.01-4.99 5.86-5.49 1.1-.19 2.22-.16 3.32.1v4.04c-.6-.2-1.24-.26-1.88-.17-1.16.16-2.22.86-2.73 1.9-.51 1.04-.49 2.32.1 3.31.59.99 1.65 1.57 2.79 1.57 2.11-.01 2.11-3.1 2.11-4.66.01-4.61.01-9.22.01-13.84z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">TikTok</div>
+                                <div class="text-zinc-900 dark:text-white font-medium">@jauhar.fauzi_</div>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+
+                    <!-- LinkedIn -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900/50 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-white/5 hover:border-blue-500/30 rounded-2xl transition-all duration-300 shadow-md dark:shadow-none">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <!-- LinkedIn Icon -->
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">LinkedIn</div>
+                                <div class="text-zinc-900 dark:text-white font-medium">Jauhar Ulul Fauzi</div>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
                 </div>
             </div>
 
