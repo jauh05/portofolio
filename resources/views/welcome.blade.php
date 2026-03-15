@@ -444,12 +444,12 @@
             <h1
                 class="text-5xl md:text-7xl font-black leading-[0.85] mb-6 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
                 <span
-                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.3em] mb-2 leading-none"
+                    class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.2em] mb-1 md:-mb-1 leading-none"
                     x-text="t[lang].hero.title" data-split-text></span>
-                <div class="flex flex-row flex-wrap md:flex-col gap-x-4 md:gap-0 leading-none">
-                    <span class="text-zinc-900 dark:text-white block overflow-hidden leading-tight"
+                <div class="flex flex-row flex-wrap md:flex-col gap-x-2 md:-space-y-1 leading-none mt-1">
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden leading-[0.9] md:leading-[0.85]"
                         x-text="t[lang].hero.subtitle_first" data-split-text></span>
-                    <span class="text-zinc-900 dark:text-white block overflow-hidden leading-tight"
+                    <span class="text-zinc-900 dark:text-white block overflow-hidden leading-[0.9] md:leading-[0.85]"
                         x-text="t[lang].hero.subtitle_second" data-split-text></span>
                 </div>
             </h1>
