@@ -1670,7 +1670,7 @@
                     </a>
 
                     <!-- LinkedIn -->
-                    <a href="#"
+                    <a href="https://www.linkedin.com/in/jauhar-fauzi-ulul-albab-979245291/" target="_blank"
                         class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900/50 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-white/5 hover:border-blue-500/30 rounded-2xl transition-all duration-300 shadow-md dark:shadow-none">
                         <div class="flex items-center gap-4">
                             <div
