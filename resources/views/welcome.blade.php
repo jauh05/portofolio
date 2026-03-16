@@ -1647,7 +1647,7 @@
                     </a>
 
                     <!-- TikTok -->
-                    <a href="#"
+                    <a href="https://tiktok.com/@jauhar.fauzi" target="_blank"
                         class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900/50 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-white/5 hover:border-zinc-500/30 rounded-2xl transition-all duration-300 shadow-md dark:shadow-none">
                         <div class="flex items-center gap-4">
                             <div
@@ -1659,7 +1659,7 @@
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">TikTok</div>
-                                <div class="text-zinc-900 dark:text-white font-medium">@jauhar.fauzi_</div>
+                                <div class="text-zinc-900 dark:text-white font-medium">@jauhar.fauzi</div>
                             </div>
                         </div>
                         <svg class="w-5 h-5 text-gray-400 dark:text-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors"
