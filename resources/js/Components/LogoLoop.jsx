@@ -94,12 +94,12 @@ const useAnimationLoop = (trackRef, targetVelocity, seqWidth, seqHeight, isHover
             track.style.transform = transformValue;
         }
 
-        if (prefersReduced) {
-            track.style.transform = isVertical ? 'translate3d(0, 0, 0)' : 'translate3d(0, 0, 0)';
-            return () => {
-                lastTimestampRef.current = null;
-            };
-        }
+        // if (prefersReduced) {
+        //     track.style.transform = isVertical ? 'translate3d(0, 0, 0)' : 'translate3d(0, 0, 0)';
+        //     return () => {
+        //         lastTimestampRef.current = null;
+        //     };
+        // }
 
         const animate = timestamp => {
             if (lastTimestampRef.current === null) {
@@ -172,7 +172,7 @@ export const LogoLoop = memo(
             if (hoverSpeed !== undefined) return hoverSpeed;
             if (pauseOnHover === true) return 0;
             if (pauseOnHover === false) return undefined;
-            return 0;
+            return undefined;
         }, [hoverSpeed, pauseOnHover]);
 
         const isVertical = direction === 'up' || direction === 'down';
@@ -275,7 +275,6 @@ export const LogoLoop = memo(
                     <span
                         className={cx(
                             'inline-flex items-center',
-                            'motion-reduce:transition-none',
                             scaleOnHover &&
                             'transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover/item:scale-120'
                         )}
@@ -289,7 +288,6 @@ export const LogoLoop = memo(
                             'h-[var(--logoloop-logoHeight)] w-auto block object-contain',
                             '[-webkit-user-drag:none] pointer-events-none',
                             '[image-rendering:-webkit-optimize-contrast]',
-                            'motion-reduce:transition-none',
                             scaleOnHover &&
                             'transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover/item:scale-120'
                         )}
@@ -336,6 +334,7 @@ export const LogoLoop = memo(
                         )}
                         key={key}
                         role="listitem"
+                        style={{ minWidth: 'var(--logoloop-logoHeight)' }}
                     >
                         {inner}
                     </li>
@@ -430,7 +429,6 @@ export const LogoLoop = memo(
                 <div
                     className={cx(
                         'flex will-change-transform select-none relative z-0',
-                        'motion-reduce:transform-none',
                         isVertical ? 'flex-col h-max w-full' : 'flex-row w-max'
                     )}
                     ref={trackRef}

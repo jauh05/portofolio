@@ -161,14 +161,16 @@ const initLogoLoop = () => {
         const root = createRoot(el);
         root.render(
             <LogoLoop
+                key={`${isMobile ? 'mobile' : 'desktop'}`}
                 logos={processedLogos}
-                speed={speed}
+                speed={isMobile ? speed * 1.5 : speed}
                 direction={direction}
                 logoHeight={logoHeight}
                 gap={gap}
                 fadeOut={fadeOut}
                 fadeOutColor={fadeOutColor}
                 scaleOnHover={true}
+                pauseOnHover={!isMobile}
             />
         );
     });
