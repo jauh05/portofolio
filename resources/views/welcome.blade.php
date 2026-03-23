@@ -556,7 +556,7 @@
 
         <div class="relative space-y-4" x-data="{ activeExp: null }">
             <!-- Asdos -->
-            <div
+            <div data-aos="fade-up" data-aos-delay="100"
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'asdos' ? null : 'asdos')"
                     class="w-full flex items-center justify-between p-5 md:p-6 text-left">
@@ -597,7 +597,7 @@
             </div>
 
             <!-- Jauki -->
-            <div
+            <div data-aos="fade-up" data-aos-delay="200"
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'jauki' ? null : 'jauki')"
                     class="w-full flex items-center justify-between p-5 md:p-6 text-left">
@@ -638,7 +638,7 @@
             </div>
 
             <!-- Magang -->
-            <div
+            <div data-aos="fade-up" data-aos-delay="300"
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'magang' ? null : 'magang')"
                     class="w-full flex items-center justify-between p-5 md:p-6 text-left">
@@ -679,7 +679,7 @@
             </div>
 
             <!-- Freedom -->
-            <div
+            <div data-aos="fade-up" data-aos-delay="400"
                 class="group border border-gray-100 dark:border-white/5 rounded-3xl bg-white dark:bg-zinc-900/40 transition-all duration-300 overflow-hidden">
                 <button @click="activeExp = (activeExp === 'freedom' ? null : 'freedom')"
                     class="w-full flex items-center justify-between p-5 md:p-6 text-left">
