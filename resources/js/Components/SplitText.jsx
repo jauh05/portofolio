@@ -14,14 +14,14 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const SplitText = ({
     text = '',
     className = '',
-    delay = 50,
-    duration = 0.05,
-    ease = 'power3.out',
+    delay = 30,
+    duration = 0.8,
+    ease = 'expo.out',
     splitType = 'chars', // 'chars', 'words', 'lines'
-    from = { opacity: 0, y: 40 },
+    from = { opacity: 0, y: 20 },
     to = { opacity: 1, y: 0 },
-    threshold = 0.1,
-    rootMargin = '-100px',
+    threshold = 0.2,
+    rootMargin = '-50px',
     textAlign = 'left',
     tag = 'p',
     onLetterAnimationComplete

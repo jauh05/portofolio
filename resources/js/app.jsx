@@ -10,6 +10,37 @@ import ProfileCard from './Components/ProfileCard.jsx';
 import LogoLoop from './Components/LogoLoop.jsx';
 import ScrollStack, { ScrollStackItem } from './Components/ScrollStack.jsx';
 import * as SiIcons from 'react-icons/si';
+import Lenis from 'lenis';
+
+// Global Lenis instance
+let lenis;
+
+const initGlobalScroll = () => {
+    lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+        infinite: false,
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Sync AOS with Lenis
+    lenis.on('scroll', () => {
+        if (window.AOS) {
+            window.AOS.refresh();
+        }
+    });
+};
 
 // Mounting function for Particles
 const initParticles = () => {
@@ -163,9 +194,10 @@ const initScrollStack = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Vite App Initializing...');
+    initGlobalScroll();
     initParticles();
 
-    // Higher delay to ensure Alpine.js x-text is fully rendered by the browser
+    // Staggered initialization for better performance and smoother entry
     setTimeout(() => {
         initTextAnimations();
         initRotatingText();
@@ -174,5 +206,5 @@ document.addEventListener('DOMContentLoaded', () => {
         initProfileCard();
         initLogoLoop();
         initScrollStack();
-    }, 800);
+    }, 1000);
 });

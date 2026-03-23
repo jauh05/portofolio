@@ -137,6 +137,21 @@
             background: rgba(24, 24, 27, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
+        /* Animation & Transition Optimization */
+        [data-aos] {
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+
+        [data-aos].aos-animate {
+            pointer-events: auto;
+        }
+
+        /* Smooth UI Interactions */
+        button, a, .group {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
     </style>
 </head>
 
@@ -438,7 +453,7 @@
             { label: t[lang].nav.contact, href: '#contact', rotation: -8, hoverStyles: { bgColor: '#ef4444', textColor: '#fff' } }
         ])"></div>
 
-    <header id="about" data-aos="fade-up"
+    <header id="about" data-aos="fade-up" data-aos-duration="1200"
         class="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-12 md:pb-16 flex flex-col-reverse md:flex-row items-center md:items-start gap-8">
         <div class="flex-1">
             <h1
@@ -498,24 +513,24 @@
         </div>
     </header>
 
-    <section class="max-w-6xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-delay="100">
+    <section class="max-w-6xl mx-auto px-6 py-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div
+            <div data-aos="fade-up" data-aos-delay="100"
                 class="bg-primary-600/10 border border-primary-500/20 p-8 rounded-3xl text-center hover:bg-primary-600/20 transition duration-300">
                 <h3 class="text-3xl font-black mb-1 text-primary-600 dark:text-primary-400">8+</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.completed"></p>
             </div>
-            <div
+            <div data-aos="fade-up" data-aos-delay="200"
                 class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
                 <h3 class="text-3xl font-black mb-1 text-zinc-900 dark:text-white">10+</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.stack"></p>
             </div>
-            <div
+            <div data-aos="fade-up" data-aos-delay="300"
                 class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
                 <h3 class="text-3xl font-black mb-1 text-zinc-900 dark:text-white">4+</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.exp"></p>
             </div>
-            <div
+            <div data-aos="fade-up" data-aos-delay="400"
                 class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 p-8 rounded-3xl text-center hover:border-primary-500/30 transition duration-300 shadow-sm dark:shadow-none">
                 <h3 class="text-3xl font-black mb-1 text-zinc-900 dark:text-white">100%</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400 font-bold" x-text="t[lang].stats.commit"></p>
@@ -1566,7 +1581,7 @@
                 <h2 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].footer.title"></span> <br>
                     <span
-                        class="block text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 via-primary-600 to-zinc-900 dark:from-white dark:via-primary-300 dark:to-white animate-[shine_3s_linear_infinite] drop-shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)] bg-[size:200%_auto]"
+                        class="block text-primary-600 dark:text-primary-400 drop-shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)]"
                         x-text="t[lang].footer.subtitle" data-split-text></span>
                 </h2>
 
@@ -1936,9 +1951,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             AOS.init({
                 once: true,
-                offset: 50,
-                duration: 800,
-                easing: 'ease-out-cubic',
+                offset: 120,
+                duration: 1000,
+                easing: 'ease-out-quart',
+                delay: 100,
             });
         });
     </script>
