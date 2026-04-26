@@ -197,7 +197,7 @@ const initScrollStack = () => {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Vite App Initializing...');
     initGlobalScroll();
-    initParticles();
+    // initParticles();
 
     // Staggered initialization for better performance and smoother entry
     setTimeout(() => {

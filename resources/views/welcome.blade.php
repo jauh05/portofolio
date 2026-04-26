@@ -75,47 +75,41 @@
             width: 100%;
         }
 
-        /* Dynamic Mesh Background */
+        /* Dynamic Premium Gradient Background */
         .bg-mesh-theme {
             position: relative;
             z-index: 0;
             overflow-x: hidden;
+            background: radial-gradient(circle at top right, rgba(var(--primary-rgb), 0.12), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(var(--primary-rgb), 0.08), transparent 40%);
+        }
+
+        .dark .bg-mesh-theme {
+            background: radial-gradient(circle at top right, rgba(var(--primary-rgb), 0.15), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(var(--primary-rgb), 0.1), transparent 40%);
         }
 
         .bg-mesh-theme::before {
             content: '';
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background:
-                radial-gradient(circle at 50% 50%, rgba(var(--primary-rgb), 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 100% 0%, rgba(var(--primary-rgb), 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%);
-            animation: mesh-rotate 20s linear infinite;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%);
             z-index: -15;
             pointer-events: none;
-            opacity: 0.6;
-            /* Softer in light mode */
+            animation: pulse-gradient 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-gradient {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
         }
 
         .dark .bg-mesh-theme::before {
-            opacity: 1;
-            background:
-                radial-gradient(circle at 50% 50%, rgba(var(--primary-rgb), 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 100% 0%, rgba(var(--primary-rgb), 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.15) 0%, transparent 50%);
-        }
-
-        @keyframes mesh-rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(var(--primary-rgb), 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(var(--primary-rgb), 0.08) 0%, transparent 50%);
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -128,14 +122,16 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(var(--primary-rgb), 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
 
         .dark .glass-card {
-            background: rgba(24, 24, 27, 0.6);
+            background: rgba(15, 15, 20, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         /* Animation & Transition Optimization */
@@ -439,10 +435,7 @@
 
     <!-- Global Background Color Layer -->
     <div class="fixed inset-0 z-[-20] transition-colors duration-500"
-        :class="darkMode ? 'bg-[#050505]' : 'bg-slate-50'"></div>
-
-    <!-- React App Container (Galaxy Background) -->
-    <div id="react-background-particles" class="fixed inset-0 z-[-10] w-full h-full pointer-events-none"></div>
+        :class="darkMode ? 'bg-[#08080a]' : 'bg-white'"></div>
 
     <!-- Dynamic Navbar Bubble Menu -->
     <div data-bubble-menu data-logo="JF" :data-items="JSON.stringify([
@@ -454,14 +447,14 @@
         ])"></div>
 
     <header id="about" data-aos="fade-up" data-aos-duration="1200"
-        class="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-12 md:pb-16 flex flex-col-reverse md:flex-row items-center md:items-start gap-8">
-        <div class="flex-1">
+        class="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-12 md:pb-16 flex flex-col md:flex-row items-center gap-12 md:gap-8">
+        <div class="flex-1 text-center md:text-left order-2 md:order-1">
             <h1
-                class="text-5xl md:text-7xl font-black leading-[0.85] mb-6 tracking-tighter text-left uppercase flex flex-col items-start translate-x-[-2px]">
+                class="text-5xl md:text-7xl font-black leading-[0.85] mb-6 tracking-tighter uppercase flex flex-col items-center md:items-start translate-x-[-2px]">
                 <span
                     class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.2em] mb-1 md:-mb-1 leading-none"
                     x-text="t[lang].hero.title" data-split-text></span>
-                <div class="flex flex-row flex-wrap md:flex-col gap-x-2 md:-space-y-1 leading-none mt-1">
+                <div class="flex flex-row flex-wrap md:flex-col justify-center md:justify-start gap-x-2 md:-space-y-1 leading-none mt-1">
                     <span class="text-zinc-900 dark:text-white block overflow-hidden leading-[0.9] md:leading-[0.85]"
                         x-text="t[lang].hero.subtitle_first" data-split-text></span>
                     <span class="text-zinc-900 dark:text-white block overflow-hidden leading-[0.9] md:leading-[0.85]"
@@ -469,11 +462,11 @@
                 </div>
             </h1>
 
-            <div class="flex flex-col mb-6 text-left items-start">
+            <div class="flex flex-col mb-6 items-center md:items-start">
                 <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-1"
                     x-text="t[lang].hero.tagline_line1" data-split-text></p>
 
-                <div class="flex items-center gap-2 text-xl md:text-3xl">
+                <div class="flex items-center gap-2 text-xl md:text-3xl justify-center md:justify-start">
                     <span class="text-primary-500 font-black">&</span>
                     <div data-rotating-text :data-rotating-texts="JSON.stringify(t[lang].hero.tagline_rotating)"
                         data-rotating-main-class="px-3 bg-primary-500/10 text-primary-500 dark:text-primary-400 py-0.5 rounded-lg border border-primary-500/20 font-black tracking-tight">
@@ -481,33 +474,34 @@
                 </div>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-6 max-w-2xl leading-snug font-medium text-justify"
+            <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-6 max-w-2xl leading-snug font-medium text-center md:text-justify"
                 x-text="t[lang].hero.desc" data-split-text data-split-type="words">
             </p>
             <div class="flex flex-col gap-3">
-                <div class="flex flex-col sm:flex-row gap-4 justify-start items-center">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center">
                     <a href="#projects"
-                        class="bg-primary-600 hover:bg-blue-700 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all transform hover:scale-105 text-center min-w-[220px] shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.4)]"
+                        class="bg-primary-600 hover:bg-primary-700 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all transform hover:scale-105 text-center min-w-[220px] shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.4)]"
                         x-text="t[lang].hero.cta_projects">
                     </a>
                     <a href="#contact"
-                        class="bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all border border-gray-200 dark:border-white/10 text-center min-w-[220px]"
+                        class="bg-zinc-100 dark:bg-zinc-800/50 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest transition-all border border-gray-200 dark:border-white/10 text-center min-w-[220px]"
                         x-text="t[lang].hero.cta_contact">
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="flex-1 relative flex items-center justify-center min-h-[400px] md:min-h-[500px]">
-            <!-- Main Photo Container (Simple static look) -->
+        <div class="flex-1 relative flex items-center justify-center min-h-[350px] md:min-h-[500px] order-1 md:order-2 w-full">
+            <!-- Main Photo Container -->
             <div
-                class="relative z-10 w-full max-w-[450px] aspect-[0.85] rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/10 bg-zinc-800">
+                class="relative z-10 w-[280px] sm:w-[350px] md:w-full max-w-[450px] aspect-[0.85] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10 bg-zinc-800 transform md:rotate-2 hover:rotate-0 transition-all duration-700">
                 <img src="/foto.png" alt="Jauhar Fauzi" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
             </div>
 
-            <!-- 3D Interactive Lanyard (Positioned at top-right side) -->
+            <!-- 3D Interactive Lanyard (Fixed for mobile) -->
             <div
-                class="absolute -top-40 -right-16 md:-right-24 w-[400px] h-[900px] z-30 pointer-events-none drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                class="absolute -top-32 -right-8 md:-right-24 w-[300px] md:w-[400px] h-[700px] md:h-[900px] z-30 pointer-events-none drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-40 md:opacity-100">
                 <div data-lanyard class="w-full h-full pointer-events-auto"></div>
             </div>
         </div>
@@ -800,10 +794,10 @@
             </div>
 
             <div x-ref="featuredSlider" @scroll="checkScroll()"
-                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-6 mb-10 relative z-10 items-stretch pb-6 pt-2 h-full">
+                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-6 mb-10 relative z-10 items-stretch pb-10 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[280px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -900,7 +894,7 @@
 
                 <!-- Cert Card 3: Waroeng Steak -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[280px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -946,7 +940,7 @@
 
                 <!-- Cert Card 4: Futuristic Tech -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[280px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -1207,7 +1201,7 @@
             <!-- Project Cards (Generic Update for Light Mode) -->
             <!-- Project Cards -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 w-[280px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/kpri.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1254,7 +1248,7 @@
 
             <!-- Project 2 (Modern Card) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-indigo-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-primary-500/40 w-[280px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(var(--primary-rgb),0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/jaugjakita.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1797,7 +1791,7 @@
                         </div>
 
                         <!-- Bottom Action -->
-                        <a href="https://wa.me/6289529104230"
+                        <a href="https://wa.me/6289529104230" target="_blank"
                             class="w-full py-4 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-xl font-bold text-center hover:bg-zinc-800 dark:hover:bg-gray-200 transition shadow-[0_0_20px_rgba(0,0,0,0.15)] dark:shadow-[0_0_20px_rgba(255,255,255,0.15)] flex justify-center items-center gap-2">
                             <span x-text="t[lang].footer.cta"></span>
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
