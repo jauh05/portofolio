@@ -51,15 +51,16 @@
     </script>
 
     <style>
+        /* Premium Easing Utility */
         :root {
             --primary-rgb: 59, 130, 246;
-            /* Default Blue */
+            --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* Smooth Theme Transitions */
         html,
         body {
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.6s var(--ease-premium), color 0.6s var(--ease-premium);
         }
 
         html {
@@ -98,12 +99,12 @@
                 radial-gradient(circle at 80% 70%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%);
             z-index: -15;
             pointer-events: none;
-            animation: pulse-gradient 15s ease-in-out infinite alternate;
+            animation: pulse-gradient 20s ease-in-out infinite alternate;
         }
 
         @keyframes pulse-gradient {
-            0% { opacity: 0.5; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.1); }
+            0% { opacity: 0.4; transform: scale(1) translate(0, 0); }
+            100% { opacity: 0.8; transform: scale(1.05) translate(2%, 2%); }
         }
 
         .dark .bg-mesh-theme::before {
@@ -126,6 +127,7 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(var(--primary-rgb), 0.1);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            transition: all 0.6s var(--ease-premium);
         }
 
         .dark .glass-card {
@@ -145,8 +147,24 @@
         }
 
         /* Smooth UI Interactions */
-        button, a, .group {
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        button, a, .group, .card-hover {
+            transition: all 0.5s var(--ease-premium);
+        }
+
+        .hero-photo-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-20px) rotate(-1deg); }
+        }
+
+        @media (max-width: 768px) {
+            @keyframes float {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-10px) rotate(1deg); }
+            }
         }
     </style>
 </head>
@@ -494,7 +512,7 @@
         <div class="flex-1 relative flex items-center justify-center min-h-[350px] md:min-h-[500px] order-1 md:order-2 w-full">
             <!-- Main Photo Container -->
             <div
-                class="relative z-10 w-[280px] sm:w-[350px] md:w-full max-w-[450px] aspect-[0.85] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10 bg-zinc-800 transform md:rotate-2 hover:rotate-0 transition-all duration-700">
+                class="relative z-10 w-[280px] sm:w-[350px] md:w-full max-w-[450px] aspect-[0.85] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10 bg-zinc-800 hero-photo-float transition-all duration-1000">
                 <img src="/foto.png" alt="Jauhar Fauzi" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
             </div>
@@ -1945,10 +1963,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             AOS.init({
                 once: true,
-                offset: 120,
-                duration: 1000,
-                easing: 'ease-out-quart',
-                delay: 100,
+                offset: 100,
+                duration: 1200,
+                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                delay: 200,
             });
         });
     </script>

@@ -17,13 +17,13 @@ let lenis;
 
 const initGlobalScroll = () => {
     lenis = new Lenis({
-        duration: 1.2,
+        duration: 1.4,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 2,
+        wheelMultiplier: 1.1,
+        touchMultiplier: 1.5,
         infinite: false,
     });
 
@@ -93,8 +93,8 @@ const initRotatingText = () => {
                 animate={{ y: 0, opacity: 1 }}
                 initial={{ y: "100%", opacity: 0 }}
                 exit={{ y: "-120%", opacity: 0 }}
-                staggerDuration={0.025}
-                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                staggerDuration={0.035}
+                transition={{ type: "spring", damping: 35, stiffness: 150, mass: 0.8 }}
             />
         );
     });
