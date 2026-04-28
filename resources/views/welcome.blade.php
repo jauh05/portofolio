@@ -1084,7 +1084,7 @@
 
                         <!-- Realistic Paper Container -->
                         <div @click="selectedJournal = true"
-                            class="relative z-10 w-full max-w-[320px] lg:max-w-[400px] h-[400px] lg:h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-pointer group/journal">
+                            class="relative z-10 w-full max-w-[240px] sm:max-w-[320px] lg:max-w-[400px] h-[320px] sm:h-[400px] lg:h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-pointer group/journal">
                             <!-- PDF Iframe -->
                             <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
                                 class="w-full h-full border-none bg-white pointer-events-none" title="JAIC Journal PDF"
