@@ -815,7 +815,7 @@
                 class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-6 mb-10 relative z-10 items-stretch pb-10 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
-                    class="w-[280px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
+                    class="w-[240px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -863,7 +863,7 @@
 
                 <!-- Cert Card 2: Juara III Nasional -->
                 <div
-                    class="w-[85vw] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[240px] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -912,7 +912,7 @@
 
                 <!-- Cert Card 3: Waroeng Steak -->
                 <div
-                    class="w-[280px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
+                    class="w-[240px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -958,7 +958,7 @@
 
                 <!-- Cert Card 4: Futuristic Tech -->
                 <div
-                    class="w-[280px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
+                    class="w-[240px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -1084,7 +1084,7 @@
 
                         <!-- Realistic Paper Container -->
                         <div @click="selectedJournal = true"
-                            class="relative z-10 w-full max-w-[240px] sm:max-w-[320px] lg:max-w-[400px] h-[320px] sm:h-[400px] lg:h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-pointer group/journal">
+                            class="relative z-10 w-full max-w-[210px] sm:max-w-[320px] lg:max-w-[400px] h-[280px] sm:h-[400px] lg:h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-pointer group/journal">
                             <!-- PDF Iframe -->
                             <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
                                 class="w-full h-full border-none bg-white pointer-events-none" title="JAIC Journal PDF"
@@ -1219,7 +1219,7 @@
             <!-- Project Cards (Generic Update for Light Mode) -->
             <!-- Project Cards -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 w-[280px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 w-[240px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/kpri.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1266,7 +1266,7 @@
 
             <!-- Project 2 (Modern Card) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-primary-500/40 w-[280px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(var(--primary-rgb),0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-primary-500/40 w-[240px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(var(--primary-rgb),0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/jaugjakita.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1311,7 +1311,7 @@
 
             <!-- Project 3 (Modern Layout) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 w-[240px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/kauiz.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1357,7 +1357,7 @@
 
             <!-- Project 4 (Modern Layout) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 w-[85vw] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 w-[240px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/livechat.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
