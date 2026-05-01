@@ -793,7 +793,7 @@
                 </div>
 
                 <!-- Navigation Arrows -->
-                <div class="flex gap-4 mt-8 md:mt-0 justify-end md:justify-center relative z-[60] pointer-events-auto">
+                <div class="flex md:hidden gap-4 mt-8 md:mt-0 justify-end md:justify-center relative z-[60] pointer-events-auto">
                     <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
                         class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-4 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
                         :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
@@ -812,10 +812,10 @@
             </div>
 
             <div x-ref="featuredSlider" @scroll="checkScroll()"
-                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-6 mb-10 relative z-10 items-stretch pb-10 pt-2 h-full">
+                class="flex flex-row md:grid md:grid-cols-2 lg:grid-cols-4 flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible overflow-y-hidden md:overflow-y-visible snap-x snap-mandatory md:snap-none no-scrollbar gap-6 mb-10 relative z-10 items-stretch pb-10 pt-2 h-full">
                 <!-- Cert Card 1: Asisten Praktikum -->
                 <div
-                    class="w-[240px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
+                    class="w-[85vw] sm:w-[350px] md:w-auto shrink-0 snap-center md:snap-none h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[3rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -831,7 +831,7 @@
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <!-- Premium PDF Preview with Scaling -->
                                 <iframe
                                     src="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
@@ -863,7 +863,7 @@
 
                 <!-- Cert Card 2: Juara III Nasional -->
                 <div
-                    class="w-[240px] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                    class="w-[85vw] sm:w-[350px] md:w-auto shrink-0 snap-center md:snap-none h-full flex flex-col pb-2 relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(236,72,153,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -879,7 +879,7 @@
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <iframe
                                     src="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
@@ -912,7 +912,7 @@
 
                 <!-- Cert Card 3: Waroeng Steak -->
                 <div
-                    class="w-[240px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
+                    class="w-[85vw] sm:w-[350px] md:w-auto shrink-0 snap-center md:snap-none h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(234,179,8,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -928,7 +928,7 @@
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <iframe src="{{ asset('serti/ws.pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"
                                     frameborder="0"></iframe>
@@ -958,7 +958,7 @@
 
                 <!-- Cert Card 4: Futuristic Tech -->
                 <div
-                    class="w-[240px] sm:w-[350px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col relative z-10">
+                    class="w-[85vw] sm:w-[350px] md:w-auto shrink-0 snap-center md:snap-none h-full flex flex-col relative z-10">
                     <div
                         class="w-full flex-1 group relative rounded-[2.5rem] p-[2px] transition-all duration-700 hover:-translate-y-4 shadow-2xl hover:shadow-[0_40px_60px_-15px_rgba(59,130,246,0.3)] flex flex-col">
                         <!-- Glowing Gradient Border -->
@@ -974,7 +974,7 @@
                             </div>
 
                             <div
-                                class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
+                                class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100/50 dark:bg-zinc-950/50 mb-5 border border-gray-200/50 dark:border-white/5">
                                 <iframe
                                     src="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}#toolbar=0&navpanes=0&scrollbar=0"
                                     class="w-full h-full absolute top-0 left-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-all duration-700"

@@ -182,7 +182,7 @@
                 </div>
 
                 <!-- Navigation Arrows -->
-                <div class="flex gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
+                <div class="flex md:hidden gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
                     <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
                         class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
                         :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
@@ -202,10 +202,10 @@
 
             <!-- Container for Slider (Mobile) / Grid (Desktop) -->
             <div x-ref="slider"
-                class="flex flex-row flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory no-scrollbar gap-4 md:gap-8 pb-6 pt-2 items-stretch h-full">
+                class="flex flex-row md:grid md:grid-cols-2 lg:grid-cols-4 flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible overflow-y-hidden md:overflow-y-visible snap-x snap-mandatory md:snap-none no-scrollbar gap-4 md:gap-8 pb-6 pt-2 items-stretch h-full">
                 <template x-for="cert in certs" :key="cert.id">
                     <div
-                        class="w-[240px] sm:w-[400px] md:w-[300px] lg:w-[350px] shrink-0 snap-center md:snap-start h-full flex flex-col pb-2 relative z-10">
+                        class="w-[85vw] sm:w-[400px] md:w-auto shrink-0 snap-center md:snap-none h-full flex flex-col pb-2 relative z-10">
                         <div @click="selectedCert = cert"
                             class="group w-full flex-1 bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer flex flex-col">
 
