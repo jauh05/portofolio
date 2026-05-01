@@ -468,7 +468,7 @@
         class="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-12 md:pb-16 flex flex-col md:flex-row items-center gap-12 md:gap-8">
         <div class="flex-1 text-center md:text-left order-2 md:order-1">
             <h1
-                class="text-5xl md:text-7xl font-black leading-[0.85] mb-6 tracking-tighter uppercase flex flex-col items-center md:items-start translate-x-[-2px]">
+                class="text-4xl md:text-7xl font-black leading-[0.85] mb-6 tracking-tighter uppercase flex flex-col items-center md:items-start translate-x-[-2px]">
                 <span
                     class="text-zinc-400 dark:text-zinc-600 block text-2xl md:text-3xl font-light tracking-[0.2em] mb-1 md:-mb-1 leading-none"
                     x-text="t[lang].hero.title" data-split-text></span>
@@ -481,10 +481,10 @@
             </h1>
 
             <div class="flex flex-col mb-6 items-center md:items-start">
-                <p class="text-xl md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-1"
+                <p class="text-lg md:text-3xl text-zinc-600 dark:text-zinc-400 font-bold tracking-tight mb-1"
                     x-text="t[lang].hero.tagline_line1" data-split-text></p>
 
-                <div class="flex items-center gap-2 text-xl md:text-3xl justify-center md:justify-start">
+                <div class="flex items-center gap-2 text-lg md:text-3xl justify-center md:justify-start">
                     <span class="text-primary-500 font-black">&</span>
                     <div data-rotating-text :data-rotating-texts="JSON.stringify(t[lang].hero.tagline_rotating)"
                         data-rotating-main-class="px-3 bg-primary-500/10 text-primary-500 dark:text-primary-400 py-0.5 rounded-lg border border-primary-500/20 font-black tracking-tight">
@@ -784,7 +784,7 @@
                             </svg>
                         </a>
                     </div>
-                    <h2 class="text-4xl md:text-6xl font-black dark:text-white tracking-tighter mb-4 leading-tight">
+                    <h2 class="text-3xl md:text-6xl font-black dark:text-white tracking-tighter mb-4 leading-tight">
                         <span class="text-primary-500">Official Certifications</span>
                     </h2>
                     <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-snug font-medium">
@@ -1043,7 +1043,7 @@
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black tracking-widest uppercase mb-4"
                     x-text="t[lang].projects.tag">
                 </div>
-                <h2 class="text-4xl md:text-5xl font-black mb-6 tracking-tight">
+                <h2 class="text-3xl md:text-5xl font-black mb-6 tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].projects.title" data-split-text></span>
                     <span class="text-primary-500" x-text="t[lang].projects.subtitle" data-split-text></span>
                 </h2>
@@ -1134,7 +1134,7 @@
                                 class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6"
                                 x-text="t[lang].projects.journal.tag">
                             </span>
-                            <h3 class="text-3xl lg:text-5xl font-black mb-6 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+                            <h3 class="text-2xl md:text-3xl lg:text-5xl font-black mb-6 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
                                 x-text="t[lang].projects.journal.title">
                             </h3>
                             <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug text-base lg:text-lg font-medium"
@@ -1219,7 +1219,7 @@
             <!-- Project Cards (Generic Update for Light Mode) -->
             <!-- Project Cards -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 w-[240px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-green-500/40 w-[85vw] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/kpri.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1238,7 +1238,7 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💰</span>
                     </div>
-                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-green-500 transition-colors"
+                    <h3 class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-green-500 transition-colors"
                         x-text="t[lang].projects.kpri.title">
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
@@ -1266,7 +1266,7 @@
 
             <!-- Project 2 (Modern Card) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-primary-500/40 w-[240px] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(var(--primary-rgb),0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-primary-500/40 w-[85vw] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(var(--primary-rgb),0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/jaugjakita.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1285,7 +1285,7 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🤖</span>
                     </div>
-                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors"
+                    <h3 class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors"
                         x-text="t[lang].projects.jaugja.title">
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
@@ -1311,7 +1311,7 @@
 
             <!-- Project 3 (Modern Layout) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 w-[240px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 w-[85vw] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/kauiz.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1330,7 +1330,7 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">🎓</span>
                     </div>
-                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors"
+                    <h3 class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors"
                         x-text="t[lang].projects.kauiz.title">
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
@@ -1357,7 +1357,7 @@
 
             <!-- Project 4 (Modern Layout) -->
             <div
-                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 w-[240px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)] flex flex-col">
+                class="group relative bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-purple-500/40 w-[85vw] sm:w-[400px] md:w-[450px] shrink-0 snap-center shadow-lg dark:shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.2)] flex flex-col">
                 <div class="h-64 overflow-hidden relative">
                     <img src="{{ asset('project-media/livechat.png') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1376,7 +1376,7 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">💬</span>
                     </div>
-                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors"
+                    <h3 class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors"
                         x-text="t[lang].projects.livechat.title">
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
@@ -1421,7 +1421,7 @@
                         class="absolute -top-12 left-8 md:left-10 w-16 h-16 bg-white dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-300">
                         <span class="text-3xl">📚</span>
                     </div>
-                    <h3 class="text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"
+                    <h3 class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white mb-4 mt-2 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"
                         x-text="t[lang].projects.jokitugas.title">
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug font-medium"
@@ -1590,7 +1590,7 @@
                     <span x-text="t[lang].footer.tag"></span>
                 </div>
 
-                <h2 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+                <h2 class="text-4xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
                     <span class="text-zinc-900 dark:text-white" x-text="t[lang].footer.title"></span> <br>
                     <span
                         class="block text-primary-600 dark:text-primary-400 drop-shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)]"

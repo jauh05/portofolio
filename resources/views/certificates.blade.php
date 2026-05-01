@@ -173,7 +173,7 @@
                 <div>
                     <p class="text-primary-500 font-black text-xs uppercase tracking-[0.4em] mb-4">Recognitions & Awards
                     </p>
-                    <h1 class="text-5xl md:text-7xl font-black dark:text-white tracking-tighter mb-6" data-split-text>
+                    <h1 class="text-4xl md:text-7xl font-black dark:text-white tracking-tighter mb-6" data-split-text>
                         Official <span class="text-primary-500">Certifications</span>
                     </h1>
                     <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium">
