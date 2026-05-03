@@ -17,14 +17,17 @@ let lenis;
 
 const initGlobalScroll = () => {
     lenis = new Lenis({
-        duration: 1.4,
+        duration: 2.5,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1.1,
+        wheelMultiplier: 1,
         touchMultiplier: 1.5,
         infinite: false,
+        lerp: 0.05,
+        syncTouch: true,
+        syncTouchLerp: 0.05,
     });
 
     function raf(time) {

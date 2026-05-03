@@ -1964,7 +1964,7 @@
             AOS.init({
                 once: true,
                 offset: 100,
-                duration: 1200,
+                duration: 1500,
                 easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
                 delay: 200,
             });
