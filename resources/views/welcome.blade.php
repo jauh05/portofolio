@@ -1084,7 +1084,7 @@
 
                         <!-- Realistic Paper Container -->
                         <div @click="selectedJournal = true"
-                            class="relative z-10 w-full max-w-[210px] sm:max-w-[320px] lg:max-w-[400px] h-[280px] sm:h-[400px] lg:h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-pointer group/journal">
+                            class="relative z-10 w-full max-w-[180px] sm:max-w-[320px] lg:max-w-[400px] h-[220px] sm:h-[400px] lg:h-[500px] bg-white rounded-sm shadow-2xl overflow-hidden transform group-hover:rotate-0 transition-all duration-700 hover:scale-[1.03] cursor-pointer group/journal">
                             <!-- PDF Iframe -->
                             <iframe src="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
                                 class="w-full h-full border-none bg-white pointer-events-none" title="JAIC Journal PDF"
@@ -1126,51 +1126,51 @@
 
                     <!-- Content Side -->
                     <div
-                        class="lg:w-1/2 p-8 lg:p-10 flex flex-col justify-center bg-white/95 dark:bg-zinc-950/90 backdrop-blur-3xl border-l border-gray-200 dark:border-white/5 relative">
+                        class="lg:w-1/2 p-6 md:p-8 lg:p-10 flex flex-col justify-center bg-white/95 dark:bg-zinc-950/90 backdrop-blur-3xl border-l border-gray-200 dark:border-white/5 relative">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-primary-600/10 blur-[60px]"></div>
 
-                        <div class="mb-6">
+                        <div class="mb-4 md:mb-6">
                             <span
-                                class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6"
+                                class="inline-block px-3 py-1 bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20 rounded-full text-[9px] md:text-[10px] font-black tracking-[0.3em] uppercase mb-4 md:mb-6"
                                 x-text="t[lang].projects.journal.tag">
                             </span>
-                            <h3 class="text-2xl md:text-3xl lg:text-5xl font-black mb-6 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+                            <h3 class="text-xl md:text-3xl lg:text-5xl font-black mb-4 md:mb-6 text-zinc-900 dark:text-white leading-tight tracking-tighter group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
                                 x-text="t[lang].projects.journal.title">
                             </h3>
-                            <p class="text-gray-600 dark:text-gray-400 mb-8 leading-snug text-base lg:text-lg font-medium"
+                            <p class="text-gray-600 dark:text-gray-400 mb-6 md:mb-8 leading-snug text-sm md:text-base lg:text-lg font-medium"
                                 x-text="t[lang].projects.journal.desc">
                             </p>
                         </div>
 
-                        <div class="mb-8">
+                        <div class="mb-6 md:mb-8">
                             <div
-                                class="p-6 bg-gradient-to-r from-gray-100 to-white dark:from-zinc-900 dark:to-zinc-900/50 rounded-2xl border border-primary-500/30 group/stat hover:shadow-lg transition-all relative overflow-hidden">
+                                class="p-4 md:p-6 bg-gradient-to-r from-gray-100 to-white dark:from-zinc-900 dark:to-zinc-900/50 rounded-2xl border border-primary-500/30 group/stat hover:shadow-lg transition-all relative overflow-hidden">
                                 <div class="absolute right-0 top-1/2 -translate-y-1/2 p-3 opacity-10">
-                                    <svg class="w-24 h-24 text-primary-500" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-16 h-16 md:w-24 md:h-24 text-primary-500" fill="currentColor" viewBox="0 0 24 24">
                                         <path
                                             d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
                                     </svg>
                                 </div>
-                                <div class="text-primary-600 dark:text-primary-500 font-black text-[12px] mb-2 uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform"
+                                <div class="text-primary-600 dark:text-primary-500 font-black text-[10px] md:text-[12px] mb-1 md:mb-2 uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform"
                                     x-text="t[lang].projects.journal.accredited"></div>
-                                <div class="text-zinc-900 dark:text-white font-black text-4xl flex items-center gap-3">
+                                <div class="text-zinc-900 dark:text-white font-black text-2xl md:text-4xl flex items-center gap-2 md:gap-3">
                                     <span x-text="t[lang].projects.journal.badge"></span>
-                                    <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                                    <div class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500 animate-pulse"></div>
                                 </div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium"
+                                <p class="text-[10px] md:text-sm text-gray-500 dark:text-gray-400 mt-1 md:mt-2 font-medium"
                                     x-text="t[lang].projects.journal.official"></p>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-4">
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
                             <a href="{{ url('/projects?id=journal') }}"
-                                class="px-8 py-5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-3xl font-bold text-xs uppercase tracking-widest hover:bg-primary-600 dark:hover:bg-primary-600 hover:text-white dark:hover:text-white transition-all shadow-xl">Lihat
+                                class="px-6 md:px-8 py-4 md:py-5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl md:rounded-3xl font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-primary-600 dark:hover:bg-primary-600 hover:text-white dark:hover:text-white transition-all shadow-xl text-center">Lihat
                                 Detail</a>
                             <a href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420"
                                 target="_blank"
-                                class="flex-1 flex items-center justify-center gap-4 px-10 py-5 bg-primary-600 hover:bg-blue-700 text-white rounded-3xl font-black text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
+                                class="flex-1 flex items-center justify-center gap-3 md:gap-4 px-6 md:px-10 py-4 md:py-5 bg-primary-600 hover:bg-blue-700 text-white rounded-2xl md:rounded-3xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_25px_50px_-15px_rgba(37,99,235,0.4)]">
                                 <span x-text="t[lang].projects.journal.cta"></span>
-                                <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24"
+                                <svg class="w-5 h-5 md:w-6 md:h-6 animate-pulse" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
