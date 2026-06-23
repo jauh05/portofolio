@@ -71,7 +71,7 @@
             solution: 'Mengimplementasikan Content-Based Filtering menggunakan algoritma TF-IDF dan Cosine Similarity untuk akurasi data yang lebih baik.',
             tech: ['Python', 'Scikit-Learn', 'Pandas', 'Flask'],
             image: '{{ asset('project-media/journal.png') }}',
-            link: '#'
+            link: 'https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420'
         },
         {
             id: 'kpri',
@@ -83,7 +83,7 @@
             solution: 'Dashboard manajemen simpan pinjam terintegrasi dengan mesin inferensi pohon keputusan C4.5 untuk otomasi kelayakan kredit.',
             tech: ['Laravel', 'MySQL', 'Bootstrap', 'Decision Tree C4.5'],
             image: '{{ asset('project-media/kpri.png') }}',
-            link: '#'
+            link: 'http://kpribaktimulia.or.id/'
         },
         {
             id: 'jaugja',
@@ -95,7 +95,7 @@
             solution: 'Integrasi API Machine Learning ke dalam aplikasi Flutter untuk filter destinasi berbasis rating dan kategori.',
             tech: ['Flutter', 'Firebase', 'TensorFlow Lite', 'Node.js'],
             image: '{{ asset('project-media/jaugjakita.png') }}',
-            link: '#'
+            link: 'http://jaugjakita.jauharfauzi.my.id'
         },
         {
             id: 'kauiz',
