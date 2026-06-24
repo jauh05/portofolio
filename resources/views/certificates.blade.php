@@ -212,7 +212,7 @@
                             <!-- PDF Preview Container -->
                             <div
                                 class="w-full aspect-[4/3] rounded-xl md:rounded-[1.5rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 relative mb-3 md:mb-6 shrink-0">
-                                <iframe :src="'{{ asset('serti') }}/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0'"
+                                <iframe :src="'{{ asset('serti') }}/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH'"
                                     class="w-full h-full pointer-events-none" frameborder="0"></iframe>
                                 <div class="absolute inset-0 bg-transparent"></div>
                                 <!-- Blocking interaction with iframe -->
@@ -265,7 +265,7 @@
             class="relative w-full max-w-6xl h-full bg-white dark:bg-zinc-950 rounded-[3rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/10">
             <!-- Left Side: Digital Certificate -->
             <div class="w-full md:w-[70%] h-[50vh] md:h-auto bg-zinc-800 relative">
-                <iframe :src="'{{ asset('serti') }}/' + selectedCert?.file" class="w-full h-full"
+                <iframe :src="'{{ asset('serti') }}/' + selectedCert?.file + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH'" class="w-full h-full"
                     frameborder="0"></iframe>
                 <button @click="selectedCert = null"
                     class="absolute top-6 left-6 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition md:hidden">
