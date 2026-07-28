@@ -60,24 +60,43 @@
         .icon-link:hover { background: var(--soft); border-color: var(--blue); }
         .burger { display: none; background: #fff; border: 1px solid var(--line); border-radius: 50%; width: 42px; height: 42px; color: var(--ink); font-size: 20px; }
 
-        #hero { position: relative; min-height: 760px; display: grid; align-items: center; padding: 150px 0 100px; overflow: hidden; background: radial-gradient(circle at 86% 8%, #e9f3ff 0, transparent 32%), linear-gradient(#fff 65%, #f8fbff); }
+        #hero { position: relative; min-height: 780px; display: grid; align-items: center; padding: 140px 0 90px; overflow: hidden; background: radial-gradient(circle at 86% 8%, #e9f3ff 0, transparent 32%), linear-gradient(#fff 65%, #f8fbff); }
         #hero:before { content: ''; position: absolute; right: -120px; top: 120px; width: 540px; height: 540px; border: 1px solid var(--line); border-radius: 48% 52% 62% 38%; transform: rotate(24deg); }
-        .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 80px; position: relative; }
-        .hero-kicker { color: var(--blue); font: 600 12px 'JetBrains Mono'; letter-spacing: .1em; }
-        .hero h1 { font-size: clamp(3.2rem, 6.5vw, 6.2rem); margin: 18px 0 16px; line-height: 1.05; }
-        .hero-role { font: 600 20px Sora; color: var(--blue-dark); margin-bottom: 20px; }
-        .hero-copy { font-size: 17px; max-width: 600px; line-height: 1.8; }
-        .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
-        .availability { display: flex; align-items: center; gap: 9px; font-size: 13px; margin-top: 22px; color: var(--ink); }
+        .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 60px; position: relative; }
+        
+        .hero-kicker-badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 18px; border: 1px solid rgba(46, 144, 250, 0.25); border-radius: 999px; background: rgba(234, 243, 255, 0.7); color: var(--blue); font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 22px; }
+        .hero h1 { font-size: clamp(3.8rem, 6.8vw, 6.2rem); font-weight: 800; margin: 0 0 16px; line-height: 1.02; letter-spacing: -.038em; color: var(--ink); }
+        
+        .hl-box { position: relative; display: inline-block; z-index: 1; color: var(--ink); padding: 0 6px; }
+        .hl-box:before { content: ''; position: absolute; inset: 10% -6px 4% -6px; background: #eaf3ff; border-radius: 8px; z-index: -1; }
+
+        .hero-role { font: 700 clamp(22px, 3.2vw, 32px) Sora, sans-serif; color: #1570ef; margin-bottom: 20px; display: flex; align-items: center; gap: 4px; }
+        .typing-cursor { color: #2e90fa; animation: blink 1s infinite; font-weight: 400; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hero-copy { font-size: 16px; max-width: 580px; line-height: 1.75; color: var(--muted); }
+        .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+        
+        .availability { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; margin-top: 24px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px; box-shadow: 0 4px 16px -8px rgba(15,46,92,.1); }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: #20b26b; box-shadow: 0 0 0 5px #e5f8ed; }
-        .hero-photo { position: relative; max-width: 410px; margin: auto; }
+
+        .tech-stack-row { margin-top: 32px; }
+        .tech-kicker { font: 600 11px 'JetBrains Mono', monospace; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; display: block; margin-bottom: 10px; }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+        .tech-item { font-size: 14px; font-weight: 600; color: #667085; }
+
+        .hero-photo { position: relative; max-width: 400px; margin: auto; }
         .hero-photo:before { content: ''; position: absolute; inset: -28px; background: var(--soft); border-radius: 47% 53% 43% 57%; z-index: -1; transform: rotate(-8deg); }
         .hero-photo img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 30px; border: 1px solid var(--line); box-shadow: 0 35px 65px -28px rgba(15,46,92,.45); }
-        .photo-badge { position: absolute; bottom: -18px; left: 30px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; font-size: 12px; font-weight: 700; color: var(--ink); box-shadow: 0 15px 30px -20px #102e5c; }
-        .float-tag { position: absolute; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 13px; font-size: 12px; font-weight: 700; color: var(--ink); box-shadow: 0 15px 30px -20px #102e5c; }
-        .float-tag.one { top: 12%; left: -54px; }
-        .float-tag.two { right: -54px; top: 48%; }
-        .float-tag.three { bottom: 10%; right: -35px; }
+        
+        .float-tag { position: absolute; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 9px 16px; font-size: 12px; font-weight: 700; color: var(--ink); box-shadow: 0 15px 35px -15px rgba(15,46,92,.25); white-space: nowrap; z-index: 2; transition: .3s var(--ease); }
+        .float-tag:hover { transform: translateY(-3px); border-color: var(--blue); }
+        .float-tag.one { top: 6%; left: -54px; }
+        .float-tag.two { right: -54px; top: 38%; }
+        .float-tag.three { bottom: 35%; left: -60px; }
+        .float-tag.four { bottom: -12px; left: 10%; }
+        .float-tag.five { bottom: 8%; right: -40px; }
+        
         .scroll-note { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); font: 11px 'JetBrains Mono'; color: var(--muted); }
 
         .marquee { border-block: 1px solid var(--line); background: var(--surface); overflow: hidden; padding: 17px 0; }
@@ -280,22 +299,38 @@
         <section id="hero">
             <div class="wrap hero-grid">
                 <div class="reveal in">
-                    <div class="hero-kicker">AI ENGINEER · SOFTWARE DEVELOPER · DIGITAL SOLUTIONS</div>
-                    <h1>Jauhar Fauzi<br>Ulul <span class="hl">Albab</span></h1>
-                    <div class="hero-role">Digital Solutions Engineer</div>
-                    <p class="hero-copy">Developer yang membangun produk digital cerdas, sistem web yang scalable, dan solusi teknologi yang benar-benar menyelesaikan masalah nyata.</p>
+                    <div class="hero-kicker-badge">AI ENGINEER · SOFTWARE DEVELOPER · DIGITAL SOLUTIONS</div>
+                    <h1>Jauhar Fauzi<br><span class="hl-box">Ulul Albab</span></h1>
+                    <div class="hero-role">AI Developer <span class="typing-cursor">|</span></div>
+                    <p class="hero-copy">Developer and AI engineer focused on building intelligent, scalable, and useful digital products. Experienced in Generative AI, Google Gemini, NLP, web systems, and technology-driven problem solving.</p>
+                    
                     <div class="hero-cta">
-                        <a class="btn btn-primary" href="#projects">Lihat Proyek <span>↗</span></a>
-                        <a class="btn btn-secondary" href="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}" target="_blank">Lihat Resume ↗</a>
+                        <a class="btn btn-primary" href="#projects">View Selected Projects <span>↗</span></a>
+                        <a class="btn btn-secondary" href="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}" target="_blank">Download CV ↗</a>
                     </div>
-                    <div class="availability"><span class="dot"></span>Tersedia untuk peluang AI & software development</div>
+                    
+                    <div class="availability"><span class="dot"></span>Available for AI and Software Development Opportunities</div>
+
+                    <div class="tech-stack-row">
+                        <span class="tech-kicker">TECHNOLOGIES I WORK WITH</span>
+                        <div class="tech-tags">
+                            <span class="tech-item">Google Cloud</span>
+                            <span class="tech-item">Google Gemini</span>
+                            <span class="tech-item">Python</span>
+                            <span class="tech-item">Laravel</span>
+                            <span class="tech-item">React</span>
+                            <span class="tech-item">GitHub</span>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="hero-photo reveal in">
                     <img src="{{ asset('foto.png') }}" alt="Foto Jauhar Fauzi Ulul Albab">
-                    <div class="float-tag one">✦ Gemini AI Developer</div>
-                    <div class="float-tag two">⌘ 10.000+ users</div>
-                    <div class="float-tag three">◎ SINTA 3 Publication</div>
-                    <div class="photo-badge">● Based in Yogyakarta, Indonesia</div>
+                    <div class="float-tag one">Google Gemini AI Developer</div>
+                    <div class="float-tag two">10,000+ Active Users</div>
+                    <div class="float-tag three">GPA 3.91</div>
+                    <div class="float-tag four">Verified AI Developer</div>
+                    <div class="float-tag five">SINTA 3 Publication</div>
                 </div>
             </div>
             <div class="scroll-note">SCROLL TO EXPLORE ↓</div>
