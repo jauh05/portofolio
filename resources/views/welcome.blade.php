@@ -173,12 +173,13 @@
         .workflow-step h3 { font-size: 18px; margin-bottom: 8px; }
         .workflow-step p { font-size: 13px; line-height: 1.65; color: var(--text); }
 
-        .certs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
-        .cert { padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
-        .cert-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--soft); color: var(--blue); display: grid; place-items: center; font-size: 20px; font-weight: bold; margin-bottom: 16px; }
-        .cert h3 { font-size: 17px; margin-bottom: 6px; }
-        .cert p { font-size: 12px; color: var(--muted); }
-        .cert a { display: inline-block; color: var(--blue-dark); font-weight: 700; font-size: 12px; margin-top: 18px; }
+        .certs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+        .cert-card-rich { padding: 26px; background: #fff; border: 1px solid var(--line); border-radius: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: .35s var(--ease); box-shadow: 0 20px 50px -36px rgba(15,46,92,.35); }
+        .cert-card-rich:hover { transform: translateY(-4px); border-color: var(--blue); box-shadow: 0 28px 60px -34px rgba(15,46,92,.4); }
+        .cert-issuer-badge { display: inline-flex; align-items: center; gap: 6px; font: 600 11px 'JetBrains Mono'; color: var(--blue); margin-bottom: 12px; }
+        .cert-card-rich h3 { font-size: 17px; line-height: 1.35; margin-bottom: 6px; color: var(--ink); }
+        .cert-date { font-size: 12px; color: var(--muted); margin-bottom: 12px; font-weight: 600; }
+        .cert-desc { font-size: 13px; color: var(--text); line-height: 1.6; margin-bottom: 14px; }
 
         /* Skills */
         .skills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; max-width: 900px; }
@@ -671,40 +672,63 @@
                     </div>
                 </div>
 
-                <!-- Recognitions / Certificates -->
+                <!-- Recognitions / Certifications -->
                 <div class="certs">
-                    <div class="card cert reveal">
-                        <div class="cert-icon">✦</div>
+                    <!-- Certificate 1: Forum Asisten -->
+                    <article class="card cert-card-rich reveal">
                         <div>
-                            <h3>Asisten Praktikum Struktur Data</h3>
-                            <p>AMIKOM Creative Economy Park · 2026</p>
+                            <div class="cert-issuer-badge">
+                                <span class="badge-icon">✦</span> Forum Asisten
+                            </div>
+                            <h3>Data Structures Course Laboratory Assistant</h3>
+                            <p style="font-size: 13px; color: var(--ink); font-weight: 600; margin-bottom: 4px;">Bachelor's Degree Program in Informatics</p>
+                            <div class="cert-date">Issued Sep 2024 · Expired Sep 2025</div>
+                            <div class="tags">
+                                <span class="tag">C++</span>
+                                <span class="tag">C#</span>
+                                <span class="tag">Data Structures</span>
+                            </div>
                         </div>
-                        <a href="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}" target="_blank">Buka sertifikat ↗</a>
-                    </div>
-                    <div class="card cert reveal">
-                        <div class="cert-icon">◆</div>
+                        <a class="badge-link" href="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}" target="_blank">Buka sertifikat ↗</a>
+                    </article>
+
+                    <!-- Certificate 2: Google Gemini Multimodality & RAG -->
+                    <article class="card cert-card-rich reveal">
                         <div>
-                            <h3>Juara III Karya Tulis Islami</h3>
-                            <p>Kemenag Kota Yogyakarta · 2025</p>
+                            <div class="cert-issuer-badge">
+                                <span class="badge-icon">✦</span> Google · Google AI Developer
+                            </div>
+                            <h3>Inspect Rich Documents with Gemini Multimodality and Multimodal RAG Skill Badge</h3>
+                            <div class="cert-date">Issued Mar 2026 · Expires Jul 2026</div>
+                            <p class="cert-desc">Memonstrasikan keahlian prompt multimodal untuk mengekstrak informasi teks & visual, deskripsi video, serta Multimodal RAG dengan Gemini.</p>
+                            <div class="tags">
+                                <span class="tag">Google Gemini</span>
+                                <span class="tag">Multimodality</span>
+                                <span class="tag">Multimodal RAG</span>
+                                <span class="tag">Python</span>
+                            </div>
                         </div>
-                        <a href="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}" target="_blank">Buka sertifikat ↗</a>
-                    </div>
-                    <div class="card cert reveal">
-                        <div class="cert-icon">◇</div>
+                        <a class="badge-link" href="https://www.credly.com/badges/9971ccc1-3004-47a6-a7c0-9a3a076a64fb/public_url" target="_blank">Show credential ↗</a>
+                    </article>
+
+                    <!-- Certificate 3: Vertex AI Skill Badge -->
+                    <article class="card cert-card-rich reveal">
                         <div>
-                            <h3>FISCREATION Workshop</h3>
-                            <p>Universitas Negeri Yogyakarta · 2023</p>
+                            <div class="cert-issuer-badge">
+                                <span class="badge-icon">◇</span> Google · Google AI Developer
+                            </div>
+                            <h3>Prompt Design in Vertex AI Skill Badge</h3>
+                            <div class="cert-date">Issued Feb 2026 · Expires Jul 2026</div>
+                            <p class="cert-desc">Memonstrasikan keahlian prompt engineering, analisis gambar, dan teknik generative AI multimodal dalam Google Vertex AI.</p>
+                            <div class="tags">
+                                <span class="tag">Artificial Intelligence (AI)</span>
+                                <span class="tag">Gemini APIs</span>
+                                <span class="tag">Vertex AI</span>
+                                <span class="tag">Prompt Engineering</span>
+                            </div>
                         </div>
-                        <a href="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}" target="_blank">Buka sertifikat ↗</a>
-                    </div>
-                    <div class="card cert reveal">
-                        <div class="cert-icon">⌁</div>
-                        <div>
-                            <h3>Assistant Programmer</h3>
-                            <p>Waroeng Steak Indonesia · 2024</p>
-                        </div>
-                        <a href="{{ asset('serti/ws.pdf') }}" target="_blank">Buka sertifikat ↗</a>
-                    </div>
+                        <a class="badge-link" href="https://www.credly.com/badges/48d4bae2-510b-4af1-b7c6-61d380cbe32a/public_url" target="_blank">Show credential ↗</a>
+                    </article>
                 </div>
                 <div style="margin-top:28px">
                     <a class="btn btn-secondary" href="{{ url('/certificates') }}">Lihat semua sertifikat ↗</a>
