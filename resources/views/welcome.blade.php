@@ -10,56 +10,825 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root{--bg:#fff;--ink:#102e5c;--text:#42526b;--muted:#667085;--blue:#2e90fa;--blue-dark:#1570ef;--soft:#eaf3ff;--surface:#f5f9ff;--line:#d9e8fb;--max:1240px;--ease:cubic-bezier(.22,1,.36,1)}
-        *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden}h1,h2,h3,h4{font-family:Sora,sans-serif;color:var(--ink);line-height:1.12;letter-spacing:-.035em}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}button{font:inherit;cursor:pointer}.mono{font-family:'JetBrains Mono',monospace}.wrap{max-width:var(--max);margin:auto;padding:0 32px}.section{padding:112px 0}.eyebrow{display:inline-flex;gap:9px;align-items:center;color:var(--blue);font:600 12px 'JetBrains Mono',monospace;letter-spacing:.13em;text-transform:uppercase;margin-bottom:18px}.eyebrow:before{content:'';width:22px;height:1px;background:var(--blue)}.title{font-size:clamp(2.2rem,4vw,3.8rem);max-width:760px}.lead{font-size:17px;color:var(--muted);max-width:620px;margin-top:18px;line-height:1.75}.hl{background:linear-gradient(transparent 62%,var(--soft) 62%);color:var(--ink)}.card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 50px -36px rgba(15,46,92,.35);transition:.35s var(--ease)}.card:hover{transform:translateY(-6px);box-shadow:0 28px 60px -34px rgba(15,46,92,.4);border-color:#b8d8fb}
-        .btn{display:inline-flex;align-items:center;gap:9px;border-radius:100px;padding:13px 22px;font-weight:700;font-size:14px;border:1px solid transparent;transition:.25s var(--ease)}.btn-primary{color:#fff;background:var(--blue);box-shadow:0 10px 24px -12px var(--blue-dark)}.btn-primary:hover{background:var(--blue-dark);transform:translateY(-2px)}.btn-secondary{color:var(--blue-dark);border-color:var(--line);background:#fff}.btn-secondary:hover{background:var(--surface);border-color:var(--blue)}
-        #nav{position:fixed;top:0;left:0;right:0;z-index:10;padding:18px 0;transition:.3s var(--ease)}#nav.scrolled{background:rgba(255,255,255,.9);backdrop-filter:blur(15px);border-bottom:1px solid var(--line);padding:11px 0}.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,var(--blue),var(--blue-dark));display:grid;place-items:center;color:#fff;font:800 16px Sora;box-shadow:0 10px 20px -10px var(--blue-dark)}.brand{display:flex;align-items:center;gap:12px;color:var(--ink);font:700 13px Sora;letter-spacing:.02em}.nav-menu{display:flex;list-style:none;gap:4px}.nav-menu a{display:block;padding:9px 13px;border-radius:999px;font-size:13px;color:var(--ink)}.nav-menu a:hover{background:var(--soft);color:var(--blue-dark)}.nav-actions{display:flex;align-items:center;gap:10px}.icon-link{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;color:var(--ink);font-size:13px;font-weight:700}.icon-link:hover{background:var(--soft);border-color:var(--blue)}.burger{display:none;background:#fff;border:1px solid var(--line);border-radius:50%;width:42px;height:42px;color:var(--ink);font-size:20px}
-        #hero{position:relative;min-height:760px;display:grid;align-items:center;padding:150px 0 100px;overflow:hidden;background:radial-gradient(circle at 86% 8%,#e9f3ff 0,transparent 32%),linear-gradient(#fff 65%,#f8fbff)}#hero:before{content:'';position:absolute;right:-120px;top:120px;width:540px;height:540px;border:1px solid var(--line);border-radius:48% 52% 62% 38%;transform:rotate(24deg)}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:80px;position:relative}.hero-kicker{color:var(--blue);font:600 12px 'JetBrains Mono';letter-spacing:.1em}.hero h1{font-size:clamp(3.2rem,7vw,6.4rem);margin:18px 0 16px}.hero-role{font:600 20px Sora;color:var(--blue-dark);margin-bottom:20px}.hero-copy{font-size:17px;max-width:600px;line-height:1.8}.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.availability{display:flex;align-items:center;gap:9px;font-size:13px;margin-top:22px;color:var(--ink)}.dot{width:8px;height:8px;border-radius:50%;background:#20b26b;box-shadow:0 0 0 5px #e5f8ed}.hero-photo{position:relative;max-width:410px;margin:auto}.hero-photo:before{content:'';position:absolute;inset:-28px;background:var(--soft);border-radius:47% 53% 43% 57%;z-index:-1;transform:rotate(-8deg)}.hero-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:30px;border:1px solid var(--line);box-shadow:0 35px 65px -28px rgba(15,46,92,.45)}.photo-badge{position:absolute;bottom:-18px;left:30px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 16px;font-size:12px;font-weight:700;color:var(--ink);box-shadow:0 15px 30px -20px #102e5c}.float-tag{position:absolute;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 13px;font-size:12px;font-weight:700;color:var(--ink);box-shadow:0 15px 30px -20px #102e5c}.float-tag.one{top:12%;left:-54px}.float-tag.two{right:-54px;top:48%}.float-tag.three{bottom:10%;right:-35px}.scroll-note{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font:11px 'JetBrains Mono';color:var(--muted)}
-        .marquee{border-block:1px solid var(--line);background:var(--surface);overflow:hidden;padding:17px 0}.marquee-track{display:flex;width:max-content;animation:move 28s linear infinite}.marquee span{font:600 13px 'JetBrains Mono';color:var(--ink);padding:0 25px}@keyframes move{to{transform:translateX(-50%)}}
-        .about-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:75px;align-items:center}.about-photo{position:relative}.about-photo img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:25px;border:1px solid var(--line)}.location{position:absolute;left:18px;right:18px;bottom:18px;background:rgba(255,255,255,.92);border:1px solid var(--line);padding:11px 14px;border-radius:13px;color:var(--ink);font-weight:700;font-size:13px}.quote{border-left:3px solid var(--blue);padding:12px 0 12px 18px;margin:28px 0;font:600 17px Sora;color:var(--ink)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:18px 14px}.stat strong{display:block;color:var(--blue);font:800 29px Sora}.stat small{font-size:11px;color:var(--muted)}
-        .blue-section{background:var(--surface)}.expertise{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}.expertise .card{padding:25px}.expertise .num{color:var(--blue);font:600 12px 'JetBrains Mono'}.expertise h3{font-size:18px;margin:28px 0 10px}.expertise p{font-size:13px;line-height:1.7}
-        .timeline{position:relative;margin-top:50px;display:grid;gap:18px}.timeline:before{content:'';position:absolute;left:15px;top:8px;bottom:8px;width:1px;background:var(--line)}.timeline-item{display:grid;grid-template-columns:32px 1fr;gap:22px}.timeline-dot{width:31px;height:31px;border-radius:50%;background:var(--soft);border:7px solid #fff;box-shadow:0 0 0 1px var(--blue);z-index:1}.timeline-content{padding:22px 26px}.timeline-content h3{font-size:20px}.timeline-meta{display:flex;flex-wrap:wrap;gap:10px;margin:9px 0 13px;color:var(--blue-dark);font-size:12px;font-weight:700}.timeline-content ul{padding-left:18px;font-size:14px;line-height:1.8}
-        .project:nth-child(1){grid-column:span 7}.project:nth-child(2){grid-column:span 5}.project:nth-child(3),.project:nth-child(4),.project:nth-child(5){grid-column:span 4}.project:nth-child(1) .project-media,.project:nth-child(2) .project-media{height:315px}.project:nth-child(3) .project-media,.project:nth-child(4) .project-media,.project:nth-child(5) .project-media{height:180px}
-        .certs{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:44px}.cert{padding:22px}.cert-icon{width:42px;height:42px;border-radius:12px;background:var(--soft);color:var(--blue);display:grid;place-items:center;font-size:20px}.cert h3{font-size:17px;margin:20px 0 7px}.cert p{font-size:12px;color:var(--muted)}.cert a{display:inline-block;color:var(--blue-dark);font-weight:700;font-size:12px;margin-top:20px}.skills{display:flex;flex-wrap:wrap;gap:10px;margin-top:42px;max-width:880px}.skill{padding:12px 16px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink)}
-        .contact{background:var(--ink);color:#c9d8eb}.contact h2{color:#fff}.contact .eyebrow{color:#77b8ff}.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;margin-top:45px}.contact-links{display:grid;gap:12px}.contact-link{border-bottom:1px solid rgba(255,255,255,.15);padding:14px 0}.contact-link small{display:block;color:#96abc6;font-size:11px}.contact-link strong{color:#fff;font-size:15px}.contact-form{display:grid;gap:13px}.contact-form input,.contact-form textarea,.contact-form select{width:100%;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:14px;background:rgba(255,255,255,.06);color:#fff;font:inherit}.contact-form textarea{min-height:130px;resize:vertical}.contact-form select option{color:var(--ink)}footer{background:#0b2142;color:#9fb2cc;padding:24px 0;font-size:12px}.footer-inner{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.footer-inner a{color:#fff}
-        .reveal{opacity:0;transform:translateY(20px);transition:.7s var(--ease)}.reveal.in{opacity:1;transform:none}@media(max-width:900px){.nav-menu{display:none}.burger{display:block}.hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;gap:48px}.hero-grid{padding-top:25px}.hero-photo{max-width:340px}.expertise{grid-template-columns:repeat(2,1fr)}.certs{grid-template-columns:repeat(2,1fr)}.projects{grid-template-columns:repeat(2,1fr)}.project.featured{grid-column:span 2}.project.tall,.project.compact{grid-column:span 1}.project.featured .project-media,.project.tall .project-media{height:260px}.float-tag.one{left:-18px}.float-tag.two{right:-18px}.float-tag.three{right:-5px}}@media(max-width:600px){.wrap{padding:0 20px}.section{padding:78px 0}.nav-actions .icon-link,.nav-actions .btn{display:none}#hero{min-height:auto;padding:130px 0 90px}.hero h1{font-size:3.1rem}.hero-copy{font-size:15px}.scroll-note{display:none}.stats{grid-template-columns:repeat(2,1fr)}.expertise,.projects,.certs{grid-template-columns:1fr}.project.featured,.project.tall,.project.compact{grid-column:span 1}.project-media,.project.featured .project-media,.project.tall .project-media{height:190px}.timeline-content{padding:18px}.float-tag{font-size:10px;padding:8px}.float-tag.one{top:4%;left:-8px}.float-tag.two{right:-8px}.float-tag.three{bottom:4%;right:-4px}}
-        .education-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:42px}.education-card,.research-card{padding:28px}.education-card h3,.research-card h3{font-size:23px;margin:14px 0 7px}.education-meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--blue-dark);font-size:12px;font-weight:700}.education-card p,.research-card p{font-size:14px;line-height:1.75}.education-card ul{padding-left:19px;margin-top:17px;font-size:13px;line-height:1.8}.research-card{background:linear-gradient(135deg,#fff,var(--soft));position:relative;overflow:hidden}.research-card:after{content:'SINTA 3';position:absolute;right:24px;top:22px;color:var(--blue);font:700 11px 'JetBrains Mono';letter-spacing:.08em}.research-link{display:inline-flex;margin-top:18px;color:var(--blue-dark);font-size:13px;font-weight:700}.linkedin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:42px}.linkedin-role{padding:22px}.linkedin-role h3{font-size:18px;margin:10px 0 5px}.linkedin-role p{font-size:13px;line-height:1.7}.linkedin-role .education-meta{font-size:11px}.impact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:42px}.impact{padding:22px}.impact strong{display:block;color:var(--blue);font:800 34px Sora}.impact span{font-size:12px;color:var(--muted)}.workflow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:42px}.workflow-step{padding:24px 20px;border-top:2px solid var(--line);position:relative}.workflow-step:before{content:'';position:absolute;top:-7px;left:0;width:12px;height:12px;background:var(--blue);border-radius:50%;box-shadow:0 0 0 5px var(--soft)}.workflow-step b{color:var(--blue);font:600 12px 'JetBrains Mono'}.workflow-step h3{font-size:18px;margin:16px 0 8px}.workflow-step p{font-size:13px;line-height:1.7}.social-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:26px}.social-pill{padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:#fff;font-size:12px;font-weight:700}.social-pill:hover{color:var(--blue-dark);border-color:var(--blue)}
-        @media(max-width:900px){.project:nth-child(1){grid-column:span 2}.project:nth-child(2),.project:nth-child(3),.project:nth-child(4),.project:nth-child(5){grid-column:span 1}.project:nth-child(1) .project-media,.project:nth-child(2) .project-media{height:260px}.education-grid,.linkedin-grid{grid-template-columns:1fr}.impact-grid{grid-template-columns:repeat(2,1fr)}.workflow{grid-template-columns:repeat(2,1fr);gap:18px}.workflow-step{border-top:0;border-left:2px solid var(--line);padding-left:24px}.workflow-step:before{top:24px;left:-7px}}
-        .projects{grid-template-columns:repeat(4,1fr);grid-template-areas:'feature feature feature tall' 'research research research tall' 'kpri kpri live live';grid-template-rows:auto auto auto;align-items:stretch}.project:nth-child(1){grid-area:feature}.project:nth-child(2){grid-area:tall}.project:nth-child(3){grid-area:research}.project:nth-child(4){grid-area:kpri}.project:nth-child(5){grid-area:live}.project:nth-child(1) .project-media{height:300px}.project:nth-child(2) .project-media{height:300px}.project:nth-child(3) .project-media{height:220px}.project:nth-child(4) .project-media,.project:nth-child(5) .project-media{height:220px}
-        @media(min-width:901px){#hero .hero h1{font-size:clamp(4.5rem,8vw,7.6rem);line-height:1.02}#hero .hero-role{font-size:24px}#hero .hero-copy{font-size:19px;max-width:650px}.hero-grid{gap:100px}}
-        @media(max-width:900px){.projects{grid-template-columns:repeat(2,1fr);grid-template-areas:'feature feature' 'tall tall' 'research research' 'kpri live';grid-template-rows:auto}.project:nth-child(1),.project:nth-child(2),.project:nth-child(3){grid-column:auto}.project:nth-child(1) .project-media,.project:nth-child(2) .project-media{height:260px}}
-        @media(max-width:600px){.projects{grid-template-columns:1fr;grid-template-areas:'feature' 'tall' 'research' 'kpri' 'live'}.project:nth-child(1) .project-media,.project:nth-child(2) .project-media,.project:nth-child(3) .project-media,.project:nth-child(4) .project-media,.project:nth-child(5) .project-media{height:190px}.impact-grid,.workflow{grid-template-columns:1fr}.workflow-step{padding:20px 20px 20px 28px}}
-        .filters{align-items:center;gap:10px;width:max-content;max-width:100%;padding:6px;background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:999px;overflow-x:auto}.filter{display:inline-flex;align-items:center;justify-content:center;min-height:40px;white-space:nowrap;padding:0 16px}.projects .project:nth-child(1){grid-area:feature}.projects .project:nth-child(2){grid-area:tall}.projects .project:nth-child(3){grid-area:research}.projects .project:nth-child(4){grid-area:kpri}.projects .project:nth-child(5){grid-area:live}.projects .project{grid-column:auto;grid-row:auto}.projects .project:nth-child(1) .project-media{height:300px}.projects .project:nth-child(2) .project-media{height:300px}.projects .project:nth-child(3) .project-media,.projects .project:nth-child(4) .project-media,.projects .project:nth-child(5) .project-media{height:220px}.linkedin-certifications-hidden{display:none!important}#linkedin-certifications{display:none!important}#education .eyebrow,#impact .eyebrow{font-size:0}#education .eyebrow:after{content:'03 — EDUCATION & RESEARCH';font-size:12px}#impact .eyebrow:after{content:'02 — IMPACT & PROCESS';font-size:12px}
-        @media(max-width:600px){.filters{width:100%;justify-content:flex-start;border-radius:16px}.filter{padding:0 13px}.projects .project:nth-child(1) .project-media,.projects .project:nth-child(2) .project-media,.projects .project:nth-child(3) .project-media,.projects .project:nth-child(4) .project-media,.projects .project:nth-child(5) .project-media{height:190px}}
+        :root {
+            --bg: #fff;
+            --ink: #102e5c;
+            --text: #42526b;
+            --muted: #667085;
+            --blue: #2e90fa;
+            --blue-dark: #1570ef;
+            --soft: #eaf3ff;
+            --surface: #f5f9ff;
+            --line: #d9e8fb;
+            --max: 1240px;
+            --ease: cubic-bezier(.22,1,.36,1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: Inter, system-ui, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: Sora, sans-serif; color: var(--ink); line-height: 1.12; letter-spacing: -.035em; }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; }
+        button { font: inherit; cursor: pointer; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .wrap { max-width: var(--max); margin: auto; padding: 0 32px; }
+        .section { padding: 100px 0; }
+        .eyebrow { display: inline-flex; gap: 9px; align-items: center; color: var(--blue); font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 18px; }
+        .eyebrow:before { content: ''; width: 22px; height: 1px; background: var(--blue); }
+        .title { font-size: clamp(2.2rem, 4vw, 3.6rem); max-width: 780px; }
+        .lead { font-size: 17px; color: var(--muted); max-width: 660px; margin-top: 16px; line-height: 1.75; }
+        .hl { background: linear-gradient(transparent 62%, var(--soft) 62%); color: var(--ink); }
+        .card { background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 20px 50px -36px rgba(15,46,92,.35); transition: .35s var(--ease); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 28px 60px -34px rgba(15,46,92,.4); border-color: #b8d8fb; }
+        
+        .btn { display: inline-flex; align-items: center; gap: 9px; border-radius: 100px; padding: 13px 24px; font-weight: 700; font-size: 14px; border: 1px solid transparent; transition: .25s var(--ease); }
+        .btn-primary { color: #fff; background: var(--blue); box-shadow: 0 10px 24px -12px var(--blue-dark); }
+        .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); }
+        .btn-secondary { color: var(--blue-dark); border-color: var(--line); background: #fff; }
+        .btn-secondary:hover { background: var(--surface); border-color: var(--blue); }
+
+        #nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 0; transition: .3s var(--ease); }
+        #nav.scrolled { background: rgba(255, 255, 255, .92); backdrop-filter: blur(15px); border-bottom: 1px solid var(--line); padding: 12px 0; }
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .logo { width: 43px; height: 43px; border-radius: 14px; background: linear-gradient(145deg, var(--blue), var(--blue-dark)); display: grid; place-items: center; color: #fff; font: 800 16px Sora; box-shadow: 0 10px 20px -10px var(--blue-dark); }
+        .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); font: 700 13px Sora; letter-spacing: .02em; }
+        .nav-menu { display: flex; list-style: none; gap: 4px; }
+        .nav-menu a { display: block; padding: 9px 15px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink); transition: .2s var(--ease); }
+        .nav-menu a:hover { background: var(--soft); color: var(--blue-dark); }
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
+        .icon-link { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); font-size: 13px; font-weight: 700; transition: .2s var(--ease); }
+        .icon-link:hover { background: var(--soft); border-color: var(--blue); }
+        .burger { display: none; background: #fff; border: 1px solid var(--line); border-radius: 50%; width: 42px; height: 42px; color: var(--ink); font-size: 20px; }
+
+        #hero { position: relative; min-height: 760px; display: grid; align-items: center; padding: 150px 0 100px; overflow: hidden; background: radial-gradient(circle at 86% 8%, #e9f3ff 0, transparent 32%), linear-gradient(#fff 65%, #f8fbff); }
+        #hero:before { content: ''; position: absolute; right: -120px; top: 120px; width: 540px; height: 540px; border: 1px solid var(--line); border-radius: 48% 52% 62% 38%; transform: rotate(24deg); }
+        .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 80px; position: relative; }
+        .hero-kicker { color: var(--blue); font: 600 12px 'JetBrains Mono'; letter-spacing: .1em; }
+        .hero h1 { font-size: clamp(3.2rem, 6.5vw, 6.2rem); margin: 18px 0 16px; line-height: 1.05; }
+        .hero-role { font: 600 20px Sora; color: var(--blue-dark); margin-bottom: 20px; }
+        .hero-copy { font-size: 17px; max-width: 600px; line-height: 1.8; }
+        .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+        .availability { display: flex; align-items: center; gap: 9px; font-size: 13px; margin-top: 22px; color: var(--ink); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #20b26b; box-shadow: 0 0 0 5px #e5f8ed; }
+        .hero-photo { position: relative; max-width: 410px; margin: auto; }
+        .hero-photo:before { content: ''; position: absolute; inset: -28px; background: var(--soft); border-radius: 47% 53% 43% 57%; z-index: -1; transform: rotate(-8deg); }
+        .hero-photo img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 30px; border: 1px solid var(--line); box-shadow: 0 35px 65px -28px rgba(15,46,92,.45); }
+        .photo-badge { position: absolute; bottom: -18px; left: 30px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; font-size: 12px; font-weight: 700; color: var(--ink); box-shadow: 0 15px 30px -20px #102e5c; }
+        .float-tag { position: absolute; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 13px; font-size: 12px; font-weight: 700; color: var(--ink); box-shadow: 0 15px 30px -20px #102e5c; }
+        .float-tag.one { top: 12%; left: -54px; }
+        .float-tag.two { right: -54px; top: 48%; }
+        .float-tag.three { bottom: 10%; right: -35px; }
+        .scroll-note { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); font: 11px 'JetBrains Mono'; color: var(--muted); }
+
+        .marquee { border-block: 1px solid var(--line); background: var(--surface); overflow: hidden; padding: 17px 0; }
+        .marquee-track { display: flex; width: max-content; animation: move 28s linear infinite; }
+        .marquee span { font: 600 13px 'JetBrains Mono'; color: var(--ink); padding: 0 25px; }
+        @keyframes move { to { transform: translateX(-50%); } }
+
+        .about-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 75px; align-items: center; }
+        .about-photo { position: relative; }
+        .about-photo img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 25px; border: 1px solid var(--line); }
+        .location { position: absolute; left: 18px; right: 18px; bottom: 18px; background: rgba(255,255,255,.92); border: 1px solid var(--line); padding: 11px 14px; border-radius: 13px; color: var(--ink); font-weight: 700; font-size: 13px; }
+        .quote { border-left: 3px solid var(--blue); padding: 12px 0 12px 18px; margin: 28px 0; font: 600 17px Sora; color: var(--ink); }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .stat { padding: 18px 14px; text-align: center; }
+        .stat strong { display: block; color: var(--blue); font: 800 29px Sora; }
+        .stat small { font-size: 11px; color: var(--muted); }
+
+        .blue-section { background: var(--surface); }
+
+        /* Education */
+        .education-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+        .education-card { padding: 28px; }
+        .education-card h3 { font-size: 22px; margin: 12px 0 6px; }
+        .education-meta { display: flex; gap: 9px; flex-wrap: wrap; color: var(--blue-dark); font-size: 12px; font-weight: 700; }
+        .education-card p { font-size: 14px; line-height: 1.7; color: var(--text); }
+        .education-card ul { padding-left: 19px; margin-top: 14px; font-size: 13px; line-height: 1.8; color: var(--text); }
+        .research-card { background: linear-gradient(135deg, #fff, var(--soft)); padding: 28px; border-radius: 20px; border: 1px solid var(--line); position: relative; overflow: hidden; margin-top: 20px; }
+        .research-card h3 { font-size: 20px; margin-bottom: 8px; padding-right: 80px; }
+        .research-card:after { content: 'SINTA 3'; position: absolute; right: 24px; top: 24px; background: var(--soft); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; color: var(--blue-dark); font: 700 11px 'JetBrains Mono'; letter-spacing: .08em; }
+        .research-card p { font-size: 14px; line-height: 1.75; color: var(--text); max-width: 90%; }
+        .research-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 16px; color: var(--blue-dark); font-size: 13px; font-weight: 700; }
+        .research-link:hover { text-decoration: underline; }
+
+        /* Experience Timeline */
+        .timeline { position: relative; margin-top: 40px; display: grid; gap: 24px; }
+        .timeline:before { content: ''; position: absolute; left: 15px; top: 12px; bottom: 12px; width: 2px; background: var(--line); }
+        .timeline-item { display: grid; grid-template-columns: 32px 1fr; gap: 22px; }
+        .timeline-dot { width: 31px; height: 31px; border-radius: 50%; background: var(--soft); border: 6px solid #fff; box-shadow: 0 0 0 2px var(--blue); z-index: 1; }
+        .timeline-content { padding: 26px; }
+        .timeline-content h3 { font-size: 21px; margin-bottom: 4px; }
+        .timeline-meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; color: var(--blue-dark); font-size: 12px; font-weight: 700; }
+        .timeline-content p { font-size: 14px; line-height: 1.75; color: var(--text); }
+        .timeline-content ul { padding-left: 18px; margin-top: 12px; font-size: 14px; line-height: 1.8; color: var(--text); }
+        
+        /* Badges inside Experience */
+        .badges-subblock { margin-top: 48px; padding-top: 36px; border-top: 1px dashed var(--line); }
+        .badges-subblock h3 { font-size: 20px; margin-bottom: 20px; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+        .badges-subblock h3:before { content: '✦'; color: var(--blue); }
+        .badges-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        .badge-card { padding: 24px; background: #fff; border: 1px solid var(--line); border-radius: 18px; transition: .3s var(--ease); display: flex; flex-direction: column; justify-content: space-between; }
+        .badge-card:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 16px 36px -20px rgba(15,46,92,.25); }
+        .badge-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+        .badge-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--soft); color: var(--blue); display: grid; place-items: center; font-size: 18px; flex-shrink: 0; font-weight: bold; }
+        .badge-title { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.35; }
+        .badge-issuer { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+        .badge-link { display: inline-flex; align-items: center; gap: 6px; color: var(--blue-dark); font-weight: 700; font-size: 12px; margin-top: 16px; width: fit-content; }
+        .badge-link:hover { text-decoration: underline; }
+
+        /* Tags */
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+        .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; background: var(--soft); color: var(--blue-dark); font: 600 11px 'JetBrains Mono'; border: 1px solid rgba(46,144,250,.15); }
+
+        /* Projects Section Fixes */
+        .filters { display: flex; align-items: center; gap: 10px; width: max-content; max-width: 100%; padding: 6px; background: #fff; border: 1px solid var(--line); border-radius: 999px; margin: 28px 0 36px; overflow-x: auto; box-shadow: 0 4px 20px -10px rgba(15,46,92,.1); }
+        .filter { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; white-space: nowrap; padding: 0 20px; border-radius: 999px; border: none; background: transparent; color: var(--ink); font-weight: 600; font-size: 13px; cursor: pointer; transition: .2s var(--ease); }
+        .filter:hover { background: var(--soft); color: var(--blue-dark); }
+        .filter.active { background: var(--blue); color: #fff; box-shadow: 0 4px 14px -4px var(--blue-dark); }
+
+        .projects { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+        .project { grid-column: span 4; display: flex; flex-direction: column; border-radius: 20px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: 0 20px 50px -36px rgba(15,46,92,.35); transition: .35s var(--ease); }
+        .project:nth-child(1) { grid-column: span 7; }
+        .project:nth-child(2) { grid-column: span 5; }
+        .project-media { width: 100%; height: 230px; overflow: hidden; position: relative; background: var(--soft); }
+        .project:nth-child(1) .project-media, .project:nth-child(2) .project-media { height: 280px; }
+        .project-media img { width: 100%; height: 100%; object-fit: cover; transition: .4s var(--ease); }
+        .project:hover .project-media img { transform: scale(1.04); }
+        .project-body { padding: 24px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
+        .project-label { display: inline-block; font: 600 11px 'JetBrains Mono'; color: var(--blue); letter-spacing: .08em; margin-bottom: 8px; text-transform: uppercase; }
+        .project h3 { font-size: 20px; margin-bottom: 8px; }
+        .project p { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 16px; }
+        .project-link { display: inline-flex; align-items: center; gap: 4px; color: var(--blue-dark); font-weight: 700; font-size: 13px; margin-top: 16px; }
+        .project-link:hover { text-decoration: underline; }
+
+        /* Achievements, Impact & Workflow */
+        .impact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
+        .impact { padding: 24px 20px; background: #fff; border: 1px solid var(--line); border-radius: 18px; text-align: center; }
+        .impact strong { display: block; color: var(--blue); font: 800 34px Sora; margin-bottom: 4px; }
+        .impact span { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+        .workflow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 36px; }
+        .workflow-step { padding: 24px 20px; background: #fff; border: 1px solid var(--line); border-radius: 18px; position: relative; }
+        .workflow-step b { color: var(--blue); font: 600 12px 'JetBrains Mono'; display: block; margin-bottom: 12px; }
+        .workflow-step h3 { font-size: 18px; margin-bottom: 8px; }
+        .workflow-step p { font-size: 13px; line-height: 1.65; color: var(--text); }
+
+        .certs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+        .cert { padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+        .cert-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--soft); color: var(--blue); display: grid; place-items: center; font-size: 20px; font-weight: bold; margin-bottom: 16px; }
+        .cert h3 { font-size: 17px; margin-bottom: 6px; }
+        .cert p { font-size: 12px; color: var(--muted); }
+        .cert a { display: inline-block; color: var(--blue-dark); font-weight: 700; font-size: 12px; margin-top: 18px; }
+
+        /* Skills */
+        .skills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; max-width: 900px; }
+        .skill { padding: 12px 18px; border-radius: 12px; background: #fff; border: 1px solid var(--line); font-size: 13px; font-weight: 700; color: var(--ink); box-shadow: 0 4px 12px -8px rgba(15,46,92,.15); transition: .2s var(--ease); }
+        .skill:hover { border-color: var(--blue); transform: translateY(-2px); color: var(--blue-dark); }
+
+        /* Contact */
+        .contact { background: var(--ink); color: #c9d8eb; }
+        .contact h2 { color: #fff; }
+        .contact .eyebrow { color: #77b8ff; }
+        .contact .eyebrow:before { background: #77b8ff; }
+        .contact-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 70px; margin-top: 45px; }
+        .contact-links { display: grid; gap: 12px; }
+        .contact-link { border-bottom: 1px solid rgba(255,255,255,.15); padding: 14px 0; transition: .2s var(--ease); }
+        .contact-link:hover { border-bottom-color: var(--blue); }
+        .contact-link small { display: block; color: #96abc6; font-size: 11px; font-weight: 600; letter-spacing: .05em; }
+        .contact-link strong { color: #fff; font-size: 15px; }
+        .contact-form { display: grid; gap: 13px; }
+        .contact-form input, .contact-form textarea, .contact-form select { width: 100%; border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 14px; background: rgba(255,255,255,.06); color: #fff; font: inherit; outline: none; transition: .2s var(--ease); }
+        .contact-form input:focus, .contact-form textarea:focus, .contact-form select:focus { border-color: var(--blue); background: rgba(255,255,255,.1); }
+        .contact-form textarea { min-height: 130px; resize: vertical; }
+        .contact-form select option { color: var(--ink); background: #fff; }
+        
+        footer { background: #0b2142; color: #9fb2cc; padding: 24px 0; font-size: 12px; }
+        .footer-inner { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+        .footer-inner a { color: #fff; }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: .7s var(--ease); }
+        .reveal.in { opacity: 1; transform: none; }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .projects .project { grid-column: span 6 !important; }
+            .projects .project-media { height: 220px !important; }
+            .badges-grid { grid-template-columns: 1fr; }
+            .impact-grid, .workflow, .certs { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .nav-menu { display: none; }
+            .burger { display: block; }
+            .hero-grid, .about-grid, .contact-grid, .education-grid { grid-template-columns: 1fr; gap: 40px; }
+            .hero-grid { padding-top: 25px; }
+            .hero-photo { max-width: 340px; }
+            .float-tag.one { left: -18px; }
+            .float-tag.two { right: -18px; }
+            .float-tag.three { right: -5px; }
+        }
+        @media (max-width: 600px) {
+            .wrap { padding: 0 20px; }
+            .section { padding: 70px 0; }
+            .nav-actions .icon-link, .nav-actions .btn { display: none; }
+            #hero { min-height: auto; padding: 120px 0 80px; }
+            .hero h1 { font-size: 2.8rem; }
+            .hero-copy { font-size: 15px; }
+            .scroll-note { display: none; }
+            .stats, .impact-grid, .workflow, .certs, .projects { grid-template-columns: 1fr !important; }
+            .projects .project { grid-column: span 1 !important; }
+            .projects .project-media { height: 200px !important; }
+            .timeline-content { padding: 20px; }
+            .float-tag { font-size: 10px; padding: 8px; }
+            .float-tag.one { top: 4%; left: -8px; }
+            .float-tag.two { right: -8px; }
+            .float-tag.three { bottom: 4%; right: -4px; }
+            .filters { width: 100%; justify-content: flex-start; border-radius: 16px; }
+            .filter { padding: 0 16px; }
+        }
     </style>
 </head>
 <body>
-    <header id="nav"><div class="wrap nav-inner"><a class="brand" href="#hero"><span class="logo">JF</span><span>JAUHAR FAUZI</span></a><nav><ul class="nav-menu"><li><a href="#about">Tentang</a></li><li><a href="#experience">Pengalaman</a></li><li><a href="#projects">Proyek</a></li><li><a href="#certificates">Sertifikat</a></li><li><a href="#skills">Keahlian</a></li><li><a href="#contact">Kontak</a></li></ul></nav><div class="nav-actions"><a class="icon-link" href="https://www.linkedin.com/in/jauhar-fauzi-ulul-albab-979245291/" target="_blank" aria-label="LinkedIn">in</a><a class="icon-link" href="https://instagram.com/jauhar.fauzi_" target="_blank" aria-label="Instagram">ig</a><a class="btn btn-primary" href="#contact">Mari Bicara</a><button class="burger" id="menuBtn" aria-label="Buka menu">☰</button></div></div></header>
+    <header id="nav">
+        <div class="wrap nav-inner">
+            <a class="brand" href="#hero">
+                <span class="logo">JF</span>
+                <span>JAUHAR FAUZI</span>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#about">Tentang</a></li>
+                    <li><a href="#education">Edukasi</a></li>
+                    <li><a href="#experience">Pengalaman</a></li>
+                    <li><a href="#projects">Proyek</a></li>
+                    <li><a href="#certificates">Pencapaian</a></li>
+                    <li><a href="#skills">Keahlian</a></li>
+                    <li><a href="#contact">Kontak</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <a class="icon-link" href="https://www.linkedin.com/in/jauhar-fauzi-ulul-albab-979245291/" target="_blank" aria-label="LinkedIn">in</a>
+                <a class="icon-link" href="https://instagram.com/jauhar.fauzi_" target="_blank" aria-label="Instagram">ig</a>
+                <a class="btn btn-primary" href="#contact">Mari Bicara</a>
+                <button class="burger" id="menuBtn" aria-label="Buka menu">☰</button>
+            </div>
+        </div>
+    </header>
+
     <main>
-        <section id="hero"><div class="wrap hero-grid"><div class="reveal in"><div class="hero-kicker">AI ENGINEER · SOFTWARE DEVELOPER · DIGITAL SOLUTIONS</div><h1>Jauhar Fauzi<br>Ulul <span class="hl">Albab</span></h1><div class="hero-role">Digital Solutions Engineer</div><p class="hero-copy">Developer yang membangun produk digital cerdas, sistem web yang scalable, dan solusi teknologi yang benar-benar menyelesaikan masalah nyata.</p><div class="hero-cta"><a class="btn btn-primary" href="#projects">Lihat Proyek <span>↗</span></a><a class="btn btn-secondary" href="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}" target="_blank">Lihat Resume ↗</a></div><div class="availability"><span class="dot"></span>Tersedia untuk peluang AI & software development</div></div><div class="hero-photo reveal in"><img src="{{ asset('foto.png') }}" alt="Foto Jauhar Fauzi Ulul Albab"><div class="float-tag one">✦ Gemini AI Developer</div><div class="float-tag two">⌘ 10.000+ users</div><div class="float-tag three">◎ SINTA 3 Publication</div><div class="photo-badge">● Based in Yogyakarta, Indonesia</div></div></div><div class="scroll-note">SCROLL TO EXPLORE ↓</div></section>
-        <div class="marquee"><div class="marquee-track"><span>GENERATIVE AI</span><span>FULL-STACK DEVELOPMENT</span><span>SYSTEM ARCHITECTURE</span><span>NLP & MACHINE LEARNING</span><span>DIGITAL PRODUCT</span><span>GENERATIVE AI</span><span>FULL-STACK DEVELOPMENT</span><span>SYSTEM ARCHITECTURE</span><span>NLP & MACHINE LEARNING</span></div></div>
-        <section class="section" id="about"><div class="wrap about-grid"><div class="about-photo reveal"><img src="{{ asset('foto.png') }}" alt="Jauhar Fauzi sedang berkarya"><div class="location">⌖ Yogyakarta, Indonesia</div></div><div class="reveal"><span class="eyebrow">01 — TENTANG SAYA</span><h2 class="title">Membangun solusi digital dengan <span class="hl">kecerdasan</span> dan tujuan.</h2><p class="lead">Saya mahasiswa Sistem Informasi dan developer dengan minat kuat pada Artificial Intelligence, Generative AI, serta produk digital yang scalable. Saya menikmati proses mengubah masalah kompleks menjadi sistem yang praktis melalui engineering, eksperimen terstruktur, dan pemikiran yang berpusat pada pengguna.</p><p class="lead">Pengalaman saya mencakup platform AI, sistem rekomendasi wisata, aplikasi keuangan, real-time communication, dan produk web untuk kebutuhan bisnis.</p><div class="quote">“Saya tidak hanya membuat interface — saya merancang sistem yang menyelesaikan masalah nyata.”</div><div class="stats"><div class="card stat"><strong data-count="5">0+</strong><small>Proyek pilihan</small></div><div class="card stat"><strong data-count="4">0+</strong><small>Tahun pengalaman</small></div><div class="card stat"><strong data-count="1">0</strong><small>Publikasi SINTA 3</small></div><div class="card stat"><strong data-count="3.91">0</strong><small>IPK / 4.00</small></div></div></div></div></section>
-        <section class="section blue-section"><div class="wrap"><span class="eyebrow">02 — KEAHLIAN UTAMA</span><h2 class="title">Dari konsep AI sampai produk digital yang siap dipakai.</h2><div class="expertise"><div class="card reveal"><span class="num">01</span><h3>Artificial Intelligence</h3><p>LLM, Generative AI, NLP, prompt engineering, RAG, dan integrasi AI ke produk nyata.</p></div><div class="card reveal"><span class="num">02</span><h3>Software Engineering</h3><p>Aplikasi maintainable, API, data structures, backend, dan arsitektur sistem.</p></div><div class="card reveal"><span class="num">03</span><h3>Digital Products</h3><p>Mengubah kebutuhan pengguna menjadi produk yang intuitif, terukur, dan berguna.</p></div><div class="card reveal"><span class="num">04</span><h3>Cloud & Integration</h3><p>Google Gemini, Google Cloud, Laravel, dan API modern untuk workflow yang efisien.</p></div></div></div></section>
-        <section class="section" id="experience"><div class="wrap"><span class="eyebrow">03 — PENGALAMAN</span><h2 class="title">Pengalaman di teknologi, pendidikan, dan inovasi digital.</h2><div class="timeline"><div class="timeline-item reveal"><div class="timeline-dot"></div><div class="card timeline-content"><h3>Asisten Dosen — Struktur Data</h3><div class="timeline-meta"><span>Universitas Amikom Yogyakarta</span><span>· Sep 2024 — Sekarang</span></div><ul><li>Membimbing mahasiswa memahami array, linked list, stack, queue, tree, dan algoritma dasar.</li><li>Memberikan asistensi praktikum serta membantu penyusunan dan evaluasi tugas pemrograman.</li></ul></div></div><div class="timeline-item reveal"><div class="timeline-dot"></div><div class="card timeline-content"><h3>Team Leader — Jauki Academy</h3><div class="timeline-meta"><span>Software House & Education</span><span>· Nov 2022 — Sekarang</span></div><ul><li>Memimpin pengembangan website, digital portfolio, dan AI prompting solutions.</li><li>Mengelola proyek end-to-end: requirement, development, deployment, dan maintenance.</li></ul></div></div><div class="timeline-item reveal"><div class="timeline-dot"></div><div class="card timeline-content"><h3>Asisten Programmer — Waroeng Steak Indonesia</h3><div class="timeline-meta"><span>Internship Program</span><span>· Agu — Sep 2024</span></div><ul><li>Berkontribusi pada sistem loyalty pelanggan berbasis Laravel dan PHP.</li><li>Melakukan troubleshooting dan mempresentasikan solusi kepada tim marketing.</li></ul></div></div><div class="timeline-item reveal"><div class="timeline-dot"></div><div class="card timeline-content"><h3>Team Leader & System Innovator — Freedomspace</h3><div class="timeline-meta"><span>Live Chat System</span><span>· Mei 2025</span></div><ul><li>Menginisiasi live chat dengan 10.000+ pengguna aktif untuk event musik.</li><li>Bertanggung jawab atas stabilitas sistem pada kondisi high traffic.</li></ul></div></div></div></div></section>
-        <section class="section blue-section" id="projects"><div class="wrap"><span class="eyebrow">04 — PROYEK PILIHAN</span><h2 class="title">Solusi yang dirancang untuk masalah nyata.</h2><p class="lead">Kumpulan karya AI, web, riset, dan digital product yang dibangun melalui eksperimen, engineering, dan pemahaman kebutuhan pengguna.</p><div class="filters"><button class="filter active" data-filter="all">Semua</button><button class="filter" data-filter="ai">AI & Research</button><button class="filter" data-filter="web">Web System</button><button class="filter" data-filter="product">Digital Product</button></div><div class="projects"><article class="card project reveal" data-cat="web"><div class="project-media"><img src="{{ asset('project-media/kpri.png') }}" alt="KPRI Bakti Mulia"></div><div class="project-body"><span class="project-label">FINTECH & WEB SYSTEM</span><h3>KPRI Bakti Mulia</h3><p>Digitalisasi simpan-pinjam dan analisis kredit menggunakan algoritma C4.5.</p><div class="tags"><span class="tag">Laravel</span><span class="tag">PHP</span><span class="tag">C4.5</span></div><a class="project-link" href="{{ url('/projects?id=kpri') }}">Lihat studi kasus ↗</a></div></article><article class="card project reveal" data-cat="ai research"><div class="project-media"><img src="{{ asset('project-media/jaugjakita.png') }}" alt="JaugjaKita"></div><div class="project-body"><span class="project-label">AI · NLP · RESEARCH</span><h3>JaugjaKita</h3><p>Sistem rekomendasi wisata Yogyakarta dengan NLP, TF-IDF, dan cosine similarity.</p><div class="tags"><span class="tag">NLP</span><span class="tag">TF-IDF</span><span class="tag">Machine Learning</span></div><a class="project-link" href="{{ url('/projects?id=jaugja') }}">Lihat studi kasus ↗</a></div></article><article class="card project reveal" data-cat="ai product"><div class="project-media"><img src="{{ asset('project-media/kauiz.png') }}" alt="Kauiz AI Platform"></div><div class="project-body"><span class="project-label">AI & DIGITAL PRODUCT</span><h3>Kauiz AI Platform</h3><p>Automatisasi pembuatan kuis cerdas berbasis AI untuk pengajar modern.</p><div class="tags"><span class="tag">Generative AI</span><span class="tag">OpenAI</span><span class="tag">SaaS</span></div><a class="project-link" href="{{ url('/projects?id=kauiz') }}">Lihat studi kasus ↗</a></div></article><article class="card project reveal" data-cat="web ai"><div class="project-media"><img src="{{ asset('project-media/livechat.png') }}" alt="LiveChat Interaction"></div><div class="project-body"><span class="project-label">REAL-TIME SYSTEM · NLP</span><h3>LiveChat Interaction</h3><p>Filtering kata kasar real-time dan sistem komunikasi untuk 10.000+ pengguna.</p><div class="tags"><span class="tag">NLP</span><span class="tag">Real-time</span><span class="tag">Moderation</span></div><a class="project-link" href="{{ url('/projects?id=livechat') }}">Lihat studi kasus ↗</a></div></article><article class="card project reveal" data-cat="web product"><div class="project-media"><img src="{{ asset('project-media/journal.png') }}" alt="Journal publication"></div><div class="project-body"><span class="project-label">ACADEMIC SERVICE</span><h3>JokiTugas Jogja</h3><p>Platform layanan bantuan akademik terintegrasi untuk mahasiswa.</p><div class="tags"><span class="tag">Web Platform</span><span class="tag">Service</span></div><a class="project-link" href="{{ url('/projects?id=jokitugas') }}">Lihat studi kasus ↗</a></div></article></div></div></section>
-        <section class="section" id="certificates"><div class="wrap"><span class="eyebrow">05 — RECOGNITIONS</span><h2 class="title">Sertifikasi dan pencapaian yang mendukung perjalanan profesional.</h2><div class="certs"><div class="card cert reveal"><div class="cert-icon">✦</div><h3>Asisten Praktikum Struktur Data</h3><p>AMIKOM Creative Economy Park · 2026</p><a href="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}" target="_blank">Buka sertifikat ↗</a></div><div class="card cert reveal"><div class="cert-icon">◆</div><h3>Juara III Karya Tulis Islami</h3><p>Kemenag Kota Yogyakarta · 2025</p><a href="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}" target="_blank">Buka sertifikat ↗</a></div><div class="card cert reveal"><div class="cert-icon">◇</div><h3>FISCREATION Workshop</h3><p>Universitas Negeri Yogyakarta · 2023</p><a href="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}" target="_blank">Buka sertifikat ↗</a></div><div class="card cert reveal"><div class="cert-icon">⌁</div><h3>Assistant Programmer</h3><p>Waroeng Steak Indonesia · 2024</p><a href="{{ asset('serti/ws.pdf') }}" target="_blank">Buka sertifikat ↗</a></div></div><div style="margin-top:28px"><a class="btn btn-secondary" href="{{ url('/certificates') }}">Lihat semua sertifikat ↗</a></div></div></section>
-        <section class="section blue-section" id="skills"><div class="wrap"><span class="eyebrow">06 — TECH STACK</span><h2 class="title">Tools yang saya gunakan untuk membuat sesuatu bekerja.</h2><div class="skills"><span class="skill">Generative AI</span><span class="skill">Google Gemini</span><span class="skill">Python</span><span class="skill">Laravel</span><span class="skill">PHP</span><span class="skill">JavaScript</span><span class="skill">React.js</span><span class="skill">MySQL</span><span class="skill">NLP</span><span class="skill">TF-IDF</span><span class="skill">C4.5</span><span class="skill">Git & GitHub</span><span class="skill">REST API</span><span class="skill">Prompt Engineering</span></div></div></section>
-        <section class="section contact" id="contact"><div class="wrap"><span class="eyebrow">07 — GET IN TOUCH</span><h2 class="title">Ayo bangun sesuatu yang berguna.</h2><p class="lead" style="color:#b8c9df">Terbuka untuk peluang kerja, kolaborasi teknologi, proyek AI, dan diskusi produk digital yang bermakna.</p><div class="contact-grid"><div class="contact-links"><a class="contact-link" href="mailto:jauharfua05@gmail.com"><small>EMAIL</small><strong>jauharfua05@gmail.com</strong></a><a class="contact-link" href="https://www.linkedin.com/in/jauhar-fauzi-ulul-albab-979245291/" target="_blank"><small>LINKEDIN</small><strong>Jauhar Fauzi Ulul Albab ↗</strong></a><a class="contact-link" href="https://wa.me/6289529104230" target="_blank"><small>WHATSAPP</small><strong>+62 895-2910-4230 ↗</strong></a><a class="contact-link" href="https://instagram.com/jauhar.fauzi_" target="_blank"><small>INSTAGRAM</small><strong>@jauhar.fauzi_ ↗</strong></a></div><form class="contact-form" action="mailto:jauharfua05@gmail.com" method="post" enctype="text/plain"><input name="name" placeholder="Nama kamu" required><input name="email" type="email" placeholder="Email kamu" required><select name="type" required><option value="">Jenis kebutuhan</option><option>Job opportunity</option><option>Project collaboration</option><option>AI consultation</option></select><textarea name="message" placeholder="Ceritakan kebutuhanmu..." required></textarea><button class="btn btn-primary" type="submit">Kirim pesan ↗</button></form></div></div></section>
-        <section class="section blue-section" id="education"><div class="wrap"><span class="eyebrow">05 — EDUCATION & RESEARCH</span><h2 class="title">Fondasi akademik yang memperkuat cara saya membangun sistem.</h2><div class="education-grid"><article class="card education-card reveal"><div class="education-meta"><span>2023 — SEKARANG</span><span>·</span><span>IPK 3.91 / 4.00</span></div><h3>Universitas Amikom Yogyakarta</h3><p>Sistem Informasi</p><ul><li>Berpartisipasi dalam riset dan proyek teknologi berbasis kebutuhan pengguna.</li><li>Mengembangkan kemampuan analisis sistem, pemrograman, database, dan pengembangan produk digital.</li></ul></article><article class="card education-card reveal"><div class="education-meta"><span>2025 — SEKARANG</span></div><h3>TrainIT Jogja</h3><p>Fullstack Developer Training</p><ul><li>Laravel dan pengembangan aplikasi web end-to-end.</li><li>Machine Learning dengan pendekatan K-Means.</li></ul></article></div><div class="card research-card reveal" style="margin-top:18px"><h3>JaugjaKita: Tourism Recommendation System</h3><p>Publikasi penelitian tentang rekomendasi destinasi wisata menggunakan NLP, TF-IDF, dan cosine similarity. Penelitian ini mengubah preferensi pengguna menjadi peringkat destinasi yang lebih relevan.</p><a class="research-link" href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank">Baca publikasi resmi ↗</a></div></div></section>
-        <section class="section" id="impact"><div class="wrap"><span class="eyebrow">08 — IMPACT & PROCESS</span><h2 class="title">Mengukur hasil, lalu memperbaiki prosesnya.</h2><div class="impact-grid"><div class="card impact reveal"><strong>10K+</strong><span>Pengguna aktif pada platform live chat</span></div><div class="card impact reveal"><strong>5+</strong><span>Proyek digital dan riset pilihan</span></div><div class="card impact reveal"><strong>4+</strong><span>Tahun pengalaman pengembangan</span></div><div class="card impact reveal"><strong>1</strong><span>Publikasi jurnal terakreditasi SINTA 3</span></div></div><div class="workflow"><div class="workflow-step reveal"><b>01 — DISCOVER</b><h3>Pahami masalah</h3><p>Menggali kebutuhan, konteks pengguna, dan target bisnis sebelum membuat solusi.</p></div><div class="workflow-step reveal"><b>02 — DESIGN</b><h3>Rancang sistem</h3><p>Menentukan user flow, data flow, arsitektur, dan prioritas pengembangan.</p></div><div class="workflow-step reveal"><b>03 — BUILD</b><h3>Bangun & uji</h3><p>Mengembangkan fitur, mengintegrasikan teknologi, lalu menguji kualitasnya.</p></div><div class="workflow-step reveal"><b>04 — ITERATE</b><h3>Belajar & perbaiki</h3><p>Menggunakan feedback dan hasil pengukuran untuk membuat produk lebih baik.</p></div></div></div></section>
-        <section class="section" id="linkedin-experience"><div class="wrap"><span class="eyebrow">09 — LINKEDIN EXPERIENCE</span><h2 class="title">Pengalaman terbaru di Generative AI dan Google Cloud.</h2><div class="card timeline-content reveal" style="margin-top:42px;border-left:4px solid var(--blue)"><div class="timeline-meta"><span>SMARTBRIDGE INDONESIA · APPRENTICESHIP</span><span>· Mar 2026 — Jul 2026</span><span>· Remote</span></div><h3>Google Gemini AI Developer Intern</h3><p style="margin-top:12px;font-size:14px;line-height:1.8">Terpilih dalam LastMile 2026 Internship Program dan menyelesaikan pelatihan intensif 12 minggu yang berfokus pada pengembangan aplikasi Generative AI berstandar industri.</p><ul style="margin-top:14px;padding-left:18px;font-size:14px;line-height:1.85"><li>Membangun aplikasi AI menggunakan Google Gemini API dan arsitektur LLM modern.</li><li>Menerapkan zero-shot, few-shot, structured prompting, prompt chaining, dan prompt optimization.</li><li>Mengembangkan AI Agent dengan function calling, tool integration, context management, dan koneksi API eksternal.</li><li>Mengimplementasikan RAG, embeddings, vector database, dan workflow multimodal AI.</li><li>Mendesain solusi production-ready menggunakan Python dan Google Cloud dengan praktik Responsible AI, evaluasi model, monitoring, dan optimasi.</li></ul><div class="tags"><span class="tag">Google Gemini</span><span class="tag">Generative AI</span><span class="tag">AI Agents</span><span class="tag">RAG</span><span class="tag">Python</span><span class="tag">Google Cloud</span><span class="tag">Prompt Engineering</span></div><a class="research-link" href="https://www.linkedin.com/in/jauhar-fauzi-ulul-albab-979245291/" target="_blank">Lihat profil LinkedIn ↗</a></div></div></section>
-        <section class="section blue-section" id="linkedin-certifications"><div class="wrap"><span class="eyebrow">10 — GOOGLE AI BADGES</span><h2 class="title">Validasi keahlian AI dari Google Cloud.</h2><div class="education-grid" style="margin-top:42px"><article class="card cert reveal"><div class="cert-icon">✦</div><h3>Inspect Rich Documents with Gemini Multimodality and Multimodal RAG</h3><p>Google · Issued Mar 2026 · Expires Jul 2026</p><div class="tags"><span class="tag">Google Gemini</span><span class="tag">Multimodality</span><span class="tag">RAG</span></div><a href="https://www.credly.com/badges/9971ccc1-3004-47a6-a7c0-9a3a076a64fb/public_url" target="_blank">Show credential ↗</a></article><article class="card cert reveal"><div class="cert-icon">◇</div><h3>Prompt Design in Vertex AI Skill Badge</h3><p>Google · Issued Feb 2026 · Expires Jul 2026</p><div class="tags"><span class="tag">Artificial Intelligence</span><span class="tag">Gemini APIs</span><span class="tag">Vertex AI</span></div><a href="https://www.credly.com/badges/48d4bae2-510b-4af1-b7c6-61d380cbe32a/public_url" target="_blank">Show credential ↗</a></article></div></div></section>
-        <section class="section" id="linkedin-roles"><div class="wrap"><span class="eyebrow">11 — PROFESSIONAL HISTORY</span><h2 class="title">Perjalanan profesional yang membentuk cara kerja saya.</h2><div class="linkedin-grid"><article class="card linkedin-role reveal"><div class="education-meta"><span>NOV 2022 — NOV 2025</span><span>·</span><span>ON-SITE</span></div><h3>Tim Leader — Jauki Academy</h3><p>Memimpin layanan pembuatan website, digital portfolio, dan AI prompting; terlibat dalam arsitektur, frontend, backend, deployment, branding, dan pengelolaan proyek end-to-end.</p></article><article class="card linkedin-role reveal"><div class="education-meta"><span>SEP 2024 — SEP 2025</span><span>·</span><span>ON-SITE</span></div><h3>Teaching Assistant — Data Structures</h3><p>Mendukung pembelajaran struktur data, membimbing array, linked list, stack, queue, tree, algoritma, praktikum, serta evaluasi tugas pemrograman.</p></article><article class="card linkedin-role reveal"><div class="education-meta"><span>MAY 2025</span><span>·</span><span>ON-SITE</span></div><h3>Team Leader & System Innovator — Freedomspace</h3><p>Membangun live chat untuk Perantara Fest (11 Mei 2025) dan Lane of Koplo (24 Mei 2025), memimpin operasi real-time, dan menjaga stabilitas sistem untuk 10.000+ pengguna.</p><a class="research-link" href="https://livechat.jauharfauzi.my.id/" target="_blank">Kunjungi website ↗</a></article><article class="card linkedin-role reveal"><div class="education-meta"><span>AUG 2024 — SEP 2024</span><span>·</span><span>ON-SITE</span></div><h3>Marketing Division — PT Waroeng Steak Indonesia</h3><p>Berkontribusi pada sistem loyalty pelanggan berbasis web, mengimplementasikan fitur Laravel/PHP, melakukan troubleshooting, dan mempresentasikan solusi kepada marketing serta manajemen.</p></article></div></div></section>
-        <section class="section blue-section" id="achievements"><div class="wrap"><span class="eyebrow">10 — ACHIEVEMENTS</span><h2 class="title">Validasi keahlian AI dari Google Cloud.</h2><div class="education-grid" style="margin-top:42px"><article class="card cert reveal"><div class="cert-icon">✦</div><h3>Inspect Rich Documents with Gemini Multimodality and Multimodal RAG</h3><p>Google · Issued Mar 2026 · Expires Jul 2026</p><div class="tags"><span class="tag">Google Gemini</span><span class="tag">Multimodality</span><span class="tag">RAG</span></div><a href="https://www.credly.com/badges/9971ccc1-3004-47a6-a7c0-9a3a076a64fb/public_url" target="_blank">Show credential ↗</a></article><article class="card cert reveal"><div class="cert-icon">◇</div><h3>Prompt Design in Vertex AI Skill Badge</h3><p>Google · Issued Feb 2026 · Expires Jul 2026</p><div class="tags"><span class="tag">Artificial Intelligence</span><span class="tag">Gemini APIs</span><span class="tag">Vertex AI</span></div><a href="https://www.credly.com/badges/48d4bae2-510b-4af1-b7c6-61d380cbe32a/public_url" target="_blank">Show credential ↗</a></article></div></div></section>
+        <!-- HERO -->
+        <section id="hero">
+            <div class="wrap hero-grid">
+                <div class="reveal in">
+                    <div class="hero-kicker">AI ENGINEER · SOFTWARE DEVELOPER · DIGITAL SOLUTIONS</div>
+                    <h1>Jauhar Fauzi<br>Ulul <span class="hl">Albab</span></h1>
+                    <div class="hero-role">Digital Solutions Engineer</div>
+                    <p class="hero-copy">Developer yang membangun produk digital cerdas, sistem web yang scalable, dan solusi teknologi yang benar-benar menyelesaikan masalah nyata.</p>
+                    <div class="hero-cta">
+                        <a class="btn btn-primary" href="#projects">Lihat Proyek <span>↗</span></a>
+                        <a class="btn btn-secondary" href="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}" target="_blank">Lihat Resume ↗</a>
+                    </div>
+                    <div class="availability"><span class="dot"></span>Tersedia untuk peluang AI & software development</div>
+                </div>
+                <div class="hero-photo reveal in">
+                    <img src="{{ asset('foto.png') }}" alt="Foto Jauhar Fauzi Ulul Albab">
+                    <div class="float-tag one">✦ Gemini AI Developer</div>
+                    <div class="float-tag two">⌘ 10.000+ users</div>
+                    <div class="float-tag three">◎ SINTA 3 Publication</div>
+                    <div class="photo-badge">● Based in Yogyakarta, Indonesia</div>
+                </div>
+            </div>
+            <div class="scroll-note">SCROLL TO EXPLORE ↓</div>
+        </section>
+
+        <!-- MARQUEE -->
+        <div class="marquee">
+            <div class="marquee-track">
+                <span>GENERATIVE AI</span><span>FULL-STACK DEVELOPMENT</span><span>SYSTEM ARCHITECTURE</span><span>NLP & MACHINE LEARNING</span><span>DIGITAL PRODUCT</span><span>GENERATIVE AI</span><span>FULL-STACK DEVELOPMENT</span><span>SYSTEM ARCHITECTURE</span><span>NLP & MACHINE LEARNING</span>
+            </div>
+        </div>
+
+        <!-- 01 — TENTANG SAYA -->
+        <section class="section" id="about">
+            <div class="wrap about-grid">
+                <div class="about-photo reveal">
+                    <img src="{{ asset('foto.png') }}" alt="Jauhar Fauzi sedang berkarya">
+                    <div class="location">⌖ Yogyakarta, Indonesia</div>
+                </div>
+                <div class="reveal">
+                    <span class="eyebrow">01 — TENTANG SAYA</span>
+                    <h2 class="title">Membangun solusi digital dengan <span class="hl">kecerdasan</span> dan tujuan.</h2>
+                    <p class="lead">Saya mahasiswa Sistem Informasi dan developer dengan minat kuat pada Artificial Intelligence, Generative AI, serta produk digital yang scalable. Saya menikmati proses mengubah masalah kompleks menjadi sistem yang praktis melalui engineering, eksperimen terstruktur, dan pemikiran yang berpusat pada pengguna.</p>
+                    <p class="lead">Pengalaman saya mencakup platform AI, sistem rekomendasi wisata, aplikasi keuangan, real-time communication, dan produk web untuk kebutuhan bisnis.</p>
+                    <div class="quote">“Saya tidak hanya membuat interface — saya merancang sistem yang menyelesaikan masalah nyata.”</div>
+                    <div class="stats">
+                        <div class="card stat"><strong data-count="5">0+</strong><small>Proyek pilihan</small></div>
+                        <div class="card stat"><strong data-count="4">0+</strong><small>Tahun pengalaman</small></div>
+                        <div class="card stat"><strong data-count="1">0</strong><small>Publikasi SINTA 3</small></div>
+                        <div class="card stat"><strong data-count="3.91">0</strong><small>IPK / 4.00</small></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02 — EDUCATION & RESEARCH -->
+        <section class="section blue-section" id="education">
+            <div class="wrap">
+                <span class="eyebrow">02 — EDUCATION & RESEARCH</span>
+                <h2 class="title">Fondasi akademik yang memperkuat cara saya membangun sistem.</h2>
+                <div class="education-grid">
+                    <article class="card education-card reveal">
+                        <div class="education-meta">
+                            <span>2023 — SEKARANG</span>
+                            <span>·</span>
+                            <span>IPK 3.91 / 4.00</span>
+                        </div>
+                        <h3>Universitas Amikom Yogyakarta</h3>
+                        <p style="font-weight: 600; color: var(--ink); margin-bottom: 8px;">Sistem Informasi</p>
+                        <ul>
+                            <li>Berpartisipasi dalam riset dan proyek teknologi berbasis kebutuhan pengguna.</li>
+                            <li>Mengembangkan kemampuan analisis sistem, pemrograman, database, dan pengembangan produk digital.</li>
+                        </ul>
+                    </article>
+                    <article class="card education-card reveal">
+                        <div class="education-meta">
+                            <span>2025 — SEKARANG</span>
+                        </div>
+                        <h3>TrainIT Jogja</h3>
+                        <p style="font-weight: 600; color: var(--ink); margin-bottom: 8px;">Fullstack Developer Training</p>
+                        <ul>
+                            <li>Laravel dan pengembangan aplikasi web end-to-end.</li>
+                            <li>Machine Learning dengan pendekatan K-Means.</li>
+                        </ul>
+                    </article>
+                </div>
+                <div class="card research-card reveal">
+                    <h3>JaugjaKita: Tourism Recommendation System</h3>
+                    <p>Publikasi penelitian tentang rekomendasi destinasi wisata menggunakan NLP, TF-IDF, dan cosine similarity. Penelitian ini mengubah preferensi pengguna menjadi peringkat destinasi yang lebih relevan.</p>
+                    <a class="research-link" href="https://jurnal.polibatam.ac.id/index.php/JAIC/article/view/11751/3420" target="_blank">Baca publikasi resmi ↗</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 — PENGALAMAN -->
+        <section class="section" id="experience">
+            <div class="wrap">
+                <span class="eyebrow">03 — PENGALAMAN</span>
+                <h2 class="title">Pengalaman di teknologi, AI, pendidikan, dan inovasi digital.</h2>
+                <div class="timeline">
+                    <!-- Google Gemini AI Developer Intern -->
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="card timeline-content" style="border-left: 4px solid var(--blue);">
+                            <h3>Google Gemini AI Developer Intern</h3>
+                            <div class="timeline-meta">
+                                <span>SMARTBRIDGE INDONESIA · APPRENTICESHIP</span>
+                                <span>· Mar 2026 — Jul 2026</span>
+                                <span>· Remote</span>
+                            </div>
+                            <p>Terpilih dalam LastMile 2026 Internship Program dan menyelesaikan pelatihan intensif 12 minggu yang berfokus pada pengembangan aplikasi Generative AI berstandar industri.</p>
+                            <ul>
+                                <li>Membangun aplikasi AI menggunakan Google Gemini API dan arsitektur LLM modern.</li>
+                                <li>Menerapkan zero-shot, few-shot, structured prompting, prompt chaining, dan prompt optimization.</li>
+                                <li>Mengembangkan AI Agent dengan function calling, tool integration, context management, dan koneksi API eksternal.</li>
+                                <li>Mengimplementasikan RAG, embeddings, vector database, dan workflow multimodal AI.</li>
+                                <li>Mendesain solusi production-ready menggunakan Python dan Google Cloud dengan praktik Responsible AI, evaluasi model, monitoring, dan optimasi.</li>
+                            </ul>
+                            <div class="tags">
+                                <span class="tag">Google Gemini</span>
+                                <span class="tag">Generative AI</span>
+                                <span class="tag">AI Agents</span>
+                                <span class="tag">RAG</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">Google Cloud</span>
+                                <span class="tag">Prompt Engineering</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asisten Dosen -->
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="card timeline-content">
+                            <h3>Asisten Dosen — Struktur Data</h3>
+                            <div class="timeline-meta">
+                                <span>Universitas Amikom Yogyakarta</span>
+                                <span>· Sep 2024 — Sep 2025</span>
+                            </div>
+                            <ul>
+                                <li>Membimbing mahasiswa memahami array, linked list, stack, queue, tree, dan algoritma dasar.</li>
+                                <li>Memberikan asistensi praktikum serta membantu penyusunan dan evaluasi tugas pemrograman.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Team Leader Jauki Academy -->
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="card timeline-content">
+                            <h3>Team Leader — Jauki Academy</h3>
+                            <div class="timeline-meta">
+                                <span>Software House & Education</span>
+                                <span>· Nov 2022 — Nov 2025</span>
+                            </div>
+                            <ul>
+                                <li>Memimpin pengembangan website, digital portfolio, dan AI prompting solutions.</li>
+                                <li>Mengelola proyek end-to-end: requirement, development, deployment, dan maintenance.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Team Leader & System Innovator Freedomspace -->
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="card timeline-content">
+                            <h3>Team Leader & System Innovator — Freedomspace</h3>
+                            <div class="timeline-meta">
+                                <span>Live Chat System</span>
+                                <span>· Mei 2025</span>
+                            </div>
+                            <ul>
+                                <li>Menginisiasi live chat dengan 10.000+ pengguna aktif untuk event musik.</li>
+                                <li>Bertanggung jawab atas stabilitas sistem pada kondisi high traffic.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Asisten Programmer Waroeng Steak -->
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="card timeline-content">
+                            <h3>Asisten Programmer — Waroeng Steak Indonesia</h3>
+                            <div class="timeline-meta">
+                                <span>Internship Program</span>
+                                <span>· Agu — Sep 2024</span>
+                            </div>
+                            <ul>
+                                <li>Berkontribusi pada sistem loyalty pelanggan berbasis Laravel dan PHP.</li>
+                                <li>Melakukan troubleshooting dan mempresentasikan solusi kepada tim marketing.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google AI Badges sub-block inside Pengalaman -->
+                <div class="badges-subblock reveal">
+                    <h3>Google Cloud AI Badges & Validasi Keahlian</h3>
+                    <div class="badges-grid">
+                        <article class="badge-card">
+                            <div>
+                                <div class="badge-header">
+                                    <div class="badge-icon">✦</div>
+                                    <div class="badge-title">Inspect Rich Documents with Gemini Multimodality and Multimodal RAG</div>
+                                </div>
+                                <div class="badge-issuer">Google · Issued Mar 2026 · Expires Jul 2026</div>
+                                <div class="tags">
+                                    <span class="tag">Google Gemini</span>
+                                    <span class="tag">Multimodality</span>
+                                    <span class="tag">RAG</span>
+                                </div>
+                            </div>
+                            <a class="badge-link" href="https://www.credly.com/badges/9971ccc1-3004-47a6-a7c0-9a3a076a64fb/public_url" target="_blank">Show credential ↗</a>
+                        </article>
+                        <article class="badge-card">
+                            <div>
+                                <div class="badge-header">
+                                    <div class="badge-icon">◇</div>
+                                    <div class="badge-title">Prompt Design in Vertex AI Skill Badge</div>
+                                </div>
+                                <div class="badge-issuer">Google · Issued Feb 2026 · Expires Jul 2026</div>
+                                <div class="tags">
+                                    <span class="tag">Artificial Intelligence</span>
+                                    <span class="tag">Gemini APIs</span>
+                                    <span class="tag">Vertex AI</span>
+                                </div>
+                            </div>
+                            <a class="badge-link" href="https://www.credly.com/badges/48d4bae2-510b-4af1-b7c6-61d380cbe32a/public_url" target="_blank">Show credential ↗</a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 — PROYEK PILIHAN -->
+        <section class="section blue-section" id="projects">
+            <div class="wrap">
+                <span class="eyebrow">04 — PROYEK PILIHAN</span>
+                <h2 class="title">Solusi yang dirancang untuk masalah nyata.</h2>
+                <p class="lead">Kumpulan karya AI, web, riset, dan digital product yang dibangun melalui eksperimen, engineering, dan pemahaman kebutuhan pengguna.</p>
+                
+                <div class="filters">
+                    <button class="filter active" data-filter="all">Semua</button>
+                    <button class="filter" data-filter="ai">AI & Research</button>
+                    <button class="filter" data-filter="web">Web System</button>
+                    <button class="filter" data-filter="product">Digital Product</button>
+                </div>
+
+                <div class="projects">
+                    <article class="card project reveal" data-cat="web">
+                        <div class="project-media">
+                            <img src="{{ asset('project-media/kpri.png') }}" alt="KPRI Bakti Mulia">
+                        </div>
+                        <div class="project-body">
+                            <div>
+                                <span class="project-label">FINTECH & WEB SYSTEM</span>
+                                <h3>KPRI Bakti Mulia</h3>
+                                <p>Digitalisasi simpan-pinjam dan analisis kredit menggunakan algoritma C4.5.</p>
+                                <div class="tags">
+                                    <span class="tag">Laravel</span>
+                                    <span class="tag">PHP</span>
+                                    <span class="tag">C4.5</span>
+                                </div>
+                            </div>
+                            <a class="project-link" href="{{ url('/projects?id=kpri') }}">Lihat studi kasus ↗</a>
+                        </div>
+                    </article>
+
+                    <article class="card project reveal" data-cat="ai research">
+                        <div class="project-media">
+                            <img src="{{ asset('project-media/jaugjakita.png') }}" alt="JaugjaKita">
+                        </div>
+                        <div class="project-body">
+                            <div>
+                                <span class="project-label">AI · NLP · RESEARCH</span>
+                                <h3>JaugjaKita</h3>
+                                <p>Sistem rekomendasi wisata Yogyakarta dengan NLP, TF-IDF, dan cosine similarity.</p>
+                                <div class="tags">
+                                    <span class="tag">NLP</span>
+                                    <span class="tag">TF-IDF</span>
+                                    <span class="tag">Machine Learning</span>
+                                </div>
+                            </div>
+                            <a class="project-link" href="{{ url('/projects?id=jaugja') }}">Lihat studi kasus ↗</a>
+                        </div>
+                    </article>
+
+                    <article class="card project reveal" data-cat="ai product">
+                        <div class="project-media">
+                            <img src="{{ asset('project-media/kauiz.png') }}" alt="Kauiz AI Platform">
+                        </div>
+                        <div class="project-body">
+                            <div>
+                                <span class="project-label">AI & DIGITAL PRODUCT</span>
+                                <h3>Kauiz AI Platform</h3>
+                                <p>Automatisasi pembuatan kuis cerdas berbasis AI untuk pengajar modern.</p>
+                                <div class="tags">
+                                    <span class="tag">Generative AI</span>
+                                    <span class="tag">OpenAI</span>
+                                    <span class="tag">SaaS</span>
+                                </div>
+                            </div>
+                            <a class="project-link" href="{{ url('/projects?id=kauiz') }}">Lihat studi kasus ↗</a>
+                        </div>
+                    </article>
+
+                    <article class="card project reveal" data-cat="web ai">
+                        <div class="project-media">
+                            <img src="{{ asset('project-media/livechat.png') }}" alt="LiveChat Interaction">
+                        </div>
+                        <div class="project-body">
+                            <div>
+                                <span class="project-label">REAL-TIME SYSTEM · NLP</span>
+                                <h3>LiveChat Interaction</h3>
+                                <p>Filtering kata kasar real-time dan sistem komunikasi untuk 10.000+ pengguna.</p>
+                                <div class="tags">
+                                    <span class="tag">NLP</span>
+                                    <span class="tag">Real-time</span>
+                                    <span class="tag">Moderation</span>
+                                </div>
+                            </div>
+                            <a class="project-link" href="{{ url('/projects?id=livechat') }}">Lihat studi kasus ↗</a>
+                        </div>
+                    </article>
+
+                    <article class="card project reveal" data-cat="web product">
+                        <div class="project-media">
+                            <img src="{{ asset('project-media/journal.png') }}" alt="Journal publication">
+                        </div>
+                        <div class="project-body">
+                            <div>
+                                <span class="project-label">ACADEMIC SERVICE</span>
+                                <h3>JokiTugas Jogja</h3>
+                                <p>Platform layanan bantuan akademik terintegrasi untuk mahasiswa.</p>
+                                <div class="tags">
+                                    <span class="tag">Web Platform</span>
+                                    <span class="tag">Service</span>
+                                </div>
+                            </div>
+                            <a class="project-link" href="{{ url('/projects?id=jokitugas') }}">Lihat studi kasus ↗</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 — PENCAPAIAN & PROSES -->
+        <section class="section" id="certificates">
+            <div class="wrap">
+                <span class="eyebrow">05 — PENCAPAIAN & PROSES</span>
+                <h2 class="title">Sertifikasi, dampak hasil, dan alur proses kerja.</h2>
+                
+                <!-- Impact Stats -->
+                <div class="impact-grid">
+                    <div class="card impact reveal">
+                        <strong data-count="10">10K+</strong>
+                        <span>Pengguna aktif pada platform live chat</span>
+                    </div>
+                    <div class="card impact reveal">
+                        <strong data-count="5">5+</strong>
+                        <span>Proyek digital dan riset pilihan</span>
+                    </div>
+                    <div class="card impact reveal">
+                        <strong data-count="4">4+</strong>
+                        <span>Tahun pengalaman pengembangan</span>
+                    </div>
+                    <div class="card impact reveal">
+                        <strong data-count="1">1</strong>
+                        <span>Publikasi jurnal terakreditasi SINTA 3</span>
+                    </div>
+                </div>
+
+                <!-- Process Workflow -->
+                <div class="workflow">
+                    <div class="workflow-step reveal">
+                        <b>01 — DISCOVER</b>
+                        <h3>Pahami masalah</h3>
+                        <p>Menggali kebutuhan, konteks pengguna, dan target bisnis sebelum membuat solusi.</p>
+                    </div>
+                    <div class="workflow-step reveal">
+                        <b>02 — DESIGN</b>
+                        <h3>Rancang sistem</h3>
+                        <p>Menentukan user flow, data flow, arsitektur, dan prioritas pengembangan.</p>
+                    </div>
+                    <div class="workflow-step reveal">
+                        <b>03 — BUILD</b>
+                        <h3>Bangun & uji</h3>
+                        <p>Mengembangkan fitur, mengintegrasikan teknologi, lalu menguji kualitasnya.</p>
+                    </div>
+                    <div class="workflow-step reveal">
+                        <b>04 — ITERATE</b>
+                        <h3>Belajar & perbaiki</h3>
+                        <p>Menggunakan feedback dan hasil pengukuran untuk membuat produk lebih baik.</p>
+                    </div>
+                </div>
+
+                <!-- Recognitions / Certificates -->
+                <div class="certs">
+                    <div class="card cert reveal">
+                        <div class="cert-icon">✦</div>
+                        <div>
+                            <h3>Asisten Praktikum Struktur Data</h3>
+                            <p>AMIKOM Creative Economy Park · 2026</p>
+                        </div>
+                        <a href="{{ asset('serti/Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf') }}" target="_blank">Buka sertifikat ↗</a>
+                    </div>
+                    <div class="card cert reveal">
+                        <div class="cert-icon">◆</div>
+                        <div>
+                            <h3>Juara III Karya Tulis Islami</h3>
+                            <p>Kemenag Kota Yogyakarta · 2025</p>
+                        </div>
+                        <a href="{{ asset('serti/Jauhar Fauzi Ulul Albab (1).pdf') }}" target="_blank">Buka sertifikat ↗</a>
+                    </div>
+                    <div class="card cert reveal">
+                        <div class="cert-icon">◇</div>
+                        <div>
+                            <h3>FISCREATION Workshop</h3>
+                            <p>Universitas Negeri Yogyakarta · 2023</p>
+                        </div>
+                        <a href="{{ asset('serti/JAUHAR FAUZI ULUL ALBAB.pdf') }}" target="_blank">Buka sertifikat ↗</a>
+                    </div>
+                    <div class="card cert reveal">
+                        <div class="cert-icon">⌁</div>
+                        <div>
+                            <h3>Assistant Programmer</h3>
+                            <p>Waroeng Steak Indonesia · 2024</p>
+                        </div>
+                        <a href="{{ asset('serti/ws.pdf') }}" target="_blank">Buka sertifikat ↗</a>
+                    </div>
+                </div>
+                <div style="margin-top:28px">
+                    <a class="btn btn-secondary" href="{{ url('/certificates') }}">Lihat semua sertifikat ↗</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 — TECH STACK -->
+        <section class="section blue-section" id="skills">
+            <div class="wrap">
+                <span class="eyebrow">06 — TECH STACK</span>
+                <h2 class="title">Tools yang saya gunakan untuk membuat sesuatu bekerja.</h2>
+                <div class="skills">
+                    <span class="skill">Generative AI</span>
+                    <span class="skill">Google Gemini</span>
+                    <span class="skill">Python</span>
+                    <span class="skill">Laravel</span>
+                    <span class="skill">PHP</span>
+                    <span class="skill">JavaScript</span>
+                    <span class="skill">React.js</span>
+                    <span class="skill">MySQL</span>
+                    <span class="skill">NLP</span>
+                    <span class="skill">TF-IDF</span>
+                    <span class="skill">C4.5</span>
+                    <span class="skill">Git & GitHub</span>
+                    <span class="skill">REST API</span>
+                    <span class="skill">Prompt Engineering</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07 — GET IN TOUCH -->
+        <section class="section contact" id="contact">
+            <div class="wrap">
+                <span class="eyebrow">07 — GET IN TOUCH</span>
+                <h2 class="title">Ayo bangun sesuatu yang berguna.</h2>
+                <p class="lead" style="color:#b8c9df">Terbuka untuk peluang kerja, kolaborasi teknologi, proyek AI, dan diskusi produk digital yang bermakna.</p>
+                <div class="contact-grid">
+                    <div class="contact-links">
+                        <a class="contact-link" href="mailto:jauharfua05@gmail.com">
+                            <small>EMAIL</small>
+                            <strong>jauharfua05@gmail.com</strong>
+                        </a>
+                        <a class="contact-link" href="https://www.linkedin.com/in/jauhar-fauzi-ulul-albab-979245291/" target="_blank">
+                            <small>LINKEDIN</small>
+                            <strong>Jauhar Fauzi Ulul Albab ↗</strong>
+                        </a>
+                        <a class="contact-link" href="https://wa.me/6289529104230" target="_blank">
+                            <small>WHATSAPP</small>
+                            <strong>+62 895-2910-4230 ↗</strong>
+                        </a>
+                        <a class="contact-link" href="https://instagram.com/jauhar.fauzi_" target="_blank">
+                            <small>INSTAGRAM</small>
+                            <strong>@jauhar.fauzi_ ↗</strong>
+                        </a>
+                    </div>
+                    <form class="contact-form" action="mailto:jauharfua05@gmail.com" method="post" enctype="text/plain">
+                        <input name="name" placeholder="Nama kamu" required>
+                        <input name="email" type="email" placeholder="Email kamu" required>
+                        <select name="type" required>
+                            <option value="">Jenis kebutuhan</option>
+                            <option>Job opportunity</option>
+                            <option>Project collaboration</option>
+                            <option>AI consultation</option>
+                        </select>
+                        <textarea name="message" placeholder="Ceritakan kebutuhanmu..." required></textarea>
+                        <button class="btn btn-primary" type="submit">Kirim pesan ↗</button>
+                    </form>
+                </div>
+            </div>
+        </section>
     </main>
-    <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Jauhar Fauzi Ulul Albab</span><span>Built with curiosity, code, and purpose · <a href="https://tiktok.com/@jauhar.fauzi" target="_blank">TikTok ↗</a></span></div></footer>
+
+    <footer>
+        <div class="wrap footer-inner">
+            <span>© <span id="year"></span> Jauhar Fauzi Ulul Albab</span>
+            <span>Built with curiosity, code, and purpose · <a href="https://tiktok.com/@jauhar.fauzi" target="_blank">TikTok ↗</a></span>
+        </div>
+    </footer>
+
     <script>
-        const nav=document.getElementById('nav');window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>24),{passive:true});
-        document.getElementById('year').textContent=new Date().getFullYear();
-        const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>observer.observe(e));
-        document.querySelectorAll('[data-count]').forEach(el=>{const target=parseFloat(el.dataset.count);const suffix=target%1?'':'+';const io=new IntersectionObserver(es=>{if(!es[0].isIntersecting)return;let start=0;const step=()=>{start=Math.min(target,start+target/24);el.textContent=(target%1?start.toFixed(2):Math.floor(start))+suffix;if(start<target)requestAnimationFrame(step)};step();io.disconnect()},{threshold:.7});io.observe(el)});
-        document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;document.querySelectorAll('.project').forEach(card=>card.style.display=f==='all'||card.dataset.cat.split(' ').includes(f)?'flex':'none')}));
-        document.getElementById('menuBtn').addEventListener('click',()=>{document.querySelector('.nav-menu').style.display=document.querySelector('.nav-menu').style.display==='flex'?'none':'flex';document.querySelector('.nav-menu').style.cssText+=';position:absolute;top:70px;left:20px;right:20px;flex-direction:column;background:#fff;padding:14px;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 40px -25px #102e5c'});
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 24), { passive: true });
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const observer = new IntersectionObserver(entries => entries.forEach(e => {
+            if (e.isIntersecting) e.target.classList.add('in');
+        }), { threshold: .12 });
+        document.querySelectorAll('.reveal').forEach(e => observer.observe(e));
+
+        document.querySelectorAll('[data-count]').forEach(el => {
+            const target = parseFloat(el.dataset.count);
+            const suffix = el.textContent.includes('+') ? '+' : '';
+            const io = new IntersectionObserver(es => {
+                if (!es[0].isIntersecting) return;
+                let start = 0;
+                const step = () => {
+                    start = Math.min(target, start + target / 24);
+                    el.textContent = (target % 1 ? start.toFixed(2) : Math.floor(start)) + suffix;
+                    if (start < target) requestAnimationFrame(step);
+                };
+                step();
+                io.disconnect();
+            }, { threshold: .7 });
+            io.observe(el);
+        });
+
+        document.querySelectorAll('.filter').forEach(btn => btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const f = btn.dataset.filter;
+            document.querySelectorAll('.project').forEach(card => {
+                card.style.display = (f === 'all' || card.dataset.cat.split(' ').includes(f)) ? 'flex' : 'none';
+            });
+        }));
+
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            const menu = document.querySelector('.nav-menu');
+            const isFlex = menu.style.display === 'flex';
+            menu.style.display = isFlex ? 'none' : 'flex';
+            if (!isFlex) {
+                menu.style.cssText += ';position:absolute;top:70px;left:20px;right:20px;flex-direction:column;background:#fff;padding:14px;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 40px -25px #102e5c';
+            }
+        });
     </script>
 </body>
 </html>
