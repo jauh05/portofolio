@@ -1,340 +1,238 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sertifikasi - Jauhar Fauzi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-
-    <!-- Vite & React -->
-    @viteReactRefresh
-    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
-
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: 'rgba(var(--primary-rgb), 0.05)',
-                            100: 'rgba(var(--primary-rgb), 0.1)',
-                            200: 'rgba(var(--primary-rgb), 0.2)',
-                            300: 'rgba(var(--primary-rgb), 0.3)',
-                            400: 'rgba(var(--primary-rgb), 0.6)',
-                            500: 'rgba(var(--primary-rgb), 0.8)',
-                            600: 'rgba(var(--primary-rgb), 1)',
-                            700: 'rgba(var(--primary-rgb), 0.9)',
-                            800: 'rgba(var(--primary-rgb), 0.95)',
-                            900: 'rgba(var(--primary-rgb), 1)',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sertifikasi — Jauhar Fauzi Ulul Albab</title>
+    <meta name="description" content="Sertifikasi dan pencapaian profesional Jauhar Fauzi Ulul Albab.">
+    <link rel="icon" type="image/png" href="{{ asset('favicon_jf.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-rgb: 59, 130, 246;
+            --bg: #fff; --ink: #102e5c; --text: #42526b; --muted: #667085;
+            --blue: #2e90fa; --blue-dark: #1570ef; --soft: #eaf3ff;
+            --surface: #f5f9ff; --line: #d9e8fb; --max: 1240px;
+            --ease: cubic-bezier(.22,1,.36,1);
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: Inter, system-ui, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: Sora, sans-serif; color: var(--ink); line-height: 1.12; letter-spacing: -.035em; }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; }
 
-        .bg-mesh {
-            background-image:
-                radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.1) 0px, transparent 50%);
-            z-index: -15;
-        }
+        .wrap { max-width: var(--max); margin: auto; padding: 0 32px; }
+        .eyebrow { display: inline-flex; gap: 9px; align-items: center; color: var(--blue); font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 18px; }
+        .eyebrow:before { content: ''; width: 22px; height: 1px; background: var(--blue); }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
+        /* Nav */
+        .sub-nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(15px); border-bottom: 1px solid var(--line); padding: 14px 0; }
+        .sub-nav .wrap { display: flex; align-items: center; justify-content: space-between; }
+        .logo-link { display: flex; align-items: center; gap: 12px; }
+        .logo { width: 43px; height: 43px; border-radius: 14px; background: linear-gradient(145deg, var(--blue), var(--blue-dark)); display: grid; place-items: center; color: #fff; font: 800 16px Sora; box-shadow: 0 10px 20px -10px var(--blue-dark); }
+        .logo-text { font: 700 13px Sora; color: var(--ink); letter-spacing: .02em; }
 
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        /* Page Header */
+        .page-header { padding: 80px 0 50px; background: var(--surface); border-bottom: 1px solid var(--line); }
+        .page-header h1 { font-size: clamp(2.8rem, 5vw, 4.2rem); font-weight: 800; margin-bottom: 14px; }
+        .page-header .lead { font-size: 17px; color: var(--muted); max-width: 660px; line-height: 1.75; }
+
+        /* Cert Grid */
+        .cert-section { padding: 70px 0 100px; }
+        .cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+        .cert-card { background: #fff; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; box-shadow: 0 20px 50px -36px rgba(15,46,92,.3); transition: .35s var(--ease); display: flex; flex-direction: column; }
+        .cert-card:hover { transform: translateY(-5px); box-shadow: 0 28px 60px -30px rgba(15,46,92,.4); border-color: #b8d8fb; }
+        .cert-preview { width: 100%; aspect-ratio: 4/3; background: #f0f4f8; position: relative; overflow: hidden; }
+        .cert-preview iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
+        .cert-preview-overlay { position: absolute; inset: 0; background: transparent; cursor: pointer; }
+        .cert-body { padding: 24px 26px 28px; flex: 1; display: flex; flex-direction: column; }
+        .cert-predicate { font: 700 11px 'JetBrains Mono', monospace; color: var(--blue); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+        .cert-card h3 { font-size: 20px; margin-bottom: 6px; line-height: 1.3; }
+        .cert-org { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+        .cert-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--line); margin-top: auto; }
+        .cert-date { font: 500 12px 'JetBrains Mono', monospace; color: var(--muted); }
+        .cert-action { font: 700 12px Inter; color: var(--blue-dark); transition: .2s; }
+        .cert-action:hover { color: var(--blue); }
+
+        /* Modal */
+        .modal-backdrop { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.75); backdrop-filter: blur(8px); display: none; place-items: center; padding: 24px; }
+        .modal-backdrop.active { display: grid; }
+        .modal-content { background: #fff; border-radius: 28px; max-width: 1100px; width: 100%; max-height: 90vh; overflow: hidden; display: grid; grid-template-columns: 1.6fr 1fr; box-shadow: 0 40px 100px -40px rgba(0,0,0,.6); }
+        .modal-pdf { background: #1a1a2e; min-height: 500px; }
+        .modal-pdf iframe { width: 100%; height: 100%; border: none; }
+        .modal-info { padding: 40px; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+        .modal-info h2 { font-size: 28px; }
+        .modal-info .detail-block { padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+        .modal-info .detail-label { font: 600 10px 'JetBrains Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 6px; }
+        .modal-info .detail-value { font: 600 14px Inter; color: var(--ink); }
+        .modal-close { position: absolute; top: 20px; right: 20px; width: 42px; height: 42px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); font-size: 20px; cursor: pointer; display: grid; place-items: center; color: var(--ink); transition: .2s; }
+        .modal-close:hover { background: var(--soft); border-color: var(--blue); }
+        .btn { display: inline-flex; align-items: center; gap: 9px; border-radius: 100px; padding: 13px 24px; font-weight: 700; font-size: 14px; border: 1px solid transparent; transition: .25s var(--ease); text-align: center; justify-content: center; }
+        .btn-primary { color: #fff; background: var(--blue); box-shadow: 0 10px 24px -12px var(--blue-dark); }
+        .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); }
+
+        @media (max-width: 768px) {
+            .cert-grid { grid-template-columns: 1fr; }
+            .modal-content { grid-template-columns: 1fr; }
+            .modal-pdf { min-height: 300px; }
+            .modal-info { padding: 24px; }
         }
     </style>
 </head>
+<body>
 
-<body x-data="{ 
-    darkMode: localStorage.getItem('theme') === 'dark',
-    selectedCert: null,
-    currentColor: localStorage.getItem('color') || '59, 130, 246',
-    certs: [
-        {
-            id: 1,
-            title: 'ASISTEN PRAKTIKUM',
-            organization: 'AMIKOM CREATIVE ECONOMY PARK',
-            role: 'Asisten Praktikum Mata Kuliah Struktur Data',
-            date: '25-02-2026',
-            number: 'NO. 0486',
-            predicate: 'BAIK',
-            file: 'Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf'
-        },
-        {
-            id: 2,
-            title: 'FISCREATION',
-            organization: 'UNIVERSITAS NEGERI YOGYAKARTA',
-            role: 'Peserta FISCREATION 2023: Futuristic Exploration Workshop',
-            date: '18 November 2023',
-            number: 'NO:014/Pan-FISCREATION/MEDINFO/BEM FISHIPOL/XI/2023',
-            predicate: 'Peserta',
-            file: 'JAUHAR FAUZI ULUL ALBAB.pdf'
-        },
-        {
-            id: 3,
-            title: 'Karya Tulis Islami',
-            organization: 'KANTOR KEMENTERIAN AGAMA KOTA YOGYAKARTA',
-            role: 'Juara III Lomba Karya Tulis Islami Putra - MTQ XXXI',
-            date: '29 September 2025',
-            number: 'Nomor: 2670/Kk.12.05/6/BA.00/09/2025',
-            predicate: 'JUARA III',
-            file: 'Jauhar Fauzi Ulul Albab (1).pdf'
-        },
-        {
-            id: 4,
-            title: 'Waroeng Steak & Shake',
-            organization: 'PT. WAROENG STEAK INDONESIA',
-            role: 'Asisten Programmer – Internship Program',
-            date: 'September 2024',
-            number: 'NO: WS/INTERN/2024/001',
-            predicate: 'ASSISTANT PROGRAMMER',
-            file: 'ws.pdf'
-        }
-    ],
-    init() {
-        document.documentElement.style.setProperty('--primary-rgb', this.currentColor);
-    }
-}" x-init="init()" :class="darkMode ? 'dark' : ''" class="min-h-screen transition-colors duration-300">
-
-    <!-- Global Background Color Layer -->
-    <div class="fixed inset-0 z-[-20] transition-colors duration-500"
-        :class="darkMode ? 'bg-[#050505]' : 'bg-slate-50'"></div>
-
-    <!-- React App Container -->
-    <div id="react-background-particles" class="fixed inset-0 z-[-10] w-full h-full pointer-events-none"></div>
-
-    <div class="bg-mesh fixed inset-0 pointer-events-none opacity-50"></div>
-
-    <!-- Header Navigation -->
-    <nav class="sticky top-0 z-40 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="{{ url('/') }}" class="flex items-center gap-4 group">
-                <div
-                    class="bg-primary-600 rounded-full w-10 h-10 flex items-center justify-center shadow-lg shadow-primary-500/30 group-hover:scale-110 transition">
-                    <span class="font-bold text-white tracking-tighter">JF</span>
-                </div>
-                <span
-                    class="font-black dark:text-white group-hover:text-primary-500 transition uppercase tracking-widest text-sm">Kembali</span>
+    <!-- Navigation -->
+    <nav class="sub-nav">
+        <div class="wrap">
+            <a class="logo-link" href="{{ url('/') }}">
+                <div class="logo">JF</div>
+                <span class="logo-text">← Kembali</span>
             </a>
-            <button @click="darkMode = !darkMode; localStorage.setItem('theme', darkMode ? 'dark' : 'light')"
-                class="p-3 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/10 text-zinc-900 dark:text-white shadow-xl hover:scale-110 transition">
-                <template x-if="darkMode">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 3v1m0 16v1m9-9h1M4 12H3m15.364-6.364l.707-.707M6.343 17.657l.707-.707m0-11.314l-.707-.707M17.657 17.657l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                </template>
-                <template x-if="!darkMode">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
-                </template>
-            </button>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 py-16">
-        <div class="relative w-full" x-data="{
-            canScrollLeft: false,
-            canScrollRight: true,
-            checkScroll() {
-                const slider = this.$refs.slider;
-                if (!slider) return;
-                this.canScrollLeft = slider.scrollLeft > 0;
-                this.canScrollRight = Math.ceil(slider.scrollLeft) < (slider.scrollWidth - slider.clientWidth - 5);
-            },
-            slideLeft() { 
-                this.$refs.slider.scrollBy({ left: -window.innerWidth * 0.5, behavior: 'smooth' }); 
-                setTimeout(() => this.checkScroll(), 500);
-            },
-            slideRight() { 
-                this.$refs.slider.scrollBy({ left: window.innerWidth * 0.5, behavior: 'smooth' }); 
-                setTimeout(() => this.checkScroll(), 500);
-            }
-        }"
-            x-init="setTimeout(() => checkScroll(), 200); setTimeout(() => checkScroll(), 1000); window.addEventListener('resize', () => checkScroll()); $refs.slider.addEventListener('scroll', () => checkScroll())">
-
-            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between">
-                <div>
-                    <p class="text-primary-500 font-black text-xs uppercase tracking-[0.4em] mb-4">Recognitions & Awards
-                    </p>
-                    <h1 class="text-4xl md:text-7xl font-black dark:text-white tracking-tighter mb-6" data-split-text>
-                        Official <span class="text-primary-500">Certifications</span>
-                    </h1>
-                    <p class="text-gray-600 dark:text-gray-400 text-xl max-w-2xl leading-relaxed font-medium">
-                        Pencapaian dan sertifikasi profesional dalam bidang teknologi dan akademik.
-                    </p>
-                </div>
-
-                <!-- Navigation Arrows -->
-                <div class="flex md:hidden gap-4 mt-6 md:mt-0 justify-end md:justify-center relative z-50 pointer-events-auto">
-                    <button type="button" @click="slideLeft" :disabled="!canScrollLeft"
-                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
-                        :class="!canScrollLeft ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <button type="button" @click="slideRight" :disabled="!canScrollRight"
-                        class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur border border-gray-200 dark:border-white/10 p-3.5 rounded-full shadow-lg transition-all duration-300 pointer-events-auto cursor-pointer"
-                        :class="!canScrollRight ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-110 active:scale-95 text-primary-500 shadow-primary-500/20'">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Container for Slider (Mobile) / Grid (Desktop) -->
-            <div x-ref="slider"
-                class="flex flex-row md:grid md:grid-cols-2 lg:grid-cols-4 flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible overflow-y-hidden md:overflow-y-visible snap-x snap-mandatory md:snap-none no-scrollbar gap-4 md:gap-8 pb-6 pt-2 items-stretch h-full">
-                <template x-for="cert in certs" :key="cert.id">
-                    <div
-                        class="w-[85vw] sm:w-[400px] md:w-auto shrink-0 snap-center md:snap-none h-full flex flex-col pb-2 relative z-10">
-                        <div @click="selectedCert = cert"
-                            class="group w-full flex-1 bg-white dark:bg-zinc-900 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 border border-gray-200 dark:border-white/10 shadow-lg md:shadow-xl hover:scale-105 transition-all duration-500 cursor-pointer flex flex-col">
-
-                            <!-- PDF Preview Container -->
-                            <div
-                                class="w-full aspect-[4/3] rounded-xl md:rounded-[1.5rem] overflow-hidden bg-gray-100 dark:bg-zinc-800 relative mb-3 md:mb-6 shrink-0">
-                                <iframe :src="'{{ asset('serti') }}/' + cert.file + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH'"
-                                    class="w-full h-full pointer-events-none" frameborder="0"></iframe>
-                                <div class="absolute inset-0 bg-transparent"></div>
-                                <!-- Blocking interaction with iframe -->
-                                <div
-                                    class="absolute inset-x-0 bottom-0 h-16 md:h-24 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-2 md:pb-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span
-                                        class="text-white text-[8px] md:text-[10px] font-black tracking-widest uppercase bg-primary-600 px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">View
-                                        <span class="hidden md:inline">Full Protocol</span></span>
-                                </div>
-                            </div>
-
-                            <div class="px-2 pb-2 md:px-4 md:pb-4 flex flex-col flex-grow">
-                                <span
-                                    class="text-[8px] md:text-[10px] font-black tracking-[0.2em] text-primary-500 uppercase mb-1.5 md:mb-2 block truncate"
-                                    x-text="cert.predicate"></span>
-                                <h3 class="text-sm md:text-xl font-bold dark:text-white mb-1.5 md:mb-2 line-clamp-2 md:line-clamp-1 leading-tight"
-                                    x-text="cert.title"></h3>
-                                <p class="text-gray-500 text-[10px] md:text-sm mb-2 md:mb-4 line-clamp-2 flex-grow leading-snug"
-                                    x-text="cert.organization"></p>
-                                <div
-                                    class="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-100 dark:border-white/5 mt-auto">
-                                    <span class="text-[8px] md:text-xs font-mono text-gray-400"
-                                        x-text="cert.date"></span>
-                                    <svg class="w-3.5 h-3.5 md:w-5 md:h-5 text-primary-500 transform group-hover:translate-x-1 transition hidden md:block"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="wrap">
+            <span class="eyebrow">RECOGNITIONS & AWARDS</span>
+            <h1>Official <span style="color: var(--blue)">Certifications</span></h1>
+            <p class="lead">Pencapaian dan sertifikasi profesional dalam bidang teknologi dan akademik.</p>
         </div>
-    </main>
+    </header>
 
-    <!-- Modal Cert Detail -->
-    <div x-show="selectedCert" style="display: none;"
-        class="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-10"
-        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+    <!-- Certificates Grid -->
+    <section class="cert-section">
+        <div class="wrap">
+            <div class="cert-grid" id="certGrid"></div>
+        </div>
+    </section>
 
-        <!-- Backdrop -->
-        <div @click="selectedCert = null" class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
-
-        <!-- Content -->
-        <div
-            class="relative w-full max-w-6xl h-full bg-white dark:bg-zinc-950 rounded-[3rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/10">
-            <!-- Left Side: Digital Certificate -->
-            <div class="w-full md:w-[70%] h-[50vh] md:h-auto bg-zinc-800 relative">
-                <iframe :src="'{{ asset('serti') }}/' + selectedCert?.file + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH'" class="w-full h-full"
-                    frameborder="0"></iframe>
-                <button @click="selectedCert = null"
-                    class="absolute top-6 left-6 p-3 rounded-full bg-black/40 text-white hover:bg-black/60 transition md:hidden">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
+    <!-- Modal -->
+    <div class="modal-backdrop" id="certModal">
+        <div class="modal-content" style="position:relative">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-pdf">
+                <iframe id="modalPdf" src=""></iframe>
             </div>
-
-            <!-- Right Side: Details -->
-            <div
-                class="w-full md:w-[30%] p-8 md:p-10 flex flex-col justify-center bg-white dark:bg-zinc-900 border-l border-white/10">
-                <button @click="selectedCert = null"
-                    class="absolute top-8 right-8 p-3 rounded-full bg-gray-100 dark:bg-white/10 text-zinc-900 dark:text-white hover:bg-gray-200 dark:hover:bg-white/20 transition hidden md:block">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-
-                <div class="space-y-8">
-                    <div>
-                        <span
-                            class="inline-block px-4 py-2 rounded-full bg-primary-600/20 text-primary-500 text-[10px] font-black tracking-widest uppercase mb-6"
-                            x-text="selectedCert?.predicate"></span>
-                        <h2 class="text-3xl font-black dark:text-white leading-tight mb-4" x-text="selectedCert?.title">
-                        </h2>
-                        <p class="text-primary-500 font-bold mb-2" x-text="selectedCert?.organization"></p>
+            <div class="modal-info">
+                <div>
+                    <div class="cert-predicate" id="modalPredicate"></div>
+                    <h2 id="modalTitle"></h2>
+                    <p style="color: var(--blue); font-weight: 700; margin-top: 6px;" id="modalOrg"></p>
+                </div>
+                <div class="detail-block">
+                    <div class="detail-label">Role / Achievement</div>
+                    <div class="detail-value" id="modalRole"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="detail-block">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value" id="modalDate"></div>
                     </div>
-
-                    <div class="space-y-6">
-                        <div
-                            class="p-6 rounded-3xl bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5">
-                            <h4 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">
-                                Role/Achievement</h4>
-                            <p class="text-gray-700 dark:text-gray-200 font-bold" x-text="selectedCert?.role"></p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div
-                                class="p-6 rounded-3xl bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5">
-                                <h4 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Date
-                                </h4>
-                                <p class="text-gray-700 dark:text-gray-200 font-bold" x-text="selectedCert?.date"></p>
-                            </div>
-                            <div
-                                class="p-6 rounded-3xl bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5">
-                                <h4 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Ref ID
-                                </h4>
-                                <p class="text-gray-700 dark:text-gray-200 font-bold text-[8px]"
-                                    x-text="selectedCert?.number"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-8 flex flex-col gap-4">
-                        <a :href="'{{ asset('serti') }}/' + selectedCert?.file" download
-                            class="w-full py-4 bg-primary-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-primary-700 transition shadow-xl shadow-primary-500/20">
-                            Download PDF
-                        </a>
-                        <button @click="selectedCert = null"
-                            class="w-full py-4 bg-zinc-100 dark:bg-white/5 text-zinc-900 dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest text-center border border-gray-200 dark:border-white/10 hover:bg-zinc-200 dark:hover:bg-white/10 transition">
-                            Tutup Detail
-                        </button>
+                    <div class="detail-block">
+                        <div class="detail-label">Ref ID</div>
+                        <div class="detail-value" id="modalNumber" style="font-size: 11px;"></div>
                     </div>
                 </div>
+                <a class="btn btn-primary" id="modalDownload" download>Download PDF</a>
             </div>
         </div>
     </div>
-</body>
 
+    <footer style="text-align: center; padding: 50px 0; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line);">
+        &copy; 2026 Jauhar Fauzi Ulul Albab. All rights reserved.
+    </footer>
+
+    <script>
+        const certs = [
+            {
+                title: 'ASISTEN PRAKTIKUM',
+                organization: 'AMIKOM CREATIVE ECONOMY PARK',
+                role: 'Asisten Praktikum Mata Kuliah Struktur Data',
+                date: '25-02-2026',
+                number: 'NO. 0486',
+                predicate: 'BAIK',
+                file: 'Sertifikat Asisten JAUHAR FAUZI ULUL ALBAB-Struktur Data.pdf'
+            },
+            {
+                title: 'FISCREATION',
+                organization: 'UNIVERSITAS NEGERI YOGYAKARTA',
+                role: 'Peserta FISCREATION 2023: Futuristic Exploration Workshop',
+                date: '18 November 2023',
+                number: 'NO:014/Pan-FISCREATION/MEDINFO/BEM FISHIPOL/XI/2023',
+                predicate: 'Peserta',
+                file: 'JAUHAR FAUZI ULUL ALBAB.pdf'
+            },
+            {
+                title: 'Karya Tulis Islami',
+                organization: 'KANTOR KEMENTERIAN AGAMA KOTA YOGYAKARTA',
+                role: 'Juara III Lomba Karya Tulis Islami Putra - MTQ XXXI',
+                date: '29 September 2025',
+                number: 'Nomor: 2670/Kk.12.05/6/BA.00/09/2025',
+                predicate: 'JUARA III',
+                file: 'Jauhar Fauzi Ulul Albab (1).pdf'
+            },
+            {
+                title: 'Waroeng Steak & Shake',
+                organization: 'PT. WAROENG STEAK INDONESIA',
+                role: 'Asisten Programmer – Internship Program',
+                date: 'September 2024',
+                number: 'NO: WS/INTERN/2024/001',
+                predicate: 'ASSISTANT PROGRAMMER',
+                file: 'ws.pdf'
+            }
+        ];
+
+        const grid = document.getElementById('certGrid');
+        const assetBase = '{{ asset("serti") }}';
+
+        certs.forEach((cert, i) => {
+            const card = document.createElement('div');
+            card.className = 'cert-card';
+            card.innerHTML = `
+                <div class="cert-preview" onclick="openModal(${i})">
+                    <iframe src="${assetBase}/${encodeURIComponent(cert.file)}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" loading="lazy"></iframe>
+                    <div class="cert-preview-overlay"></div>
+                </div>
+                <div class="cert-body">
+                    <div class="cert-predicate">${cert.predicate}</div>
+                    <h3>${cert.title}</h3>
+                    <div class="cert-org">${cert.organization}</div>
+                    <div class="cert-footer">
+                        <span class="cert-date">${cert.date}</span>
+                        <span class="cert-action" onclick="openModal(${i})" style="cursor:pointer">Lihat Detail →</span>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        function openModal(index) {
+            const cert = certs[index];
+            document.getElementById('modalPdf').src = `${assetBase}/${encodeURIComponent(cert.file)}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`;
+            document.getElementById('modalPredicate').textContent = cert.predicate;
+            document.getElementById('modalTitle').textContent = cert.title;
+            document.getElementById('modalOrg').textContent = cert.organization;
+            document.getElementById('modalRole').textContent = cert.role;
+            document.getElementById('modalDate').textContent = cert.date;
+            document.getElementById('modalNumber').textContent = cert.number;
+            document.getElementById('modalDownload').href = `${assetBase}/${encodeURIComponent(cert.file)}`;
+            document.getElementById('certModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('certModal').classList.remove('active');
+            document.getElementById('modalPdf').src = '';
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('certModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+</body>
 </html>

@@ -65,7 +65,7 @@
         .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 60px; position: relative; }
         
         .hero-kicker-badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 18px; border: 1px solid rgba(46, 144, 250, 0.25); border-radius: 999px; background: rgba(234, 243, 255, 0.7); color: var(--blue); font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 22px; }
-        .hero h1 { font-size: clamp(4.4rem, 8.5vw, 7.6rem); font-weight: 800; margin: 0 0 18px; line-height: 1.01; letter-spacing: -.04em; color: var(--ink); }
+        .hero h1 { font-size: clamp(5rem, 9.5vw, 8.5rem); font-weight: 800; margin: 0 0 18px; line-height: 0.98; letter-spacing: -.045em; color: var(--ink); }
         
         .hl-box { position: relative; display: inline-block; z-index: 1; color: var(--ink); padding: 0 6px; }
         .hl-box:before { content: ''; position: absolute; inset: 10% -6px 4% -6px; background: #eaf3ff; border-radius: 8px; z-index: -1; }
