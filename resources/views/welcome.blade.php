@@ -65,12 +65,12 @@
         .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 60px; position: relative; }
         
         .hero-kicker-badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 18px; border: 1px solid rgba(46, 144, 250, 0.25); border-radius: 999px; background: rgba(234, 243, 255, 0.7); color: var(--blue); font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 22px; }
-        .hero h1 { font-size: clamp(3.8rem, 6.8vw, 6.2rem); font-weight: 800; margin: 0 0 16px; line-height: 1.02; letter-spacing: -.038em; color: var(--ink); }
+        .hero h1 { font-size: clamp(4.4rem, 8.5vw, 7.6rem); font-weight: 800; margin: 0 0 18px; line-height: 1.01; letter-spacing: -.04em; color: var(--ink); }
         
         .hl-box { position: relative; display: inline-block; z-index: 1; color: var(--ink); padding: 0 6px; }
         .hl-box:before { content: ''; position: absolute; inset: 10% -6px 4% -6px; background: #eaf3ff; border-radius: 8px; z-index: -1; }
 
-        .hero-role { font: 700 clamp(22px, 3.2vw, 32px) Sora, sans-serif; color: #1570ef; margin-bottom: 20px; display: flex; align-items: center; gap: 4px; }
+        .hero-role { font: 700 clamp(28px, 4vw, 42px) Sora, sans-serif; color: #1570ef; margin-bottom: 22px; display: flex; align-items: center; gap: 6px; }
         .typing-cursor { color: #2e90fa; animation: blink 1s infinite; font-weight: 400; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
@@ -506,42 +506,6 @@
                     </div>
                 </div>
 
-                <!-- Google AI Badges sub-block inside Pengalaman -->
-                <div class="badges-subblock reveal">
-                    <h3>Google Cloud AI Badges & Validasi Keahlian</h3>
-                    <div class="badges-grid">
-                        <article class="badge-card">
-                            <div>
-                                <div class="badge-header">
-                                    <div class="badge-icon">✦</div>
-                                    <div class="badge-title">Inspect Rich Documents with Gemini Multimodality and Multimodal RAG</div>
-                                </div>
-                                <div class="badge-issuer">Google · Issued Mar 2026 · Expires Jul 2026</div>
-                                <div class="tags">
-                                    <span class="tag">Google Gemini</span>
-                                    <span class="tag">Multimodality</span>
-                                    <span class="tag">RAG</span>
-                                </div>
-                            </div>
-                            <a class="badge-link" href="https://www.credly.com/badges/9971ccc1-3004-47a6-a7c0-9a3a076a64fb/public_url" target="_blank">Show credential ↗</a>
-                        </article>
-                        <article class="badge-card">
-                            <div>
-                                <div class="badge-header">
-                                    <div class="badge-icon">◇</div>
-                                    <div class="badge-title">Prompt Design in Vertex AI Skill Badge</div>
-                                </div>
-                                <div class="badge-issuer">Google · Issued Feb 2026 · Expires Jul 2026</div>
-                                <div class="tags">
-                                    <span class="tag">Artificial Intelligence</span>
-                                    <span class="tag">Gemini APIs</span>
-                                    <span class="tag">Vertex AI</span>
-                                </div>
-                            </div>
-                            <a class="badge-link" href="https://www.credly.com/badges/48d4bae2-510b-4af1-b7c6-61d380cbe32a/public_url" target="_blank">Show credential ↗</a>
-                        </article>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -657,55 +621,11 @@
             </div>
         </section>
 
-        <!-- 05 — PENCAPAIAN & PROSES -->
+        <!-- 05 — SERTIFIKASI & PENCAPAIAN -->
         <section class="section" id="certificates">
             <div class="wrap">
-                <span class="eyebrow">05 — PENCAPAIAN & PROSES</span>
-                <h2 class="title">Sertifikasi, dampak hasil, dan alur proses kerja.</h2>
-                
-                <!-- Impact Stats -->
-                <div class="impact-grid">
-                    <div class="card impact reveal">
-                        <strong data-count="10">10K+</strong>
-                        <span>Pengguna aktif pada platform live chat</span>
-                    </div>
-                    <div class="card impact reveal">
-                        <strong data-count="5">5+</strong>
-                        <span>Proyek digital dan riset pilihan</span>
-                    </div>
-                    <div class="card impact reveal">
-                        <strong data-count="4">4+</strong>
-                        <span>Tahun pengalaman pengembangan</span>
-                    </div>
-                    <div class="card impact reveal">
-                        <strong data-count="1">1</strong>
-                        <span>Publikasi jurnal terakreditasi SINTA 3</span>
-                    </div>
-                </div>
-
-                <!-- Process Workflow -->
-                <div class="workflow">
-                    <div class="workflow-step reveal">
-                        <b>01 — DISCOVER</b>
-                        <h3>Pahami masalah</h3>
-                        <p>Menggali kebutuhan, konteks pengguna, dan target bisnis sebelum membuat solusi.</p>
-                    </div>
-                    <div class="workflow-step reveal">
-                        <b>02 — DESIGN</b>
-                        <h3>Rancang sistem</h3>
-                        <p>Menentukan user flow, data flow, arsitektur, dan prioritas pengembangan.</p>
-                    </div>
-                    <div class="workflow-step reveal">
-                        <b>03 — BUILD</b>
-                        <h3>Bangun & uji</h3>
-                        <p>Mengembangkan fitur, mengintegrasikan teknologi, lalu menguji kualitasnya.</p>
-                    </div>
-                    <div class="workflow-step reveal">
-                        <b>04 — ITERATE</b>
-                        <h3>Belajar & perbaiki</h3>
-                        <p>Menggunakan feedback dan hasil pengukuran untuk membuat produk lebih baik.</p>
-                    </div>
-                </div>
+                <span class="eyebrow">05 — SERTIFIKASI & PENCAPAIAN</span>
+                <h2 class="title">Validasi keahlian dan sertifikasi profesional.</h2>
 
                 <!-- Recognitions / Certifications -->
                 <div class="certs">
