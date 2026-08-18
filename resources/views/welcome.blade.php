@@ -325,7 +325,7 @@
                 </div>
                 
                 <div class="hero-photo reveal in">
-                    <img src="{{ asset('foto.png') }}" alt="Foto Jauhar Fauzi Ulul Albab">
+                    <img src="{{ asset('foto-baru.png') }}" alt="Foto Jauhar Fauzi Ulul Albab">
                     <div class="float-tag one">Google Gemini AI Developer</div>
                     <div class="float-tag two">10,000+ Active Users</div>
                     <div class="float-tag three">GPA 3.91</div>
@@ -347,7 +347,7 @@
         <section class="section" id="about">
             <div class="wrap about-grid">
                 <div class="about-photo reveal">
-                    <img src="{{ asset('foto.png') }}" alt="Jauhar Fauzi sedang berkarya">
+                    <img src="{{ asset('foto-baru.png') }}" alt="Jauhar Fauzi sedang berkarya">
                     <div class="location">⌖ Yogyakarta, Indonesia</div>
                 </div>
                 <div class="reveal">
