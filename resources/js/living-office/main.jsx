@@ -172,14 +172,14 @@ function OfficeMap({ agents, selectedId, onSelect, financeData, activeEvent, onS
     </div>;
 }
 
-function AgentListView({ agents, selectedId, onSelect }) {
-    return <div className="content-view"><div className="view-heading"><div><span>WORKFORCE DIRECTORY</span><h1>AI Agents</h1><p>Logical workers grouped by their real parent system.</p></div><div className="view-count">{agents.length}<small>total workers</small></div></div>{systems.map(system => <section className="system-group" key={system.id}><div className="system-group-title"><i style={{ background: system.color }} /><div><strong>{system.name}</strong><small>{system.label}</small></div><span className={system.status}>{system.status.replace('_', ' ')}</span></div><div className="agent-card-grid">{agents.filter(a => a.parentSystem === system.id).map(agent => <button key={agent.id} className="agent-card" onClick={() => onSelect(agent.id)}><span className="agent-card-avatar" style={{ '--agent-color': agent.color }}>{agent.shortName}</span><div><strong>{agent.name}</strong><small>{agent.fullRole}</small><p>{agent.currentTask}</p></div><span className={`status-pill ${statusTone(agent.status)}`}>{workerStates[agent.status].label}</span><ChevronRight size={17} /></button>)}</div></section>)}</div>;
+function AgentListView({ agents, selectedId, onSelect, liveSystems = systems }) {
+    return <div className="content-view"><div className="view-heading"><div><span>WORKFORCE DIRECTORY</span><h1>AI Agents</h1><p>Logical workers grouped by their real parent system.</p></div><div className="view-count">{agents.length}<small>total workers</small></div></div>{liveSystems.map(system => <section className="system-group" key={system.id}><div className="system-group-title"><i style={{ background: system.color }} /><div><strong>{system.name}</strong><small>{system.label}</small></div><span className={system.status}>{system.status.replace('_', ' ')}</span></div><div className="agent-card-grid">{agents.filter(a => a.parentSystem === system.id).map(agent => <button key={agent.id} className="agent-card" onClick={() => onSelect(agent.id)}><span className="agent-card-avatar" style={{ '--agent-color': agent.color }}>{agent.shortName}</span><div><strong>{agent.name}</strong><small>{agent.fullRole}</small><p>{agent.currentTask}</p></div><span className={`status-pill ${statusTone(agent.status)}`}>{workerStates[agent.status].label}</span><ChevronRight size={17} /></button>)}</div></section>)}</div>;
 }
 
-function GenericView({ view, agents }) {
+function GenericView({ view, agents, tasks: liveTasks = tasks, systems: liveSystems = systems }) {
     const title = { tasks: 'Task Operations', systems: 'Connected Systems', analytics: 'Operations Analytics', settings: 'Office Settings' }[view];
-    if (view === 'tasks') return <div className="content-view"><div className="view-heading"><div><span>LIVE WORK QUEUE</span><h1>{title}</h1><p>Task records follow the shared extensible task model.</p></div></div><div className="task-table"><div className="task-row task-head"><span>Task</span><span>Worker</span><span>Status</span><span>Progress</span></div>{tasks.map(task => { const agent = agents.find(a => a.id === task.agentId); return <div className="task-row" key={task.id}><span><i className="task-icon"><FileText size={16} /></i>{task.title}</span><span>{agent?.name}</span><span><b className={`status-pill ${statusTone(agent?.status)}`}>{task.status}</b></span><span><div className="task-progress"><i style={{ width: `${task.progress}%` }} /></div>{task.progress}%</span></div>})}</div></div>;
-    return <div className="content-view"><div className="view-heading"><div><span>LIVING OFFICE</span><h1>{title}</h1><p>{view === 'systems' ? 'Backend services and logical workers remain intentionally separate.' : 'This Phase 1 surface is ready for a private backend adapter.'}</p></div></div><div className="placeholder-grid">{(view === 'systems' ? systems : agents.slice(0, 3)).map(item => <article key={item.id}><span><Server size={20} /></span><strong>{item.name}</strong><small>{item.label || item.role}</small><b className={item.status}>{(item.status || 'adapter ready').replace('_', ' ')}</b></article>)}</div></div>;
+    if (view === 'tasks') return <div className="content-view"><div className="view-heading"><div><span>LIVE WORK QUEUE</span><h1>{title}</h1><p>Task records follow the shared extensible task model.</p></div></div><div className="task-table"><div className="task-row task-head"><span>Task</span><span>Worker</span><span>Status</span><span>Progress</span></div>{liveTasks.map(task => { const agent = agents.find(a => a.id === task.agentId); return <div className="task-row" key={task.id}><span><i className="task-icon"><FileText size={16} /></i>{task.title}</span><span>{agent?.name}</span><span><b className={`status-pill ${statusTone(agent?.status)}`}>{task.status}</b></span><span><div className="task-progress"><i style={{ width: `${task.progress}%` }} /></div>{task.progress}%</span></div>})}</div></div>;
+    return <div className="content-view"><div className="view-heading"><div><span>LIVING OFFICE</span><h1>{title}</h1><p>{view === 'systems' ? 'Backend services and logical workers remain intentionally separate.' : 'This Phase 1 surface is ready for a private backend adapter.'}</p></div></div><div className="placeholder-grid">{(view === 'systems' ? liveSystems : agents.slice(0, 3)).map(item => <article key={item.id}><span><Server size={20} /></span><strong>{item.name}</strong><small>{item.label || item.role}</small><b className={item.status}>{(item.status || 'adapter ready').replace('_', ' ')}</b></article>)}</div></div>;
 }
 
 function BottomDock({ selectedAgent, onSelect, agents }) {
@@ -224,10 +224,34 @@ function App() {
     const [activeView, setActiveView] = useState('office');
     const [serverData, setServerData] = useState(null);
     const [financeData, setFinanceData] = useState(null);
+    const [liveTasks, setLiveTasks] = useState(tasks);
+    const [liveSystems, setLiveSystems] = useState(systems);
+
     const selectedAgent = useMemo(() => agents.find(a => a.id === selectedId) || agents[0], [agents, selectedId]);
     useEffect(() => { TrentService.getServerStatus().then(setServerData); FinanceService.getCostSummary().then(setFinanceData); }, []);
+    
+    // Poll tasks & systems
+    useEffect(() => {
+        const pollSystems = async () => {
+            try {
+                const [sysRes, taskRes] = await Promise.all([fetch('/api/office/system-status'), fetch('/api/office/tasks')]);
+                if (sysRes.ok) {
+                    const data = await sysRes.json();
+                    setLiveSystems(current => current.map(s => data[s.id] ? { ...s, status: data[s.id].status } : s));
+                }
+                if (taskRes.ok) {
+                    const data = await taskRes.json();
+                    setLiveTasks(data.length ? data : tasks);
+                }
+            } catch (err) {}
+        };
+        pollSystems();
+        const intv = setInterval(pollSystems, 5000);
+        return () => clearInterval(intv);
+    }, []);
+
     const selectAgent = (id) => { setSelectedId(id); setDrawerOpen(true); };
-    return <div className="app-shell" data-ambience={ambience}><Header agents={agents} /><Sidebar activeView={activeView} setActiveView={setActiveView} agents={agents} /><main className={`main-stage ${activeView !== 'office' ? 'view-mode' : ''}`}>{activeView === 'office' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} financeData={financeData} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => selectedAgent.status !== 'not_installed' && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} /></> : activeView === 'agents' ? <AgentListView agents={agents} selectedId={selectedId} onSelect={selectAgent} /> : <GenericView view={activeView} agents={agents} />}</main>{drawerOpen && <AgentDrawer agent={selectedAgent} serverData={serverData} financeData={financeData} onClose={() => setDrawerOpen(false)} />}</div>;
+    return <div className="app-shell" data-ambience={ambience}><Header agents={agents} /><Sidebar activeView={activeView} setActiveView={setActiveView} agents={agents} /><main className={`main-stage ${activeView !== 'office' ? 'view-mode' : ''}`}>{activeView === 'office' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} financeData={financeData} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => selectedAgent.status !== 'not_installed' && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} /></> : activeView === 'agents' ? <AgentListView agents={agents} selectedId={selectedId} onSelect={selectAgent} liveSystems={liveSystems} /> : <GenericView view={activeView} agents={agents} tasks={liveTasks} systems={liveSystems} />}</main>{drawerOpen && <AgentDrawer agent={selectedAgent} serverData={serverData} financeData={financeData} onClose={() => setDrawerOpen(false)} />}</div>;
 }
 
 createRoot(document.getElementById('living-office-root')).render(<App />);

@@ -31,6 +31,37 @@ export function useLivingOffice(registry) {
     useEffect(() => { agentsRef.current = visualAgents; }, [visualAgents]);
     useEffect(() => { eventRef.current = activeEvent; }, [activeEvent]);
 
+    // Backend polling for real status
+    useEffect(() => {
+        const poll = async () => {
+            try {
+                const res = await fetch('/api/office/agents');
+                if (res.ok) {
+                    const serverAgents = await res.json();
+                    setVisualAgents((current) => current.map((agent) => {
+                        const serverAgent = serverAgents.find(sa => sa.id === agent.id);
+                        if (serverAgent) {
+                            return {
+                                ...agent,
+                                status: serverAgent.status,
+                                currentTask: serverAgent.currentTask,
+                                progress: serverAgent.progress,
+                                lastActivity: serverAgent.lastActivity,
+                                recentResults: serverAgent.recentResults || agent.recentResults,
+                            };
+                        }
+                        return agent;
+                    }));
+                }
+            } catch (error) {
+                console.error('Office Bridge polling error:', error);
+            }
+        };
+        poll();
+        const interval = window.setInterval(poll, 4000);
+        return () => window.clearInterval(interval);
+    }, []);
+
     const rememberTimer = useCallback((timer) => { timers.current.push(timer); return timer; }, []);
     const clearTimers = useCallback(() => { timers.current.forEach(window.clearTimeout); timers.current = []; }, []);
 
