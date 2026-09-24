@@ -32,6 +32,12 @@ Route::middleware('auth')->prefix('office')->group(function () {
         Route::get('/agents/{id}', [LivingOfficeController::class, 'getAgent']);
         Route::get('/tasks', [LivingOfficeController::class, 'getTasks']);
         Route::get('/activity', [LivingOfficeController::class, 'getActivity']);
+        Route::get('/content', [LivingOfficeController::class, 'getContent']);
+        Route::get('/summary', [LivingOfficeController::class, 'summary']);
+        Route::get('/notifications', [LivingOfficeController::class, 'getNotifications']);
+        Route::patch('/notifications/read-all', [LivingOfficeController::class, 'readAllNotifications']);
+        Route::patch('/notifications/{notification}/read', [LivingOfficeController::class, 'readNotification']);
+        Route::get('/commands', [LivingOfficeController::class, 'getCommands']);
         Route::get('/system-status', [LivingOfficeController::class, 'getSystemStatus']);
         Route::post('/agents/{id}/command', [LivingOfficeController::class, 'commandAgent']);
     });

@@ -6,7 +6,7 @@ export const workerStates = {
     completed: { label: 'Completed', motion: 'celebrate' }, error: { label: 'Error', motion: 'stop' },
     reporting: { label: 'Reporting', motion: 'inspect' }, meeting: { label: 'In meeting', motion: 'think' },
     warning: { label: 'Warning', motion: 'stop' },
-    offline: { label: 'Offline', motion: 'sleep' }, not_installed: { label: 'Belum diinstal', motion: 'disabled' },
+    offline: { label: 'Offline', motion: 'sleep' }, not_connected: { label: 'Not connected', motion: 'sleep' }, not_installed: { label: 'Not connected', motion: 'disabled' },
 };
 
 export const transitionAgent = (agent, event) => {

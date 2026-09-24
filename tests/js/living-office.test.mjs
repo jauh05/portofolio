@@ -2,22 +2,26 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { agentRegistry, systems, tasks } from '../../resources/js/living-office/agentRegistry.js';
-import { FinanceService } from '../../resources/js/living-office/services.js';
 import { deskAssignments, meetingSeats, officeEvents, officeStations, restSeats, routeBetween } from '../../resources/js/living-office/officeModel.js';
 
-test('registry exposes seven dynamic workers and matching task records', () => {
+test('registry exposes seven dynamic workers without fabricated task records', () => {
     assert.equal(agentRegistry.length, 7);
-    assert.equal(tasks.length, agentRegistry.length);
+    assert.equal(tasks.length, 0);
     assert.equal(new Set(agentRegistry.map((agent) => agent.id)).size, agentRegistry.length);
     assert.ok(agentRegistry.every((agent) => systems.some((system) => system.id === agent.parentSystem)));
 });
 
-test('future agents are represented honestly', async () => {
-    assert.equal(agentRegistry.find((agent) => agent.id === 'data-analyst').status, 'not_installed');
-    assert.equal(agentRegistry.find((agent) => agent.id === 'finance-analyst').detail.integration, 'pending');
-    const finance = await FinanceService.getCostSummary();
-    assert.equal(finance.source, 'isolated_mock');
-    assert.equal(finance.integration, 'pending');
+test('future agents are represented honestly', () => {
+    assert.equal(agentRegistry.find((agent) => agent.id === 'data-analyst').status, 'not_connected');
+    assert.equal(agentRegistry.find((agent) => agent.id === 'finance-analyst').status, 'not_connected');
+});
+
+test('browser source never contains the office bridge secret', () => {
+    const sourceFiles = ['main.jsx', 'useOfficeData.js', 'useLivingOffice.js', 'services.js'];
+    for (const file of sourceFiles) {
+        const source = readFileSync(new URL(`../../resources/js/living-office/${file}`, import.meta.url), 'utf8');
+        assert.doesNotMatch(source, /OFFICE_BRIDGE_TOKEN|secret_token_here/);
+    }
 });
 
 test('every worker has one unique home desk and fixed seat anchor', () => {

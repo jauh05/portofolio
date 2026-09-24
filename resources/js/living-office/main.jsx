@@ -7,43 +7,43 @@ import {
     PanelLeftClose, Play, Radio, Refrigerator, RotateCcw, Search, Server, Settings, Sparkles, Square,
     Thermometer, Users, X, ZoomIn, ZoomOut,
 } from 'lucide-react';
-import { agentRegistry, systems, tasks } from './agentRegistry';
-import { FinanceService, TrentService } from './services';
+import { agentRegistry, systems } from './agentRegistry';
 import { workerStates } from './stateMachine';
 import { OFFICE_WORLD, deskAssignments, officeEvents, officeStations } from './officeModel';
 import { useLivingOffice } from './useLivingOffice';
+import { useOfficeData } from './useOfficeData';
+import { OperationsView } from './OperationsViews';
 import './living-office.css';
 
 const statusTone = (status) => ({
     monitoring: 'cyan', generating: 'violet', working: 'blue', planning: 'green', completed: 'green',
     idle: 'slate', break: 'amber', error: 'red', warning: 'amber', reporting: 'amber', meeting: 'violet',
-    analyzing: 'amber', offline: 'slate', not_installed: 'muted',
+    analyzing: 'amber', offline: 'slate', not_connected: 'muted', not_installed: 'muted',
 }[status] || 'slate');
 
 function BrandMark() {
     return <div className="brand-mark" aria-hidden="true"><span /><Bot size={24} /></div>;
 }
 
-function Header({ agents }) {
-    const active = agents.filter((a) => !['offline', 'not_installed'].includes(a.status)).length;
-    const running = agents.filter((a) => ['working', 'generating', 'planning', 'monitoring', 'analyzing'].includes(a.status)).length;
+function Header({ summary, notifications, unread, onRead, onReadAll }) {
     const [now, setNow] = useState(new Date());
+    const [open, setOpen] = useState(false);
     useEffect(() => { const timer = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(timer); }, []);
     const metrics = [
-        { icon: Radio, value: '2', label: 'Systems online', tone: 'green' },
-        { icon: Users, value: active, label: 'Agents active', tone: 'cyan' },
-        { icon: ListTodo, value: running, label: 'Tasks running', tone: 'blue' },
-        { icon: Check, value: '8', label: 'Completed today', tone: 'violet' },
-        { icon: AlertTriangle, value: '0', label: 'Errors', tone: 'red' },
+        { icon: Users, value: summary.workers ?? '—', label: 'AI Workers', tone: 'cyan' },
+        { icon: Radio, value: summary.workingNow ?? '—', label: 'Working Now', tone: 'green' },
+        { icon: ListTodo, value: summary.tasksToday ?? '—', label: 'Tasks Today', tone: 'blue' },
+        { icon: FileText, value: summary.contentThisWeek ?? '—', label: 'Content This Week', tone: 'violet' },
     ];
     return <header className="topbar">
-        <a href="/" className="brand"><BrandMark /><div><strong>Jauhar Bot HQ</strong><span><i /> All systems operational</span></div></a>
+        <a href="/" className="brand"><BrandMark /><div><strong>Jauhar Bot HQ</strong><span>Living AI operations</span></div></a>
         <div className="top-metrics">{metrics.map(({ icon: Icon, value, label, tone }) => <div className="top-metric" key={label}>
             <span className={`metric-icon ${tone}`}><Icon size={16} /></span><strong>{value}</strong><small>{label}</small>
         </div>)}</div>
         <div className="header-user">
             <div className="current-time"><small>{now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</small><strong>{now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':')}</strong></div>
-            <button className="icon-button"><Bell size={18} /><i /></button>
+            <button className="icon-button notification-button" onClick={() => setOpen(value => !value)} aria-label={`${unread} unread notifications`}><Bell size={18} />{unread > 0 && <b>{unread > 99 ? '99+' : unread}</b>}</button>
+            {open && <aside className="notification-panel"><header><div><strong>Notifications</strong><small>{unread} unread</small></div><button onClick={onReadAll} disabled={!unread}>Mark all read</button></header><div>{notifications.length ? notifications.map(item => <button className={item.readAt ? 'read' : ''} key={item.id} onClick={() => onRead(item.id)}><i className={item.severity}>{item.severity === 'error' ? '×' : '✓'}</i><span><strong>{item.title}</strong><p>{item.message}</p><time>{new Date(item.createdAt).toLocaleString('id-ID')}</time></span></button>) : <p className="notification-empty">No notifications yet</p>}</div></aside>}
             <form action="/office/logout" method="POST" style={{ margin: 0 }}>
                 <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
                 <button type="submit" className="icon-button" aria-label="Logout" title="Logout" style={{ color: '#ef4444' }}><X size={18} /></button>
@@ -54,12 +54,12 @@ function Header({ agents }) {
 }
 
 const navItems = [
-    ['office', LayoutDashboard, 'Office'], ['agents', Users, 'Agents'], ['tasks', ListTodo, 'Tasks'],
-    ['systems', Server, 'Systems'], ['analytics', BarChart3, 'Analytics'], ['settings', Settings, 'Settings'],
+    ['office', LayoutDashboard, 'Office'], ['tasks', ListTodo, 'Tasks'], ['content', FileText, 'Content'],
+    ['activity', Activity, 'Activity'],
 ];
 
-function Sidebar({ activeView, setActiveView, agents }) {
-    return <aside className="sidebar"><nav>{navItems.map(([id, Icon, label]) => <button key={id} className={activeView === id ? 'active' : ''} onClick={() => setActiveView(id)}><Icon size={20} /><span>{label}</span>{id === 'agents' && <em>{agents.length}</em>}</button>)}</nav><a className="back-site" href="/"><ArrowLeft size={18} /><span>Portfolio</span></a></aside>;
+function Sidebar({ activeView, setActiveView }) {
+    return <aside className="sidebar"><nav>{navItems.map(([id, Icon, label]) => <button key={id} className={activeView === id ? 'active' : ''} onClick={() => setActiveView(id)}><Icon size={20} /><span>{label}</span></button>)}</nav><a className="back-site" href="/"><ArrowLeft size={18} /><span>Portfolio</span></a></aside>;
 }
 
 function Workstation({ variant = 'desk' }) {
@@ -90,11 +90,15 @@ const deskVariants = {
 function DeskPod({ agent }) {
     const assignment = deskAssignments[agent.id];
     const seat = assignment.deskSeat;
-    return <div className={`desk-pod desk-${assignment.role} ${agent.status === 'not_installed' ? 'inactive' : ''}`} style={{ left: `${seat.x}%`, top: `${seat.y}%` }}>
+    const unavailable = ['not_installed', 'not_connected'].includes(agent.status);
+    const working = ['working', 'generating', 'planning', 'monitoring', 'analyzing'].includes(agent.status);
+    return <div className={`desk-pod desk-${assignment.role} ${unavailable ? 'inactive' : ''}`} style={{ left: `${seat.x}%`, top: `${seat.y}%` }}>
         <span className="desk-label"><i style={{ background: agent.color }} />{agent.name.replace(' Worker', '')}</span>
         <Workstation variant={deskVariants[agent.id]} />
+        <span className={`desk-screen ${agent.status === 'error' ? 'error' : ''}`}><b>{agent.shortName}</b><em>{unavailable ? 'NOT CONNECTED' : agent.status.toUpperCase()}</em><small>{working ? `${'█'.repeat(Math.round(agent.progress / 15))}${'░'.repeat(7 - Math.round(agent.progress / 15))} ${agent.progress}%` : agent.currentTask}</small></span>
+        <span className="desk-keyboard" /><span className="desk-mouse" /><span className="desk-leg left" /><span className="desk-leg right" />
         <span className="desk-chair" /><span className="desk-foreground" />
-        {agent.status === 'not_installed' && <span className="desk-offline">NOT INSTALLED</span>}
+        {unavailable && <span className="desk-offline">NOT CONNECTED</span>}
     </div>;
 }
 
@@ -124,9 +128,8 @@ function Worker({ agent, selected, onClick }) {
     </button>;
 }
 
-function CentralMonitor({ agents, financeData }) {
-    const running = agents.filter(a => ['working', 'generating', 'planning', 'monitoring', 'analyzing'].includes(a.status)).length;
-    return <div className="central-monitor"><div className="monitor-heading"><span><Activity size={14} /> CENTRAL OPERATIONS · LIVE</span><i><span /> HEALTHY</i></div><div className="monitor-grid"><div><small>Systems online</small><strong>2</strong><em>+ 2 pending</em></div><div><small>Running tasks</small><strong>{running}</strong><span className="mini-chart"><i /><i /><i /><i /><i /><i /></span></div><div><small>Completed</small><strong>08</strong><em>Today</em></div><div><small>Errors</small><strong>0</strong><em className="ok">No incidents</em></div><div><small>Server</small><strong>98.7%</strong><span className="signal-bars"><i /><i /><i /><i /><i /></span></div><div><small>AI cost today</small><strong>${financeData?.today?.toFixed(2) || '—'}</strong><em>Mock</em></div><div><small>Content today</small><strong>12</strong><em>4 published</em></div></div></div>;
+function CentralMonitor({ summary }) {
+    return <div className="central-monitor"><div className="monitor-heading"><span><Activity size={14} /> CENTRAL OPERATIONS · LIVE</span></div><div className="monitor-grid"><div><small>AI workers</small><strong>{summary.workers ?? '—'}</strong></div><div><small>Working now</small><strong>{summary.workingNow ?? '—'}</strong></div><div><small>Tasks today</small><strong>{summary.tasksToday ?? '—'}</strong></div><div><small>Content / week</small><strong>{summary.contentThisWeek ?? '—'}</strong></div>{summary.successRate != null && <div><small>Success rate</small><strong>{summary.successRate}%</strong></div>}{summary.averageRuntimeSeconds != null && <div><small>Avg runtime</small><strong>{summary.averageRuntimeSeconds}s</strong></div>}</div></div>;
 }
 
 function OfficeDecor() {
@@ -143,7 +146,7 @@ function MeetingStatus({ event }) {
     return <div className="meeting-bubble"><Users size={13} /><strong>{event.label}</strong><span>{event.message}</span><time>{String(Math.floor(remaining / 60)).padStart(2, '0')}:{String(remaining % 60).padStart(2, '0')}</time></div>;
 }
 
-function OfficeMap({ agents, selectedId, onSelect, financeData, activeEvent, onSimulateEvent, onServerCheck, onRest }) {
+function OfficeMap({ agents, selectedId, onSelect, summary, activeEvent, onSimulateEvent, onServerCheck, onRest }) {
     const [zoom, setZoom] = useState(.68);
     const [eventIndex, setEventIndex] = useState(0);
     const viewportRef = useRef(null);
@@ -167,8 +170,8 @@ function OfficeMap({ agents, selectedId, onSelect, financeData, activeEvent, onS
         <div className="office-viewport" ref={viewportRef} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={() => { dragRef.current = null; }} onPointerCancel={() => { dragRef.current = null; }}>
             <div className="office-canvas" style={{ width: OFFICE_WORLD.width * zoom, height: OFFICE_WORLD.height * zoom }}>
                 <div className="office-map" style={{ width: OFFICE_WORLD.width, height: OFFICE_WORLD.height, transform: `scale(${zoom})` }}>
-                    <OfficeDecor /><OpenOffice agents={agents} /><CentralMonitor agents={agents} financeData={financeData} />
-                    <OfficeZone className="zone-server" label="SERVER ROOM" icon={Server} variant="servers" capacity={2}><span className="temp-monitor">TEMP 48°C</span></OfficeZone>
+                    <OfficeDecor /><OpenOffice agents={agents} /><CentralMonitor summary={summary} />
+                    <OfficeZone className="zone-server" label="SERVER ROOM" icon={Server} variant="servers" capacity={2}><span className="temp-monitor">MONITORING PENDING</span></OfficeZone>
                     <OfficeZone className="zone-meeting" label="MEETING ROOM" icon={Users} variant="meeting" capacity={8}><span className="presentation-screen">PRESENTATION</span><span className="meeting-whiteboard">PLAN · REVIEW · DECIDE</span></OfficeZone>
                     <OfficeZone className="zone-break" label="REST / LOUNGE" icon={Coffee} variant="lounge" capacity={4}><div className="integrated-pantry"><Coffee size={21} /><span>COFFEE</span></div><span className="water-dispenser">◒</span><span className="daybed">DAYBED</span></OfficeZone>
                     <div className="main-hallway"><span>MAIN WALKWAY</span></div>
@@ -180,90 +183,54 @@ function OfficeMap({ agents, selectedId, onSelect, financeData, activeEvent, onS
     </div>;
 }
 
-function AgentListView({ agents, selectedId, onSelect, liveSystems = systems }) {
-    return <div className="content-view"><div className="view-heading"><div><span>WORKFORCE DIRECTORY</span><h1>AI Agents</h1><p>Logical workers grouped by their real parent system.</p></div><div className="view-count">{agents.length}<small>total workers</small></div></div>{liveSystems.map(system => <section className="system-group" key={system.id}><div className="system-group-title"><i style={{ background: system.color }} /><div><strong>{system.name}</strong><small>{system.label}</small></div><span className={system.status}>{system.status.replace('_', ' ')}</span></div><div className="agent-card-grid">{agents.filter(a => a.parentSystem === system.id).map(agent => <button key={agent.id} className="agent-card" onClick={() => onSelect(agent.id)}><span className="agent-card-avatar" style={{ '--agent-color': agent.color }}>{agent.shortName}</span><div><strong>{agent.name}</strong><small>{agent.fullRole}</small><p>{agent.currentTask}</p></div><span className={`status-pill ${statusTone(agent.status)}`}>{workerStates[agent.status].label}</span><ChevronRight size={17} /></button>)}</div></section>)}</div>;
+function BottomDock({ selectedAgent, onSelect, agents, activity }) {
+    return <div className="bottom-dock"><section className="dock-agent"><div className="panel-label">SELECTED WORKER</div><div className="current-agent"><span className="mini-avatar" style={{ '--agent-color': selectedAgent.color }}>{selectedAgent.shortName}</span><div><strong>{selectedAgent.name}</strong><small>{selectedAgent.role}</small><span className={`status-pill ${statusTone(selectedAgent.status)}`}>{workerStates[selectedAgent.status]?.label || selectedAgent.status}</span></div></div></section><section className="dock-task"><div className="panel-label">CURRENT TASK <small>LIVE</small></div><div className="active-task"><span><FileText size={19} /></span><div><strong>{selectedAgent.currentTask}</strong><small>{selectedAgent.parentSystem}</small><div className="progress-track"><i style={{ width: `${selectedAgent.progress}%` }} /></div></div><b>{selectedAgent.progress}%</b></div></section><section className="dock-feed"><div className="panel-label">RECENT ACTIVITY</div><div className="feed-list">{activity.length ? activity.slice(0, 2).map(item => <div key={item.id}><time>{new Date(item.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</time><i /><p><strong>{item.type}</strong> {item.activity}</p></div>) : <p className="dock-empty">No activity yet</p>}</div></section><section className="dock-team"><div className="panel-label">CONNECTED <small>{agents.filter(a => !['offline', 'not_connected', 'not_installed'].includes(a.status)).length}/{agents.length}</small></div><div className="avatar-stack">{agents.map(a => <button key={a.id} style={{ '--agent-color': a.color }} onClick={() => onSelect(a.id)} className={['offline', 'not_connected', 'not_installed'].includes(a.status) ? 'disabled' : ''}>{a.shortName}</button>)}</div><small>Click a worker to inspect</small></section></div>;
 }
 
-function GenericView({ view, agents, tasks: liveTasks = tasks, systems: liveSystems = systems }) {
-    const title = { tasks: 'Task Operations', systems: 'Connected Systems', analytics: 'Operations Analytics', settings: 'Office Settings' }[view];
-    if (view === 'tasks') return <div className="content-view"><div className="view-heading"><div><span>LIVE WORK QUEUE</span><h1>{title}</h1><p>Task records follow the shared extensible task model.</p></div></div><div className="task-table"><div className="task-row task-head"><span>Task</span><span>Worker</span><span>Status</span><span>Progress</span></div>{liveTasks.map(task => { const agent = agents.find(a => a.id === task.agentId); return <div className="task-row" key={task.id}><span><i className="task-icon"><FileText size={16} /></i>{task.title}</span><span>{agent?.name}</span><span><b className={`status-pill ${statusTone(agent?.status)}`}>{task.status}</b></span><span><div className="task-progress"><i style={{ width: `${task.progress}%` }} /></div>{task.progress}%</span></div>})}</div></div>;
-    return <div className="content-view"><div className="view-heading"><div><span>LIVING OFFICE</span><h1>{title}</h1><p>{view === 'systems' ? 'Backend services and logical workers remain intentionally separate.' : 'This Phase 1 surface is ready for a private backend adapter.'}</p></div></div><div className="placeholder-grid">{(view === 'systems' ? liveSystems : agents.slice(0, 3)).map(item => <article key={item.id}><span><Server size={20} /></span><strong>{item.name}</strong><small>{item.label || item.role}</small><b className={item.status}>{(item.status || 'adapter ready').replace('_', ' ')}</b></article>)}</div></div>;
-}
-
-function BottomDock({ selectedAgent, onSelect, agents }) {
-    const activities = [
-        ['12:31', 'Trent', 'Server health check completed'], ['12:25', 'Weekly Planner', 'Weekly theme prepared'],
-        ['12:19', 'Social Worker', 'Instagram cover generated'], ['12:15', 'Article Worker', 'Kauiz article started'],
-    ];
-    return <div className="bottom-dock"><section className="dock-agent"><div className="panel-label">AGENT SAAT INI <button><MoreHorizontal size={15} /></button></div><div className="current-agent"><span className="mini-avatar" style={{ '--agent-color': selectedAgent.color }}>{selectedAgent.shortName}</span><div><strong>{selectedAgent.name}</strong><small>{selectedAgent.role}</small><span className={`status-pill ${statusTone(selectedAgent.status)}`}>{workerStates[selectedAgent.status].label}</span></div></div></section><section className="dock-task"><div className="panel-label">TASK AKTIF <small>LIVE</small></div><div className="active-task"><span><FileText size={19} /></span><div><strong>{selectedAgent.currentTask}</strong><small>{selectedAgent.parentSystem}</small><div className="progress-track"><i style={{ width: `${selectedAgent.progress}%` }} /></div></div><b>{selectedAgent.progress}%</b></div></section><section className="dock-feed"><div className="panel-label">AKTIVITAS TERBARU <button><ChevronRight size={15} /></button></div><div className="feed-list">{activities.slice(0, 2).map(([time, name, action]) => <div key={time}><time>{time}</time><i /><p><strong>{name}</strong> {action}</p></div>)}</div></section><section className="dock-team"><div className="panel-label">WORKER ONLINE <small>{agents.filter(a => a.status !== 'not_installed').length}/{agents.length}</small></div><div className="avatar-stack">{agents.map(a => <button key={a.id} style={{ '--agent-color': a.color }} onClick={() => onSelect(a.id)} className={a.status === 'not_installed' ? 'disabled' : ''}>{a.shortName}</button>)}</div><small>Klik avatar untuk lihat detail</small></section></div>;
-}
-
-function Metric({ icon: Icon, label, value, suffix = '%' }) { return <div className="server-metric"><span><Icon size={16} /></span><div><small>{label}</small><strong>{value}{typeof value === 'number' ? suffix : ''}</strong><i><b style={{ width: typeof value === 'number' ? `${value}%` : '100%' }} /></i></div></div>; }
-
-function AgentDrawer({ agent, serverData, financeData, onClose }) {
+function AgentDrawer({ agent, tasks, commands, enqueue, onClose }) {
     if (!agent) return null;
     const parent = systems.find(s => s.id === agent.parentSystem);
-    const unavailable = agent.status === 'not_installed';
+    const unavailable = ['not_installed', 'not_connected'].includes(agent.status);
     const room = officeStations[agent.currentStation]?.label || agent.zoneLabel;
+    const recentTasks = tasks.filter(task => task.agentId === agent.id).slice(0, 5);
+    const recentCommands = commands.filter(command => command.agentId === agent.id).slice(0, 3);
+    const labels = { generate_feed: 'Generate Feed', generate_story: 'Generate Story', publish_last: 'Publish Last', generate_threads: 'Generate Threads', generate_article: 'Generate Article', publish_article: 'Publish Article', schedule_article: 'Schedule Article', run_weekly_analysis: 'Run Weekly Analysis' };
+    const [queueState, setQueueState] = useState(null);
+    const run = async action => { setQueueState('queuing'); try { const result = await enqueue(agent.id, action); setQueueState(`${labels[action]} · ${result.status}`); } catch (error) { setQueueState(error.message); } };
     return <>
         <button className="drawer-scrim" onClick={onClose} aria-label="Tutup panel" />
         <aside className="agent-drawer">
             <div className="drawer-header"><div className="drawer-avatar" style={{ '--agent-color': agent.color }}>{agent.shortName}<i /></div><div><span>{parent?.name}</span><h2>{agent.name}</h2><p>{agent.fullRole}</p></div><button className="drawer-close" onClick={onClose}><X size={19} /></button></div>
-            <div className="drawer-status"><span className={`status-pill ${statusTone(agent.status)}`}>{workerStates[agent.status].label}</span><small><Clock3 size={13} /> {agent.lastActivity}</small></div>
+            <div className="drawer-status"><span className={`status-pill ${statusTone(agent.status)}`}>{workerStates[agent.status]?.label || agent.status}</span><small><Clock3 size={13} /> {agent.lastActivity}</small></div>
             <div className="activity-state"><div><small>CURRENT ROOM</small><strong>{room}</strong></div><div><small>ACTIVITY</small><strong>{officeStateLabel[agent.officeState] || agent.officeState}</strong></div><div><small>ENERGY</small><strong>{agent.energy}%</strong><i><b style={{ width: `${agent.energy}%` }} /></i></div></div>
-            {unavailable ? <div className="unavailable-card"><Database size={24} /><div><strong>Worker belum tersedia</strong><p>Tidak ada backend palsu yang dijalankan. Registry dan workstation sudah siap untuk adapter di fase berikutnya.</p></div><button disabled>Setup Later</button></div> : <>
+            {unavailable ? <div className="unavailable-card"><Database size={24} /><div><strong>NOT CONNECTED</strong><p>Integration pending. No command controls are available for this worker.</p></div><button disabled>Integration pending</button></div> : <>
                 <section className="drawer-section"><label>CURRENT TASK</label><div className="drawer-task"><span><Activity size={18} /></span><div><strong>{agent.currentTask}</strong><small>{room}</small><div className="progress-track"><i style={{ width: `${agent.progress}%` }} /></div></div><b>{agent.progress}%</b></div></section>
-                {agent.id === 'trent' && serverData && <section className="drawer-section"><label>SERVER HEALTH · ISOLATED MOCK</label><div className="server-grid"><Metric icon={Cpu} label="CPU" value={serverData.cpu} /><Metric icon={MemoryStick} label="RAM" value={serverData.ram} /><Metric icon={HardDrive} label="Disk" value={serverData.disk} /><Metric icon={Thermometer} label="Temp" value={`${serverData.temperature}°C`} suffix="" /></div><div className="service-line"><span>Nginx <b>{serverData.nginx}</b></span><span>Docker <b>{serverData.docker}</b></span><span>Uptime <b>{serverData.uptime}</b></span></div></section>}
-                {agent.id === 'finance-analyst' && financeData && <section className="drawer-section finance-summary"><label>FINANCE SNAPSHOT · ISOLATED MOCK</label><div className="finance-grid"><div><small>AI cost today</small><strong>${financeData.today.toFixed(2)}</strong></div><div><small>This month</small><strong>${financeData.month.toFixed(2)}</strong></div><div><small>API cost</small><strong>${financeData.api.toFixed(2)}</strong></div><div><small>Avg / task</small><strong>${financeData.averagePerTask.toFixed(2)}</strong></div></div><p>Integration pending — no provider billing account is connected.</p></section>}
+                <section className="drawer-section"><label>SAFE COMMANDS</label><div className="command-grid">{agent.availableActions.map(action => <button key={action} onClick={() => run(action)} disabled={queueState === 'queuing'}><Play size={13} />{labels[action]}</button>)}</div>{queueState && <p className="queue-state">{queueState}</p>}</section>
                 <section className="drawer-section"><label>CAPABILITIES</label><div className="capability-list">{agent.capabilities.map(item => <span key={item}><Check size={12} />{item}</span>)}</div></section>
-                <section className="drawer-section"><label>RECENT RESULTS</label><div className="result-list">{agent.recentResults.map(item => <button key={item}><span><Box size={15} /></span><strong>{item}</strong><ExternalLink size={14} /></button>)}</div></section>
+                <section className="drawer-section"><label>RECENT TASKS / RESULTS</label>{recentTasks.length ? <div className="result-list">{recentTasks.map(item => <div className="result-row" key={item.id}><span><Box size={15} /></span><strong>{item.title}</strong><b className={`status-pill ${item.status === 'failed' ? 'red' : item.status === 'completed' ? 'green' : 'blue'}`}>{item.status}</b></div>)}</div> : <p className="drawer-empty">No tasks yet</p>}</section>
+                <section className="drawer-section"><label>COMMAND HISTORY</label>{recentCommands.length ? <div className="command-history">{recentCommands.map(item => <p key={item.id}><span>{labels[item.action] || item.action}</span><b>{item.status}</b></p>)}</div> : <p className="drawer-empty">No commands queued yet</p>}</section>
             </>}
-            <div className="drawer-actions"><button disabled><Play size={16} />Run <small>Coming soon</small></button><button disabled><Coffee size={16} />Send to break <small>Soon</small></button><button disabled><MonitorCog size={16} />View logs <small>Soon</small></button></div>
-            <p className="drawer-note"><PanelLeftClose size={13} /> Commands stay disabled until a private backend adapter is connected.</p>
+            <p className="drawer-note"><PanelLeftClose size={13} /> Commands are queued only. No shell or operating-system command is executed.</p>
         </aside>
     </>;
 }
 
 function App() {
     const { visualAgents: agents, activeEvent, simulateEvent, sendToRest, sendToServer } = useLivingOffice(agentRegistry);
+    const office = useOfficeData();
     const ambience = useMemo(() => { const hour = new Date().getHours(); return hour >= 18 || hour < 6 ? 'night' : hour >= 16 ? 'evening' : 'day'; }, []);
     const [selectedId, setSelectedId] = useState('jauki-article');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [activeView, setActiveView] = useState('office');
-    const [serverData, setServerData] = useState(null);
-    const [financeData, setFinanceData] = useState(null);
-    const [liveTasks, setLiveTasks] = useState(tasks);
-    const [liveSystems, setLiveSystems] = useState(systems);
-
     const selectedAgent = useMemo(() => agents.find(a => a.id === selectedId) || agents[0], [agents, selectedId]);
-    useEffect(() => { TrentService.getServerStatus().then(setServerData); FinanceService.getCostSummary().then(setFinanceData); }, []);
-    
-    // Poll tasks & systems
-    useEffect(() => {
-        const pollSystems = async () => {
-            try {
-                const [sysRes, taskRes] = await Promise.all([fetch('/office/api/system-status'), fetch('/office/api/tasks')]);
-                if (sysRes.status === 401 || sysRes.status === 419 || taskRes.status === 401 || taskRes.status === 419) {
-                    window.location.href = '/office/login';
-                    return;
-                }
-                if (sysRes.ok) {
-                    const data = await sysRes.json();
-                    setLiveSystems(current => current.map(s => data[s.id] ? { ...s, status: data[s.id].status } : s));
-                }
-                if (taskRes.ok) {
-                    const data = await taskRes.json();
-                    setLiveTasks(data.length ? data : tasks);
-                }
-            } catch (err) {}
-        };
-        pollSystems();
-        const intv = setInterval(pollSystems, 5000);
-        return () => clearInterval(intv);
-    }, []);
-
     const selectAgent = (id) => { setSelectedId(id); setDrawerOpen(true); };
-    return <div className="app-shell" data-ambience={ambience}><Header agents={agents} /><Sidebar activeView={activeView} setActiveView={setActiveView} agents={agents} /><main className={`main-stage ${activeView !== 'office' ? 'view-mode' : ''}`}>{activeView === 'office' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} financeData={financeData} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => selectedAgent.status !== 'not_installed' && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} /></> : activeView === 'agents' ? <AgentListView agents={agents} selectedId={selectedId} onSelect={selectAgent} liveSystems={liveSystems} /> : <GenericView view={activeView} agents={agents} tasks={liveTasks} systems={liveSystems} />}</main>{drawerOpen && <AgentDrawer agent={selectedAgent} serverData={serverData} financeData={financeData} onClose={() => setDrawerOpen(false)} />}</div>;
+    return <div className="app-shell" data-ambience={ambience}>
+        <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} />
+        <Sidebar activeView={activeView} setActiveView={setActiveView} />
+        <main className={`main-stage ${activeView !== 'office' ? 'view-mode' : ''}`}>{activeView === 'office' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} /></> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
+        {drawerOpen && <AgentDrawer agent={selectedAgent} tasks={office.tasks} commands={office.commands} enqueue={office.enqueue} onClose={() => setDrawerOpen(false)} />}
+        {office.toast && <div className={`office-toast ${office.toast.severity}`}><i>{office.toast.severity === 'error' ? '×' : '✓'}</i><div><strong>{office.toast.title}</strong><span>{office.toast.message}</span></div><button onClick={office.dismissToast}><X size={14} /></button></div>}
+    </div>;
 }
 
 createRoot(document.getElementById('living-office-root')).render(<App />);

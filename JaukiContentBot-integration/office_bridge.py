@@ -3,6 +3,7 @@ import json
 import logging
 import urllib.request
 import threading
+import uuid
 from typing import Optional, Dict, Any
 
 logger = logging.getLogger(__name__)
@@ -37,7 +38,8 @@ def _fire_and_forget(payload: Dict[str, Any]):
     """Runs the HTTP request in a background thread to prevent blocking main bot workflow."""
     if not OFFICE_BRIDGE_URL or not OFFICE_BRIDGE_TOKEN:
         return
-    threading.Thread(target=_send_event_sync, args=(payload,), daemon=True).start()
+    event_payload = {"event_id": str(uuid.uuid4()), **payload}
+    threading.Thread(target=_send_event_sync, args=(event_payload,), daemon=True).start()
 
 def emit_status(agent_id: str, status: str, activity: Optional[str] = None, progress: Optional[int] = None):
     payload = {

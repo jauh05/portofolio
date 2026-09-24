@@ -18,12 +18,12 @@ export function useLivingOffice(registry) {
     const [activeEvent, setActiveEvent] = useState(null);
     const [visualAgents, setVisualAgents] = useState(() => registry.map((agent) => {
         const assignment = deskAssignments[agent.id];
-        const initialState = agent.status === 'not_installed' ? 'not_installed' : 'seated_work';
+        const initialState = ['not_installed', 'not_connected', 'offline'].includes(agent.status) ? 'offline' : 'seated_work';
         return {
             ...agent, homeDeskId: assignment.homeDeskId, currentStation: assignment.homeDeskId,
             targetLocation: assignment.homeDeskId, position: stationPosition(assignment.homeDeskId),
             officeState: initialState, movementState: initialState, animation: statePose[initialState],
-            facing: assignment.deskSeat.facing, bubble: null, energy: initialState === 'not_installed' ? 0 : 86,
+            facing: assignment.deskSeat.facing, bubble: null, energy: initialState === 'offline' ? 0 : 86,
             walkDuration: 3, interactionState: initialState,
         };
     }));
@@ -45,6 +45,8 @@ export function useLivingOffice(registry) {
                     setVisualAgents((current) => current.map((agent) => {
                         const serverAgent = serverAgents.find(sa => sa.id === agent.id);
                         if (serverAgent) {
+                            const disconnected = ['offline', 'not_connected', 'not_installed'].includes(serverAgent.status);
+                            const reconnecting = agent.officeState === 'offline' && !disconnected;
                             return {
                                 ...agent,
                                 status: serverAgent.status,
@@ -52,6 +54,9 @@ export function useLivingOffice(registry) {
                                 progress: serverAgent.progress,
                                 lastActivity: serverAgent.lastActivity,
                                 recentResults: serverAgent.recentResults || agent.recentResults,
+                                officeState: disconnected ? 'offline' : (reconnecting ? 'seated_work' : agent.officeState),
+                                movementState: disconnected ? 'offline' : (reconnecting ? 'seated_work' : agent.movementState),
+                                animation: disconnected ? statePose.offline : (reconnecting ? statePose.seated_work : agent.animation),
                             };
                         }
                         return agent;
@@ -71,7 +76,7 @@ export function useLivingOffice(registry) {
 
     const moveLeg = useCallback((agentId, destination, finalState = 'standing_idle', bubble = null) => {
         const currentAgent = agentsRef.current.find((agent) => agent.id === agentId);
-        if (!currentAgent || currentAgent.officeState === 'not_installed') return 0;
+        if (!currentAgent || ['not_installed', 'offline'].includes(currentAgent.officeState)) return 0;
         const position = stationPosition(destination);
         const distance = Math.hypot(position.x - currentAgent.position.x, position.y - currentAgent.position.y);
         const duration = Math.max(1.8, Math.min(4.2, distance / (5.2 * workerSpeeds[agentId])));
@@ -94,7 +99,7 @@ export function useLivingOffice(registry) {
 
     const travelAgent = useCallback((agentId, destination, finalState, options = {}) => {
         const agent = agentsRef.current.find((item) => item.id === agentId);
-        if (!agent || agent.officeState === 'not_installed') return 0;
+        if (!agent || ['not_installed', 'offline'].includes(agent.officeState)) return 0;
         const path = routeBetween(agent.currentStation, destination);
         let elapsed = 0;
         path.forEach((stationId, index) => {
@@ -109,7 +114,7 @@ export function useLivingOffice(registry) {
 
     const returnToDesk = useCallback((agentId, delay = 0) => {
         const agent = agentsRef.current.find((item) => item.id === agentId);
-        if (!agent || agent.officeState === 'not_installed') return 0;
+        if (!agent || ['not_installed', 'offline'].includes(agent.officeState)) return 0;
         return rememberTimer(window.setTimeout(() => travelAgent(agentId, agent.homeDeskId, 'seated_work', { bubble: 'Back to work' }), delay));
     }, [rememberTimer, travelAgent]);
 
