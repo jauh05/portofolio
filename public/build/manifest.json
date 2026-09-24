@@ -1,4 +1,8 @@
 {
+  "_index-DmXw1Ymk.js": {
+    "file": "assets/index-DmXw1Ymk.js",
+    "name": "index"
+  },
   "resources/css/app.css": {
     "file": "assets/app-CR9ln0ls.css",
     "src": "resources/css/app.css",
@@ -24,6 +28,18 @@
     "assets": [
       "assets/card-BP4TWJmK.glb",
       "assets/lanyard-BQfo1yFS.png"
+    ]
+  },
+  "resources/js/living-office/main.jsx": {
+    "file": "assets/main-CCjxaGIb.js",
+    "name": "main",
+    "src": "resources/js/living-office/main.jsx",
+    "isEntry": true,
+    "imports": [
+      "_index-DmXw1Ymk.js"
+    ],
+    "css": [
+      "assets/main-BTH-CEqp.css"
     ]
   }
 }

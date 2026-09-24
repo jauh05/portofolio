@@ -13,3 +13,7 @@ Route::get('/projects', function () {
 Route::get('/certificates', function () {
     return view('certificates');
 });
+
+Route::get('/living-office', function () {
+    return view('living-office');
+});
