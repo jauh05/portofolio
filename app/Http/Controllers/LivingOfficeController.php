@@ -167,8 +167,8 @@ class LivingOfficeController extends Controller
 
     public function ingestEvent(Request $request)
     {
-        // Simple token check (middleware is also an option, but inline is fine for MVP)
-        $token = env('OFFICE_BRIDGE_TOKEN');
+        // Simple token check
+        $token = config('services.office_bridge.token');
         $auth = $request->header('Authorization');
         
         if (!$token || $auth !== "Bearer {$token}") {
@@ -323,16 +323,12 @@ class LivingOfficeController extends Controller
 
     public function commandAgent(Request $request, $id)
     {
-        $token = env('OFFICE_BRIDGE_TOKEN');
-        $auth = $request->header('Authorization');
-        
-        // Note: Currently UI might not send the token (as it's a frontend action). 
-        // We will just disable real execution and return mock response for MVP phase 2.
-        // The user explicitly stated: "JANGAN langsung menjalankan shell/systemctl. Jika command real belum tersedia, UI boleh disabled."
+        // This endpoint is protected by web/auth middleware for the owner session.
+        // Execution is simulated in Phase 2 for safety.
         return response()->json([
             'message' => 'Command execution is disabled for safety in Phase 2.',
             'agent_id' => $id,
             'command' => $request->input('command')
-        ], 200); // We return 200 so UI can show a "Simulated" message instead of failure
+        ], 200);
     }
 }

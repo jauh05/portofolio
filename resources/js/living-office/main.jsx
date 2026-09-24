@@ -41,7 +41,15 @@ function Header({ agents }) {
         <div className="top-metrics">{metrics.map(({ icon: Icon, value, label, tone }) => <div className="top-metric" key={label}>
             <span className={`metric-icon ${tone}`}><Icon size={16} /></span><strong>{value}</strong><small>{label}</small>
         </div>)}</div>
-        <div className="header-user"><div className="current-time"><small>{now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</small><strong>{now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':')}</strong></div><button className="icon-button"><Bell size={18} /><i /></button><div className="avatar">JF</div><div className="user-copy"><strong>Jauhar</strong><small>Owner</small></div></div>
+        <div className="header-user">
+            <div className="current-time"><small>{now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</small><strong>{now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':')}</strong></div>
+            <button className="icon-button"><Bell size={18} /><i /></button>
+            <form action="/office/logout" method="POST" style={{ margin: 0 }}>
+                <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
+                <button type="submit" className="icon-button" aria-label="Logout" title="Logout" style={{ color: '#ef4444' }}><X size={18} /></button>
+            </form>
+            <div className="avatar">JF</div><div className="user-copy"><strong>Jauhar</strong><small>Owner</small></div>
+        </div>
     </header>;
 }
 
@@ -234,7 +242,11 @@ function App() {
     useEffect(() => {
         const pollSystems = async () => {
             try {
-                const [sysRes, taskRes] = await Promise.all([fetch('/api/office/system-status'), fetch('/api/office/tasks')]);
+                const [sysRes, taskRes] = await Promise.all([fetch('/office/api/system-status'), fetch('/office/api/tasks')]);
+                if (sysRes.status === 401 || sysRes.status === 419 || taskRes.status === 401 || taskRes.status === 419) {
+                    window.location.href = '/office/login';
+                    return;
+                }
                 if (sysRes.ok) {
                     const data = await sysRes.json();
                     setLiveSystems(current => current.map(s => data[s.id] ? { ...s, status: data[s.id].status } : s));

@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'office_bridge' => [
+        'token' => env('OFFICE_BRIDGE_TOKEN'),
+    ],
+
 ];

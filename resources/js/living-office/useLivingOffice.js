@@ -35,7 +35,11 @@ export function useLivingOffice(registry) {
     useEffect(() => {
         const poll = async () => {
             try {
-                const res = await fetch('/api/office/agents');
+                const res = await fetch('/office/api/agents');
+                if (res.status === 401 || res.status === 419) {
+                    window.location.href = '/office/login';
+                    return;
+                }
                 if (res.ok) {
                     const serverAgents = await res.json();
                     setVisualAgents((current) => current.map((agent) => {
