@@ -40,6 +40,7 @@ class OfficeCommandClient:
                 "Authorization": "Bearer " + token,
                 "Content-Type": "application/json",
                 "Accept": "application/json",
+                "User-Agent": "JaukiContentBot-LivingOffice/1.0",
             },
             method=method,
         )
