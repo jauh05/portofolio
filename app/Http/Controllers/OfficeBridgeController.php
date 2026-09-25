@@ -19,6 +19,7 @@ class OfficeBridgeController extends Controller
             'event' => ['required', 'string', 'max:100'], 'event_id' => ['nullable', 'string', 'max:191'], 'agent_id' => ['nullable', 'string', 'max:100'],
             'parent_system' => ['nullable', 'string', 'max:100'], 'status' => ['nullable', 'string', 'max:50'],
             'activity' => ['nullable', 'string', 'max:500'], 'progress' => ['nullable', 'integer', 'between:0,100'],
+            'task_id' => ['nullable', 'string', 'max:191'],
             'task' => ['nullable', 'array'], 'result' => ['nullable', 'array'], 'content' => ['nullable', 'array'],
             'error' => ['nullable', 'string', 'max:2000'],
         ]);

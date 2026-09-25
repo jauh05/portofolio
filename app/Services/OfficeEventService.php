@@ -73,10 +73,14 @@ class OfficeEventService
             ]);
         }
 
-        $task = OfficeTask::where('agent_id', $agentId)->whereIn('status', ['running', 'queued'])->latest('started_at')->first();
-        if (! $task && in_array($type, ['task.completed', 'task.failed'], true)) {
-            $finalStatus = $type === 'task.completed' ? 'completed' : 'failed';
-            $task = OfficeTask::where('agent_id', $agentId)->where('status', $finalStatus)->latest($type === 'task.completed' ? 'completed_at' : 'failed_at')->first();
+        if (array_key_exists('task_id', $data) && $data['task_id'] !== null && $data['task_id'] !== '') {
+            $task = OfficeTask::where('agent_id', $agentId)->where('external_id', $data['task_id'])->first();
+        } else {
+            $task = OfficeTask::where('agent_id', $agentId)->whereIn('status', ['running', 'queued'])->latest('started_at')->first();
+            if (! $task && in_array($type, ['task.completed', 'task.failed'], true)) {
+                $finalStatus = $type === 'task.completed' ? 'completed' : 'failed';
+                $task = OfficeTask::where('agent_id', $agentId)->where('status', $finalStatus)->latest($type === 'task.completed' ? 'completed_at' : 'failed_at')->first();
+            }
         }
         if (! $task) {
             return null;
