@@ -154,9 +154,77 @@ def handle_generate_story(context: Dict[str, Any]) -> None:
     _do_generate(context, "story")
 
 
+def handle_publish_last(context: Dict[str, Any]) -> None:
+    from bot import load_latest_state, publish_instagram, save_latest_state, feed_caption
+    
+    state = load_latest_state()
+    if not state or not state.get("image_path"):
+        raise RuntimeError("Belum ada draft content yang di-generate. Lakukan generate_feed atau generate_story dulu.")
+        
+    if state.get("uploaded"):
+        raise RuntimeError("Draft terakhir ini sudah pernah dipublish. Generate konten baru.")
+        
+    mode = state.get("mode", "feed")
+    label = "Feed" if mode == "feed" else "Story"
+    
+    _start_task(context, f"Publish Instagram {label}", f"instagram_{mode}_publish", f"Publishing {label}")
+    _progress(context, 20, f"Preparing to publish {label} to Instagram")
+
+    # Ambil caption (Feed saja)
+    caption = ""
+    if mode == "feed" and "content" in state:
+        caption = feed_caption(state["content"])
+        
+    image_path = state["image_path"]
+    
+    _progress(context, 50, f"Uploading to Instagram")
+    
+    # Run the publisher
+    result = publish_instagram(state)
+    if "error" in result:
+        raise RuntimeError(f"Gagal publish ke Instagram: {result['error']}")
+        
+    media_id = result.get("media_id", "")
+    public_url = result.get("permalink", f"https://instagram.com/p/{media_id}") if media_id else ""
+    
+    _progress(context, 90, f"Marking as published")
+    
+    # Update local state
+    state["uploaded"] = True
+    if media_id:
+        state["instagram_media_id"] = media_id
+    save_latest_state(state)
+    
+    # Emit Living Office event untuk merubah status db
+    content_payload = {
+        "platform": "instagram",
+        "content_type": mode,
+        "external_id": context["task_id"], # Link to this task
+    }
+    
+    if media_id:
+        content_payload["media_id"] = media_id
+    if public_url:
+        content_payload["public_url"] = public_url
+        
+    _emit_required(
+        "content.published",
+        activity=f"Successfully published {label} to Instagram",
+        content=content_payload
+    )
+
+    _emit_required(
+        "task.completed",
+        task_id=context["task_id"],
+        progress=100,
+        result={"title": f"Instagram {label} published", "stage": "published", "mode": mode, "media_id": media_id, "url": public_url},
+    )
+
+
 DISPATCH = {
     ("jauki-social", "generate_feed"): handle_generate_feed,
     ("jauki-social", "generate_story"): handle_generate_story,
+    ("jauki-social", "publish_last"): handle_publish_last,
 }
 
 
