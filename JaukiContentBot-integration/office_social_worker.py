@@ -123,6 +123,7 @@ def _do_generate(context: Dict[str, Any], mode: str) -> None:
         "platform": "instagram",
         "content_type": mode,
         "title": f"Instagram {label} post",
+        "external_id": context["task_id"],
     }
     
     if mode == "feed":
