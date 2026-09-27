@@ -9,6 +9,7 @@ class OfficeRegistry
         'jauki-threads' => ['generate_threads', 'publish_last'],
         'jauki-article' => ['generate_article', 'publish_article', 'schedule_article'],
         'jauki-planner' => ['run_weekly_analysis'],
+        'jauki-analyst' => ['research_trends', 'research_topic', 'find_content_ideas', 'analyze_sources'],
     ];
 
     public const COMMAND_PAYLOAD_KEYS = [
@@ -20,6 +21,10 @@ class OfficeRegistry
         'publish_article' => [],
         'schedule_article' => ['scheduled_at'],
         'run_weekly_analysis' => [],
+        'research_trends' => ['topic', 'audience', 'language', 'limit'],
+        'research_topic' => ['topic', 'audience', 'language'],
+        'find_content_ideas' => ['topic', 'audience', 'language'],
+        'analyze_sources' => ['topic', 'sources', 'language'],
     ];
 
     public static function agents(): array
@@ -30,6 +35,7 @@ class OfficeRegistry
             'jauki-threads' => self::agent('jauki-threads', 'jauki-content-bot'),
             'jauki-article' => self::agent('jauki-article', 'jauki-content-bot'),
             'jauki-planner' => self::agent('jauki-planner', 'jauki-content-bot'),
+            'jauki-analyst' => self::agent('jauki-analyst', 'jauki-content-bot'),
             'data-analyst' => self::agent('data-analyst', 'future-data-agent', 'not_connected', 'Integration pending'),
             'finance-analyst' => self::agent('finance-analyst', 'future-finance-agent', 'not_connected', 'Integration pending'),
         ];
@@ -49,7 +55,7 @@ class OfficeRegistry
     {
         return [
             'trent' => 'Trent', 'jauki-social' => 'Social Worker', 'jauki-threads' => 'Threads Worker',
-            'jauki-article' => 'Article Worker', 'jauki-planner' => 'Weekly Planner',
+            'jauki-article' => 'Article Worker', 'jauki-planner' => 'Weekly Planner', 'jauki-analyst' => 'Trend/Data Analyst',
             'data-analyst' => 'Data Analyst', 'finance-analyst' => 'Finance Analyst',
         ][$id] ?? 'Office';
     }
