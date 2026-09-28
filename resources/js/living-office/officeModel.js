@@ -40,7 +40,7 @@ export const deskAssignments = {
     'jauki-threads': { homeDeskId: 'deskThreads', deskSeat: officeStations.deskThreads, role: 'threads' },
     'jauki-article': { homeDeskId: 'deskArticle', deskSeat: officeStations.deskArticle, role: 'article' },
     'jauki-planner': { homeDeskId: 'deskPlanner', deskSeat: officeStations.deskPlanner, role: 'planner' },
-    'data-analyst': { homeDeskId: 'deskData', deskSeat: officeStations.deskData, role: 'data' },
+    'jauki-analyst': { homeDeskId: 'deskData', deskSeat: officeStations.deskData, role: 'data' },
     'finance-analyst': { homeDeskId: 'deskFinance', deskSeat: officeStations.deskFinance, role: 'finance' },
 };
 

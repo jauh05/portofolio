@@ -3,7 +3,7 @@ import { deskAssignments, meetingSeats, officeEvents, officeStations, restSeats,
 
 const workerSpeeds = {
     trent: .94, 'jauki-social': 1.04, 'jauki-threads': 1.08, 'jauki-article': .98,
-    'jauki-planner': .92, 'data-analyst': 0, 'finance-analyst': .95,
+    'jauki-planner': .92, 'jauki-analyst': .96, 'finance-analyst': .95,
 };
 
 const statePose = {

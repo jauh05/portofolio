@@ -58,6 +58,13 @@ const navItems = [
     ['activity', Activity, 'Activity'],
 ];
 
+const actionFields = {
+    research_trends: ['topic', 'audience', 'language', 'limit'],
+    research_topic: ['topic', 'audience', 'language'],
+    find_content_ideas: ['topic', 'audience', 'language'],
+    analyze_sources: ['topic', 'sources', 'language'],
+};
+
 function Sidebar({ activeView, setActiveView }) {
     return <aside className="sidebar"><nav>{navItems.map(([id, Icon, label]) => <button key={id} className={activeView === id ? 'active' : ''} onClick={() => setActiveView(id)}><Icon size={20} /><span>{label}</span></button>)}</nav><a className="back-site" href="/"><ArrowLeft size={18} /><span>Portfolio</span></a></aside>;
 }
@@ -84,7 +91,7 @@ function OfficeZone({ className, label, icon: Icon, variant, capacity, children,
 
 const deskVariants = {
     trent: 'trent', 'jauki-social': 'content', 'jauki-threads': 'community', 'jauki-article': 'article',
-    'jauki-planner': 'board', 'data-analyst': 'analytics', 'finance-analyst': 'finance',
+    'jauki-planner': 'board', 'jauki-analyst': 'analytics', 'finance-analyst': 'finance',
 };
 
 function DeskPod({ agent }) {
@@ -194,10 +201,13 @@ function AgentDrawer({ agent, tasks, commands, enqueue, onClose }) {
     const room = officeStations[agent.currentStation]?.label || agent.zoneLabel;
     const recentTasks = tasks.filter(task => task.agentId === agent.id).slice(0, 5);
     const recentCommands = commands.filter(command => command.agentId === agent.id).slice(0, 3);
-    const labels = { generate_feed: 'Generate Feed', generate_story: 'Generate Story', publish_last: 'Publish Last', generate_threads: 'Generate Threads', generate_article: 'Generate Article', publish_article: 'Publish Article', schedule_article: 'Schedule Article', run_weekly_analysis: 'Run Weekly Analysis' };
+    const labels = { generate_feed: 'Generate Feed', generate_story: 'Generate Story', publish_last: 'Publish Last', generate_threads: 'Generate Threads', generate_article: 'Generate Article', publish_article: 'Publish Article', schedule_article: 'Schedule Article', run_weekly_analysis: 'Run Weekly Analysis', research_trends: 'Research Trends', research_topic: 'Research Topic', find_content_ideas: 'Find Content Ideas', analyze_sources: 'Analyze Sources' };
     const [queueState, setQueueState] = useState(null);
+    const [payloads, setPayloads] = useState({});
     const activeCommand = commands.find(command => command.agentId === agent.id && ['queued', 'claimed', 'running'].includes(command.status));
-    const run = async action => { setQueueState('queuing'); try { const result = await enqueue(agent.id, action); setQueueState(`${labels[action]} · ${result.status}`); } catch (error) { setQueueState(error.message); } };
+    const payloadFor = (action) => Object.fromEntries((actionFields[action] || []).map(field => [field, payloads[action]?.[field] || '']).filter(([, value]) => value !== ''));
+    const updatePayload = (action, field, value) => setPayloads(current => ({ ...current, [action]: { ...(current[action] || {}), [field]: value } }));
+    const run = async action => { setQueueState('queuing'); try { const result = await enqueue(agent.id, action, payloadFor(action)); setQueueState(`${labels[action]} · ${result.status}`); } catch (error) { setQueueState(error.message); } };
     return <>
         <button className="drawer-scrim" onClick={onClose} aria-label="Tutup panel" />
         <aside className="agent-drawer">
@@ -206,7 +216,7 @@ function AgentDrawer({ agent, tasks, commands, enqueue, onClose }) {
             <div className="activity-state"><div><small>CURRENT ROOM</small><strong>{room}</strong></div><div><small>ACTIVITY</small><strong>{officeStateLabel[agent.officeState] || agent.officeState}</strong></div><div><small>ENERGY</small><strong>{agent.energy}%</strong><i><b style={{ width: `${agent.energy}%` }} /></i></div></div>
             {unavailable ? <div className="unavailable-card"><Database size={24} /><div><strong>NOT CONNECTED</strong><p>Integration pending. No command controls are available for this worker.</p></div><button disabled>Integration pending</button></div> : <>
                 <section className="drawer-section"><label>CURRENT TASK</label><div className="drawer-task"><span><Activity size={18} /></span><div><strong>{agent.currentTask}</strong><small>{room}</small><div className="progress-track"><i style={{ width: `${agent.progress}%` }} /></div></div><b>{agent.progress}%</b></div></section>
-                <section className="drawer-section"><label>SAFE COMMANDS</label><div className="command-grid">{agent.availableActions.map(action => <button key={action} onClick={() => run(action)} disabled={queueState === 'queuing' || !!activeCommand}><Play size={13} />{labels[action]}</button>)}</div>{queueState && <p className="queue-state">{queueState}</p>}{activeCommand && <p className="queue-state">A command is currently active: {labels[activeCommand.action] || activeCommand.action}</p>}</section>
+                <section className="drawer-section"><label>SAFE COMMANDS</label><div className="command-grid">{agent.availableActions.map(action => <div className="command-card" key={action}>{(actionFields[action] || []).map(field => <input key={field} value={payloads[action]?.[field] || ''} onChange={event => updatePayload(action, field, event.target.value)} placeholder={field === 'sources' ? 'sources (comma separated or URLs)' : field} />)}<button onClick={() => run(action)} disabled={queueState === 'queuing' || !!activeCommand}><Play size={13} />{labels[action]}</button></div>)}</div>{queueState && <p className="queue-state">{queueState}</p>}{activeCommand && <p className="queue-state">A command is currently active: {labels[activeCommand.action] || activeCommand.action}</p>}</section>
                 <section className="drawer-section"><label>CAPABILITIES</label><div className="capability-list">{agent.capabilities.map(item => <span key={item}><Check size={12} />{item}</span>)}</div></section>
                 <section className="drawer-section"><label>RECENT TASKS / RESULTS</label>{recentTasks.length ? <div className="result-list">{recentTasks.map(item => <div className="result-row" key={item.id}><span><Box size={15} /></span><strong>{item.title}</strong><b className={`status-pill ${item.status === 'failed' ? 'red' : item.status === 'completed' ? 'green' : 'blue'}`}>{item.status}</b></div>)}</div> : <p className="drawer-empty">No tasks yet</p>}</section>
                 <section className="drawer-section"><label>COMMAND HISTORY</label>{recentCommands.length ? <div className="command-history">{recentCommands.map(item => <p key={item.id}><span>{labels[item.action] || item.action}</span><b>{item.status}</b></p>)}</div> : <p className="drawer-empty">No commands queued yet</p>}</section>

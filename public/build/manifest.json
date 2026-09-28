@@ -4,7 +4,7 @@
     "name": "index"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CR9ln0ls.css",
+    "file": "assets/app-BYle4lXB.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -21,17 +21,20 @@
     "src": "resources/js/Components/Lanyard/lanyard.png"
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-Dd_ber1R.js",
+    "file": "assets/app-SGbjmLAb.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
+    "imports": [
+      "_index-DmXw1Ymk.js"
+    ],
     "assets": [
       "assets/card-BP4TWJmK.glb",
       "assets/lanyard-BQfo1yFS.png"
     ]
   },
   "resources/js/living-office/main.jsx": {
-    "file": "assets/main-CCjxaGIb.js",
+    "file": "assets/main-p3NhtCNB.js",
     "name": "main",
     "src": "resources/js/living-office/main.jsx",
     "isEntry": true,
@@ -39,7 +42,7 @@
       "_index-DmXw1Ymk.js"
     ],
     "css": [
-      "assets/main-BTH-CEqp.css"
+      "assets/main-B6dPN47b.css"
     ]
   }
 }

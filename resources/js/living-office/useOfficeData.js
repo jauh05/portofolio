@@ -56,8 +56,8 @@ export function useOfficeData() {
 
     const markRead = async (id) => { await request(`/office/api/notifications/${id}/read`, { method: 'PATCH', body: '{}' }); await refresh(); };
     const markAllRead = async () => { await request('/office/api/notifications/read-all', { method: 'PATCH', body: '{}' }); await refresh(); };
-    const enqueue = async (agentId, action) => {
-        const command = await request(`/office/api/agents/${agentId}/command`, { method: 'POST', body: JSON.stringify({ action, payload: {} }) });
+    const enqueue = async (agentId, action, payload = {}) => {
+        const command = await request(`/office/api/agents/${agentId}/command`, { method: 'POST', body: JSON.stringify({ action, payload }) });
         await refresh();
         return command;
     };
