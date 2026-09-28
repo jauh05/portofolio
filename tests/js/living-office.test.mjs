@@ -12,7 +12,7 @@ test('registry exposes seven dynamic workers without fabricated task records', (
 });
 
 test('future agents are represented honestly', () => {
-    assert.equal(agentRegistry.find((agent) => agent.id === 'data-analyst').status, 'not_connected');
+    assert.equal(agentRegistry.find((agent) => agent.id === 'jauki-analyst').status, 'idle');
     assert.equal(agentRegistry.find((agent) => agent.id === 'finance-analyst').status, 'not_connected');
 });
 

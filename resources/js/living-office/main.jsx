@@ -54,7 +54,7 @@ function Header({ summary, notifications, unread, onRead, onReadAll }) {
 }
 
 const navItems = [
-    ['office', LayoutDashboard, 'Office'], ['tasks', ListTodo, 'Tasks'], ['content', FileText, 'Content'],
+    ['overview', LayoutDashboard, 'Overview'], ['kanban', ListTodo, 'Kanban'], ['agents', Bot, 'Agents'],
     ['activity', Activity, 'Activity'],
 ];
 
@@ -91,7 +91,7 @@ function OfficeZone({ className, label, icon: Icon, variant, capacity, children,
 
 const deskVariants = {
     trent: 'trent', 'jauki-social': 'content', 'jauki-threads': 'community', 'jauki-article': 'article',
-    'jauki-planner': 'board', 'jauki-analyst': 'analytics', 'finance-analyst': 'finance',
+    'jauki-planner': 'board', 'data-analyst': 'analytics', 'finance-analyst': 'finance',
 };
 
 function DeskPod({ agent }) {
@@ -232,13 +232,13 @@ function App() {
     const ambience = useMemo(() => { const hour = new Date().getHours(); return hour >= 18 || hour < 6 ? 'night' : hour >= 16 ? 'evening' : 'day'; }, []);
     const [selectedId, setSelectedId] = useState('jauki-article');
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [activeView, setActiveView] = useState('office');
+    const [activeView, setActiveView] = useState('overview');
     const selectedAgent = useMemo(() => agents.find(a => a.id === selectedId) || agents[0], [agents, selectedId]);
     const selectAgent = (id) => { setSelectedId(id); setDrawerOpen(true); };
     return <div className="app-shell" data-ambience={ambience}>
         <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} />
         <Sidebar activeView={activeView} setActiveView={setActiveView} />
-        <main className={`main-stage ${activeView !== 'office' ? 'view-mode' : ''}`}>{activeView === 'office' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} /></> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
+        <main className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} /></> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
         {drawerOpen && <AgentDrawer agent={selectedAgent} tasks={office.tasks} commands={office.commands} enqueue={office.enqueue} onClose={() => setDrawerOpen(false)} />}
         {office.toast && <div className={`office-toast ${office.toast.severity}`}><i>{office.toast.severity === 'error' ? '×' : '✓'}</i><div><strong>{office.toast.title}</strong><span>{office.toast.message}</span></div><button onClick={office.dismissToast}><X size={14} /></button></div>}
     </div>;
