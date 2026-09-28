@@ -4,7 +4,7 @@
     "name": "index"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BYle4lXB.css",
+    "file": "assets/app-BQRnzoiU.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -34,7 +34,7 @@
     ]
   },
   "resources/js/living-office/main.jsx": {
-    "file": "assets/main-p3NhtCNB.js",
+    "file": "assets/main-CE9tg6ih.js",
     "name": "main",
     "src": "resources/js/living-office/main.jsx",
     "isEntry": true,
@@ -42,7 +42,7 @@
       "_index-DmXw1Ymk.js"
     ],
     "css": [
-      "assets/main-B6dPN47b.css"
+      "assets/main-CM1JBOdm.css"
     ]
   }
 }

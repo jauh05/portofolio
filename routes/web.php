@@ -16,6 +16,7 @@ Route::get('/certificates', function () {
 
 use App\Http\Controllers\OfficeAuthController;
 use App\Http\Controllers\LivingOfficeController;
+use App\Http\Controllers\OfficeKnowledgeController;
 
 Route::get('/office/login', [OfficeAuthController::class, 'showLogin'])->name('login');
 Route::post('/office/login', [OfficeAuthController::class, 'login']);
@@ -39,6 +40,11 @@ Route::middleware('auth')->prefix('office')->group(function () {
         Route::patch('/notifications/{notification}/read', [LivingOfficeController::class, 'readNotification']);
         Route::get('/commands', [LivingOfficeController::class, 'getCommands']);
         Route::get('/system-status', [LivingOfficeController::class, 'getSystemStatus']);
+        Route::get('/memories', [OfficeKnowledgeController::class, 'memories']);
+        Route::get('/memories/context', [OfficeKnowledgeController::class, 'context']);
+        Route::get('/memories/{memory}', [OfficeKnowledgeController::class, 'memory']);
+        Route::get('/reports', [OfficeKnowledgeController::class, 'reports']);
+        Route::get('/reports/{report}', [OfficeKnowledgeController::class, 'report']);
         Route::post('/agents/{id}/command', [LivingOfficeController::class, 'commandAgent']);
     });
 });

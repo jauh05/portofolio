@@ -6,12 +6,13 @@ use App\Models\OfficeContentItem;
 use App\Models\OfficeEvent;
 use App\Models\OfficeNotification;
 use App\Models\OfficeTask;
+use App\Services\OfficeReportService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class OfficeEventService
 {
-    public function __construct(private OfficeStateStore $state) {}
+    public function __construct(private OfficeStateStore $state, private OfficeReportService $reports) {}
 
     public function ingest(array $data): void
     {
@@ -43,6 +44,9 @@ class OfficeEventService
             ]);
             $event->update(['status' => $data['status'] ?? $task?->status, 'progress' => $data['progress'] ?? $task?->progress]);
             $content = $this->updateContent($data);
+            if ($data['event'] === 'task.completed' && ($data['agent_id'] ?? null) === 'jauki-analyst') {
+                $this->reports->persistAnalystResult($data['result'] ?? []);
+            }
             $this->notify($data, $task, $content);
         });
     }
