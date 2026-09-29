@@ -60,7 +60,7 @@ class LivingOfficeController extends Controller
     public function getContent(Request $request): JsonResponse
     {
         $filter = $request->string('filter')->lower()->value();
-        $query = OfficeContentItem::latest('generated_at');
+        $query = OfficeContentItem::with('brand')->latest('generated_at');
         if (in_array($filter, ['article', 'instagram', 'threads'], true)) {
             $query->where('platform', $filter);
         }
@@ -69,6 +69,7 @@ class LivingOfficeController extends Controller
             'contentType' => $item->content_type, 'title' => $item->title, 'text' => $item->text,
             'imageUrl' => $item->image_url, 'externalId' => $item->external_id,
             'publicUrl' => $item->public_url, 'status' => $item->status,
+            'brand' => $item->brand ? ['id' => $item->brand->id, 'name' => $item->brand->name, 'slug' => $item->brand->slug] : null,
             'generatedAt' => $item->generated_at?->toIso8601String(), 'publishedAt' => $item->published_at?->toIso8601String(),
         ]);
         return response()->json(['data' => $items, 'empty' => $items->isEmpty()]);

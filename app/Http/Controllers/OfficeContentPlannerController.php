@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OfficeContentItem;
+use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentSchedule;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +20,10 @@ class OfficeContentPlannerController extends Controller
         $timezone = $request->string('timezone', 'Asia/Jakarta')->value();
         $start = CarbonImmutable::parse($request->string('start', now($timezone)->startOfMonth()->toDateString())->value(), $timezone)->startOfDay();
         $end = CarbonImmutable::parse($request->string('end', $start->endOfMonth()->toDateString())->value(), $timezone)->endOfDay();
-        $schedules = OfficeContentSchedule::where('is_active', true)->orderBy('next_run_at')->get();
+        $brandId = $request->string('brand_id')->value();
+        $schedules = OfficeContentSchedule::with('brand')->where('is_active', true)
+            ->when($brandId, fn ($query) => $query->where('brand_id', $brandId))
+            ->orderBy('next_run_at')->get();
         $occurrences = $schedules->flatMap(fn (OfficeContentSchedule $schedule) => $this->occurrences($schedule, $start, $end))
             ->sortBy('scheduledAt')->values();
 
@@ -32,25 +36,51 @@ class OfficeContentPlannerController extends Controller
 
     public function index(): JsonResponse
     {
-        return response()->json(['data' => OfficeContentSchedule::latest()->get()->map(fn (OfficeContentSchedule $schedule) => $this->schedulePayload($schedule))]);
+        return response()->json(['data' => OfficeContentSchedule::with('brand')->latest()->get()->map(fn (OfficeContentSchedule $schedule) => $this->schedulePayload($schedule))]);
     }
 
     public function show(OfficeContentSchedule $schedule): JsonResponse
     {
-        return response()->json($this->schedulePayload($schedule));
+        return response()->json($this->schedulePayload($schedule->load('brand')));
+    }
+
+    public function brands(): JsonResponse
+    {
+        return response()->json(['data' => OfficeContentBrand::where('is_active', true)->orderBy('name')->get()->map(fn (OfficeContentBrand $brand) => $this->brandPayload($brand))]);
+    }
+
+    public function storeBrand(Request $request): JsonResponse
+    {
+        $brand = OfficeContentBrand::create($request->validate([
+            'name' => ['required', 'string', 'max:255'], 'slug' => ['required', 'string', 'max:100', 'alpha_dash', 'unique:office_content_brands,slug'],
+            'description' => ['nullable', 'string'], 'default_agent' => ['nullable', 'string', 'max:100'],
+            'primary_platform' => ['nullable', 'string', 'max:100'], 'is_active' => ['sometimes', 'boolean'], 'metadata' => ['nullable', 'array'],
+        ]));
+        return response()->json($this->brandPayload($brand), 201);
+    }
+
+    public function updateBrand(Request $request, OfficeContentBrand $brand): JsonResponse
+    {
+        $brand->update($request->validate([
+            'name' => ['sometimes', 'string', 'max:255'], 'slug' => ['sometimes', 'string', 'max:100', 'alpha_dash', Rule::unique('office_content_brands', 'slug')->ignore($brand->id)],
+            'description' => ['sometimes', 'nullable', 'string'], 'default_agent' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'primary_platform' => ['sometimes', 'nullable', 'string', 'max:100'], 'is_active' => ['sometimes', 'boolean'], 'metadata' => ['sometimes', 'nullable', 'array'],
+        ]));
+        return response()->json($this->brandPayload($brand->fresh()));
     }
 
     public function store(Request $request): JsonResponse
     {
         $schedule = new OfficeContentSchedule;
         $this->fillSchedule($schedule, $request->validate($this->rules()));
-        return response()->json($this->schedulePayload($schedule), 201);
+        return response()->json($this->schedulePayload($schedule->load('brand')), 201);
     }
 
     public function update(Request $request, OfficeContentSchedule $schedule): JsonResponse
     {
         $existing = [
             'name' => $schedule->name, 'schedule_type' => $schedule->schedule_type, 'platform' => $schedule->platform,
+            'brand_id' => $schedule->brand_id,
             'content_type' => $schedule->content_type, 'topic' => $schedule->topic, 'brief' => $schedule->brief,
             'assigned_agent' => $schedule->assigned_agent, 'timezone' => $schedule->timezone,
             'scheduled_at' => $schedule->scheduled_at?->format('Y-m-d H:i:s'),
@@ -60,7 +90,7 @@ class OfficeContentPlannerController extends Controller
             'publishing_mode' => $schedule->publishing_mode, 'is_active' => $schedule->is_active, 'metadata' => $schedule->metadata,
         ];
         $this->fillSchedule($schedule, array_replace($existing, $request->validate($this->rules(true))));
-        return response()->json($this->schedulePayload($schedule));
+        return response()->json($this->schedulePayload($schedule->load('brand')));
     }
 
     public function destroy(OfficeContentSchedule $schedule): JsonResponse
@@ -73,6 +103,7 @@ class OfficeContentPlannerController extends Controller
     {
         $data = $request->validate([
             'schedule_id' => ['nullable', 'uuid', 'exists:office_content_schedules,id'],
+            'brand_id' => ['required', 'uuid', 'exists:office_content_brands,id'],
             'agent_id' => ['required', 'string', 'max:100'], 'platform' => ['required', 'string', 'max:100'],
             'content_type' => ['required', 'string', 'max:100'], 'title' => ['nullable', 'string', 'max:255'],
             'text' => ['nullable', 'string'], 'status' => ['required', Rule::in(self::CONTENT_STATUSES)],
@@ -81,7 +112,7 @@ class OfficeContentPlannerController extends Controller
             'deduplication_key' => hash('sha256', Str::uuid().'|'.($data['title'] ?? '')),
             'generated_at' => now(),
         ]));
-        return response()->json($item, 201);
+        return response()->json($item->load('brand'), 201);
     }
 
     public function updateContent(Request $request, OfficeContentItem $content): JsonResponse
@@ -89,6 +120,7 @@ class OfficeContentPlannerController extends Controller
         $data = $request->validate([
             'title' => ['sometimes', 'nullable', 'string', 'max:255'], 'text' => ['sometimes', 'nullable', 'string'],
             'status' => ['sometimes', Rule::in(self::CONTENT_STATUSES)], 'scheduled_at' => ['sometimes', 'nullable', 'date'],
+            'brand_id' => ['sometimes', 'nullable', 'uuid', 'exists:office_content_brands,id'],
         ]);
         $metadata = $content->metadata ?? [];
         if (array_key_exists('scheduled_at', $data)) {
@@ -97,7 +129,7 @@ class OfficeContentPlannerController extends Controller
             $data['metadata'] = $metadata;
         }
         $content->update($data);
-        return response()->json($content->fresh());
+        return response()->json($content->fresh()->load('brand'));
     }
 
     private function rules(bool $partial = false): array
@@ -105,6 +137,7 @@ class OfficeContentPlannerController extends Controller
         $required = $partial ? 'sometimes' : 'required';
         return [
             'name' => [$required, 'string', 'max:255'], 'schedule_type' => [$required, Rule::in(['one_time', 'recurring'])],
+            'brand_id' => $partial ? ['sometimes', 'nullable', 'uuid', 'exists:office_content_brands,id'] : ['required', 'uuid', 'exists:office_content_brands,id'],
             'platform' => [$required, 'string', 'max:100'], 'content_type' => [$required, 'string', 'max:100'],
             'topic' => ['nullable', 'string', 'max:255'], 'brief' => ['nullable', 'string'], 'assigned_agent' => ['nullable', 'string', 'max:100'],
             'timezone' => ['nullable', 'timezone'], 'scheduled_at' => ['nullable', 'date'],
@@ -183,17 +216,24 @@ class OfficeContentPlannerController extends Controller
             'id' => $schedule->id.'@'.$when->format('YmdHi'), 'scheduleId' => $schedule->id, 'name' => $schedule->name,
             'topic' => $schedule->topic, 'platform' => $schedule->platform, 'contentType' => $schedule->content_type,
             'assignedAgent' => $schedule->assigned_agent, 'scheduleType' => $schedule->schedule_type,
+            'brand' => $schedule->brand ? $this->brandPayload($schedule->brand) : null,
             'recurrenceLabel' => $schedule->recurrence_label, 'scheduledAt' => $when->toIso8601String(), 'status' => 'scheduled',
         ];
     }
 
     private function schedulePayload(OfficeContentSchedule $schedule): array
     {
-        return ['id' => $schedule->id, 'name' => $schedule->name, 'scheduleType' => $schedule->schedule_type, 'platform' => $schedule->platform,
+        return ['id' => $schedule->id, 'name' => $schedule->name, 'brand' => $schedule->brand ? $this->brandPayload($schedule->brand) : null, 'brandId' => $schedule->brand_id, 'scheduleType' => $schedule->schedule_type, 'platform' => $schedule->platform,
             'contentType' => $schedule->content_type, 'topic' => $schedule->topic, 'brief' => $schedule->brief, 'assignedAgent' => $schedule->assigned_agent,
             'timezone' => $schedule->timezone, 'scheduledAt' => $schedule->scheduled_at?->toIso8601String(), 'recurrenceRule' => $schedule->recurrence_rule,
             'recurrenceLabel' => $schedule->recurrence_label, 'generationMode' => $schedule->generation_mode, 'publishingMode' => $schedule->publishing_mode,
             'isActive' => $schedule->is_active, 'startsAt' => $schedule->starts_at?->toIso8601String(), 'endsAt' => $schedule->ends_at?->toIso8601String(),
             'nextRunAt' => $schedule->next_run_at?->toIso8601String(), 'metadata' => $schedule->metadata];
+    }
+
+    private function brandPayload(OfficeContentBrand $brand): array
+    {
+        return ['id' => $brand->id, 'name' => $brand->name, 'slug' => $brand->slug, 'description' => $brand->description,
+            'defaultAgent' => $brand->default_agent, 'primaryPlatform' => $brand->primary_platform, 'isActive' => $brand->is_active, 'metadata' => $brand->metadata];
     }
 }

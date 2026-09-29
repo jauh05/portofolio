@@ -21,4 +21,9 @@ class OfficeContentItem extends Model
     {
         return $this->belongsTo(OfficeContentSchedule::class, 'schedule_id');
     }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(OfficeContentBrand::class, 'brand_id');
+    }
 }

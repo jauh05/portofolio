@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OfficeContentSchedule extends Model
 {
@@ -23,5 +24,10 @@ class OfficeContentSchedule extends Model
             'metadata' => 'array',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(OfficeContentBrand::class, 'brand_id');
     }
 }

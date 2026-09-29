@@ -2,6 +2,7 @@
 
 use App\Models\OfficeCommand;
 use App\Models\OfficeContentItem;
+use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentSchedule;
 use App\Models\OfficeEvent;
 use App\Models\OfficeNotification;
@@ -24,23 +25,35 @@ function bridgeHeaders(string $token = 'bridge-test-token'): array
 }
 
 test('owner operations APIs require authentication', function () {
-    foreach (['/office/api/tasks', '/office/api/activity', '/office/api/content', '/office/api/content-planner', '/office/api/content-schedules', '/office/api/notifications', '/office/api/commands', '/office/api/summary'] as $url) {
+    foreach (['/office/api/tasks', '/office/api/activity', '/office/api/content', '/office/api/content-brands', '/office/api/content-planner', '/office/api/content-schedules', '/office/api/notifications', '/office/api/commands', '/office/api/summary'] as $url) {
         $this->getJson($url)->assertUnauthorized();
     }
 });
 
+test('owner can create, list, and deactivate content brands', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $this->actingAs($owner)->getJson('/office/api/content-brands')->assertOk()->assertJsonCount(3, 'data');
+    $created = $this->actingAs($owner)->postJson('/office/api/content-brands', [
+        'name' => 'Client Alpha', 'slug' => 'client-alpha', 'primary_platform' => 'linkedin',
+    ])->assertCreated()->assertJsonPath('slug', 'client-alpha');
+    $id = $created->json('id');
+    $this->actingAs($owner)->patchJson('/office/api/content-brands/'.$id, ['is_active' => false])->assertOk()->assertJsonPath('isActive', false);
+    $this->actingAs($owner)->getJson('/office/api/content-brands')->assertOk()->assertJsonMissing(['id' => $id]);
+});
+
 test('owner can create one-time content schedules and see them only inside a requested calendar range', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
     $payload = [
         'name' => 'Portfolio launch post', 'schedule_type' => 'one_time', 'platform' => 'linkedin', 'content_type' => 'post',
-        'topic' => 'Launch', 'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-15 09:30:00',
+        'brand_id' => $brand->id, 'topic' => 'Launch', 'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-15 09:30:00',
         'generation_mode' => 'manual', 'publishing_mode' => 'review',
     ];
     $this->actingAs($owner)->postJson('/office/api/content-schedules', $payload)->assertCreated()
-        ->assertJsonPath('scheduleType', 'one_time')->assertJsonPath('timezone', 'Asia/Jakarta');
+        ->assertJsonPath('scheduleType', 'one_time')->assertJsonPath('brand.slug', 'kauiz')->assertJsonPath('timezone', 'Asia/Jakarta');
 
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta')
-        ->assertOk()->assertJsonCount(1, 'occurrences')->assertJsonPath('occurrences.0.name', 'Portfolio launch post');
+        ->assertOk()->assertJsonCount(1, 'occurrences')->assertJsonPath('occurrences.0.name', 'Portfolio launch post')->assertJsonPath('occurrences.0.brand.slug', 'kauiz');
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-11-01&end=2026-11-30&timezone=Asia/Jakarta')
         ->assertOk()->assertJsonCount(0, 'occurrences');
     expect(OfficeContentSchedule::count())->toBe(1);
@@ -48,9 +61,10 @@ test('owner can create one-time content schedules and see them only inside a req
 
 test('owner can create recurring schedules without generating unbounded content rows', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'jauki')->firstOrFail();
     $payload = [
         'name' => 'Weekly product insight', 'schedule_type' => 'recurring', 'platform' => 'instagram', 'content_type' => 'carousel',
-        'timezone' => 'Asia/Jakarta', 'frequency' => 'weekly', 'days' => [1, 4], 'time' => '08:00', 'starts_at' => '2026-10-01',
+        'brand_id' => $brand->id, 'timezone' => 'Asia/Jakarta', 'frequency' => 'weekly', 'days' => [1, 4], 'time' => '08:00', 'starts_at' => '2026-10-01',
         'generation_mode' => 'manual', 'publishing_mode' => 'review',
     ];
     $this->actingAs($owner)->postJson('/office/api/content-schedules', $payload)->assertCreated()
@@ -58,17 +72,20 @@ test('owner can create recurring schedules without generating unbounded content 
 
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta')
         ->assertOk()->assertJsonPath('occurrences.0.scheduleType', 'recurring');
+    $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta&brand_id='.$brand->id)
+        ->assertOk()->assertJsonPath('occurrences.0.brand.slug', 'jauki');
     expect(OfficeContentSchedule::count())->toBe(1)->and(OfficeContentItem::count())->toBe(0);
 });
 
 test('owner can update and deactivate a content schedule', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'personal-brand')->firstOrFail();
     $schedule = OfficeContentSchedule::create([
         'name' => 'Original', 'schedule_type' => 'one_time', 'platform' => 'blog', 'content_type' => 'article',
-        'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-20 10:00:00', 'generation_mode' => 'manual', 'publishing_mode' => 'review', 'is_active' => true,
+        'brand_id' => $brand->id, 'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-20 10:00:00', 'generation_mode' => 'manual', 'publishing_mode' => 'review', 'is_active' => true,
     ]);
     $payload = [
-        'name' => 'Updated', 'schedule_type' => 'one_time', 'platform' => 'blog', 'content_type' => 'article',
+        'name' => 'Updated', 'brand_id' => $brand->id, 'schedule_type' => 'one_time', 'platform' => 'blog', 'content_type' => 'article',
         'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-21 10:00:00', 'generation_mode' => 'manual', 'publishing_mode' => 'review',
     ];
     $this->actingAs($owner)->patchJson('/office/api/content-schedules/'.$schedule->id, $payload)->assertOk()->assertJsonPath('name', 'Updated');
