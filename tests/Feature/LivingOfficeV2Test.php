@@ -8,6 +8,8 @@ use App\Models\OfficeContentSchedule;
 use App\Models\OfficeEvent;
 use App\Models\OfficeNotification;
 use App\Models\OfficeTask;
+use App\Services\OfficeAiGateway;
+use App\Services\OfficeAiGatewayException;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Process;
@@ -46,8 +48,38 @@ test('owner can create, list, and deactivate content brands', function () {
 function fakePlanner(array $plan): void
 {
     config(['services.office_ai' => ['base_url' => 'https://planner.test/v1', 'api_key' => 'test-key', 'model' => 'office-test']]);
-    Http::fake(['planner.test/*' => Http::response(['choices' => [['message' => ['content' => json_encode($plan)]]])]);
+    Http::fake(['planner.test/*' => Http::response(['choices' => [['message' => ['content' => json_encode($plan)]]]])]);
 }
+
+function fakeOfficeAiResponse(string $content, int $status = 200): void
+{
+    config(['services.office_ai' => ['base_url' => 'https://planner.test/v1', 'api_key' => 'test-key', 'model' => 'office-test']]);
+    Http::fake(['planner.test/*' => Http::response($status === 200 ? ['choices' => [['message' => ['content' => $content]]]] : ['error' => ['message' => 'provider error']], $status)]);
+}
+
+test('shared Office AI gateway accepts code-fenced JSON and exposes controlled provider errors', function () {
+    fakeOfficeAiResponse("```json\n{\"ok\":true}\n```");
+    expect(app(OfficeAiGateway::class)->completeJson('system', 'user'))->toBe(['ok' => true]);
+    fakeOfficeAiResponse('', 429);
+    expect(fn () => app(OfficeAiGateway::class)->completeJson('system', 'user'))->toThrow(OfficeAiGatewayException::class, 'rate-limited');
+});
+
+test('AI Planner handles string clarifications and code-fenced JSON without creating a schedule', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakeOfficeAiResponse("```json\n".json_encode(['type' => 'schedule_plan', 'items' => [[
+        'schedule_type' => 'one_time', 'brand_slug' => 'kauiz', 'platform' => 'instagram', 'content_type' => 'feed', 'topic' => 'Study tips', 'time' => '19:00', 'scheduled_at' => '2026-10-10T19:00:00+07:00',
+    ]], 'clarifications' => ['Check the content angle.']])."\n```");
+    $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Create a Kauiz feed on 10 October at 19:00.'])
+        ->assertOk()->assertJsonPath('plan.items.0.schedule_type', 'one_time')->assertJsonPath('clarifications.0', 'Check the content angle.');
+    expect(OfficeContentSchedule::count())->toBe(0)->and(OfficeCommand::count())->toBe(0);
+});
+
+test('AI Planner reports invalid provider JSON as a controlled response', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakeOfficeAiResponse('not json');
+    $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Create a Kauiz feed tomorrow at 19:00.'])
+        ->assertStatus(502)->assertJsonPath('message', 'Office AI provider returned invalid JSON.');
+});
 
 test('owner receives a safe recurring AI Plan preview without worker execution', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
@@ -441,6 +473,43 @@ test('owner approval is the only path from analyst proposal to a queued task', f
     $report->update(['status' => 'ready', 'next_actions' => [['id' => '4346223f-3418-48ca-9ae3-3b539ba17513', 'status' => 'proposed', 'action_type' => 'task', 'agent_id' => 'jauki-analyst', 'description' => 'Review failed task', 'target' => 'task-1']]]);
     $this->actingAs($owner)->postJson('/office/api/analyst-reports/'.$report->id.'/approve', ['action_ids' => ['4346223f-3418-48ca-9ae3-3b539ba17513']])->assertOk();
     expect(OfficeTask::count())->toBe(1)->and(OfficeTask::first()->status)->toBe('queued')->and(OfficeCommand::count())->toBe(0);
+});
+
+test('analyst uses the shared AI gateway, proposes actions, and never executes workers before approval', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakeOfficeAiResponse(json_encode([
+        'summary' => 'Two internal tasks need review. No performance data available yet.',
+        'findings' => [['type' => 'attention', 'title' => 'Kauiz needs a plan', 'description' => 'There is no active schedule for Kauiz.', 'evidence' => 'office_content_schedules brand count = 0']],
+        'conclusion' => 'Owner review should decide the next content planning step.',
+        'recommendations' => [['priority' => 'medium', 'action' => 'Prepare a Kauiz planning task', 'reason' => 'The brand has no active schedule.']],
+        'next_actions' => [['action_type' => 'task', 'description' => 'Prepare Kauiz weekly content plan', 'reason' => 'No active schedule exists for Kauiz.', 'brand_slug' => 'kauiz']],
+    ]));
+    $response = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
+        ->assertCreated()->assertJsonPath('metadata.analysis_mode', 'ai')->assertJsonPath('nextActions.0.status', 'proposed');
+    expect(OfficeTask::count())->toBe(0)->and(OfficeCommand::count())->toBe(0);
+    $this->actingAs($owner)->postJson('/office/api/analyst-reports/'.$response->json('id').'/approve', ['action_ids' => [$response->json('nextActions.0.id')]])->assertOk();
+    expect(OfficeTask::count())->toBe(1)->and(OfficeCommand::count())->toBe(0);
+});
+
+test('analyst marks factual fallback when the AI provider response is invalid', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakeOfficeAiResponse('not json');
+    $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
+        ->assertCreated()->assertJsonPath('metadata.analysis_mode', 'fallback_internal')->assertJsonPath('metadata.performance_available', false)
+        ->assertJsonFragment(['No performance data available yet.']);
+});
+
+test('repeated approval cannot duplicate an analyst content schedule', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $actionId = '4b74de25-b1f3-4499-b22b-b6b5c97e9db0';
+    $report = OfficeAnalystReport::create([
+        'report_date' => now('Asia/Jakarta')->toDateString(), 'report_type' => 'manual', 'status' => 'ready', 'summary' => 'No performance data available yet.', 'conclusion' => 'Review.',
+        'next_actions' => [['id' => $actionId, 'status' => 'proposed', 'action_type' => 'content_schedule', 'description' => 'Kauiz study tips', 'reason' => 'Planning proposal.', 'schedule' => ['name' => 'Kauiz study tips', 'brand_id' => $brand->id, 'schedule_type' => 'one_time', 'platform' => 'instagram', 'content_type' => 'feed', 'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-10T19:00:00+07:00', 'generation_mode' => 'manual', 'publishing_mode' => 'review']]],
+        'metadata' => ['analysis_mode' => 'ai', 'performance_available' => false], 'generated_at' => now('Asia/Jakarta'),
+    ]);
+    foreach (range(1, 2) as $_) $this->actingAs($owner)->postJson('/office/api/analyst-reports/'.$report->id.'/approve', ['action_ids' => [$actionId]])->assertOk();
+    expect(OfficeContentSchedule::count())->toBe(1)->and(OfficeCommand::count())->toBe(0);
 });
 
 test('manual analyst reports use a seven-day Jakarta range when requested', function () {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OfficeContentItem;
 use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentSchedule;
+use App\Services\OfficeAiGatewayException;
 use App\Services\OfficeContentPlannerAiService;
 use Carbon\CarbonInterface;
 use Carbon\CarbonImmutable;
@@ -76,6 +77,8 @@ class OfficeContentPlannerController extends Controller
         $prompt = $request->validate(['prompt' => ['required', 'string', 'min:8', 'max:2000']])['prompt'];
         try {
             return response()->json($planner->analyze($prompt, OfficeContentBrand::where('is_active', true)->orderBy('name')->get()));
+        } catch (OfficeAiGatewayException $exception) {
+            return response()->json(['message' => $exception->getMessage()], $exception->getCode() ?: 422);
         } catch (\RuntimeException $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }

@@ -5,43 +5,17 @@ namespace App\Services;
 use App\Models\OfficeContentBrand;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
 class OfficeContentPlannerAiService
 {
+    public function __construct(private OfficeAiGateway $ai)
+    {
+    }
+
     public function analyze(string $prompt, Collection $brands): array
     {
-        $baseUrl = rtrim((string) config('services.office_ai.base_url'), '/');
-        $apiKey = (string) config('services.office_ai.api_key');
-        $model = (string) config('services.office_ai.model');
-        if ($baseUrl === '' || $apiKey === '' || $model === '') {
-            throw new RuntimeException('AI Planner is not configured yet. Add the Office AI provider environment settings first.');
-        }
-
-        try {
-            $response = Http::acceptJson()->withToken($apiKey)->timeout(20)->post($baseUrl.'/chat/completions', [
-                'model' => $model,
-                'response_format' => ['type' => 'json_object'],
-                'messages' => [
-                    ['role' => 'system', 'content' => $this->systemPrompt($brands)],
-                    ['role' => 'user', 'content' => $prompt],
-                ],
-            ]);
-        } catch (\Throwable $exception) {
-            throw new RuntimeException('AI Planner is taking too long. Try again.');
-        }
-        if (! $response->successful()) {
-            throw new RuntimeException('Planner could not analyze this request.');
-        }
-
-        $content = $response->json('choices.0.message.content');
-        $decoded = is_string($content) ? json_decode($content, true) : null;
-        if (! is_array($decoded)) {
-            throw new RuntimeException('Planner returned an invalid schedule preview. Try again.');
-        }
-
-        return $this->normalize($decoded, $brands);
+        return $this->normalize($this->ai->completeJson($this->systemPrompt($brands), $prompt), $brands);
     }
 
     private function systemPrompt(Collection $brands): string
@@ -59,7 +33,11 @@ class OfficeContentPlannerAiService
 
     private function normalize(array $raw, Collection $brands): array
     {
-        $clarifications = collect($raw['clarifications'] ?? [])->filter('is_string')->map('trim')->filter()->values()->all();
+        $clarifications = collect($raw['clarifications'] ?? [])
+            ->filter(fn ($value) => is_string($value))
+            ->map(fn ($value) => trim($value))
+            ->filter(fn ($value) => $value !== '')
+            ->values()->all();
         $items = [];
         foreach (array_slice(is_array($raw['items'] ?? null) ? $raw['items'] : [], 0, 10) as $index => $item) {
             if (! is_array($item)) {
