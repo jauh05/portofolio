@@ -16,6 +16,7 @@ import { OperationsView } from './OperationsViews';
 import { ContentPlanner } from './ContentPlanner';
 import { AnalystReports } from './AnalystReports';
 import './living-office.css';
+import './office-3d-elements.css';
 
 const statusTone = (status) => ({
     monitoring: 'cyan', generating: 'violet', working: 'blue', planning: 'green', completed: 'green',
@@ -88,8 +89,8 @@ function Workstation({ variant = 'desk', worker = null }) {
     return <div className={`workstation ${worker?.status || 'idle'}`}><span className="workstation-shadow" /><span className="workstation-chair" /><span className="workstation-desk"><i className="workstation-monitor"><b>{worker?.shortName}</b><em /></i><i className="workstation-keyboard" /><i className="workstation-mouse" /></span></div>;
 }
 
-function OfficeZone({ className, label, icon: Icon, variant, capacity, children, disabled, pending }) {
-    return <section className={`office-zone ${className} ${disabled ? 'disabled' : ''}`}><div className="zone-title"><Icon size={13} /><span>{label}</span>{capacity && <small>{capacity} seats</small>}{disabled && <em>Belum diinstal</em>}{pending && <em className="pending">Mock data</em>}</div><Workstation variant={variant} />{children}<i className="plant plant-one" /><i className="plant plant-two" /></section>;
+function OfficeZone({ className, label, icon: Icon, variant, capacity, children, disabled, pending, asset }) {
+    return <section className={`office-zone ${className} ${disabled ? 'disabled' : ''}`}><div className="zone-title"><Icon size={13} /><span>{label}</span>{capacity && <small>{capacity} seats</small>}{disabled && <em>Belum diinstal</em>}{pending && <em className="pending">Mock data</em>}</div><span className={`office-3d-piece office-3d-room office-3d-${asset}`} aria-hidden="true" /><Workstation variant={variant} />{children}<i className="plant plant-one" /><i className="plant plant-two" /></section>;
 }
 
 function DeskPod({ agent }) {
@@ -98,6 +99,7 @@ function DeskPod({ agent }) {
     const unavailable = ['not_installed', 'not_connected'].includes(agent.status);
     return <div className={`desk-pod desk-${assignment.role} ${unavailable ? 'inactive' : ''}`} style={{ left: `${seat.x}%`, top: `${seat.y}%` }}>
         <span className="desk-label"><i style={{ background: agent.color }} />{agent.name.replace(' Worker', '')}</span>
+        <span className={`office-3d-piece office-3d-desk office-3d-${agent.id}`} aria-hidden="true" />
         <Workstation worker={agent} />
         {unavailable && <span className="desk-offline">NOT CONNECTED</span>}
     </div>;
@@ -177,7 +179,7 @@ function OfficeMap({ agents, selectedId, onSelect, summary, analystReport, activ
                     {agents.map(agent => <Worker key={agent.id} agent={agent} selected={selectedId === agent.id} onClick={onSelect} reportReady={agent.id === 'jauki-analyst' && analystReport?.status === 'ready'} />)}
                 </div>
             </div>
-        </div><aside className="office-room-stack"><OfficeZone className="zone-server" label="SERVER ROOM" icon={Server} variant="servers" capacity={2}><span className="temp-monitor">MONITORING PENDING</span></OfficeZone><OfficeZone className="zone-meeting" label="MEETING ROOM" icon={Users} variant="meeting" capacity={8}><span className="presentation-screen">PRESENTATION</span><span className="meeting-whiteboard">PLAN · REVIEW · DECIDE</span></OfficeZone><OfficeZone className="zone-break" label="REST / LOUNGE" icon={Coffee} variant="lounge" capacity={4}><div className="integrated-pantry"><Coffee size={21} /><span>COFFEE</span></div><span className="water-dispenser">◒</span><span className="daybed">DAYBED</span></OfficeZone></aside></div>
+        </div><aside className="office-room-stack"><OfficeZone className="zone-server" label="SERVER ROOM" icon={Server} variant="servers" asset="server" capacity={2}><span className="temp-monitor">MONITORING PENDING</span></OfficeZone><OfficeZone className="zone-meeting" label="MEETING ROOM" icon={Users} variant="meeting" asset="meeting" capacity={8}><span className="presentation-screen">PRESENTATION</span><span className="meeting-whiteboard">PLAN · REVIEW · DECIDE</span></OfficeZone><OfficeZone className="zone-break" label="REST / LOUNGE" icon={Coffee} variant="lounge" asset="lounge" capacity={4}><div className="integrated-pantry"><Coffee size={21} /><span>COFFEE</span></div><span className="water-dispenser">◒</span><span className="daybed">DAYBED</span></OfficeZone></aside></div>
     </div>;
 }
 
