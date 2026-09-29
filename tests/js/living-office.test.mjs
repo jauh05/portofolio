@@ -68,16 +68,19 @@ test('paths are deterministic and pass through safe waypoints', () => {
     assert.equal(restRoute.at(-1), 'daybed1');
 });
 
-test('movement implementation guarantees translation-only sprites and no free walking', () => {
+test('movement implementation keeps walks intentional, infrequent, and on fixed routes', () => {
     const hook = readFileSync(new URL('../../resources/js/living-office/useLivingOffice.js', import.meta.url), 'utf8');
     const main = readFileSync(new URL('../../resources/js/living-office/main.jsx', import.meta.url), 'utf8');
     const css = readFileSync(new URL('../../resources/js/living-office/living-office.css', import.meta.url), 'utf8');
     const workerCss = css.split('\n').filter((line) => line.includes('.worker') || line.includes('@keyframes walk')).join('\n');
 
-    assert.doesNotMatch(hook, /Math\.random|Math\.atan2|\bangle\b|\brotation\b|rotate\(/i);
+    assert.doesNotMatch(hook, /Math\.atan2|\bangle\b|\brotation\b|rotate\(/i);
     assert.match(main, /translate3d\(/);
     assert.doesNotMatch(workerCss, /rotate\(/i);
-    assert.doesNotMatch(hook, /wander|random/i);
+    assert.doesNotMatch(hook, /wander/i);
+    assert.match(hook, /const scheduleAmbientVisit/);
+    assert.match(hook, /90_000/);
+    assert.match(hook, /returnToDesk\(agent\.id/);
     for (const command of ['sendToMeeting', 'sendToRest', 'sendToServer', 'returnToDesk', 'startMeeting', 'endMeeting']) {
         assert.match(hook, new RegExp(`const ${command}`));
     }

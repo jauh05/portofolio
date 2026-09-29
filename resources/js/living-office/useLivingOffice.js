@@ -18,6 +18,7 @@ const statusPose = {
 
 export function useLivingOffice(registry) {
     const timers = useRef([]);
+    const ambientTimer = useRef(null);
     const agentsRef = useRef([]);
     const eventRef = useRef(null);
     const [activeEvent, setActiveEvent] = useState(null);
@@ -145,6 +146,31 @@ export function useLivingOffice(registry) {
         return travelTime;
     }, [rememberTimer, returnToDesk, travelAgent]);
 
+    // One infrequent, bounded visit keeps the office alive without free roaming.
+    const scheduleAmbientVisit = useCallback(() => {
+        const scheduleNext = () => {
+            const delay = 90_000 + Math.floor(Math.random() * 120_000);
+            ambientTimer.current = window.setTimeout(() => {
+                if (!eventRef.current) {
+                    const candidates = agentsRef.current.filter((agent) => agent.officeState === 'seated_work'
+                        && ['idle', 'completed'].includes(agent.status)
+                        && !['not_installed', 'not_connected', 'offline'].includes(agent.status));
+                    if (candidates.length) {
+                        const agent = candidates[Math.floor(Math.random() * candidates.length)];
+                        const destinations = [...restSeats, ...meetingSeats.slice(0, 2)];
+                        const destination = destinations[Math.floor(Math.random() * destinations.length)];
+                        const finalState = officeStations[destination]?.type === 'rest' ? 'resting' : 'meeting';
+                        const travelTime = travelAgent(agent.id, destination, finalState, { bubble: 'Quick office visit' });
+                        returnToDesk(agent.id, travelTime + 15_000 + Math.floor(Math.random() * 15_000));
+                    }
+                }
+                scheduleNext();
+            }, delay);
+        };
+        scheduleNext();
+        return () => { if (ambientTimer.current) window.clearTimeout(ambientTimer.current); };
+    }, [returnToDesk, travelAgent]);
+
     const endMeeting = useCallback(() => {
         const event = eventRef.current;
         if (!event) return;
@@ -162,6 +188,7 @@ export function useLivingOffice(registry) {
     }, [endMeeting, rememberTimer, sendToMeeting]);
 
     useEffect(() => () => clearTimers(), [clearTimers]);
+    useEffect(() => scheduleAmbientVisit(), [scheduleAmbientVisit]);
 
     return {
         visualAgents, activeEvent, simulateEvent: startMeeting, startMeeting, endMeeting,
