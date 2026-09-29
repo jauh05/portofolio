@@ -10,8 +10,32 @@ const initialForm = (type, brandId = '') => ({
     brand_id: brandId, scheduled_at: '', frequency: 'weekly', days: [1], time: '09:00', starts_at: new Date().toISOString().slice(0, 10), ends_at: '', generation_mode: 'manual', publishing_mode: 'review', is_active: true,
 });
 
-function PlannerForm({ type, brands, onClose, onSave }) {
-    const [form, setForm] = useState(() => initialForm(type, brands[0]?.id));
+const mapScheduleToForm = (schedule) => {
+    return {
+        id: schedule.id,
+        name: schedule.name || '',
+        schedule_type: schedule.scheduleType,
+        platform: schedule.platform,
+        content_type: schedule.contentType,
+        topic: schedule.topic || '',
+        brief: schedule.brief || '',
+        assigned_agent: schedule.assignedAgent || '',
+        timezone: schedule.timezone || TZ,
+        brand_id: schedule.brandId || '',
+        scheduled_at: schedule.scheduledAt ? schedule.scheduledAt.slice(0, 16) : '',
+        frequency: schedule.recurrenceRule?.frequency || 'weekly',
+        days: schedule.recurrenceRule?.days || [1],
+        time: schedule.recurrenceRule?.time || '09:00',
+        starts_at: schedule.startsAt ? schedule.startsAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
+        ends_at: schedule.endsAt ? schedule.endsAt.slice(0, 10) : '',
+        generation_mode: schedule.generationMode || 'manual',
+        publishing_mode: schedule.publishingMode || 'review',
+        is_active: schedule.isActive,
+    };
+};
+
+function PlannerForm({ type, brands, onClose, onSave, initialData }) {
+    const [form, setForm] = useState(() => initialData ? mapScheduleToForm(initialData) : initialForm(type, brands[0]?.id));
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
     const change = (key, value) => setForm(current => ({ ...current, [key]: value }));
@@ -58,9 +82,81 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, createSc
     const byDay = useMemo(() => visibleOccurrences.reduce((result, item) => { const key = dateKey(item.scheduledAt); result[key] = [...(result[key] || []), item]; return result; }, {}), [visibleOccurrences]);
     const monthTitle = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(cursor);
 
+    const [editSchedule, setEditSchedule] = useState(null);
+
     const handleOccurrenceClick = (occurrence) => {
-        const item = contentItems.find(c => c.schedule_id === occurrence.scheduleId && (c.metadata?.scheduled_at === occurrence.scheduledAt || occurrence.scheduleType === 'one_time'));
-        if (item) setReviewItem(item);
+        const schedule = planner?.schedules?.find(s => s.id === occurrence.scheduleId);
+        const draft = contentItems.find(c => c.schedule_id === occurrence.scheduleId && (c.metadata?.scheduled_at === occurrence.scheduledAt || occurrence.scheduleType === 'one_time'));
+        if (!schedule) {
+            console.warn('Schedule record missing for occurrence item', occurrence);
+            return;
+        }
+        setReviewItem({ draft: draft || null, schedule: schedule, occurrence });
+    };
+
+    const ScheduleCard = ({ item }) => {
+        const schedule = item.scheduleId ? (planner?.schedules?.find(s => s.id === item.scheduleId) || item) : item;
+        return (
+            <article key={item.id} className={!schedule.isActive ? 'paused-schedule' : ''}>
+                <div><em>{item.brand?.name || 'Unassigned'}</em><b>{item.name}</b><small>{item.platform} · {item.contentType}</small>{item.topic && <small>{item.topic}</small>}</div>
+                <time>{prettyDate(item.scheduledAt)}</time><span className={item.scheduleType}>{item.scheduleType === 'recurring' ? item.recurrenceLabel : 'One-time'}</span>
+                {!schedule.isActive && <div style={{color: 'var(--amber-11)', fontSize: 11, marginTop: 4, fontWeight: 500}}>PAUSED</div>}
+                <div style={{marginTop: 8, display: 'flex', gap: '4px', flexWrap: 'wrap'}}>
+                    {(() => {
+                        const draft = contentItems.find(c => c.schedule_id === item.scheduleId && (c.metadata?.scheduled_at === item.scheduledAt || item.scheduleType === 'one_time'));
+                        if (draft) {
+                            return <button onClick={() => setReviewItem({draft, schedule})} className="primary-button" style={{fontSize: 11, padding: '4px 8px'}}>Draft: {draft.status}</button>;
+                        }
+                        return null;
+                    })()}
+                    <button onClick={() => setEditSchedule(schedule)} style={{fontSize: 11, padding: '4px 8px'}}>Edit</button>
+                    <button onClick={() => togglePause(schedule)} style={{fontSize: 11, padding: '4px 8px'}}>{schedule.isActive ? 'Pause' : 'Resume'}</button>
+                    <button onClick={() => deleteSchedule(schedule)} style={{fontSize: 11, padding: '4px 8px', color: 'red'}}>Delete</button>
+                </div>
+            </article>
+        );
+    };
+
+    const deleteSchedule = async (schedule) => {
+        if (!window.confirm(`Yakin ingin menghapus planner "${schedule.name}"?\n(Konten yang sudah dibuat tidak akan dihapus, tetapi jadwal ini akan berhenti)`)) return;
+        try {
+            await fetch(`/office/api/content-schedules/${schedule.id}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } });
+            await loadPlanner(start.toISOString().slice(0, 10), end.toISOString().slice(0, 10));
+        } catch (error) {
+            console.error('Failed to delete schedule', error);
+            alert('Gagal menghapus schedule: ' + error.message);
+        }
+    };
+
+    const togglePause = async (schedule) => {
+        try {
+            const res = await fetch(`/office/api/content-schedules/${schedule.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                body: JSON.stringify({ is_active: !schedule.isActive })
+            });
+            if (!res.ok) throw new Error('Failed to update status');
+            await loadPlanner(start.toISOString().slice(0, 10), end.toISOString().slice(0, 10));
+        } catch (error) {
+            console.error(error);
+            alert('Gagal mengubah status: ' + error.message);
+        }
+    };
+
+    const updateSchedule = async (schedule, data) => {
+        try {
+            const res = await fetch(`/office/api/content-schedules/${schedule.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                body: JSON.stringify(data)
+            });
+            if (!res.ok) throw new Error('Failed to update schedule');
+            await loadPlanner(start.toISOString().slice(0, 10), end.toISOString().slice(0, 10));
+        } catch (error) {
+            console.error(error);
+            alert('Gagal mengedit jadwal: ' + error.message);
+            throw error;
+        }
     };
 
     return <div className="content-view planner-view"><div className="view-heading"><div><span>CONTENT PLANNER</span><h1>Content Planner</h1><p>Calendar-based schedules in {TZ}. Saving a schedule never starts a worker.</p></div><div className="planner-actions"><button onClick={() => setFormType('one_time')}><Plus size={15} /> One-time</button><button onClick={() => setFormType('recurring')}><Repeat2 size={15} /> Recurring</button><button onClick={() => setAiPlanOpen(true)}><Sparkles size={15} /> AI Plan</button></div></div>
@@ -75,7 +171,8 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, createSc
 </div>
 </article>) : <p>No content scheduled in this visible month.</p>}</aside></section>
         {formType && <PlannerForm type={formType} brands={brands} onClose={() => setFormType(null)} onSave={createSchedule} />}
+        {editSchedule && <PlannerForm type={editSchedule.scheduleType} brands={brands} initialData={editSchedule} onClose={() => setEditSchedule(null)} onSave={(data) => updateSchedule(editSchedule, data)} />}
         {aiPlanOpen && <AiPlanModal brands={brands} onClose={() => setAiPlanOpen(false)} onAnalyze={analyzePlan} onSave={createSchedule} />}
-        <ContentReview contentItem={reviewItem} onClose={() => setReviewItem(null)} generateContent={generateContent} reviseContent={reviseContent} updateContent={updateContent} approveContent={approveContent} />
+        <ContentReview contentItem={reviewItem?.draft} schedule={reviewItem?.schedule} occurrence={reviewItem?.occurrence} onClose={() => setReviewItem(null)} generateContent={generateContent} reviseContent={reviseContent} updateContent={updateContent} approveContent={approveContent} />
     </div>;
 }

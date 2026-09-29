@@ -76,7 +76,7 @@ class OfficeContentPlannerController extends Controller
         $start = CarbonImmutable::parse($request->string('start', now($timezone)->startOfMonth()->toDateString())->value(), $timezone)->startOfDay();
         $end = CarbonImmutable::parse($request->string('end', $start->endOfMonth()->toDateString())->value(), $timezone)->endOfDay();
         $brandId = $request->string('brand_id')->value();
-        $schedules = OfficeContentSchedule::with('brand')->where('is_active', true)
+        $schedules = OfficeContentSchedule::with('brand')
             ->when($brandId, fn ($query) => $query->where('brand_id', $brandId))
             ->orderBy('next_run_at')->get();
         $occurrences = $schedules->flatMap(fn (OfficeContentSchedule $schedule) => $this->occurrences($schedule, $start, $end))
@@ -86,6 +86,7 @@ class OfficeContentPlannerController extends Controller
             'range' => ['start' => $start->toIso8601String(), 'end' => $end->toIso8601String(), 'timezone' => $timezone],
             'occurrences' => $occurrences,
             'upcoming' => $occurrences->filter(fn (array $item) => CarbonImmutable::parse($item['scheduledAt'])->greaterThanOrEqualTo(now($timezone)))->take(12)->values(),
+            'schedules' => $schedules->map(fn (OfficeContentSchedule $schedule) => $this->schedulePayload($schedule)),
         ]);
     }
 
@@ -166,7 +167,10 @@ class OfficeContentPlannerController extends Controller
 
     public function destroy(OfficeContentSchedule $schedule): JsonResponse
     {
-        $schedule->update(['is_active' => false]);
+        $schedule->update([
+            'is_active' => false,
+            'next_run_at' => null
+        ]);
         return response()->json(['status' => 'deactivated']);
     }
 
@@ -297,7 +301,7 @@ class OfficeContentPlannerController extends Controller
         ]);
         unset($attributes['frequency'], $attributes['days'], $attributes['time']);
         $schedule->fill($attributes);
-        $schedule->next_run_at = $this->nextOccurrence($schedule);
+        $schedule->next_run_at = $schedule->is_active ? $this->nextOccurrence($schedule) : null;
         $schedule->save();
     }
 
@@ -325,6 +329,7 @@ class OfficeContentPlannerController extends Controller
 
     private function occurrences(OfficeContentSchedule $schedule, CarbonImmutable $start, CarbonImmutable $end): array
     {
+        if (!$schedule->is_active) return [];
         $timezone = $schedule->timezone;
         if ($schedule->schedule_type === 'one_time') {
             $when = $this->immutable($schedule->scheduled_at, $timezone);
