@@ -208,11 +208,22 @@ def run_mcporter_exa(query: str, objective: str, num_results: int = 5) -> List[D
                     for block in blocks:
                         title_match = re.search(r"Title:\s*(.+)", block)
                         url_match = re.search(r"URL:\s*(.+)", block)
+                        published_match = re.search(r"Published:\s*(.+)", block)
+                        author_match = re.search(r"Author:\s*(.+)", block)
+                        highlights_match = re.search(r"Highlights:\s*(.+)", block, re.DOTALL)
+                        
                         if title_match and url_match:
-                            sources.append({
+                            source = {
                                 "title": title_match.group(1).strip(),
                                 "url": url_match.group(1).strip()
-                            })
+                            }
+                            if published_match and published_match.group(1).strip() != "None":
+                                source["published_at"] = published_match.group(1).strip()
+                            if author_match and author_match.group(1).strip() != "None":
+                                source["author"] = author_match.group(1).strip()
+                            if highlights_match and highlights_match.group(1).strip() != "None":
+                                source["snippet"] = highlights_match.group(1).strip().split("\n")[0] # Take first line of highlights as snippet
+                            sources.append(source)
                     return sources
 
                 if isinstance(parsed, dict) and "results" in parsed:
@@ -227,10 +238,10 @@ def run_mcporter_exa(query: str, objective: str, num_results: int = 5) -> List[D
         return []
     except subprocess.CalledProcessError as e:
         logger.error("mcporter call failed: %s\nStderr: %s", e, e.stderr)
-        return []
+        raise RuntimeError(f"Tool execution failed: {e}") from e
     except Exception as e:
          logger.error("Error executing mcporter: %s", e)
-         return []
+         raise RuntimeError(f"Tool execution failed: {e}") from e
 
 def _execute(
     client: OfficeCommandClient,

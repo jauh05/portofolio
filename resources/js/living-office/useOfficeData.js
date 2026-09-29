@@ -87,7 +87,7 @@ export function useOfficeData() {
         await refresh(); return report;
     };
     const approveReport = async (id, actionIds) => {
-        const report = await request(`/office/api/analyst-reports/${id}/approve`, { method: 'POST', body: JSON.stringify({ action_ids: actionIds }) });
+        const report = await request(`/office/api/analyst-reports/${id}/approve`, { method: 'POST', body: JSON.stringify({ plan_ids: actionIds }) });
         await refresh(); return report;
     };
     
@@ -97,7 +97,7 @@ export function useOfficeData() {
     const approveContent = async (id) => { const item = await request(`/office/api/content/${id}/approve`, { method: 'POST', body: '{}' }); await refresh(); return item; };
 
     const dismissReport = async (id, actionIds) => {
-        const report = await request(`/office/api/analyst-reports/${id}/dismiss`, { method: 'POST', body: JSON.stringify({ action_ids: actionIds }) });
+        const report = await request(`/office/api/analyst-reports/${id}/dismiss`, { method: 'POST', body: JSON.stringify({ plan_ids: actionIds }) });
         await refresh(); return report;
     };
     return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, createSchedule, analyzePlan, updateSchedule, deactivateSchedule, generateReport, approveReport, dismissReport, generateContent, reviseContent, updateContent, approveContent };

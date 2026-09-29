@@ -64,8 +64,8 @@ class OfficeEventService
                     'metadata' => array_merge($run->metadata ?? [], ['raw_result' => $result]),
                 ]);
                 
-                // Immediately consume it to generate the Analyst Report and Plan
-                app(\App\Services\OfficeAnalystReportService::class)->generatePlanFromResearch($run);
+                // Dispatch async job to generate the Analyst Report and Plan
+                \App\Jobs\ProcessCompletedResearchRun::dispatch($run);
             }
         }
     }
