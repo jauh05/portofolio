@@ -71,7 +71,7 @@ function Sidebar({ activeView, setActiveView }) {
     return <aside className="sidebar"><nav>{navItems.map(([id, Icon, label]) => <button key={id} className={activeView === id ? 'active' : ''} onClick={() => setActiveView(id)}><Icon size={20} /><span>{label}</span></button>)}</nav><a className="back-site" href="/"><ArrowLeft size={18} /><span>Portfolio</span></a></aside>;
 }
 
-function Workstation({ variant = 'desk' }) {
+function Workstation({ variant = 'desk', worker = null }) {
     if (variant === 'trent') return <div className="identity-desk trent-station"><div className="trent-monitors"><i /><i /><i /></div><span className="server-strip"><i /><i /><i /><i /></span><em>SYS</em></div>;
     if (variant === 'servers') return <div className="server-racks"><span /><span /><span /></div>;
     if (variant === 'board') return <div className="planning-board"><b>WEEK 39</b><span /><span /><span /></div>;
@@ -84,29 +84,20 @@ function Workstation({ variant = 'desk' }) {
     if (variant === 'pantry') return <div className="pantry-station"><Coffee /><Refrigerator /><span><i /></span></div>;
     if (variant === 'meeting') return <div className="meeting-table"><span /><i /><i /><i /><i /></div>;
     if (variant === 'reception') return <div className="reception-desk"><BrandMark /><span>CONTROL</span></div>;
-    return <div className="workstation"><div className="monitor"><span /></div><div className="desk-top" /><div className="chair" /></div>;
+    return <div className={`workstation ${worker?.status || 'idle'}`}><span className="workstation-shadow" /><span className="workstation-chair" /><span className="workstation-desk"><i className="workstation-monitor"><b>{worker?.shortName}</b><em /></i><i className="workstation-keyboard" /><i className="workstation-mouse" /></span></div>;
 }
 
 function OfficeZone({ className, label, icon: Icon, variant, capacity, children, disabled, pending }) {
     return <section className={`office-zone ${className} ${disabled ? 'disabled' : ''}`}><div className="zone-title"><Icon size={13} /><span>{label}</span>{capacity && <small>{capacity} seats</small>}{disabled && <em>Belum diinstal</em>}{pending && <em className="pending">Mock data</em>}</div><Workstation variant={variant} />{children}<i className="plant plant-one" /><i className="plant plant-two" /></section>;
 }
 
-const deskVariants = {
-    trent: 'trent', 'jauki-social': 'content', 'jauki-threads': 'community', 'jauki-article': 'article',
-    'jauki-planner': 'board', 'data-analyst': 'analytics', 'finance-analyst': 'finance',
-};
-
 function DeskPod({ agent }) {
     const assignment = deskAssignments[agent.id];
     const seat = assignment.deskSeat;
     const unavailable = ['not_installed', 'not_connected'].includes(agent.status);
-    const working = ['working', 'generating', 'planning', 'monitoring', 'analyzing'].includes(agent.status);
     return <div className={`desk-pod desk-${assignment.role} ${unavailable ? 'inactive' : ''}`} style={{ left: `${seat.x}%`, top: `${seat.y}%` }}>
         <span className="desk-label"><i style={{ background: agent.color }} />{agent.name.replace(' Worker', '')}</span>
-        <Workstation variant={deskVariants[agent.id]} />
-        <span className={`desk-screen ${agent.status === 'error' ? 'error' : ''}`}><b>{agent.shortName}</b><em>{unavailable ? 'NOT CONNECTED' : agent.status.toUpperCase()}</em><small>{working ? `${'█'.repeat(Math.round(agent.progress / 15))}${'░'.repeat(7 - Math.round(agent.progress / 15))} ${agent.progress}%` : agent.currentTask}</small></span>
-        <span className="desk-keyboard" /><span className="desk-mouse" /><span className="desk-leg left" /><span className="desk-leg right" />
-        <span className="desk-chair" /><span className="desk-foreground" />
+        <Workstation worker={agent} />
         {unavailable && <span className="desk-offline">NOT CONNECTED</span>}
     </div>;
 }
