@@ -13,7 +13,7 @@ class CreateOfficeOwner extends Command
      *
      * @var string
      */
-    protected $signature = 'office:owner {--email= : The email of the owner}';
+    protected $signature = 'office:owner {--email= : The email of the owner} {--existing : Promote an existing account without changing its password}';
 
     /**
      * The console command description.
@@ -30,6 +30,18 @@ class CreateOfficeOwner extends Command
         $this->info('Living AI Office - Owner Setup');
         $email = $this->option('email') ?: $this->ask('Enter owner email (e.g. admin@example.com)');
         
+        if ($this->option('existing')) {
+            $user = User::where('email', $email)->first();
+            if (! $user) {
+                $this->error('No existing user was found for that email.');
+                return 1;
+            }
+
+            $user->update(['is_office_owner' => true]);
+            $this->info("Existing account {$email} can now access Living AI Office.");
+            return 0;
+        }
+
         $password = $this->secret('Enter a strong password for this owner account');
         $passwordConfirm = $this->secret('Confirm password');
 
@@ -48,6 +60,7 @@ class CreateOfficeOwner extends Command
             [
                 'name' => 'Office Owner',
                 'password' => Hash::make($password),
+                'is_office_owner' => true,
             ]
         );
 

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_office_owner',
     ];
 
     /**
@@ -43,6 +44,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_office_owner' => 'boolean',
         ];
+    }
+
+    public function isOfficeOwner(): bool
+    {
+        return $this->is_office_owner;
     }
 }

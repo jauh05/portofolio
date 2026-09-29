@@ -29,7 +29,7 @@ test('owner operations APIs require authentication', function () {
 });
 
 test('owner can access operations APIs and content has an explicit empty response', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->create(['is_office_owner' => true]);
     $this->actingAs($owner)->getJson('/office/api/tasks')->assertOk()->assertJson(['data' => [], 'empty' => true]);
     $this->actingAs($owner)->getJson('/office/api/content')->assertOk()->assertJson(['data' => [], 'empty' => true]);
     $this->actingAs($owner)->getJson('/office/api/activity')->assertOk()->assertJson(['data' => [], 'empty' => true]);
@@ -178,7 +178,7 @@ test('content preview is persisted and creates one important notification', func
 
 test('valid command is queued but unknown and executable actions are rejected', function () {
     Process::fake();
-    $owner = User::factory()->create();
+    $owner = User::factory()->create(['is_office_owner' => true]);
     $this->actingAs($owner)->postJson('/office/api/agents/jauki-social/command', [
         'action' => 'generate_feed', 'payload' => [],
     ])->assertStatus(202)->assertJson(['status' => 'queued']);
@@ -199,7 +199,7 @@ test('command endpoint requires an authenticated owner', function () {
 });
 
 test('bot can claim and report an allowlisted command with server token only', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->create(['is_office_owner' => true]);
     $this->actingAs($owner)->postJson('/office/api/agents/jauki-threads/command', ['action' => 'generate_threads', 'payload' => []])->assertStatus(202);
     $claim = $this->postJson('/api/office/commands/claim', ['agent_id' => 'jauki-threads'], bridgeHeaders())->assertOk();
     $id = $claim->json('command.id');
@@ -210,7 +210,7 @@ test('bot can claim and report an allowlisted command with server token only', f
 });
 
 test('threads claim leaves queued article commands untouched', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->create(['is_office_owner' => true]);
     $article = OfficeCommand::create([
         'agent_id' => 'jauki-article', 'action' => 'generate_article', 'payload' => [],
         'status' => 'queued', 'requested_by' => $owner->id,
@@ -229,7 +229,7 @@ test('threads claim leaves queued article commands untouched', function () {
 });
 
 test('command bridge APIs reject missing and invalid bearer tokens', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->create(['is_office_owner' => true]);
     $command = OfficeCommand::create([
         'agent_id' => 'jauki-threads',
         'action' => 'generate_threads',
@@ -247,7 +247,7 @@ test('command bridge APIs reject missing and invalid bearer tokens', function ()
 });
 
 test('claimed commands cannot skip the running lifecycle state', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->create(['is_office_owner' => true]);
     $this->actingAs($owner)->postJson('/office/api/agents/jauki-social/command', ['action' => 'generate_feed', 'payload' => []])->assertStatus(202);
     $id = $this->postJson('/api/office/commands/claim', ['agent_id' => 'jauki-social'], bridgeHeaders())->json('command.id');
     $this->patchJson('/api/office/commands/'.$id, ['status' => 'completed'], bridgeHeaders())->assertConflict();
@@ -255,6 +255,6 @@ test('claimed commands cannot skip the running lifecycle state', function () {
 });
 
 test('office bridge token is not rendered into the dashboard', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->create(['is_office_owner' => true]);
     $this->actingAs($owner)->get('/office')->assertOk()->assertDontSee('bridge-test-token');
 });

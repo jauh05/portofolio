@@ -28,6 +28,7 @@ class LivingOfficeAuthTest extends TestCase
         $user = User::factory()->create([
             'email' => 'admin@example.com',
             'password' => bcrypt('secret123'),
+            'is_office_owner' => true,
         ]);
 
         $response = $this->post('/office/login', [
@@ -44,6 +45,7 @@ class LivingOfficeAuthTest extends TestCase
         $user = User::factory()->create([
             'email' => 'admin@example.com',
             'password' => bcrypt('secret123'),
+            'is_office_owner' => true,
         ]);
 
         $response = $this->post('/office/login', [
@@ -57,14 +59,14 @@ class LivingOfficeAuthTest extends TestCase
 
     public function test_authenticated_owner_can_access_office()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['is_office_owner' => true]);
         $response = $this->actingAs($user)->get('/office');
         $response->assertStatus(200);
     }
 
     public function test_owner_can_logout()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['is_office_owner' => true]);
         $response = $this->actingAs($user)->post('/office/logout');
         $response->assertRedirect('/office/login');
         $this->assertGuest();
@@ -78,9 +80,43 @@ class LivingOfficeAuthTest extends TestCase
 
     public function test_authenticated_owner_can_get_office_api()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['is_office_owner' => true]);
         $response = $this->actingAs($user)->getJson('/office/api/agents');
         $response->assertStatus(200);
+    }
+
+    public function test_authenticated_non_owner_cannot_access_office_or_api()
+    {
+        $user = User::factory()->create(['is_office_owner' => false]);
+
+        $this->actingAs($user)->get('/office')->assertForbidden();
+        $this->actingAs($user)->getJson('/office/api/agents')->assertForbidden();
+    }
+
+    public function test_non_owner_credentials_are_rejected_by_office_login()
+    {
+        User::factory()->create([
+            'email' => 'member@example.com',
+            'password' => bcrypt('secret123'),
+            'is_office_owner' => false,
+        ]);
+
+        $this->post('/office/login', ['email' => 'member@example.com', 'password' => 'secret123'])
+            ->assertSessionHasErrors(['email']);
+        $this->assertGuest();
+    }
+
+    public function test_existing_account_can_be_promoted_without_resetting_its_password()
+    {
+        $user = User::factory()->create(['is_office_owner' => false]);
+        $passwordHash = $user->password;
+
+        $this->artisan('office:owner', ['--email' => $user->email, '--existing' => true])
+            ->assertSuccessful();
+
+        $user->refresh();
+        $this->assertTrue($user->isOfficeOwner());
+        $this->assertSame($passwordHash, $user->password);
     }
 
     public function test_bot_endpoint_does_not_require_login()

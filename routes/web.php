@@ -21,7 +21,7 @@ Route::get('/office/login', [OfficeAuthController::class, 'showLogin'])->name('l
 Route::post('/office/login', [OfficeAuthController::class, 'login']);
 Route::post('/office/logout', [OfficeAuthController::class, 'logout'])->name('office.logout');
 
-Route::middleware('auth')->prefix('office')->group(function () {
+Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function () {
     Route::get('/', function () {
         return view('living-office');
     });
