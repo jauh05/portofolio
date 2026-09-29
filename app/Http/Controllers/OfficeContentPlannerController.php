@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\OfficeContentItem;
 use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentSchedule;
+use App\Services\OfficeContentPlannerAiService;
+use Carbon\CarbonInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -67,6 +69,16 @@ class OfficeContentPlannerController extends Controller
             'primary_platform' => ['sometimes', 'nullable', 'string', 'max:100'], 'is_active' => ['sometimes', 'boolean'], 'metadata' => ['sometimes', 'nullable', 'array'],
         ]));
         return response()->json($this->brandPayload($brand->fresh()));
+    }
+
+    public function analyze(Request $request, OfficeContentPlannerAiService $planner): JsonResponse
+    {
+        $prompt = $request->validate(['prompt' => ['required', 'string', 'min:8', 'max:2000']])['prompt'];
+        try {
+            return response()->json($planner->analyze($prompt, OfficeContentBrand::where('is_active', true)->orderBy('name')->get()));
+        } catch (\RuntimeException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
     }
 
     public function store(Request $request): JsonResponse
@@ -189,18 +201,20 @@ class OfficeContentPlannerController extends Controller
     {
         $timezone = $schedule->timezone;
         if ($schedule->schedule_type === 'one_time') {
-            $when = $schedule->scheduled_at?->setTimezone($timezone);
+            $when = $this->immutable($schedule->scheduled_at, $timezone);
             return $when && $when->betweenIncluded($start, $end) ? [$this->occurrencePayload($schedule, $when)] : [];
         }
         $rule = $schedule->recurrence_rule ?? [];
-        $from = $start->max($schedule->starts_at?->setTimezone($timezone)->startOfDay() ?? $start);
-        $until = $schedule->ends_at ? $end->min($schedule->ends_at->setTimezone($timezone)->endOfDay()) : $end;
+        $startsAt = $this->immutable($schedule->starts_at, $timezone);
+        $endsAt = $this->immutable($schedule->ends_at, $timezone);
+        $from = $start->max($startsAt?->startOfDay() ?? $start);
+        $until = $endsAt ? $end->min($endsAt->endOfDay()) : $end;
         $items = [];
         for ($day = $from->startOfDay(); $day->lessThanOrEqualTo($until) && count($items) < 100; $day = $day->addDay()) {
             $matches = match ($rule['frequency'] ?? null) {
                 'daily' => true,
                 'weekly' => in_array($day->isoWeekday(), $rule['days'] ?? [], true),
-                'monthly' => $day->day === ($schedule->starts_at?->setTimezone($timezone)->day ?? $day->day),
+                'monthly' => $day->day === ($startsAt?->day ?? $day->day),
                 default => false,
             };
             if (! $matches) continue;
@@ -235,5 +249,10 @@ class OfficeContentPlannerController extends Controller
     {
         return ['id' => $brand->id, 'name' => $brand->name, 'slug' => $brand->slug, 'description' => $brand->description,
             'defaultAgent' => $brand->default_agent, 'primaryPlatform' => $brand->primary_platform, 'isActive' => $brand->is_active, 'metadata' => $brand->metadata];
+    }
+
+    private function immutable(?CarbonInterface $value, string $timezone): ?CarbonImmutable
+    {
+        return $value ? CarbonImmutable::instance($value)->setTimezone($timezone) : null;
     }
 }

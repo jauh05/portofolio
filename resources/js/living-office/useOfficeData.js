@@ -72,6 +72,7 @@ export function useOfficeData() {
         await refresh();
         return schedule;
     };
+    const analyzePlan = async (prompt) => request('/office/api/content-planner/analyze', { method: 'POST', body: JSON.stringify({ prompt }) });
     const updateSchedule = async (id, payload) => {
         const schedule = await request(`/office/api/content-schedules/${id}`, { method: 'PATCH', body: JSON.stringify(payload) });
         await refresh();
@@ -81,5 +82,5 @@ export function useOfficeData() {
         await request(`/office/api/content-schedules/${id}`, { method: 'DELETE' });
         await refresh();
     };
-    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, createSchedule, updateSchedule, deactivateSchedule };
+    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, createSchedule, analyzePlan, updateSchedule, deactivateSchedule };
 }

@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 uses(RefreshDatabase::class);
 
@@ -41,6 +42,63 @@ test('owner can create, list, and deactivate content brands', function () {
     $this->actingAs($owner)->getJson('/office/api/content-brands')->assertOk()->assertJsonMissing(['id' => $id]);
 });
 
+function fakePlanner(array $plan): void
+{
+    config(['services.office_ai' => ['base_url' => 'https://planner.test/v1', 'api_key' => 'test-key', 'model' => 'office-test']]);
+    Http::fake(['planner.test/*' => Http::response(['choices' => [['message' => ['content' => json_encode($plan)]]])]);
+}
+
+test('owner receives a safe recurring AI Plan preview without worker execution', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakePlanner(['type' => 'schedule_plan', 'items' => [[
+        'schedule_type' => 'recurring', 'brand_slug' => 'kauiz', 'platform' => 'instagram', 'content_type' => 'feed',
+        'topic' => 'tips belajar', 'frequency' => 'weekly', 'weekdays' => ['monday'], 'time' => '19:00', 'starts_at' => '2026-10-05',
+    ]], 'clarifications' => []]);
+    $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Setiap Senin buat Feed Kauiz jam 19:00 tentang tips belajar.'])
+        ->assertOk()->assertJsonPath('plan.items.0.schedule_type', 'recurring')->assertJsonPath('plan.items.0.brand_id', OfficeContentBrand::where('slug', 'kauiz')->firstOrFail()->id);
+    expect(OfficeCommand::count())->toBe(0)->and(OfficeContentSchedule::count())->toBe(0);
+});
+
+test('AI Plan returns one-time and multi-schedule previews for user confirmation', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakePlanner(['type' => 'schedule_plan', 'items' => [
+        ['schedule_type' => 'one_time', 'brand_slug' => 'jauki', 'platform' => 'threads', 'content_type' => 'post', 'topic' => 'promo SPSS', 'time' => '19:00', 'scheduled_at' => '2026-10-02T19:00:00+07:00'],
+        ['schedule_type' => 'recurring', 'brand_slug' => 'kauiz', 'platform' => 'instagram', 'content_type' => 'story', 'topic' => 'tips belajar', 'frequency' => 'weekly', 'weekdays' => ['monday'], 'time' => '12:00', 'starts_at' => '2026-10-05'],
+    ], 'clarifications' => []]);
+    $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Besok jam 19 buat Threads Jauki dan setiap Senin Story Kauiz jam 12.'])
+        ->assertOk()->assertJsonCount(2, 'plan.items')->assertJsonPath('plan.items.0.schedule_type', 'one_time');
+    expect(OfficeContentSchedule::count())->toBe(0);
+});
+
+test('AI Plan requests clarification for missing time or unknown workspace', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakePlanner(['type' => 'schedule_plan', 'items' => [
+        ['schedule_type' => 'recurring', 'brand_slug' => 'unknown-brand', 'platform' => 'instagram', 'content_type' => 'feed', 'frequency' => 'weekly', 'weekdays' => ['monday']],
+    ], 'clarifications' => []]);
+    $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Setiap Senin buat feed untuk brand baru.'])
+        ->assertOk()->assertJsonPath('plan.items', [])->assertJsonFragment(['Workspace \'unknown-brand\' is not available.']);
+    fakePlanner(['type' => 'schedule_plan', 'items' => [
+        ['schedule_type' => 'recurring', 'brand_slug' => 'kauiz', 'platform' => 'instagram', 'content_type' => 'feed', 'frequency' => 'weekly', 'weekdays' => ['monday']],
+    ], 'clarifications' => []]);
+    $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Setiap Senin buat feed Kauiz.'])
+        ->assertOk()->assertJsonFragment(['Schedule item 1 needs a time.']);
+});
+
+test('AI Plan endpoint is owner-only', function () {
+    $this->postJson('/office/api/content-planner/analyze', ['prompt' => 'Every Monday create a Kauiz feed at 19:00.'])->assertUnauthorized();
+});
+
+test('AI Plan preview creates a schedule only after explicit confirmation through the schedule API', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    fakePlanner(['type' => 'schedule_plan', 'items' => [[
+        'schedule_type' => 'recurring', 'brand_slug' => 'kauiz', 'platform' => 'instagram', 'content_type' => 'feed',
+        'topic' => 'tips belajar', 'frequency' => 'weekly', 'weekdays' => ['monday'], 'time' => '19:00', 'starts_at' => '2026-10-05',
+    ]], 'clarifications' => []]);
+    $preview = $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Every Monday create a Kauiz feed at 19:00.'])->assertOk();
+    $this->actingAs($owner)->postJson('/office/api/content-schedules', $preview->json('plan.items.0'))->assertCreated();
+    expect(OfficeContentSchedule::count())->toBe(1)->and(OfficeCommand::count())->toBe(0);
+});
+
 test('owner can create one-time content schedules and see them only inside a requested calendar range', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
     $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
@@ -57,6 +115,17 @@ test('owner can create one-time content schedules and see them only inside a req
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-11-01&end=2026-11-30&timezone=Asia/Jakarta')
         ->assertOk()->assertJsonCount(0, 'occurrences');
     expect(OfficeContentSchedule::count())->toBe(1);
+});
+
+test('planner occurrence calculation normalizes hydrated Carbon values to CarbonImmutable', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    OfficeContentSchedule::create([
+        'name' => 'Immutable regression', 'brand_id' => $brand->id, 'schedule_type' => 'one_time', 'platform' => 'instagram', 'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-15 19:00:00', 'generation_mode' => 'manual', 'publishing_mode' => 'review', 'is_active' => true,
+    ]);
+    $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta')
+        ->assertOk()->assertJsonCount(1, 'occurrences');
 });
 
 test('owner can create recurring schedules without generating unbounded content rows', function () {

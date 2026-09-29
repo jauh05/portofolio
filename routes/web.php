@@ -38,6 +38,7 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::post('/content-brands', [OfficeContentPlannerController::class, 'storeBrand']);
         Route::patch('/content-brands/{brand}', [OfficeContentPlannerController::class, 'updateBrand']);
         Route::get('/content-planner', [OfficeContentPlannerController::class, 'planner']);
+        Route::post('/content-planner/analyze', [OfficeContentPlannerController::class, 'analyze']);
         Route::get('/content-schedules', [OfficeContentPlannerController::class, 'index']);
         Route::post('/content-schedules', [OfficeContentPlannerController::class, 'store']);
         Route::get('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'show']);

@@ -39,4 +39,10 @@ return [
         'token' => env('OFFICE_BRIDGE_TOKEN'),
     ],
 
+    'office_ai' => [
+        'base_url' => env('OFFICE_AI_BASE_URL'),
+        'api_key' => env('OFFICE_AI_API_KEY'),
+        'model' => env('OFFICE_AI_MODEL'),
+    ],
+
 ];
