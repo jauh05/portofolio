@@ -38,7 +38,7 @@ class OfficeAiGateway
                 'messages' => [['role' => 'system', 'content' => $system], ['role' => 'user', 'content' => $user]],
             ];
             if ($json) $payload['response_format'] = ['type' => 'json_object'];
-            $response = Http::acceptJson()->withToken($apiKey)->timeout(20)->post($baseUrl.'/chat/completions', $payload);
+            $response = Http::acceptJson()->withToken($apiKey)->timeout(90)->post($baseUrl.'/chat/completions', $payload);
         } catch (ConnectionException) {
             throw new OfficeAiGatewayException('Office AI provider timed out. Please try again.', 504);
         } catch (\Throwable) {
