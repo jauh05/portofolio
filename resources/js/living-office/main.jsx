@@ -14,6 +14,7 @@ import { useLivingOffice } from './useLivingOffice';
 import { useOfficeData } from './useOfficeData';
 import { OperationsView } from './OperationsViews';
 import { ContentPlanner } from './ContentPlanner';
+import { AnalystReports } from './AnalystReports';
 import './living-office.css';
 
 const statusTone = (status) => ({
@@ -26,7 +27,7 @@ function BrandMark() {
     return <div className="brand-mark" aria-hidden="true"><span /><Bot size={24} /></div>;
 }
 
-function Header({ summary, notifications, unread, onRead, onReadAll, theme, onThemeToggle }) {
+function Header({ summary, notifications, unread, onRead, onReadAll, onNotificationOpen, theme, onThemeToggle }) {
     const [now, setNow] = useState(new Date());
     const [open, setOpen] = useState(false);
     useEffect(() => { const timer = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(timer); }, []);
@@ -45,7 +46,7 @@ function Header({ summary, notifications, unread, onRead, onReadAll, theme, onTh
             <div className="current-time"><small>{now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</small><strong>{now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':')}</strong></div>
             <button className="icon-button theme-toggle" onClick={onThemeToggle} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>{theme === 'light' ? <Moon size={17} /> : <Sun size={17} />}</button>
             <button className="icon-button notification-button" onClick={() => setOpen(value => !value)} aria-label={`${unread} unread notifications`}><Bell size={18} />{unread > 0 && <b>{unread > 99 ? '99+' : unread}</b>}</button>
-            {open && <aside className="notification-panel"><header><div><strong>Notifications</strong><small>{unread} unread</small></div><button onClick={onReadAll} disabled={!unread}>Mark all read</button></header><div>{notifications.length ? notifications.map(item => <button className={item.readAt ? 'read' : ''} key={item.id} onClick={() => onRead(item.id)}><i className={item.severity}>{item.severity === 'error' ? '×' : '✓'}</i><span><strong>{item.title}</strong><p>{item.message}</p><time>{new Date(item.createdAt).toLocaleString('id-ID')}</time></span></button>) : <p className="notification-empty">No notifications yet</p>}</div></aside>}
+            {open && <aside className="notification-panel"><header><div><strong>Notifications</strong><small>{unread} unread</small></div><button onClick={onReadAll} disabled={!unread}>Mark all read</button></header><div>{notifications.length ? notifications.map(item => <button className={item.readAt ? 'read' : ''} key={item.id} onClick={() => { onRead(item.id); if (item.type === 'analyst.report_ready') { onNotificationOpen?.(item.data?.report_id); setOpen(false); } }}><i className={item.severity}>{item.severity === 'error' ? '×' : '✓'}</i><span><strong>{item.title}</strong><p>{item.message}</p><time>{new Date(item.createdAt).toLocaleString('id-ID')}</time></span></button>) : <p className="notification-empty">No notifications yet</p>}</div></aside>}
             <form action="/office/logout" method="POST" style={{ margin: 0 }}>
                 <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
                 <button type="submit" className="icon-button" aria-label="Logout" title="Logout" style={{ color: '#ef4444' }}><X size={18} /></button>
@@ -57,7 +58,7 @@ function Header({ summary, notifications, unread, onRead, onReadAll, theme, onTh
 
 const navItems = [
     ['overview', LayoutDashboard, 'Overview'], ['kanban', ListTodo, 'Kanban'], ['planner', CalendarDays, 'Content Planner'],
-    ['agents', Bot, 'Agents'], ['activity', Activity, 'Activity'],
+    ['reports', BarChart3, 'Analyst Report'], ['agents', Bot, 'Agents'], ['activity', Activity, 'Activity'],
 ];
 
 const actionFields = {
@@ -112,7 +113,7 @@ const officeStateLabel = {
     not_installed: 'Belum diinstal', error: 'Error',
 };
 
-function Worker({ agent, selected, onClick }) {
+function Worker({ agent, selected, onClick, reportReady }) {
     const state = workerStates[agent.status] || workerStates.idle;
     const worldX = (agent.position.x / 100) * OFFICE_WORLD.width;
     const worldY = (agent.position.y / 100) * OFFICE_WORLD.height;
@@ -122,7 +123,7 @@ function Worker({ agent, selected, onClick }) {
         onClick={() => onClick(agent.id)} aria-label={`Buka detail ${agent.name}`}
     >
         {agent.bubble && <span className="speech-bubble">{agent.bubble}</span>}
-        <span className={`worker-status ${statusTone(agent.status)}`}>{agent.status === 'not_installed' ? <Square size={10} /> : <i />}{officeStateLabel[agent.officeState] || state.label}</span>
+        <span className={`worker-status ${reportReady ? 'violet' : statusTone(agent.status)}`}>{agent.status === 'not_installed' ? <Square size={10} /> : <i />}{reportReady ? 'Report ready' : officeStateLabel[agent.officeState] || state.label}</span>
         <span className="worker-shadow" /><span className="worker-body"><i className="hair" /><i className="head"><b /><b /></i><i className="torso"><small>{agent.shortName}</small></i><i className="arm left" /><i className="arm right" /><i className="leg left" /><i className="leg right" /></span>
         <span className="worker-name">{agent.name.replace(' Worker', '')}</span>
     </button>;
@@ -146,7 +147,7 @@ function MeetingStatus({ event }) {
     return <div className="meeting-bubble"><Users size={13} /><strong>{event.label}</strong><span>{event.message}</span><time>{String(Math.floor(remaining / 60)).padStart(2, '0')}:{String(remaining % 60).padStart(2, '0')}</time></div>;
 }
 
-function OfficeMap({ agents, selectedId, onSelect, summary, activeEvent, onSimulateEvent, onServerCheck, onRest }) {
+function OfficeMap({ agents, selectedId, onSelect, summary, analystReport, activeEvent, onSimulateEvent, onServerCheck, onRest }) {
     const [zoom, setZoom] = useState(.68);
     const [eventIndex, setEventIndex] = useState(0);
     const viewportRef = useRef(null);
@@ -170,18 +171,18 @@ function OfficeMap({ agents, selectedId, onSelect, summary, activeEvent, onSimul
         <div className="office-command-layout"><div className="office-viewport" ref={viewportRef} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={() => { dragRef.current = null; }} onPointerCancel={() => { dragRef.current = null; }}>
             <div className="office-canvas" style={{ width: OFFICE_WORLD.width * zoom, height: OFFICE_WORLD.height * zoom }}>
                 <div className="office-map" style={{ width: OFFICE_WORLD.width, height: OFFICE_WORLD.height, transform: `scale(${zoom})` }}>
-                    <OfficeDecor /><OpenOffice agents={agents} /><CentralMonitor summary={summary} />
+                    <img className="office-prop-atlas" src="/images/living-office/office-elements-v1.png" alt="" aria-hidden="true" /><OfficeDecor /><OpenOffice agents={agents} /><CentralMonitor summary={summary} />
                     <div className="main-hallway"><span>MAIN WALKWAY</span></div>
                     {activeEvent && <MeetingStatus event={activeEvent} />}
-                    {agents.map(agent => <Worker key={agent.id} agent={agent} selected={selectedId === agent.id} onClick={onSelect} />)}
+                    {agents.map(agent => <Worker key={agent.id} agent={agent} selected={selectedId === agent.id} onClick={onSelect} reportReady={agent.id === 'jauki-analyst' && analystReport?.status === 'ready'} />)}
                 </div>
             </div>
         </div><aside className="office-room-stack"><OfficeZone className="zone-server" label="SERVER ROOM" icon={Server} variant="servers" capacity={2}><span className="temp-monitor">MONITORING PENDING</span></OfficeZone><OfficeZone className="zone-meeting" label="MEETING ROOM" icon={Users} variant="meeting" capacity={8}><span className="presentation-screen">PRESENTATION</span><span className="meeting-whiteboard">PLAN · REVIEW · DECIDE</span></OfficeZone><OfficeZone className="zone-break" label="REST / LOUNGE" icon={Coffee} variant="lounge" capacity={4}><div className="integrated-pantry"><Coffee size={21} /><span>COFFEE</span></div><span className="water-dispenser">◒</span><span className="daybed">DAYBED</span></OfficeZone></aside></div>
     </div>;
 }
 
-function BottomDock({ selectedAgent, onSelect, agents, activity }) {
-    return <div className="bottom-dock"><section className="dock-agent"><div className="panel-label">SELECTED WORKER</div><div className="current-agent"><span className="mini-avatar" style={{ '--agent-color': selectedAgent.color }}>{selectedAgent.shortName}</span><div><strong>{selectedAgent.name}</strong><small>{selectedAgent.role}</small><span className={`status-pill ${statusTone(selectedAgent.status)}`}>{workerStates[selectedAgent.status]?.label || selectedAgent.status}</span></div></div></section><section className="dock-task"><div className="panel-label">CURRENT TASK <small>LIVE</small></div><div className="active-task"><span><FileText size={19} /></span><div><strong>{selectedAgent.currentTask}</strong><small>{selectedAgent.parentSystem}</small><div className="progress-track"><i style={{ width: `${selectedAgent.progress}%` }} /></div></div><b>{selectedAgent.progress}%</b></div></section><section className="dock-feed"><div className="panel-label">RECENT ACTIVITY</div><div className="feed-list">{activity.length ? activity.slice(0, 2).map(item => <div key={item.id}><time>{new Date(item.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</time><i /><p><strong>{item.type}</strong> {item.activity}</p></div>) : <p className="dock-empty">No activity yet</p>}</div></section><section className="dock-team"><div className="panel-label">CONNECTED <small>{agents.filter(a => !['offline', 'not_connected', 'not_installed'].includes(a.status)).length}/{agents.length}</small></div><div className="avatar-stack">{agents.map(a => <button key={a.id} style={{ '--agent-color': a.color }} onClick={() => onSelect(a.id)} className={['offline', 'not_connected', 'not_installed'].includes(a.status) ? 'disabled' : ''}>{a.shortName}</button>)}</div><small>Click a worker to inspect</small></section></div>;
+function BottomDock({ selectedAgent, onSelect, agents, activity, analystReport, onOpenReports }) {
+    return <div className="bottom-dock"><section className="dock-agent"><div className="panel-label">SELECTED WORKER</div><div className="current-agent"><span className="mini-avatar" style={{ '--agent-color': selectedAgent.color }}>{selectedAgent.shortName}</span><div><strong>{selectedAgent.name}</strong><small>{selectedAgent.role}</small><span className={`status-pill ${statusTone(selectedAgent.status)}`}>{workerStates[selectedAgent.status]?.label || selectedAgent.status}</span></div></div></section><section className="dock-task"><div className="panel-label">CURRENT TASK <small>LIVE</small></div><div className="active-task"><span><FileText size={19} /></span><div><strong>{selectedAgent.currentTask}</strong><small>{selectedAgent.parentSystem}</small><div className="progress-track"><i style={{ width: `${selectedAgent.progress}%` }} /></div></div><b>{selectedAgent.progress}%</b></div></section><section className="dock-feed"><div className="panel-label">RECENT ACTIVITY</div><div className="feed-list">{activity.length ? activity.slice(0, 2).map(item => <div key={item.id}><time>{new Date(item.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</time><i /><p><strong>{item.type}</strong> {item.activity}</p></div>) : <p className="dock-empty">No activity yet</p>}</div></section><section className="dock-analyst"><div className="panel-label">ANALYST INSIGHT</div><button onClick={onOpenReports}><BarChart3 size={18} /><span><strong>{analystReport ? `${analystReport.reportType} brief ready` : 'No brief yet'}</strong><small>{analystReport?.conclusion || 'Run an analysis from Analyst Report.'}</small></span><ChevronRight size={15} /></button></section><section className="dock-team"><div className="panel-label">CONNECTED <small>{agents.filter(a => !['offline', 'not_connected', 'not_installed'].includes(a.status)).length}/{agents.length}</small></div><div className="avatar-stack">{agents.map(a => <button key={a.id} style={{ '--agent-color': a.color }} onClick={() => onSelect(a.id)} className={['offline', 'not_connected', 'not_installed'].includes(a.status) ? 'disabled' : ''}>{a.shortName}</button>)}</div><small>Click a worker to inspect</small></section></div>;
 }
 
 function AgentDrawer({ agent, tasks, commands, enqueue, onClose }) {
@@ -230,9 +231,9 @@ function App() {
     const selectAgent = (id) => { setSelectedId(id); setDrawerOpen(true); };
     useEffect(() => { try { localStorage.setItem('living-office-theme', theme); } catch {} }, [theme]);
     return <div className="app-shell" data-theme={theme} data-ambience={ambience}>
-        <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} theme={theme} onThemeToggle={() => setTheme(current => current === 'light' ? 'dark' : 'light')} />
+        <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} onNotificationOpen={() => setActiveView('reports')} theme={theme} onThemeToggle={() => setTheme(current => current === 'light' ? 'dark' : 'light')} />
         <Sidebar activeView={activeView} setActiveView={setActiveView} />
-        <main className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} /></> : activeView === 'planner' ? <ContentPlanner planner={office.planner} brands={office.brands} loading={office.loading} loadPlanner={office.loadPlanner} createSchedule={office.createSchedule} analyzePlan={office.analyzePlan} /> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
+        <main className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} analystReport={office.reports[0]} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} analystReport={office.reports[0]} onOpenReports={() => setActiveView('reports')} /></> : activeView === 'planner' ? <ContentPlanner planner={office.planner} brands={office.brands} loading={office.loading} loadPlanner={office.loadPlanner} createSchedule={office.createSchedule} analyzePlan={office.analyzePlan} /> : activeView === 'reports' ? <AnalystReports reports={office.reports} brands={office.brands} loading={office.loading} generateReport={office.generateReport} approveReport={office.approveReport} dismissReport={office.dismissReport} /> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
         {drawerOpen && <AgentDrawer agent={selectedAgent} tasks={office.tasks} commands={office.commands} enqueue={office.enqueue} onClose={() => setDrawerOpen(false)} />}
         {office.toast && <div className={`office-toast ${office.toast.severity}`}><i>{office.toast.severity === 'error' ? '×' : '✓'}</i><div><strong>{office.toast.title}</strong><span>{office.toast.message}</span></div><button onClick={office.dismissToast}><X size={14} /></button></div>}
     </div>;

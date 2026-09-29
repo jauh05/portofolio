@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\OfficeAnalystReport;
 use App\Models\OfficeCommand;
 use App\Models\OfficeContentItem;
 use App\Models\OfficeContentBrand;
@@ -411,6 +412,42 @@ test('claimed commands cannot skip the running lifecycle state', function () {
     $id = $this->postJson('/api/office/commands/claim', ['agent_id' => 'jauki-social'], bridgeHeaders())->json('command.id');
     $this->patchJson('/api/office/commands/'.$id, ['status' => 'completed'], bridgeHeaders())->assertConflict();
     expect(OfficeCommand::find($id)->status)->toBe('claimed');
+});
+
+test('analyst reports are owner-only, persist history, and disclose missing performance data', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $this->getJson('/office/api/analyst-reports')->assertUnauthorized();
+
+    OfficeTask::create(['agent_id' => 'jauki-article', 'external_id' => 'analyst-failed-1', 'title' => 'Draft failed', 'type' => 'article', 'status' => 'failed', 'progress' => 0, 'failed_at' => now('Asia/Jakarta')]);
+    $first = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
+        ->assertCreated()->assertJsonPath('metadata.performance_available', false)->assertJsonPath('nextActions.0.action_type', 'task');
+    $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'daily', 'scope' => 'today'])->assertCreated();
+
+    expect(OfficeAnalystReport::count())->toBe(2)
+        ->and($first->json('summary'))->toContain('No performance data available yet.')
+        ->and(OfficeNotification::where('type', 'analyst.report_ready')->count())->toBe(2);
+});
+
+test('owner approval is the only path from analyst proposal to a queued task', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $report = OfficeAnalystReport::create([
+        'report_date' => now('Asia/Jakarta')->toDateString(), 'report_type' => 'manual', 'status' => 'ready', 'summary' => 'Internal facts.', 'conclusion' => 'Review.',
+        'next_actions' => [['id' => 'f6942a9e-3ed4-477d-9d7f-a6fabbd7ed5c', 'status' => 'proposed', 'action_type' => 'task', 'agent_id' => 'jauki-analyst', 'description' => 'Review failed task', 'target' => 'task-1']],
+        'metadata' => ['performance_available' => false], 'generated_at' => now('Asia/Jakarta'),
+    ]);
+    $this->actingAs($owner)->postJson('/office/api/analyst-reports/'.$report->id.'/dismiss', ['action_ids' => ['f6942a9e-3ed4-477d-9d7f-a6fabbd7ed5c']])->assertOk();
+    expect(OfficeTask::count())->toBe(0)->and(OfficeCommand::count())->toBe(0);
+
+    $report->update(['status' => 'ready', 'next_actions' => [['id' => '4346223f-3418-48ca-9ae3-3b539ba17513', 'status' => 'proposed', 'action_type' => 'task', 'agent_id' => 'jauki-analyst', 'description' => 'Review failed task', 'target' => 'task-1']]]);
+    $this->actingAs($owner)->postJson('/office/api/analyst-reports/'.$report->id.'/approve', ['action_ids' => ['4346223f-3418-48ca-9ae3-3b539ba17513']])->assertOk();
+    expect(OfficeTask::count())->toBe(1)->and(OfficeTask::first()->status)->toBe('queued')->and(OfficeCommand::count())->toBe(0);
+});
+
+test('manual analyst reports use a seven-day Jakarta range when requested', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $response = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'last_7_days'])->assertCreated();
+    $rangeStart = \Carbon\CarbonImmutable::parse($response->json('metadata.range_start'));
+    expect($rangeStart->timezoneName)->toBe('Asia/Jakarta')->and($rangeStart->diffInDays(now('Asia/Jakarta')->startOfDay()))->toBe(6);
 });
 
 test('office bridge token is not rendered into the dashboard', function () {

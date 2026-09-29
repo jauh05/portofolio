@@ -79,7 +79,7 @@ class LivingOfficeController extends Controller
     {
         $notifications = OfficeNotification::latest()->limit(50)->get()->map(fn (OfficeNotification $item) => [
             'id' => $item->id, 'type' => $item->type, 'agentId' => $item->agent_id,
-            'title' => $item->title, 'message' => $item->message, 'severity' => $item->severity,
+            'title' => $item->title, 'message' => $item->message, 'severity' => $item->severity, 'data' => $item->data ?? [],
             'readAt' => $item->read_at?->toIso8601String(), 'createdAt' => $item->created_at?->toIso8601String(),
         ]);
         return response()->json(['data' => $notifications, 'unread' => $notifications->whereNull('readAt')->count()]);

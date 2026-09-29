@@ -15,6 +15,7 @@ Route::get('/certificates', function () {
 });
 
 use App\Http\Controllers\OfficeAuthController;
+use App\Http\Controllers\OfficeAnalystReportController;
 use App\Http\Controllers\OfficeContentPlannerController;
 use App\Http\Controllers\LivingOfficeController;
 
@@ -34,6 +35,11 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::get('/tasks', [LivingOfficeController::class, 'getTasks']);
         Route::get('/activity', [LivingOfficeController::class, 'getActivity']);
         Route::get('/content', [LivingOfficeController::class, 'getContent']);
+        Route::get('/analyst-reports', [OfficeAnalystReportController::class, 'index']);
+        Route::post('/analyst-reports/generate', [OfficeAnalystReportController::class, 'generate']);
+        Route::get('/analyst-reports/{report}', [OfficeAnalystReportController::class, 'show']);
+        Route::post('/analyst-reports/{report}/approve', [OfficeAnalystReportController::class, 'approve']);
+        Route::post('/analyst-reports/{report}/dismiss', [OfficeAnalystReportController::class, 'dismiss']);
         Route::get('/content-brands', [OfficeContentPlannerController::class, 'brands']);
         Route::post('/content-brands', [OfficeContentPlannerController::class, 'storeBrand']);
         Route::patch('/content-brands/{brand}', [OfficeContentPlannerController::class, 'updateBrand']);
