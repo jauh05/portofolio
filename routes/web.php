@@ -52,6 +52,14 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::delete('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'destroy']);
         Route::post('/content', [OfficeContentPlannerController::class, 'createContent']);
         Route::patch('/content/{content}', [OfficeContentPlannerController::class, 'updateContent']);
+        Route::post('/content/{content}/generate', [\App\Http\Controllers\OfficeContentPlannerController::class, 'generateContent']);
+        Route::post('/content/{content}/revise', [\App\Http\Controllers\OfficeContentPlannerController::class, 'reviseContent']);
+        Route::post('/content/{content}/approve', [\App\Http\Controllers\OfficeContentPlannerController::class, 'approveContent']);
+
+        Route::post('/content/{content}/generate', [\App\Http\Controllers\OfficeContentPlannerController::class, 'generateContent']);
+        Route::post('/content/{content}/revise', [\App\Http\Controllers\OfficeContentPlannerController::class, 'reviseContent']);
+        Route::post('/content/{content}/approve', [\App\Http\Controllers\OfficeContentPlannerController::class, 'approveContent']);
+
         Route::get('/summary', [LivingOfficeController::class, 'summary']);
         Route::get('/notifications', [LivingOfficeController::class, 'getNotifications']);
         Route::patch('/notifications/read-all', [LivingOfficeController::class, 'readAllNotifications']);

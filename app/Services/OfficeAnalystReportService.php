@@ -88,7 +88,7 @@ class OfficeAnalystReportService
 
     private function systemPrompt(): string
     {
-        return 'You are an internal Living Office analyst. Return JSON only with this schema: {"summary":"","findings":[{"type":"issue|attention|opportunity|status","title":"","description":"","evidence":""}],"conclusion":"","recommendations":[{"priority":"high|medium|low","action":"","reason":""}],"next_actions":[{"action_type":"task|content_schedule","description":"","reason":"","brand_slug":"","schedule":{}}]}. Use only supplied internal Office context. Never invent metrics, performance, external facts, tool results, actions or outcomes. performance_available is false: include exactly "No performance data available yet." in summary. Actions are proposals only. A content_schedule must be complete, manual and review-only; otherwise propose a task.';
+        return 'You are an internal Living Office analyst. Seluruh output yang dibaca pengguna wajib menggunakan Bahasa Indonesia. Gunakan bahasa profesional, natural, ringkas, dan mudah dipahami. Jangan menggunakan Bahasa Inggris kecuali nama brand, platform, model AI, nama field teknis, atau istilah yang memang tidak perlu diterjemahkan. Return JSON only with this schema: {"summary":"","findings":[{"type":"issue|attention|opportunity|status","title":"","description":"","evidence":""}],"conclusion":"","recommendations":[{"priority":"high|medium|low","action":"","reason":""}],"next_actions":[{"action_type":"task|content_schedule","description":"","reason":"","brand_slug":"","schedule":{}}]}. Use only supplied internal Office context. Never invent metrics, performance, external facts, tool results, actions or outcomes. performance_available is false: include exactly "Data performa belum tersedia." in summary. Actions are proposals only. A content_schedule must be complete, manual and review-only; otherwise propose a task.';
     }
 
     private function aiContext(array $context, CarbonImmutable $start, CarbonImmutable $end, string $type): array
@@ -109,7 +109,7 @@ class OfficeAnalystReportService
     private function normalizeAiReport(array $raw, Collection $brands): array
     {
         $summary = $this->text($raw['summary'] ?? null, 1600); $conclusion = $this->text($raw['conclusion'] ?? null, 1000);
-        if (! $summary || ! $conclusion || ! str_contains($summary, 'No performance data available yet.')) throw new \UnexpectedValueException('Invalid analyst report.');
+        if (! $summary || ! $conclusion || ! str_contains($summary, 'Data performa belum tersedia.')) throw new \UnexpectedValueException('Invalid analyst report.');
         $findings = collect($raw['findings'] ?? [])->filter(fn ($item) => is_array($item))->map(fn ($item) => $this->normalizeFinding($item))->filter()->take(12)->values()->all();
         $recommendations = collect($raw['recommendations'] ?? [])->filter(fn ($item) => is_array($item))->map(fn ($item) => $this->normalizeRecommendation($item))->filter()->take(12)->values()->all();
         $nextActions = collect($raw['next_actions'] ?? [])->filter(fn ($item) => is_array($item))->map(fn ($item) => $this->normalizeAction($item, $brands))->filter()->take(10)->values()->all();
@@ -160,24 +160,24 @@ class OfficeAnalystReportService
     private function factualReport(array $context, CarbonImmutable $start, CarbonImmutable $end, string $type): array
     {
         $metrics = $context['metrics']; $findings = [];
-        if ($metrics['tasks_failed'] > 0) $findings[] = $this->finding('issue', $metrics['tasks_failed'].' task failure(s) recorded', 'Failed tasks were recorded in the selected period.', 'office_tasks.status = failed');
-        if ($metrics['content_failed'] > 0) $findings[] = $this->finding('issue', $metrics['content_failed'].' content failure(s) recorded', 'Content items marked failed need review.', 'office_content_items.status = failed');
+        if ($metrics['tasks_failed'] > 0) $findings[] = $this->finding('issue', $metrics['tasks_failed'].' kegagalan task tercatat', 'Terdapat task yang gagal dalam periode ini.', 'office_tasks.status = failed');
+        if ($metrics['content_failed'] > 0) $findings[] = $this->finding('issue', $metrics['content_failed'].' kegagalan konten tercatat', 'Konten yang gagal perlu ditinjau.', 'office_content_items.status = failed');
         $withoutTopic = $context['schedules']->filter(fn ($schedule) => blank($schedule->topic))->count();
-        if ($withoutTopic > 0) $findings[] = $this->finding('attention', $withoutTopic.' schedule(s) need topic detail', 'Active schedules without a topic are harder to review.', 'office_content_schedules.topic is null');
-        foreach ($context['brands'] as $brand) if ($context['schedules']->where('brand_id', $brand->id)->isEmpty()) $findings[] = $this->finding('opportunity', $brand->name.' has no active schedule', 'No active content schedule is assigned to this workspace.', 'office_content_schedules brand count = 0');
-        if ($findings === []) $findings[] = $this->finding('status', 'No anomalies found in available Office data', 'No task/content failure or incomplete schedule was found in this period.', 'Internal Office records only');
+        if ($withoutTopic > 0) $findings[] = $this->finding('attention', $withoutTopic.' jadwal memerlukan detail topik', 'Jadwal aktif tanpa topik akan lebih sulit ditinjau.', 'office_content_schedules.topic is null');
+        foreach ($context['brands'] as $brand) if ($context['schedules']->where('brand_id', $brand->id)->isEmpty()) $findings[] = $this->finding('opportunity', $brand->name.' tidak memiliki jadwal aktif', 'Tidak ada jadwal konten aktif yang ditugaskan ke workspace ini.', 'office_content_schedules brand count = 0');
+        if ($findings === []) $findings[] = $this->finding('status', 'Tidak ditemukan anomali pada data Office', 'Tidak ada kegagalan task/konten atau jadwal yang tidak lengkap pada periode ini.', 'Internal Office records only');
         $recommendations = collect($findings)->filter(fn ($finding) => $finding['type'] !== 'status')->map(fn ($finding) => ['priority' => $finding['type'] === 'issue' ? 'high' : 'medium', 'action' => $finding['title'], 'reason' => $finding['description']])->values()->all();
-        if ($recommendations === []) $recommendations[] = ['priority' => 'low', 'action' => 'Continue monitoring the content plan.', 'reason' => 'No issue is recorded in available Office data.'];
-        $summary = "{$type} analysis for {$start->toDateString()} to {$end->toDateString()}: {$metrics['tasks_total']} task(s), {$metrics['content_total']} content item(s), and {$metrics['active_schedules']} active schedule(s) in available Office data. No performance data available yet.";
-        $conclusion = ($metrics['tasks_failed'] + $metrics['content_failed']) > 0 ? 'The pipeline needs owner review for recorded failures before further planning.' : 'Available Office data shows a stable pipeline; continue with owner-reviewed planning.';
+        if ($recommendations === []) $recommendations[] = ['priority' => 'low', 'action' => 'Lanjutkan pemantauan rencana konten.', 'reason' => 'Tidak ada masalah yang tercatat di data Office.'];
+        $summary = "Analisis {$type} dari {$start->toDateString()} hingga {$end->toDateString()}: {$metrics['tasks_total']} task, {$metrics['content_total']} konten, dan {$metrics['active_schedules']} jadwal aktif di data Office. Data performa belum tersedia.";
+        $conclusion = ($metrics['tasks_failed'] + $metrics['content_failed']) > 0 ? 'Pipeline memerlukan tinjauan owner untuk kegagalan yang tercatat sebelum melanjutkan perencanaan.' : 'Data Office yang tersedia menunjukkan pipeline yang stabil; lanjutkan dengan perencanaan yang ditinjau oleh owner.';
         return ['summary' => $summary, 'findings' => $findings, 'conclusion' => $conclusion, 'recommendations' => $recommendations, 'next_actions' => $this->nextActions($context['tasks'], $context['content'])];
     }
 
     private function nextActions(Collection $tasks, Collection $content): array
     {
         $actions = [];
-        foreach ($tasks->where('status', 'failed')->take(5) as $task) $actions[] = ['id' => (string) Str::uuid(), 'status' => 'proposed', 'action_type' => 'task', 'agent_id' => 'jauki-analyst', 'description' => 'Review failed task: '.$task->title, 'reason' => 'The task is marked failed in Office records.', 'target' => $task->id];
-        foreach ($content->where('status', 'failed')->take(5) as $item) $actions[] = ['id' => (string) Str::uuid(), 'status' => 'proposed', 'action_type' => 'task', 'agent_id' => 'jauki-analyst', 'description' => 'Review failed content: '.($item->title ?? $item->content_type), 'reason' => 'The content item is marked failed in Office records.', 'target' => $item->id];
+        foreach ($tasks->where('status', 'failed')->take(5) as $task) $actions[] = ['id' => (string) Str::uuid(), 'status' => 'proposed', 'action_type' => 'task', 'agent_id' => 'jauki-analyst', 'description' => 'Tinjau task yang gagal: '.$task->title, 'reason' => 'Task ditandai gagal dalam catatan Office.', 'target' => $task->id];
+        foreach ($content->where('status', 'failed')->take(5) as $item) $actions[] = ['id' => (string) Str::uuid(), 'status' => 'proposed', 'action_type' => 'task', 'agent_id' => 'jauki-analyst', 'description' => 'Tinjau konten yang gagal: '.($item->title ?? $item->content_type), 'reason' => 'Konten ditandai gagal dalam catatan Office.', 'target' => $item->id];
         return $actions;
     }
 

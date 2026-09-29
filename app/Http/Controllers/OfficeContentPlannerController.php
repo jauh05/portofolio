@@ -84,10 +84,11 @@ class OfficeContentPlannerController extends Controller
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, \App\Services\OfficeContentGenerator $generator): JsonResponse
     {
         $schedule = new OfficeContentSchedule;
         $this->fillSchedule($schedule, $request->validate($this->rules()));
+        $generator->ensureDraft($schedule);
         return response()->json($this->schedulePayload($schedule->load('brand')), 201);
     }
 
@@ -134,16 +135,77 @@ class OfficeContentPlannerController extends Controller
     {
         $data = $request->validate([
             'title' => ['sometimes', 'nullable', 'string', 'max:255'], 'text' => ['sometimes', 'nullable', 'string'],
-            'status' => ['sometimes', Rule::in(self::CONTENT_STATUSES)], 'scheduled_at' => ['sometimes', 'nullable', 'date'],
+            'status' => ['sometimes', Rule::in(array_merge(self::CONTENT_STATUSES, ['ready_for_review', 'revision_requested', 'approved']))], 'scheduled_at' => ['sometimes', 'nullable', 'date'],
             'brand_id' => ['sometimes', 'nullable', 'uuid', 'exists:office_content_brands,id'],
+            'revision_instruction' => ['sometimes', 'nullable', 'string'],
+            'source' => ['sometimes', 'string']
         ]);
+        
+        // save revision
+        if ($request->has('text') && $content->text !== $data['text']) {
+            \App\Models\OfficeContentRevision::create([
+                'id' => \Illuminate\Support\Str::uuid(),
+                'content_item_id' => $content->id,
+                'version' => \App\Models\OfficeContentRevision::where('content_item_id', $content->id)->max('version') + 1,
+                'source' => $data['source'] ?? 'manual',
+                'revision_instruction' => $data['revision_instruction'] ?? null,
+                'payload' => json_decode($content->text, true),
+            ]);
+        }
+        
         $metadata = $content->metadata ?? [];
         if (array_key_exists('scheduled_at', $data)) {
             $metadata['scheduled_at'] = $data['scheduled_at'];
             unset($data['scheduled_at']);
             $data['metadata'] = $metadata;
         }
+        unset($data['revision_instruction'], $data['source']);
+        
         $content->update($data);
+        return response()->json($content->fresh()->load('brand'));
+    }
+
+    public function generateContent(OfficeContentItem $content, \App\Services\OfficeContentGenerator $generator): JsonResponse
+    {
+        try {
+            $content->update(['status' => 'generating']);
+            $schedule = $content->schedule;
+            if (!$schedule) abort(404, 'Schedule not found');
+            
+            $result = $generator->generate($content, $schedule);
+            
+            $content->update([
+                'status' => 'ready_for_review',
+                'metadata' => array_merge($content->metadata ?? [], ['generated_payload' => $result, 'visual_brief' => $result['visual_brief'] ?? null]),
+                'title' => $result['title'] ?? $content->title,
+                'text' => json_encode($result),
+            ]);
+            
+            return response()->json($content->fresh()->load('brand'));
+        } catch (\Throwable $e) {
+            $content->update(['status' => 'failed']);
+            return response()->json(['message' => 'Draft belum berhasil dibuat.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function reviseContent(Request $request, OfficeContentItem $content, \App\Services\OfficeContentGenerator $generator): JsonResponse
+    {
+        $instruction = $request->validate(['instruction' => 'required|string'])['instruction'];
+        try {
+            $schedule = $content->schedule;
+            if (!$schedule) abort(404, 'Schedule not found');
+            
+            $result = $generator->generate($content, $schedule, $instruction);
+            
+            return response()->json(['preview' => $result]);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Revision failed.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function approveContent(Request $request, OfficeContentItem $content): JsonResponse
+    {
+        $content->update(['status' => 'approved']);
         return response()->json($content->fresh()->load('brand'));
     }
 

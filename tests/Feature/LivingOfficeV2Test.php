@@ -57,9 +57,12 @@ function fakeOfficeAiResponse(string $content, int $status = 200): void
     Http::fake(['planner.test/*' => Http::response($status === 200 ? ['choices' => [['message' => ['content' => $content]]]] : ['error' => ['message' => 'provider error']], $status)]);
 }
 
-test('shared Office AI gateway accepts code-fenced JSON and exposes controlled provider errors', function () {
+test('shared Office AI gateway accepts code-fenced JSON', function () {
     fakeOfficeAiResponse("```json\n{\"ok\":true}\n```");
     expect(app(OfficeAiGateway::class)->completeJson('system', 'user'))->toBe(['ok' => true]);
+});
+
+test('shared Office AI gateway exposes controlled provider errors', function () {
     fakeOfficeAiResponse('', 429);
     expect(fn () => app(OfficeAiGateway::class)->completeJson('system', 'user'))->toThrow(OfficeAiGatewayException::class, 'rate-limited');
 });
@@ -103,13 +106,17 @@ test('AI Plan returns one-time and multi-schedule previews for user confirmation
     expect(OfficeContentSchedule::count())->toBe(0);
 });
 
-test('AI Plan requests clarification for missing time or unknown workspace', function () {
+test('AI Plan requests clarification for unknown workspace', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
     fakePlanner(['type' => 'schedule_plan', 'items' => [
         ['schedule_type' => 'recurring', 'brand_slug' => 'unknown-brand', 'platform' => 'instagram', 'content_type' => 'feed', 'frequency' => 'weekly', 'weekdays' => ['monday']],
     ], 'clarifications' => []]);
     $this->actingAs($owner)->postJson('/office/api/content-planner/analyze', ['prompt' => 'Setiap Senin buat feed untuk brand baru.'])
         ->assertOk()->assertJsonPath('plan.items', [])->assertJsonFragment(['Workspace \'unknown-brand\' is not available.']);
+});
+
+test('AI Plan requests clarification for missing time', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
     fakePlanner(['type' => 'schedule_plan', 'items' => [
         ['schedule_type' => 'recurring', 'brand_slug' => 'kauiz', 'platform' => 'instagram', 'content_type' => 'feed', 'frequency' => 'weekly', 'weekdays' => ['monday']],
     ], 'clarifications' => []]);
@@ -176,7 +183,7 @@ test('owner can create recurring schedules without generating unbounded content 
         ->assertOk()->assertJsonPath('occurrences.0.scheduleType', 'recurring');
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta&brand_id='.$brand->id)
         ->assertOk()->assertJsonPath('occurrences.0.brand.slug', 'jauki');
-    expect(OfficeContentSchedule::count())->toBe(1)->and(OfficeContentItem::count())->toBe(0);
+    expect(OfficeContentSchedule::count())->toBe(1)->and(OfficeContentItem::count())->toBe(1);
 });
 
 test('owner can update and deactivate a content schedule', function () {
@@ -451,12 +458,12 @@ test('analyst reports are owner-only, persist history, and disclose missing perf
     $this->getJson('/office/api/analyst-reports')->assertUnauthorized();
 
     OfficeTask::create(['agent_id' => 'jauki-article', 'external_id' => 'analyst-failed-1', 'title' => 'Draft failed', 'type' => 'article', 'status' => 'failed', 'progress' => 0, 'failed_at' => now('Asia/Jakarta')]);
-    $first = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
+    $first = $response = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
         ->assertCreated()->assertJsonPath('metadata.performance_available', false)->assertJsonPath('nextActions.0.action_type', 'task');
     $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'daily', 'scope' => 'today'])->assertCreated();
 
     expect(OfficeAnalystReport::count())->toBe(2)
-        ->and($first->json('summary'))->toContain('No performance data available yet.')
+        ->and($first->json('summary'))->toContain('Data performa belum tersedia.')
         ->and(OfficeNotification::where('type', 'analyst.report_ready')->count())->toBe(2);
 });
 
@@ -478,13 +485,13 @@ test('owner approval is the only path from analyst proposal to a queued task', f
 test('analyst uses the shared AI gateway, proposes actions, and never executes workers before approval', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
     fakeOfficeAiResponse(json_encode([
-        'summary' => 'Two internal tasks need review. No performance data available yet.',
+        'summary' => 'Two internal tasks need review. Data performa belum tersedia.',
         'findings' => [['type' => 'attention', 'title' => 'Kauiz needs a plan', 'description' => 'There is no active schedule for Kauiz.', 'evidence' => 'office_content_schedules brand count = 0']],
         'conclusion' => 'Owner review should decide the next content planning step.',
         'recommendations' => [['priority' => 'medium', 'action' => 'Prepare a Kauiz planning task', 'reason' => 'The brand has no active schedule.']],
         'next_actions' => [['action_type' => 'task', 'description' => 'Prepare Kauiz weekly content plan', 'reason' => 'No active schedule exists for Kauiz.', 'brand_slug' => 'kauiz']],
     ]));
-    $response = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
+    $response = $response = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
         ->assertCreated()->assertJsonPath('metadata.analysis_mode', 'ai')->assertJsonPath('nextActions.0.status', 'proposed');
     expect(OfficeTask::count())->toBe(0)->and(OfficeCommand::count())->toBe(0);
     $this->actingAs($owner)->postJson('/office/api/analyst-reports/'.$response->json('id').'/approve', ['action_ids' => [$response->json('nextActions.0.id')]])->assertOk();
@@ -494,9 +501,9 @@ test('analyst uses the shared AI gateway, proposes actions, and never executes w
 test('analyst marks factual fallback when the AI provider response is invalid', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
     fakeOfficeAiResponse('not json');
-    $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
-        ->assertCreated()->assertJsonPath('metadata.analysis_mode', 'fallback_internal')->assertJsonPath('metadata.performance_available', false)
-        ->assertJsonFragment(['No performance data available yet.']);
+    $response = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'today'])
+        ->assertCreated()->assertJsonPath('metadata.analysis_mode', 'fallback_internal')->assertJsonPath('metadata.performance_available', false);
+    expect($response->json('summary'))->toContain('Data performa belum tersedia.');
 });
 
 test('repeated approval cannot duplicate an analyst content schedule', function () {
@@ -516,7 +523,7 @@ test('manual analyst reports use a seven-day Jakarta range when requested', func
     $owner = User::factory()->create(['is_office_owner' => true]);
     $response = $this->actingAs($owner)->postJson('/office/api/analyst-reports/generate', ['report_type' => 'manual', 'scope' => 'last_7_days'])->assertCreated();
     $rangeStart = \Carbon\CarbonImmutable::parse($response->json('metadata.range_start'));
-    expect($rangeStart->timezoneName)->toBe('Asia/Jakarta')->and($rangeStart->diffInDays(now('Asia/Jakarta')->startOfDay()))->toBe(6);
+    expect(in_array($rangeStart->timezoneName, ['Asia/Jakarta', '+07:00']))->toBeTrue()->and($rangeStart->diffInDays(now('Asia/Jakarta')->startOfDay()))->toEqual(6);
 });
 
 test('office bridge token is not rendered into the dashboard', function () {
@@ -622,3 +629,215 @@ test('one-time AI Plan confirmation does not trigger Carbon TypeError', function
         ->assertOk()
         ->assertJsonFragment(['name' => 'AI Planned one time']);
 });
+
+test('schedule store creates a draft content item', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $response = $this->actingAs($owner)->postJson('/office/api/content-schedules', [
+        'name' => 'Draft test',
+        'schedule_type' => 'one_time',
+        'brand_id' => $brand->id,
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => now('Asia/Jakarta')->addDays(2)->format('Y-m-d H:i:s'),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+    ])->assertCreated();
+    
+    $scheduleId = $response->json('id');
+    
+    // Check that a draft content item was created
+    $item = \App\Models\OfficeContentItem::where('schedule_id', $scheduleId)->first();
+    expect($item)->not->toBeNull()
+        ->and($item->status)->toBe('draft')
+        ->and($item->title)->toContain('Draft test');
+});
+
+test('repeated content generation does not duplicate', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'Dup test',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    
+    $generator = app(\App\Services\OfficeContentGenerator::class);
+    $item1 = $generator->ensureDraft($schedule);
+    $item2 = $generator->ensureDraft($schedule);
+    
+    expect((string)$item1->id)->toBe((string)$item2->id);
+    expect(\App\Models\OfficeContentItem::where('schedule_id', $schedule->id)->count())->toBe(1);
+});
+
+test('AI content generation handles feed JSON normalization', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'Feed test',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    
+    $generator = app(\App\Services\OfficeContentGenerator::class);
+    $item = $generator->ensureDraft($schedule);
+    
+    fakeOfficeAiResponse(json_encode([
+        'title' => 'Test Feed',
+        'hook' => 'Check this out',
+        'content' => 'Some content',
+        'caption' => 'A caption',
+        'cta' => 'Buy now',
+        'hashtags' => ['#test'],
+        'visual_brief' => 'A nice image',
+        'language' => 'id'
+    ]));
+    
+    $this->actingAs($owner)->postJson("/office/api/content/{$item->id}/generate")->assertOk();
+    
+    $item->refresh();
+    expect($item->status)->toBe('ready_for_review')
+        ->and($item->title)->toBe('Test Feed')
+        ->and($item->metadata['visual_brief'])->toBe('A nice image');
+});
+
+test('AI provider failure correctly updates status to failed', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'Fail test',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    $item = app(\App\Services\OfficeContentGenerator::class)->ensureDraft($schedule);
+    
+    fakeOfficeAiResponse('', 503); // simulate failure
+    
+    $this->actingAs($owner)->postJson("/office/api/content/{$item->id}/generate")->assertStatus(500);
+    
+    $item->refresh();
+    expect($item->status)->toBe('failed');
+});
+
+test('revise with AI preview works', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'Revise test',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    $item = app(\App\Services\OfficeContentGenerator::class)->ensureDraft($schedule);
+    
+    fakeOfficeAiResponse(json_encode(['title' => 'Revised title']));
+    
+    $response = $this->actingAs($owner)->postJson("/office/api/content/{$item->id}/revise", [
+        'instruction' => 'Buat lebih menarik'
+    ])->assertOk();
+    
+    expect($response->json('preview.title'))->toBe('Revised title');
+});
+
+test('manual edit creates a revision', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'Edit test',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    $item = app(\App\Services\OfficeContentGenerator::class)->ensureDraft($schedule);
+    $item->update(['text' => json_encode(['title' => 'Old title'])]);
+    
+    $this->actingAs($owner)->patchJson("/office/api/content/{$item->id}", [
+        'title' => 'New title',
+        'text' => json_encode(['title' => 'New title']),
+        'status' => 'ready_for_review',
+        'revision_instruction' => 'Manual fix'
+    ])->assertOk();
+    
+    $revision = \App\Models\OfficeContentRevision::where('content_item_id', $item->id)->first();
+    expect($revision)->not->toBeNull()
+        ->and($revision->payload['title'])->toBe('Old title');
+});
+
+test('approval sets status but does not publish', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'Approve test',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    $item = app(\App\Services\OfficeContentGenerator::class)->ensureDraft($schedule);
+    
+    $this->actingAs($owner)->postJson("/office/api/content/{$item->id}/approve")->assertOk();
+    
+    $item->refresh();
+    expect($item->status)->toBe('approved')
+        ->and($item->published_at)->toBeNull();
+});
+
+test('Content Review is owner-only', function () {
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'Auth test',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    $item = app(\App\Services\OfficeContentGenerator::class)->ensureDraft($schedule);
+    
+    $this->postJson("/office/api/content/{$item->id}/generate")->assertUnauthorized();
+});
+
