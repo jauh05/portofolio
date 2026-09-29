@@ -523,3 +523,102 @@ test('office bridge token is not rendered into the dashboard', function () {
     $owner = User::factory()->create(['is_office_owner' => true]);
     $this->actingAs($owner)->get('/office')->assertOk()->assertDontSee('bridge-test-token');
 });
+
+test('one-time schedule creation does not trigger Carbon TypeError', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    $this->actingAs($owner)->postJson('/office/api/content-schedules', [
+        'name' => 'One time test',
+        'schedule_type' => 'one_time',
+        'brand_id' => $brand->id,
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => now('Asia/Jakarta')->addDays(2)->format('Y-m-d H:i:s'),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+    ])->assertCreated();
+});
+
+test('weekly recurring schedule does not trigger Carbon TypeError on creation and update', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    
+    // Test store()
+    $response = $this->actingAs($owner)->postJson('/office/api/content-schedules', [
+        'name' => 'Weekly test',
+        'schedule_type' => 'recurring',
+        'brand_id' => $brand->id,
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'frequency' => 'weekly',
+        'days' => [1, 3, 5],
+        'time' => '09:00',
+        'starts_at' => now('Asia/Jakarta')->toDateString(),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+    ])->assertCreated();
+    
+    // Test update()
+    $scheduleId = $response->json('id');
+    $this->actingAs($owner)->patchJson("/office/api/content-schedules/{$scheduleId}", [
+        'name' => 'Weekly test updated',
+        'schedule_type' => 'recurring',
+        'brand_id' => $brand->id,
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'frequency' => 'weekly',
+        'days' => [2, 4],
+        'time' => '10:00',
+        'starts_at' => now('Asia/Jakarta')->toDateString(),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+    ])->assertOk();
+});
+
+test('monthly recurring schedule does not trigger Carbon TypeError on creation', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    
+    $this->actingAs($owner)->postJson('/office/api/content-schedules', [
+        'name' => 'Monthly test',
+        'schedule_type' => 'recurring',
+        'brand_id' => $brand->id,
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'frequency' => 'monthly',
+        'time' => '09:00',
+        'starts_at' => now('Asia/Jakarta')->toDateString(),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+    ])->assertCreated();
+});
+
+test('one-time AI Plan confirmation does not trigger Carbon TypeError', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    
+    // Simulate AI plan approval for a one-time schedule.
+    // The approval actually sends a POST to schedules if it creates one.
+    // We already tested create in store, but we can verify via occurrences as well.
+    $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
+    
+    $schedule = \App\Models\OfficeContentSchedule::create([
+        'name' => 'AI Planned one time',
+        'brand_id' => $brand->id,
+        'schedule_type' => 'one_time',
+        'platform' => 'instagram',
+        'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+        'generation_mode' => 'manual',
+        'publishing_mode' => 'review',
+        'next_run_at' => \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3),
+    ]);
+    
+    $this->actingAs($owner)->getJson('/office/api/content-planner?start=' . now()->subDay()->toDateString() . '&end=' . now()->addDays(10)->toDateString() . '&timezone=Asia/Jakarta')
+        ->assertOk()
+        ->assertJsonFragment(['name' => 'AI Planned one time']);
+});

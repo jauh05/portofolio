@@ -195,7 +195,13 @@ class OfficeContentPlannerController extends Controller
     private function nextOccurrence(OfficeContentSchedule $schedule): ?CarbonImmutable
     {
         $timezone = $schedule->timezone;
-        $occurrence = collect($this->occurrences($schedule, now($timezone)->startOfDay(), now($timezone)->addDays(400)->endOfDay()))->first();
+        if ($schedule->schedule_type === 'one_time') {
+            return $this->immutable($schedule->scheduled_at, $timezone);
+        }
+
+        $start = CarbonImmutable::now($timezone)->startOfDay();
+        $end = CarbonImmutable::now($timezone)->addDays(400)->endOfDay();
+        $occurrence = collect($this->occurrences($schedule, $start, $end))->first();
 
         return $occurrence ? CarbonImmutable::parse($occurrence['scheduledAt']) : null;
     }
