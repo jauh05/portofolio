@@ -32,13 +32,13 @@ class OfficeAnalystReportController extends Controller
 
     public function approve(Request $request, OfficeAnalystReport $report, OfficeAnalystReportService $analyst): JsonResponse
     {
-        $ids = $request->validate(['action_ids' => ['required', 'array', 'min:1'], 'action_ids.*' => ['uuid']])['action_ids'];
+        $ids = $request->validate(['plan_ids' => ['required', 'array', 'min:1'], 'plan_ids.*' => ['uuid']])['plan_ids'];
         return response()->json($this->payload($analyst->approve($report, $ids)));
     }
 
     public function dismiss(Request $request, OfficeAnalystReport $report, OfficeAnalystReportService $analyst): JsonResponse
     {
-        $ids = $request->validate(['action_ids' => ['required', 'array', 'min:1'], 'action_ids.*' => ['uuid']])['action_ids'];
+        $ids = $request->validate(['plan_ids' => ['required', 'array', 'min:1'], 'plan_ids.*' => ['uuid']])['plan_ids'];
         return response()->json($this->payload($analyst->dismiss($report, $ids)));
     }
 

@@ -16,6 +16,58 @@ use Illuminate\Validation\Rule;
 
 class OfficeContentPlannerController extends Controller
 {
+    public function dispatchScheduledPublishing()
+    {
+        $now = now('Asia/Jakarta');
+        $items = \App\Models\OfficeContentItem::whereIn('status', ['approved', 'ready_for_review'])
+            ->whereNull('published_at')
+            ->get();
+
+        foreach ($items as $item) {
+            $schedule = $item->schedule;
+            if (!$schedule) continue;
+
+            $pubMode = $schedule->publishing_mode ?? 'review';
+            if ($pubMode === 'review' && $item->status !== 'approved') continue;
+            if ($pubMode === 'automatic' && !in_array($item->status, ['approved', 'ready_for_review'])) continue;
+
+            $scheduledAt = $item->metadata['scheduled_at'] ?? null;
+            if (!$scheduledAt) continue;
+
+            $time = \Carbon\CarbonImmutable::parse($scheduledAt, 'Asia/Jakarta');
+            if ($now->lessThan($time)) continue;
+
+            // Mark as publishing
+            $item->update(['status' => 'publishing']);
+
+            $agent = match($item->platform) {
+                'instagram' => 'jauki-social',
+                'threads' => 'jauki-threads',
+                'article', 'blog' => 'jauki-article',
+                default => null,
+            };
+
+            $action = ($agent === 'jauki-article') ? 'publish_article' : 'publish_last';
+
+            if (!$agent || !in_array($action, \App\Services\OfficeRegistry::COMMANDS[$agent] ?? [])) {
+                $item->update([
+                    'status' => 'ready_to_publish',
+                    'metadata' => array_merge($item->metadata ?? [], ['publish_error' => 'Publishing integration belum terhubung'])
+                ]);
+                continue;
+            }
+
+            \App\Models\OfficeCommand::create([
+                'agent_id' => $agent,
+                'action' => $action,
+                'payload' => [
+                    'content_id' => $item->id,
+                ],
+                'status' => 'queued',
+            'requested_by' => auth()->id() ?? \App\Models\User::where('is_office_owner', true)->first()?->id,
+            ]);
+        }
+    }
     private const CONTENT_STATUSES = ['idea', 'draft', 'scheduled', 'generating', 'ready', 'published', 'failed'];
 
     public function planner(Request $request): JsonResponse
@@ -88,7 +140,10 @@ class OfficeContentPlannerController extends Controller
     {
         $schedule = new OfficeContentSchedule;
         $this->fillSchedule($schedule, $request->validate($this->rules()));
-        $generator->ensureDraft($schedule);
+        $draft = $generator->ensureDraft($schedule);
+        if ($schedule->generation_mode === 'automatic') {
+            $this->dispatchGeneration($draft);
+        }
         return response()->json($this->schedulePayload($schedule->load('brand')), 201);
     }
 
@@ -325,5 +380,61 @@ class OfficeContentPlannerController extends Controller
     private function immutable(?CarbonInterface $value, string $timezone): ?CarbonImmutable
     {
         return $value ? CarbonImmutable::instance($value)->setTimezone($timezone) : null;
+    }
+
+    public function dispatchGeneration(\App\Models\OfficeContentItem $content)
+    {
+        $content->update(['status' => 'generating']);
+        $schedule = $content->schedule;
+        $brand = $content->brand;
+        
+        $action = 'generate_' . ($content->content_type ?? 'feed');
+        $agent = match($content->platform) {
+            'instagram' => 'jauki-social',
+            'threads' => 'jauki-threads',
+            'article', 'blog' => 'jauki-article',
+            default => 'jauki-social'
+        };
+
+        $researchId = $schedule->metadata['plan_item_id'] ?? null;
+        $evidence = '';
+        if ($researchId) {
+            $plan = \App\Models\OfficeContentPlanItem::find($researchId);
+            if ($plan && $plan->research_run_id) {
+                $run = \App\Models\OfficeResearchRun::find($plan->research_run_id);
+                if ($run) {
+                    $evidence = "\nResearch evidence:\n";
+                    if ($run->findings) $evidence .= json_encode($run->findings) . "\n";
+                    if ($run->sources) $evidence .= json_encode($run->sources) . "\n";
+                }
+            }
+        }
+
+        $generationPrompt = sprintf(
+            "Brand: %s\nPlatform: %s\nFormat: %s\nTopik: %s\nBahasa: Indonesia\n%s\nCreate:\n- hook\n- slide/content structure\n- caption\n- CTA\n- hashtags\n- visual brief",
+            $brand?->name ?? 'None',
+            $content->platform,
+            ucfirst($content->content_type ?? 'feed'),
+            $schedule?->topic ?? $content->title,
+            $evidence
+        );
+
+        \App\Models\OfficeCommand::create([
+            'agent_id' => $agent,
+            'action' => $action,
+            'payload' => [
+                'content_id' => $content->id,
+                'prompt' => $generationPrompt,
+                'brand' => $brand?->name,
+                'platform' => $content->platform,
+                'content_type' => $content->content_type,
+                'topic' => $schedule?->topic,
+                'brief' => $schedule?->brief,
+                'language' => 'id',
+                'scheduled_at' => $content->metadata['scheduled_at'] ?? null,
+            ],
+            'status' => 'queued',
+            'requested_by' => auth()->id() ?? \App\Models\User::where('is_office_owner', true)->first()?->id,
+        ]);
     }
 }

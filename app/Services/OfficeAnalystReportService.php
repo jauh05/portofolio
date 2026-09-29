@@ -19,55 +19,180 @@ class OfficeAnalystReportService
 {
     public function __construct(private OfficeAiGateway $ai) {}
 
-    public function generate(string $type = 'daily', array $filters = []): OfficeAnalystReport
+        public function generate(string $type = 'daily', array $filters = []): OfficeAnalystReport
     {
+        $report = OfficeAnalystReport::create([
+            'report_date' => now('Asia/Jakarta')->toDateString(),
+            'report_type' => $type,
+            'status' => 'generating', // Awaiting research
+            'summary' => 'Memulai riset eksternal...',
+            'findings' => [], 'conclusion' => '', 'recommendations' => [], 'next_actions' => [],
+            'metadata' => ['filters' => $filters],
+            'generated_at' => now('Asia/Jakarta'),
+        ]);
+
+        $topic = $filters['topic'] ?? 'General Trends';
+        $run = \App\Models\OfficeResearchRun::create([
+            'command_id' => null, // populated below
+            'brand_id' => $filters['brand_id'] ?? null,
+            'scope' => $type,
+            'query' => $topic,
+            'status' => 'queued',
+            'started_at' => now(),
+            'metadata' => ['analyst_report_id' => $report->id],
+        ]);
+
+        $command = OfficeCommand::create([
+            'agent_id' => 'jauki-analyst',
+            'action' => 'research_trends',
+            'payload' => ['topic' => $topic, 'language' => 'id', 'limit' => 5],
+            'status' => 'queued',
+            'requested_by' => auth()->id() ?? \App\Models\User::where('is_office_owner', true)->first()?->id,
+        ]);
+
+        $run->update(['command_id' => $command->id]);
+        return $report;
+    }
+
+
+    public function generatePlanFromResearch(\App\Models\OfficeResearchRun $run): void
+    {
+        $reportId = $run->metadata['analyst_report_id'] ?? null;
+        if (!$reportId) return;
+        $report = OfficeAnalystReport::find($reportId);
+        if (!$report) return;
+
+        $type = $report->report_type;
+        $filters = $report->metadata['filters'] ?? [];
         [$start, $end] = $this->range($type, $filters);
         $context = $this->collect($start, $end, $filters);
+        
         $body = $this->factualReport($context, $start, $end, $type);
         $analysisMode = 'fallback_internal';
         try {
-            $contextJson = json_encode($this->aiContext($context, $start, $end, $type), JSON_THROW_ON_ERROR);
+            $contextJson = json_encode(array_merge($this->aiContext($context, $start, $end, $type), [
+                'agent_reach_research' => [
+                    'topic' => $run->query,
+                    'sources' => $run->sources,
+                    'findings' => $run->findings,
+                    'trends' => $run->trends,
+                    'content_ideas' => $run->content_ideas,
+                ]
+            ]), JSON_THROW_ON_ERROR);
             $body = $this->normalizeAiReport($this->ai->completeJson($this->systemPrompt(), $contextJson), $context['brands']);
             $analysisMode = 'ai';
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             // An unavailable/malformed provider must not create fake AI output.
         }
 
-        $report = OfficeAnalystReport::create([
-            'report_date' => $end->toDateString(), 'report_type' => $type, 'status' => 'ready',
-            'summary' => $body['summary'], 'findings' => $body['findings'], 'conclusion' => $body['conclusion'],
-            'recommendations' => $body['recommendations'], 'next_actions' => $body['next_actions'],
-            'metadata' => ['source' => 'internal_office_data', 'analysis_mode' => $analysisMode, 'range_start' => $start->toIso8601String(), 'range_end' => $end->toIso8601String(), 'metrics' => $context['metrics'], 'performance_available' => false, 'filters' => $filters],
+        $report->update([
+            'status' => 'ready',
+            'summary' => $body['summary'],
+            'findings' => $body['findings'],
+            'conclusion' => $body['conclusion'],
+            'recommendations' => $body['recommendations'],
+            'next_actions' => [], // Plan items handle actions now
+            'metadata' => array_merge($report->metadata ?? [], [
+                'source' => 'agent_reach', 
+                'analysis_mode' => $analysisMode, 
+                'range_start' => $start->toIso8601String(), 
+                'range_end' => $end->toIso8601String(), 
+                'metrics' => $context['metrics'], 
+                'performance_available' => false,
+                'research_run_id' => $run->id
+            ]),
             'generated_at' => now('Asia/Jakarta'),
         ]);
+
+        // Create Content Plan Items from AI Output
+        $this->createPlanItems($body['content_plan'] ?? [], $run, $context['brands']);
+
         OfficeNotification::create([
             'deduplication_key' => 'analyst-report-'.$report->id, 'type' => 'analyst.report_ready', 'agent_id' => 'jauki-analyst',
             'title' => ucfirst($type).' Analyst Brief is ready', 'message' => 'Review findings and approve any proposed next actions.', 'severity' => 'info', 'data' => ['report_id' => $report->id], 'created_at' => now('Asia/Jakarta'),
         ]);
-        return $report;
     }
 
-    public function approve(OfficeAnalystReport $report, array $actionIds): OfficeAnalystReport
+    private function createPlanItems(array $plans, \App\Models\OfficeResearchRun $run, $brands): void
     {
-        return DB::transaction(function () use ($report, $actionIds) {
+        foreach ($plans as $plan) {
+            $brand = $brands->firstWhere('slug', strtolower((string) ($plan['brand_slug'] ?? '')));
+            if (!$brand) continue;
+            \App\Models\OfficeContentPlanItem::create([
+                'research_run_id' => $run->id,
+                'brand_id' => $brand->id,
+                'platform' => $plan['platform'] ?? 'instagram',
+                'content_type' => $plan['content_type'] ?? 'feed',
+                'topic' => $plan['topic'] ?? 'General',
+                'brief' => $plan['brief'] ?? '',
+                'reason' => $plan['reason'] ?? '',
+                'scheduled_at' => \Carbon\CarbonImmutable::parse($plan['scheduled_at'] ?? now()->addDay(), 'Asia/Jakarta'),
+                'generation_mode' => $plan['generation_mode'] ?? 'manual',
+                'publishing_mode' => $plan['publishing_mode'] ?? 'review',
+                'status' => 'proposed',
+            ]);
+        }
+    }
+
+    public function approve(OfficeAnalystReport $report, array $planIds): OfficeAnalystReport
+    {
+        return DB::transaction(function () use ($report, $planIds) {
             $report = OfficeAnalystReport::whereKey($report->id)->lockForUpdate()->firstOrFail();
-            $actions = collect($report->next_actions ?? [])->map(function (array $action) use ($actionIds, $report) {
-                if (! in_array($action['id'] ?? null, $actionIds, true) || ($action['status'] ?? 'proposed') !== 'proposed') return $action;
-                if (($action['action_type'] ?? null) === 'content_schedule') $this->createSchedule($action, $report);
-                if (($action['action_type'] ?? null) === 'task') $this->createTask($action, $report);
-                return array_merge($action, ['status' => 'approved', 'approved_at' => now('Asia/Jakarta')->toIso8601String()]);
-            })->all();
-            $report->update(['next_actions' => $actions, 'status' => $this->allResolved($actions) ? 'reviewed' : 'ready']);
+            $plans = \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
+                        ->whereIn('id', $planIds)
+                        ->where('status', 'proposed')
+                        ->get();
+            
+            foreach ($plans as $plan) {
+                $schedule = \App\Models\OfficeContentSchedule::create([
+                    'brand_id' => $plan->brand_id,
+                    'name' => 'Plan: ' . $plan->topic,
+                    'schedule_type' => 'one_time',
+                    'platform' => $plan->platform,
+                    'content_type' => $plan->content_type,
+                    'topic' => $plan->topic,
+                    'brief' => $plan->brief,
+                    'scheduled_at' => $plan->scheduled_at,
+                    'next_run_at' => $plan->scheduled_at,
+                    'timezone' => 'Asia/Jakarta',
+                    'generation_mode' => $plan->generation_mode,
+                    'publishing_mode' => $plan->publishing_mode,
+                    'metadata' => ['plan_item_id' => $plan->id],
+                ]);
+                $plan->update(['status' => 'approved', 'schedule_id' => $schedule->id]);
+                
+                if ($plan->generation_mode === 'automatic') {
+                    // Trigger draft and generator immediately
+                    $generator = app(\App\Services\OfficeContentGenerator::class);
+                    $draft = $generator->ensureDraft($schedule);
+                    $plan->update(['content_item_id' => $draft->id]);
+                    app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchGeneration($draft);
+                }
+            }
+            
+            $unresolved = \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
+                            ->where('status', 'proposed')->exists();
+            if (!$unresolved) {
+                $report->update(['status' => 'reviewed']);
+            }
             return $report->fresh();
         });
     }
 
-    public function dismiss(OfficeAnalystReport $report, array $actionIds): OfficeAnalystReport
+    public function dismiss(OfficeAnalystReport $report, array $planIds): OfficeAnalystReport
     {
-        return DB::transaction(function () use ($report, $actionIds) {
+        return DB::transaction(function () use ($report, $planIds) {
             $report = OfficeAnalystReport::whereKey($report->id)->lockForUpdate()->firstOrFail();
-            $actions = collect($report->next_actions ?? [])->map(fn (array $action) => in_array($action['id'] ?? null, $actionIds, true) && ($action['status'] ?? 'proposed') === 'proposed' ? array_merge($action, ['status' => 'dismissed', 'dismissed_at' => now('Asia/Jakarta')->toIso8601String()]) : $action)->all();
-            $report->update(['next_actions' => $actions, 'status' => $this->allResolved($actions) ? 'reviewed' : 'ready']);
+            \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
+                        ->whereIn('id', $planIds)
+                        ->where('status', 'proposed')
+                        ->update(['status' => 'dismissed']);
+            
+            $unresolved = \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
+                            ->where('status', 'proposed')->exists();
+            if (!$unresolved) {
+                $report->update(['status' => 'reviewed']);
+            }
             return $report->fresh();
         });
     }
@@ -88,7 +213,7 @@ class OfficeAnalystReportService
 
     private function systemPrompt(): string
     {
-        return 'You are an internal Living Office analyst. Seluruh output yang dibaca pengguna wajib menggunakan Bahasa Indonesia. Gunakan bahasa profesional, natural, ringkas, dan mudah dipahami. Jangan menggunakan Bahasa Inggris kecuali nama brand, platform, model AI, nama field teknis, atau istilah yang memang tidak perlu diterjemahkan. Return JSON only with this schema: {"summary":"","findings":[{"type":"issue|attention|opportunity|status","title":"","description":"","evidence":""}],"conclusion":"","recommendations":[{"priority":"high|medium|low","action":"","reason":""}],"next_actions":[{"action_type":"task|content_schedule","description":"","reason":"","brand_slug":"","schedule":{}}]}. Use only supplied internal Office context. Never invent metrics, performance, external facts, tool results, actions or outcomes. performance_available is false: include exactly "Data performa belum tersedia." in summary. Actions are proposals only. A content_schedule must be complete, manual and review-only; otherwise propose a task.';
+        return 'You are an internal Living Office analyst. Seluruh output yang dibaca pengguna wajib menggunakan Bahasa Indonesia. Gunakan bahasa profesional, natural, ringkas, dan mudah dipahami. Return JSON only with this schema: {"summary":"","findings":[{"type":"issue|attention|opportunity|status","title":"","description":"","evidence":""}],"conclusion":"","recommendations":[{"priority":"high|medium|low","action":"","reason":""}],"content_plan":[{"brand_slug":"","platform":"","content_type":"","topic":"","brief":"","reason":"","scheduled_at":"YYYY-MM-DD HH:mm:ss","generation_mode":"automatic|manual","publishing_mode":"automatic|review"}]}. Gunakan data riset eksternal (Agent-Reach) dan internal Office. performance_available is false: masukkan kalimat "Data performa belum tersedia." pada summary. Buat rencana konten 7 hari ke depan (content_plan) yang spesifik berdasarkan riset dan hindari tabrakan jadwal. Jadwal harus menggunakan timezone Asia/Jakarta.';
     }
 
     private function aiContext(array $context, CarbonImmutable $start, CarbonImmutable $end, string $type): array
@@ -114,7 +239,8 @@ class OfficeAnalystReportService
         $recommendations = collect($raw['recommendations'] ?? [])->filter(fn ($item) => is_array($item))->map(fn ($item) => $this->normalizeRecommendation($item))->filter()->take(12)->values()->all();
         $nextActions = collect($raw['next_actions'] ?? [])->filter(fn ($item) => is_array($item))->map(fn ($item) => $this->normalizeAction($item, $brands))->filter()->take(10)->values()->all();
         if ($findings === [] || $recommendations === []) throw new \UnexpectedValueException('Incomplete analyst report.');
-        return compact('summary', 'findings', 'conclusion', 'recommendations', 'nextActions') + ['next_actions' => $nextActions];
+        $contentPlan = collect($raw['content_plan'] ?? [])->filter(fn($item) => is_array($item))->values()->all();
+        return compact('summary', 'findings', 'conclusion', 'recommendations', 'nextActions') + ['next_actions' => $nextActions, 'content_plan' => $contentPlan];
     }
 
     private function normalizeFinding(array $item): ?array
@@ -181,7 +307,8 @@ class OfficeAnalystReportService
         return $actions;
     }
 
-    private function createTask(array $action, OfficeAnalystReport $report): void { OfficeTask::firstOrCreate(['agent_id' => $action['agent_id'] ?? 'jauki-analyst', 'external_id' => 'analyst-'.$report->id.'-'.$action['id']], ['title' => $action['description'], 'type' => 'analyst_follow_up', 'status' => 'queued', 'progress' => 0, 'target' => $action['target'] ?? null, 'metadata' => ['analyst_report_id' => $report->id, 'analyst_action_id' => $action['id'], 'approval_only' => true]]); }
+    private function createTask(array $action, OfficeAnalystReport $report): void { OfficeTask::firstOrCreate(['agent_id' => $action['agent_id'] ?? 'jauki-analyst', 'external_id' => 'analyst-'.$report->id.'-'.$action['id']], ['title' => $action['description'], 'type' => 'analyst_follow_up', 'status' => 'queued',
+            'requested_by' => auth()->id() ?? \App\Models\User::where('is_office_owner', true)->first()?->id, 'progress' => 0, 'target' => $action['target'] ?? null, 'metadata' => ['analyst_report_id' => $report->id, 'analyst_action_id' => $action['id'], 'approval_only' => true]]); }
     private function createSchedule(array $action, OfficeAnalystReport $report): void
     {
         if (OfficeContentSchedule::where('metadata->analyst_action_id', $action['id'])->exists()) return;

@@ -43,8 +43,31 @@ class OfficeEventService
             ]);
             $event->update(['status' => $data['status'] ?? $task?->status, 'progress' => $data['progress'] ?? $task?->progress]);
             $content = $this->updateContent($data);
+            $this->handleResearch($data, $task);
             $this->notify($data, $task, $content);
         });
+    }
+
+
+    private function handleResearch(array $data, ?OfficeTask $task): void
+    {
+        if ($data['event'] === 'research.completed') {
+            if ($run = \App\Models\OfficeResearchRun::where('command_id', $data['task_id'] ?? $data['command_id'] ?? '')->first()) {
+                $result = $data['result'] ?? [];
+                $run->update([
+                    'status' => 'completed',
+                    'completed_at' => now(),
+                    'sources' => $result['sources'] ?? null,
+                    'findings' => $result['summary'] ? ['summary' => $result['summary']] : null,
+                    'trends' => $result['trend_signals'] ?? null,
+                    'content_ideas' => $result['content_ideas'] ?? null,
+                    'metadata' => array_merge($run->metadata ?? [], ['raw_result' => $result]),
+                ]);
+                
+                // Immediately consume it to generate the Analyst Report and Plan
+                app(\App\Services\OfficeAnalystReportService::class)->generatePlanFromResearch($run);
+            }
+        }
     }
 
     private function updateTask(array $data): ?OfficeTask
@@ -126,7 +149,7 @@ class OfficeEventService
             'image_url' => $content['image_url'] ?? $item->image_url,
             'external_id' => $externalId ?? $item->external_id,
             'public_url' => $content['public_url'] ?? $content['url'] ?? $item->public_url,
-            'status' => $published ? 'published' : ($data['event'] === 'content.preview_ready' ? 'preview_ready' : 'generated'),
+            'status' => $published ? 'published' : ($data['event'] === 'content.preview_ready' ? 'preview_ready' : 'ready_for_review'),
             'metadata' => array_merge($item->metadata ?? [], $content['metadata'] ?? []),
             'generated_at' => $item->generated_at ?? now(),
             'published_at' => $published ? now() : $item->published_at,
