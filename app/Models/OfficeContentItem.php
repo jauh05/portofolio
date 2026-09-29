@@ -17,9 +17,9 @@ class OfficeContentItem extends Model
         return ['metadata' => 'array', 'generated_at' => 'datetime', 'published_at' => 'datetime'];
     }
 
-    public function schedule(): BelongsTo
+    public function schedule()
     {
-        return $this->belongsTo(OfficeContentSchedule::class, 'schedule_id');
+        return $this->belongsTo(OfficeContentSchedule::class, 'schedule_id')->withTrashed();
     }
 
     public function brand(): BelongsTo

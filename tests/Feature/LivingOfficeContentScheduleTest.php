@@ -156,8 +156,7 @@ class LivingOfficeContentScheduleTest extends TestCase
             ->deleteJson("/office/api/content-schedules/{$schedule->id}")
             ->assertOk();
 
-        $schedule->refresh();
-        $this->assertFalse($schedule->is_active);
-        $this->assertNull($schedule->next_run_at);
+        $schedule = OfficeContentSchedule::withTrashed()->find($schedule->id);
+        $this->assertNotNull($schedule->deleted_at);
     }
 }

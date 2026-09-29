@@ -167,11 +167,8 @@ class OfficeContentPlannerController extends Controller
 
     public function destroy(OfficeContentSchedule $schedule): JsonResponse
     {
-        $schedule->update([
-            'is_active' => false,
-            'next_run_at' => null
-        ]);
-        return response()->json(['status' => 'deactivated']);
+        $schedule->delete();
+        return response()->json(['status' => 'deleted']);
     }
 
     public function createContent(Request $request): JsonResponse
