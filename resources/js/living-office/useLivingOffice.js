@@ -59,7 +59,8 @@ export function useLivingOffice(registry) {
                                 progress: serverAgent.progress,
                                 lastActivity: serverAgent.lastActivity,
                                 recentResults: serverAgent.recentResults || agent.recentResults,
-                                animation: disconnected ? statePose.offline : (statusPose[serverAgent.status] || (reconnecting ? statePose.seated_work : agent.animation)),
+                                // Status updates may change monitor/hand effects, but a worker at a desk keeps the seated pose.
+                                animation: disconnected ? statePose.offline : (reconnecting || agent.officeState === 'seated_work' ? statePose.seated_work : (statusPose[serverAgent.status] || agent.animation)),
                                 officeState: disconnected ? 'offline' : (reconnecting ? 'seated_work' : agent.officeState),
                                 movementState: disconnected ? 'offline' : (reconnecting ? 'seated_work' : agent.movementState),
                             };
