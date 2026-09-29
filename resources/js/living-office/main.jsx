@@ -5,7 +5,7 @@ import {
     Check, ChevronRight, CirclePause, Clock3, Coffee, Cpu, Database, ExternalLink, FileText,
     DollarSign, Gauge, HardDrive, LayoutDashboard, ListTodo, MemoryStick, MessageCircle, MonitorCog, MoreHorizontal,
     PanelLeftClose, Play, Radio, Refrigerator, RotateCcw, Search, Server, Settings, Sparkles, Square,
-    Thermometer, Users, X, ZoomIn, ZoomOut,
+    Thermometer, Users, X, ZoomIn, ZoomOut, Moon, Sun,
 } from 'lucide-react';
 import { agentRegistry, systems } from './agentRegistry';
 import { workerStates } from './stateMachine';
@@ -26,7 +26,7 @@ function BrandMark() {
     return <div className="brand-mark" aria-hidden="true"><span /><Bot size={24} /></div>;
 }
 
-function Header({ summary, notifications, unread, onRead, onReadAll }) {
+function Header({ summary, notifications, unread, onRead, onReadAll, theme, onThemeToggle }) {
     const [now, setNow] = useState(new Date());
     const [open, setOpen] = useState(false);
     useEffect(() => { const timer = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(timer); }, []);
@@ -43,6 +43,7 @@ function Header({ summary, notifications, unread, onRead, onReadAll }) {
         </div>)}</div>
         <div className="header-user">
             <div className="current-time"><small>{now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</small><strong>{now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':')}</strong></div>
+            <button className="icon-button theme-toggle" onClick={onThemeToggle} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>{theme === 'light' ? <Moon size={17} /> : <Sun size={17} />}</button>
             <button className="icon-button notification-button" onClick={() => setOpen(value => !value)} aria-label={`${unread} unread notifications`}><Bell size={18} />{unread > 0 && <b>{unread > 99 ? '99+' : unread}</b>}</button>
             {open && <aside className="notification-panel"><header><div><strong>Notifications</strong><small>{unread} unread</small></div><button onClick={onReadAll} disabled={!unread}>Mark all read</button></header><div>{notifications.length ? notifications.map(item => <button className={item.readAt ? 'read' : ''} key={item.id} onClick={() => onRead(item.id)}><i className={item.severity}>{item.severity === 'error' ? '×' : '✓'}</i><span><strong>{item.title}</strong><p>{item.message}</p><time>{new Date(item.createdAt).toLocaleString('id-ID')}</time></span></button>) : <p className="notification-empty">No notifications yet</p>}</div></aside>}
             <form action="/office/logout" method="POST" style={{ margin: 0 }}>
@@ -55,8 +56,8 @@ function Header({ summary, notifications, unread, onRead, onReadAll }) {
 }
 
 const navItems = [
-    ['overview', LayoutDashboard, 'Overview'], ['kanban', ListTodo, 'Kanban'], ['agents', Bot, 'Agents'],
-    ['activity', Activity, 'Activity'], ['planner', CalendarDays, 'Content Planner'],
+    ['overview', LayoutDashboard, 'Overview'], ['kanban', ListTodo, 'Kanban'], ['planner', CalendarDays, 'Content Planner'],
+    ['agents', Bot, 'Agents'], ['activity', Activity, 'Activity'],
 ];
 
 const actionFields = {
@@ -125,7 +126,7 @@ function Worker({ agent, selected, onClick }) {
     const worldX = (agent.position.x / 100) * OFFICE_WORLD.width;
     const worldY = (agent.position.y / 100) * OFFICE_WORLD.height;
     return <button
-        className={`worker worker-${agent.animation || state.motion} is-${agent.movementState || 'idle'} facing-${agent.facing || 'right'} ${selected ? 'selected' : ''}`}
+        className={`worker worker-${agent.animation || state.motion} status-${agent.status} is-${agent.movementState || 'idle'} facing-${agent.facing || 'right'} ${selected ? 'selected' : ''}`}
         style={{ '--agent-color': agent.color, '--walk-duration': `${agent.walkDuration || 3.5}s`, transform: `translate3d(${worldX}px, ${worldY}px, 0) translate3d(-50%, -50%, 0)`, zIndex: 100 + Math.floor(agent.position.y) }}
         onClick={() => onClick(agent.id)} aria-label={`Buka detail ${agent.name}`}
     >
@@ -234,10 +235,14 @@ function App() {
     const [selectedId, setSelectedId] = useState('jauki-article');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [activeView, setActiveView] = useState('overview');
+    const [theme, setTheme] = useState(() => {
+        try { return localStorage.getItem('living-office-theme') === 'dark' ? 'dark' : 'light'; } catch { return 'light'; }
+    });
     const selectedAgent = useMemo(() => agents.find(a => a.id === selectedId) || agents[0], [agents, selectedId]);
     const selectAgent = (id) => { setSelectedId(id); setDrawerOpen(true); };
-    return <div className="app-shell" data-ambience={ambience}>
-        <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} />
+    useEffect(() => { try { localStorage.setItem('living-office-theme', theme); } catch {} }, [theme]);
+    return <div className="app-shell" data-theme={theme} data-ambience={ambience}>
+        <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} theme={theme} onThemeToggle={() => setTheme(current => current === 'light' ? 'dark' : 'light')} />
         <Sidebar activeView={activeView} setActiveView={setActiveView} />
         <main className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} /></> : activeView === 'planner' ? <ContentPlanner planner={office.planner} loading={office.loading} loadPlanner={office.loadPlanner} createSchedule={office.createSchedule} /> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
         {drawerOpen && <AgentDrawer agent={selectedAgent} tasks={office.tasks} commands={office.commands} enqueue={office.enqueue} onClose={() => setDrawerOpen(false)} />}

@@ -16,7 +16,7 @@ function PlannerForm({ type, onClose, onSave }) {
     const change = (key, value) => setForm(current => ({ ...current, [key]: value }));
     const toggleDay = (day) => change('days', form.days.includes(day) ? form.days.filter(item => item !== day) : [...form.days, day]);
     const save = async (event) => { event.preventDefault(); setSaving(true); setError(null); try { await onSave(form); onClose(); } catch (caught) { setError(caught.message); } finally { setSaving(false); } };
-    return <div className="planner-modal-wrap"><button className="drawer-scrim" onClick={onClose} aria-label="Tutup formulir" /><form className="planner-modal" onSubmit={save}>
+    return <div className="planner-modal-wrap"><button type="button" className="planner-modal-scrim" onClick={onClose} aria-label="Tutup formulir" /><form className="planner-modal" onSubmit={save}>
         <header><div><span>{type === 'recurring' ? 'RECURRING SCHEDULE' : 'ONE-TIME SCHEDULE'}</span><h2>{type === 'recurring' ? 'Add recurring content' : 'Schedule content'}</h2></div><button type="button" onClick={onClose}><X size={18} /></button></header>
         <label>Name<input required value={form.name} onChange={e => change('name', e.target.value)} placeholder="Weekly content idea" /></label>
         <div className="planner-form-grid"><label>Platform<select value={form.platform} onChange={e => change('platform', e.target.value)}><option>instagram</option><option>linkedin</option><option>twitter</option><option>blog</option></select></label><label>Content type<input required value={form.content_type} onChange={e => change('content_type', e.target.value)} placeholder="post, article, thread" /></label></div>

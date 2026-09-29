@@ -11,6 +11,11 @@ const statePose = {
     server_check: 'analyze', returning_to_desk: 'walk1', offline: 'sleep', not_installed: 'sleep', error: 'error',
 };
 
+const statusPose = {
+    idle: 'idle', working: 'type', generating: 'create', planning: 'think', analyzing: 'analyze', monitoring: 'analyze',
+    completed: 'celebrate', error: 'error', warning: 'error', break: 'rest', meeting: 'think', reporting: 'analyze',
+};
+
 export function useLivingOffice(registry) {
     const timers = useRef([]);
     const agentsRef = useRef([]);
@@ -54,9 +59,9 @@ export function useLivingOffice(registry) {
                                 progress: serverAgent.progress,
                                 lastActivity: serverAgent.lastActivity,
                                 recentResults: serverAgent.recentResults || agent.recentResults,
+                                animation: disconnected ? statePose.offline : (statusPose[serverAgent.status] || (reconnecting ? statePose.seated_work : agent.animation)),
                                 officeState: disconnected ? 'offline' : (reconnecting ? 'seated_work' : agent.officeState),
                                 movementState: disconnected ? 'offline' : (reconnecting ? 'seated_work' : agent.movementState),
-                                animation: disconnected ? statePose.offline : (reconnecting ? statePose.seated_work : agent.animation),
                             };
                         }
                         return agent;
