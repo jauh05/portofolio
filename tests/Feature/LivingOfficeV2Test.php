@@ -33,7 +33,32 @@ test('owner can access operations APIs and content has an explicit empty respons
     $this->actingAs($owner)->getJson('/office/api/tasks')->assertOk()->assertJson(['data' => [], 'empty' => true]);
     $this->actingAs($owner)->getJson('/office/api/content')->assertOk()->assertJson(['data' => [], 'empty' => true]);
     $this->actingAs($owner)->getJson('/office/api/activity')->assertOk()->assertJson(['data' => [], 'empty' => true]);
-    $this->actingAs($owner)->getJson('/office/api/summary')->assertOk()->assertJsonStructure(['workers', 'workingNow', 'tasksToday', 'contentThisWeek', 'successRate', 'averageRuntimeSeconds']);
+    $this->actingAs($owner)->getJson('/office/api/summary')->assertOk()->assertJsonStructure(['workers', 'workingNow', 'tasksToday', 'contentThisWeek', 'completedToday', 'errorsToday', 'successRate', 'averageRuntimeSeconds']);
+});
+
+test('summary metrics are calculated from current office records', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $now = now();
+
+    foreach ([
+        ['status' => 'claimed', 'title' => 'Claimed task'],
+        ['status' => 'running', 'title' => 'Running task'],
+        ['status' => 'completed', 'title' => 'Completed task', 'completed_at' => $now],
+        ['status' => 'failed', 'title' => 'Failed task', 'failed_at' => $now],
+    ] as $index => $attributes) {
+        OfficeTask::create(array_merge([
+            'agent_id' => 'jauki-article', 'external_id' => 'summary-'.$index, 'type' => 'article',
+            'progress' => 0, 'started_at' => $now,
+        ], $attributes));
+    }
+    OfficeContentItem::create([
+        'deduplication_key' => 'summary-content', 'agent_id' => 'jauki-article', 'platform' => 'article',
+        'content_type' => 'article', 'status' => 'generated', 'generated_at' => $now,
+    ]);
+
+    $this->actingAs($owner)->getJson('/office/api/summary')->assertOk()->assertJson([
+        'workingNow' => 2, 'tasksToday' => 4, 'contentThisWeek' => 1, 'completedToday' => 1, 'errorsToday' => 1,
+    ]);
 });
 
 test('bridge accepts the configured token and rejects a bad token', function () {

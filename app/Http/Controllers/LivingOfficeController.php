@@ -138,15 +138,17 @@ class LivingOfficeController extends Controller
         $agents = collect($this->state->get()['agents']);
         $today = now()->startOfDay();
         $week = now()->startOfWeek();
-        $completed = OfficeTask::where('started_at', '>=', $today)->where('status', 'completed')->count();
-        $failed = OfficeTask::where('started_at', '>=', $today)->where('status', 'failed')->count();
+        $completed = OfficeTask::where('completed_at', '>=', $today)->where('status', 'completed')->count();
+        $failed = OfficeTask::where('failed_at', '>=', $today)->where('status', 'failed')->count();
         $finished = $completed + $failed;
         $durations = OfficeTask::whereNotNull('completed_at')->get(['started_at', 'completed_at'])->map(fn ($task) => Carbon::parse($task->started_at)->diffInSeconds(Carbon::parse($task->completed_at)));
         return response()->json([
-            'workers' => $agents->reject(fn ($agent) => in_array($agent['status'], ['not_connected', 'not_installed'], true))->count(),
-            'workingNow' => $agents->whereIn('status', ['working', 'generating', 'planning', 'monitoring', 'analyzing'])->count(),
-            'tasksToday' => OfficeTask::where('started_at', '>=', $today)->count(),
-            'contentThisWeek' => OfficeContentItem::where('generated_at', '>=', $week)->count(),
+            'workers' => $agents->reject(fn ($agent) => in_array($agent['status'], ['offline', 'not_connected', 'not_installed'], true))->count(),
+            'workingNow' => OfficeTask::whereIn('status', ['claimed', 'running'])->count(),
+            'tasksToday' => OfficeTask::where(fn ($query) => $query->where('created_at', '>=', $today)->orWhere('started_at', '>=', $today))->count(),
+            'contentThisWeek' => OfficeContentItem::where(fn ($query) => $query->where('generated_at', '>=', $week)->orWhere('created_at', '>=', $week))->count(),
+            'completedToday' => $completed,
+            'errorsToday' => $failed,
             'successRate' => $finished ? round(($completed / $finished) * 100, 1) : null,
             'averageRuntimeSeconds' => $durations->isNotEmpty() ? (int) round($durations->average()) : null,
         ]);

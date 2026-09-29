@@ -24,6 +24,17 @@ test('browser source never contains the office bridge secret', () => {
     }
 });
 
+test('kanban source renders the five persisted task lifecycle columns as cards', () => {
+    const source = readFileSync(new URL('../../resources/js/living-office/OperationsViews.jsx', import.meta.url), 'utf8');
+
+    for (const status of ['queued', 'claimed', 'running', 'completed', 'failed']) {
+        assert.match(source, new RegExp(`['\"]${status}['\"]`));
+    }
+    assert.match(source, /kanban-board/);
+    assert.match(source, /kanban-card/);
+    assert.doesNotMatch(source, /view === 'kanban' \? \(\s*tasks\.length \? <div className="task-table"/);
+});
+
 test('every worker has one unique home desk and fixed seat anchor', () => {
     assert.equal(Object.keys(deskAssignments).length, agentRegistry.length);
     assert.equal(new Set(Object.values(deskAssignments).map((assignment) => assignment.homeDeskId)).size, agentRegistry.length);
