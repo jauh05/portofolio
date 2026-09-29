@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OfficeContentItem extends Model
 {
@@ -14,5 +15,10 @@ class OfficeContentItem extends Model
     protected function casts(): array
     {
         return ['metadata' => 'array', 'generated_at' => 'datetime', 'published_at' => 'datetime'];
+    }
+
+    public function schedule(): BelongsTo
+    {
+        return $this->belongsTo(OfficeContentSchedule::class, 'schedule_id');
     }
 }

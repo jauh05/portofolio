@@ -13,6 +13,7 @@ import { OFFICE_WORLD, deskAssignments, officeEvents, officeStations } from './o
 import { useLivingOffice } from './useLivingOffice';
 import { useOfficeData } from './useOfficeData';
 import { OperationsView } from './OperationsViews';
+import { ContentPlanner } from './ContentPlanner';
 import './living-office.css';
 
 const statusTone = (status) => ({
@@ -55,7 +56,7 @@ function Header({ summary, notifications, unread, onRead, onReadAll }) {
 
 const navItems = [
     ['overview', LayoutDashboard, 'Overview'], ['kanban', ListTodo, 'Kanban'], ['agents', Bot, 'Agents'],
-    ['activity', Activity, 'Activity'],
+    ['activity', Activity, 'Activity'], ['planner', CalendarDays, 'Content Planner'],
 ];
 
 const actionFields = {
@@ -238,7 +239,7 @@ function App() {
     return <div className="app-shell" data-ambience={ambience}>
         <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} />
         <Sidebar activeView={activeView} setActiveView={setActiveView} />
-        <main className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} /></> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
+        <main className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent.status) && sendToRest(selectedAgent.id)} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={agents} activity={office.activity} /></> : activeView === 'planner' ? <ContentPlanner planner={office.planner} loading={office.loading} loadPlanner={office.loadPlanner} createSchedule={office.createSchedule} /> : <OperationsView view={activeView} agents={agents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} />}</main>
         {drawerOpen && <AgentDrawer agent={selectedAgent} tasks={office.tasks} commands={office.commands} enqueue={office.enqueue} onClose={() => setDrawerOpen(false)} />}
         {office.toast && <div className={`office-toast ${office.toast.severity}`}><i>{office.toast.severity === 'error' ? '×' : '✓'}</i><div><strong>{office.toast.title}</strong><span>{office.toast.message}</span></div><button onClick={office.dismissToast}><X size={14} /></button></div>}
     </div>;

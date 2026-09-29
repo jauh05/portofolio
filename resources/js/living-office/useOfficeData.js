@@ -17,7 +17,7 @@ async function request(url, options = {}) {
 }
 
 export function useOfficeData() {
-    const [data, setData] = useState({ tasks: [], activity: [], content: [], notifications: [], commands: [], summary: {}, unread: 0 });
+    const [data, setData] = useState({ tasks: [], activity: [], content: [], planner: { occurrences: [], upcoming: [], range: null }, notifications: [], commands: [], summary: {}, unread: 0 });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [toast, setToast] = useState(null);
@@ -26,9 +26,9 @@ export function useOfficeData() {
 
     const refresh = useCallback(async () => {
         try {
-            const [tasks, activity, content, notifications, commands, summary] = await Promise.all([
+            const [tasks, activity, content, planner, notifications, commands, summary] = await Promise.all([
                 request('/office/api/tasks'), request('/office/api/activity'), request('/office/api/content'),
-                request('/office/api/notifications'), request('/office/api/commands'), request('/office/api/summary'),
+                request('/office/api/content-planner'), request('/office/api/notifications'), request('/office/api/commands'), request('/office/api/summary'),
             ]);
             if (initialized.current) {
                 const important = notifications.data.find((item) => !item.readAt && !seenNotifications.current.has(item.id));
@@ -36,7 +36,7 @@ export function useOfficeData() {
             }
             notifications.data.forEach((item) => seenNotifications.current.add(item.id));
             initialized.current = true;
-            setData({ tasks: tasks.data, activity: activity.data, content: content.data, notifications: notifications.data, commands: commands.data, summary, unread: notifications.unread });
+            setData({ tasks: tasks.data, activity: activity.data, content: content.data, planner, notifications: notifications.data, commands: commands.data, summary, unread: notifications.unread });
             setError(null);
         } catch (caught) {
             if (caught.message !== 'Session expired') setError(caught.message || 'Unable to load data');
@@ -61,5 +61,25 @@ export function useOfficeData() {
         await refresh();
         return command;
     };
-    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue };
+    const loadPlanner = async (start, end) => {
+        const query = new URLSearchParams({ start, end, timezone: 'Asia/Jakarta' });
+        const planner = await request(`/office/api/content-planner?${query}`);
+        setData(current => ({ ...current, planner }));
+        return planner;
+    };
+    const createSchedule = async (payload) => {
+        const schedule = await request('/office/api/content-schedules', { method: 'POST', body: JSON.stringify(payload) });
+        await refresh();
+        return schedule;
+    };
+    const updateSchedule = async (id, payload) => {
+        const schedule = await request(`/office/api/content-schedules/${id}`, { method: 'PATCH', body: JSON.stringify(payload) });
+        await refresh();
+        return schedule;
+    };
+    const deactivateSchedule = async (id) => {
+        await request(`/office/api/content-schedules/${id}`, { method: 'DELETE' });
+        await refresh();
+    };
+    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, createSchedule, updateSchedule, deactivateSchedule };
 }

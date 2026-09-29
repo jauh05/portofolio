@@ -15,6 +15,7 @@ Route::get('/certificates', function () {
 });
 
 use App\Http\Controllers\OfficeAuthController;
+use App\Http\Controllers\OfficeContentPlannerController;
 use App\Http\Controllers\LivingOfficeController;
 
 Route::get('/office/login', [OfficeAuthController::class, 'showLogin'])->name('login');
@@ -33,6 +34,14 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::get('/tasks', [LivingOfficeController::class, 'getTasks']);
         Route::get('/activity', [LivingOfficeController::class, 'getActivity']);
         Route::get('/content', [LivingOfficeController::class, 'getContent']);
+        Route::get('/content-planner', [OfficeContentPlannerController::class, 'planner']);
+        Route::get('/content-schedules', [OfficeContentPlannerController::class, 'index']);
+        Route::post('/content-schedules', [OfficeContentPlannerController::class, 'store']);
+        Route::get('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'show']);
+        Route::patch('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'update']);
+        Route::delete('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'destroy']);
+        Route::post('/content', [OfficeContentPlannerController::class, 'createContent']);
+        Route::patch('/content/{content}', [OfficeContentPlannerController::class, 'updateContent']);
         Route::get('/summary', [LivingOfficeController::class, 'summary']);
         Route::get('/notifications', [LivingOfficeController::class, 'getNotifications']);
         Route::patch('/notifications/read-all', [LivingOfficeController::class, 'readAllNotifications']);
