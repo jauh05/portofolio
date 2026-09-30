@@ -101,7 +101,14 @@ def _do_generate(context: Dict[str, Any], mode: str) -> None:
     _progress(context, 30, f"Generating {label} content")
 
     # This is normally done in asyncio.to_thread in the bot, but here we run it synchronously
-    content = generate_content(mode)
+    if "prompt" in context.get("command_payload", {}):
+        prompt_data = context["command_payload"]["prompt"]
+        content = generate_content(mode)
+        if isinstance(content, dict):
+            pass
+    else:
+        content = generate_content(mode)
+
     variant = choose_new_variant()
     prompt = build_muse_prompt(content, variant, mode)
 
@@ -120,6 +127,7 @@ def _do_generate(context: Dict[str, Any], mode: str) -> None:
 
     # For preview, we prepare the output
     preview_content = {
+        "content_id": context.get("command_payload", {}).get("content_id"),
         "platform": "instagram",
         "content_type": mode,
         "title": f"Instagram {label} post",
@@ -130,11 +138,13 @@ def _do_generate(context: Dict[str, Any], mode: str) -> None:
         preview_content["text"] = feed_caption(content)
         
     try:
-        public_url, public_path = create_public_media(image_path, mode)
+        public_url = create_public_media(image_path, mode)
         preview_content["image_url"] = public_url
-        preview_content["image_path"] = public_path
+        preview_content["image_path"] = image_path
     except Exception as e:
         logger.warning(f"Failed to create public media: {e}")
+        _emit_required("task.failed", task_id=context["task_id"], error=f"Media creation failed: {e}")
+        return
     
     _emit_required(
         "content.preview_ready",
