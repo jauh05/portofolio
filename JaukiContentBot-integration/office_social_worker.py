@@ -34,7 +34,6 @@ class OfficeCommandClient:
             data=json.dumps(payload).encode("utf-8"),
             headers={
                 "Authorization": "Bearer " + token,
-                "X-Office-Bridge-Token": token,
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "User-Agent": "JaukiContentBot-LivingOffice/1.0",
@@ -94,7 +93,7 @@ def _progress(context: Dict[str, Any], progress: int, activity: str) -> None:
 
 def _do_generate(context: Dict[str, Any], mode: str) -> None:
     # Importing bot functions that don't depend on telegram classes
-    from bot import generate_content, build_muse_prompt, generate_muse_image, save_latest_state, choose_new_variant, feed_caption
+    from bot import generate_content, build_muse_prompt, generate_muse_image, save_latest_state, choose_new_variant, feed_caption, create_public_media
     
     label = "Feed" if mode == "feed" else "Story"
     
@@ -130,8 +129,12 @@ def _do_generate(context: Dict[str, Any], mode: str) -> None:
     if mode == "feed":
         preview_content["text"] = feed_caption(content)
         
-    # the frontend uses image URL if present, or just knows it's generated
-    # (Office needs an accessible URL which might not exist unless we expose it, but text/caption is the main part)
+    try:
+        public_url, public_path = create_public_media(image_path, mode)
+        preview_content["image_url"] = public_url
+        preview_content["image_path"] = public_path
+    except Exception as e:
+        logger.warning(f"Failed to create public media: {e}")
     
     _emit_required(
         "content.preview_ready",
