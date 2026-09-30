@@ -152,7 +152,7 @@ class OfficeEventService
             'image_url' => $content['image_url'] ?? $item->image_url,
             'external_id' => $externalId ?? $item->external_id,
             'public_url' => $content['public_url'] ?? $content['url'] ?? $item->public_url,
-            'status' => $published ? 'published' : ($data['event'] === 'content.preview_ready' ? 'preview_ready' : 'ready_for_review'),
+            'status' => $published ? 'published' : 'ready_for_review',
             'metadata' => array_merge($item->metadata ?? [], $content['metadata'] ?? [], [
                 'generated_payload' => $content,
                 'visual_asset' => array_filter(['url' => $content['image_url'] ?? $content['media_url'] ?? null, 'path' => $content['image_path'] ?? null]),
