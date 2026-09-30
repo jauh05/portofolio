@@ -11,6 +11,7 @@ use Carbon\CarbonInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -169,6 +170,31 @@ class OfficeContentPlannerController extends Controller
     {
         $schedule->delete();
         return response()->json(['status' => 'deleted']);
+    }
+
+    public function bulkAction(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'action' => ['required', Rule::in(['pause', 'resume', 'delete'])],
+            'schedule_ids' => ['required', 'array', 'min:1'],
+            'schedule_ids.*' => ['uuid'],
+        ]);
+
+        $affected = DB::transaction(function () use ($data) {
+            $schedules = OfficeContentSchedule::whereIn('id', $data['schedule_ids'])->lockForUpdate()->get();
+            foreach ($schedules as $schedule) {
+                if ($data['action'] === 'delete') {
+                    $schedule->delete();
+                    continue;
+                }
+                $schedule->is_active = $data['action'] === 'resume';
+                $schedule->next_run_at = $schedule->is_active ? $this->nextOccurrence($schedule) : null;
+                $schedule->save();
+            }
+            return $schedules->count();
+        });
+
+        return response()->json(['action' => $data['action'], 'affected' => $affected]);
     }
 
     public function createContent(Request $request): JsonResponse
@@ -390,22 +416,28 @@ class OfficeContentPlannerController extends Controller
         $schedule = $content->schedule;
         $brand = $content->brand;
         
-        $action = 'generate_' . ($content->content_type ?? 'feed');
         $agent = match($content->platform) {
             'instagram' => 'jauki-social',
             'threads' => 'jauki-threads',
-            'article', 'blog' => 'jauki-article',
+            'article', 'blog', 'website' => 'jauki-article',
             default => 'jauki-social'
         };
+        $action = match (true) {
+            $agent === 'jauki-threads' => 'generate_threads',
+            $agent === 'jauki-article' => 'generate_article',
+            default => 'generate_' . ($content->content_type ?? 'feed'),
+        };
 
-        $researchId = $schedule->metadata['plan_item_id'] ?? null;
+        $intelligence = $schedule?->metadata ?? [];
+        $researchId = $intelligence['plan_item_id'] ?? null;
         $evidence = '';
         if ($researchId) {
             $plan = \App\Models\OfficeContentPlanItem::find($researchId);
+            if ($plan) $intelligence = array_merge($plan->metadata ?? [], $intelligence);
             if ($plan && $plan->research_run_id) {
                 $run = \App\Models\OfficeResearchRun::find($plan->research_run_id);
                 if ($run) {
-                    $evidence = "\nResearch evidence:\n";
+                    $evidence = "\nResearch Evidence:\n";
                     if ($run->findings) $evidence .= json_encode($run->findings) . "\n";
                     if ($run->sources) $evidence .= json_encode($run->sources) . "\n";
                 }
@@ -413,11 +445,19 @@ class OfficeContentPlannerController extends Controller
         }
 
         $generationPrompt = sprintf(
-            "Brand: %s\nPlatform: %s\nFormat: %s\nTopik: %s\nBahasa: Indonesia\n%s\nCreate:\n- hook\n- slide/content structure\n- caption\n- CTA\n- hashtags\n- visual brief",
+            "Brand: %s\nPlatform: %s\nFormat: %s\nAudience: %s\nObjective: %s\nTopik: %s\nAudience problem: %s\nAngle: %s\nHook direction: %s\nKey message: %s\nCTA: %s\nBrief: %s\nBahasa: Indonesia\n%s\nCreate:\n- hook\n- slide/content structure\n- caption\n- CTA\n- hashtags\n- visual brief",
             $brand?->name ?? 'None',
             $content->platform,
             ucfirst($content->content_type ?? 'feed'),
+            $intelligence['audience'] ?? '-',
+            $intelligence['objective'] ?? '-',
             $schedule?->topic ?? $content->title,
+            $intelligence['audience_problem'] ?? '-',
+            $intelligence['angle'] ?? '-',
+            $intelligence['hook_direction'] ?? '-',
+            $intelligence['key_message'] ?? '-',
+            $intelligence['cta'] ?? '-',
+            $schedule?->brief ?? '-',
             $evidence
         );
 

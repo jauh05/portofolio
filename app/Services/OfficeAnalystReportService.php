@@ -27,7 +27,7 @@ class OfficeAnalystReportService
             'status' => 'generating', // Awaiting research
             'summary' => 'Memulai riset eksternal...',
             'findings' => [], 'conclusion' => '', 'recommendations' => [], 'next_actions' => [],
-            'metadata' => ['filters' => $filters],
+            'metadata' => ['filters' => $filters, 'planning_horizon' => $filters['planning_horizon'] ?? '7_days'],
             'generated_at' => now('Asia/Jakarta'),
         ]);
 
@@ -45,7 +45,7 @@ class OfficeAnalystReportService
         $command = OfficeCommand::create([
             'agent_id' => 'jauki-analyst',
             'action' => 'research_trends',
-            'payload' => ['topic' => $topic, 'language' => 'id', 'limit' => 5],
+            'payload' => ['topic' => $topic, 'audience' => $filters['audience'] ?? null, 'language' => 'id', 'limit' => 5],
             'status' => 'queued',
             'requested_by' => auth()->id() ?? \App\Models\User::where('is_office_owner', true)->first()?->id,
         ]);
@@ -79,7 +79,7 @@ class OfficeAnalystReportService
                     'content_ideas' => $run->content_ideas,
                 ]
             ]), JSON_THROW_ON_ERROR);
-            $body = $this->normalizeAiReport($this->ai->completeJson($this->systemPrompt(), $contextJson), $context['brands']);
+            $body = $this->normalizeAiReport($this->ai->completeJson($this->systemPrompt($filters), $contextJson), $context['brands']);
             $analysisMode = 'ai';
         } catch (\Throwable $e) {
             // An unavailable/malformed provider must not create fake AI output.
@@ -99,13 +99,14 @@ class OfficeAnalystReportService
                 'range_end' => $end->toIso8601String(), 
                 'metrics' => $context['metrics'], 
                 'performance_available' => false,
-                'research_run_id' => $run->id
+                'research_run_id' => $run->id,
+                'source_count' => is_array($run->sources) ? count($run->sources) : 0,
             ]),
             'generated_at' => now('Asia/Jakarta'),
         ]);
 
         // Create Content Plan Items from AI Output
-        $this->createPlanItems($body['content_plan'] ?? [], $run, $context['brands']);
+        $this->createPlanItems($body['content_plan'] ?? [], $run, $context['brands'], $report);
 
         OfficeNotification::create([
             'deduplication_key' => 'analyst-report-'.$report->id, 'type' => 'analyst.report_ready', 'agent_id' => 'jauki-analyst',
@@ -113,25 +114,83 @@ class OfficeAnalystReportService
         ]);
     }
 
-    private function createPlanItems(array $plans, \App\Models\OfficeResearchRun $run, $brands): void
+    private function createPlanItems(array $plans, \App\Models\OfficeResearchRun $run, $brands, OfficeAnalystReport $report): void
     {
+        $batchId = (string) Str::uuid();
+        $existingTopics = \App\Models\OfficeContentPlanItem::where('research_run_id', $run->id)->pluck('topic')->map(fn ($topic) => Str::lower($topic))->all();
         foreach ($plans as $plan) {
-            $brand = $brands->firstWhere('slug', strtolower((string) ($plan['brand_slug'] ?? '')));
-            if (!$brand) continue;
+            $plan = $this->normalizeContentPlan($plan, $run, $brands);
+            if (!$plan || in_array(Str::lower($plan['topic']), $existingTopics, true)) continue;
             \App\Models\OfficeContentPlanItem::create([
                 'research_run_id' => $run->id,
-                'brand_id' => $brand->id,
-                'platform' => $plan['platform'] ?? 'instagram',
-                'content_type' => $plan['content_type'] ?? 'feed',
-                'topic' => $plan['topic'] ?? 'General',
-                'brief' => $plan['brief'] ?? '',
-                'reason' => $plan['reason'] ?? '',
-                'scheduled_at' => \Carbon\CarbonImmutable::parse($plan['scheduled_at'] ?? now()->addDay(), 'Asia/Jakarta'),
-                'generation_mode' => $plan['generation_mode'] ?? 'manual',
-                'publishing_mode' => $plan['publishing_mode'] ?? 'review',
+                'brand_id' => $plan['brand']->id,
+                'platform' => $plan['platform'],
+                'content_type' => $plan['content_type'],
+                'topic' => $plan['topic'],
+                'brief' => $plan['brief'],
+                'reason' => $plan['reason'],
+                'scheduled_at' => $plan['scheduled_at'],
+                'generation_mode' => $plan['generation_mode'],
+                'publishing_mode' => $plan['publishing_mode'],
+                'assigned_agent' => $this->agentFor($plan['platform'], $plan['content_type']),
                 'status' => 'proposed',
+                'metadata' => array_merge($plan['metadata'], [
+                    'source' => 'analyst',
+                    'analyst_report_id' => $report->id,
+                    'analyst_plan_batch_id' => $batchId,
+                    'research_run_id' => $run->id,
+                ]),
             ]);
+            $existingTopics[] = Str::lower($plan['topic']);
         }
+    }
+
+    private function normalizeContentPlan(array $plan, \App\Models\OfficeResearchRun $run, $brands): ?array
+    {
+        $brand = $brands->firstWhere('slug', strtolower((string) ($plan['brand_slug'] ?? '')));
+        if (!$brand) return null;
+        $platform = strtolower((string) ($plan['platform'] ?? 'instagram'));
+        $contentType = strtolower((string) ($plan['content_type'] ?? 'feed'));
+        if (!$this->agentFor($platform, $contentType)) return null;
+        $topic = $this->text($plan['topic'] ?? null, 255);
+        $brief = $this->text($plan['brief'] ?? null, 4000);
+        if (!$topic || !$brief) return null;
+        try { $scheduledAt = CarbonImmutable::parse($plan['scheduled_at'] ?? now('Asia/Jakarta')->addDay(), 'Asia/Jakarta'); }
+        catch (\Throwable) { return null; }
+        $evidence = collect($run->sources ?? [])->take(5)->map(fn ($source) => [
+            'title' => $source['title'] ?? $source['name'] ?? 'Sumber riset',
+            'url' => $source['url'] ?? null,
+            'snippet' => $source['snippet'] ?? $source['summary'] ?? null,
+        ])->values()->all();
+        return [
+            'brand' => $brand, 'platform' => $platform, 'content_type' => $contentType, 'topic' => $topic, 'brief' => $brief,
+            'reason' => $this->text($plan['reason'] ?? null, 1000) ?: 'Berdasarkan peluang dari riset Agent-Reach.',
+            'scheduled_at' => $scheduledAt,
+            'generation_mode' => in_array($plan['generation_mode'] ?? 'manual', ['manual', 'automatic'], true) ? $plan['generation_mode'] : 'manual',
+            'publishing_mode' => in_array($plan['publishing_mode'] ?? 'review', ['review', 'automatic'], true) ? $plan['publishing_mode'] : 'review',
+            'metadata' => [
+                'brand_slug' => $brand->slug,
+                'objective' => $this->text($plan['objective'] ?? null, 100) ?: 'education',
+                'audience' => $this->text($plan['audience'] ?? null, 255),
+                'audience_problem' => $this->text($plan['audience_problem'] ?? null, 500),
+                'angle' => $this->text($plan['angle'] ?? null, 500),
+                'hook_direction' => $this->text($plan['hook_direction'] ?? null, 500),
+                'key_message' => $this->text($plan['key_message'] ?? null, 800),
+                'cta' => $this->text($plan['cta'] ?? null, 300),
+                'research_summary' => $this->text($plan['research_summary'] ?? null, 1000) ?: $this->text($run->summary ?? null, 1000),
+                'key_findings' => $plan['key_findings'] ?? $run->findings ?? [],
+                'source_evidence' => $plan['source_evidence'] ?? $evidence,
+            ],
+        ];
+    }
+
+    private function agentFor(string $platform, string $contentType): ?string
+    {
+        $action = 'generate_'.$contentType;
+        $agent = match ($platform) { 'instagram' => 'jauki-social', 'threads' => 'jauki-threads', 'article', 'blog', 'website' => 'jauki-article', default => null };
+        if ($platform === 'threads' && $contentType === 'thread') $action = 'generate_threads';
+        if (in_array($contentType, ['article', 'blog'], true)) $action = 'generate_article';
+        return $agent && in_array($action, OfficeRegistry::COMMANDS[$agent] ?? [], true) ? $agent : null;
     }
 
     public function approve(OfficeAnalystReport $report, array $planIds): OfficeAnalystReport
@@ -157,7 +216,12 @@ class OfficeAnalystReportService
                     'timezone' => 'Asia/Jakarta',
                     'generation_mode' => $plan->generation_mode,
                     'publishing_mode' => $plan->publishing_mode,
-                    'metadata' => ['plan_item_id' => $plan->id],
+                    'metadata' => array_merge($plan->metadata ?? [], [
+                        'source' => 'analyst',
+                        'plan_item_id' => $plan->id,
+                        'analyst_report_id' => $report->id,
+                        'research_run_id' => $plan->research_run_id,
+                    ]),
                 ]);
                 $plan->update(['status' => 'approved', 'schedule_id' => $schedule->id]);
                 
@@ -211,9 +275,11 @@ class OfficeAnalystReportService
         return compact('tasks', 'events', 'commands', 'notifications', 'schedules', 'content', 'brands', 'metrics');
     }
 
-    private function systemPrompt(): string
+    private function systemPrompt(array $filters = []): string
     {
-        return 'You are an internal Living Office analyst. Seluruh output yang dibaca pengguna wajib menggunakan Bahasa Indonesia. Gunakan bahasa profesional, natural, ringkas, dan mudah dipahami. Return JSON only with this schema: {"summary":"","findings":[{"type":"issue|attention|opportunity|status","title":"","description":"","evidence":""}],"conclusion":"","recommendations":[{"priority":"high|medium|low","action":"","reason":""}],"content_plan":[{"brand_slug":"","platform":"","content_type":"","topic":"","brief":"","reason":"","scheduled_at":"YYYY-MM-DD HH:mm:ss","generation_mode":"automatic|manual","publishing_mode":"automatic|review"}]}. Gunakan data riset eksternal (Agent-Reach) dan internal Office. performance_available is false: masukkan kalimat "Data performa belum tersedia." pada summary. Buat rencana konten 7 hari ke depan (content_plan) yang spesifik berdasarkan riset dan hindari tabrakan jadwal. Jadwal harus menggunakan timezone Asia/Jakarta.';
+        $horizon = $filters['planning_horizon'] ?? '7_days';
+        $brandScope = $filters['brand_id'] ?? null ? 'Gunakan hanya brand yang dipilih dalam context.' : 'Jika scope Semua Brand, pilih brand yang relevan saja.';
+        return 'You are an internal Living Office analyst. Seluruh output yang dibaca pengguna wajib menggunakan Bahasa Indonesia. Return JSON only with schema: {"summary":"","findings":[{"type":"issue|attention|opportunity|status","title":"","description":"","evidence":""}],"conclusion":"","recommendations":[{"priority":"high|medium|low","action":"","reason":""}],"content_plan":[{"brand_slug":"","platform":"instagram|threads|article|blog","content_type":"feed|story|thread|article|blog","topic":"","objective":"","audience":"","audience_problem":"","angle":"","hook_direction":"","key_message":"","cta":"","brief":"","reason":"","scheduled_at":"YYYY-MM-DD HH:mm:ss","research_summary":"","key_findings":[],"source_evidence":[{"title":"","url":"","snippet":""}],"generation_mode":"automatic|manual","publishing_mode":"automatic|review"}]}. Gunakan data Agent-Reach dan internal Office. performance_available is false: masukkan kalimat "Data performa belum tersedia." pada summary. Planning horizon: '.$horizon.'. Jika horizon only_analysis, content_plan boleh kosong. Untuk 7/14 hari buat rencana konkret sesuai jumlah hari yang masuk akal; untuk 30 hari buat rencana bulanan bounded dalam bulan tersebut, jangan recurring tanpa batas. '.$brandScope.' Hindari duplicate topic, jadwal aktif, dan jam bentrok. Jangan buat proposal palsu jika evidence tidak cukup. Jadwal timezone Asia/Jakarta.';
     }
 
     private function aiContext(array $context, CarbonImmutable $start, CarbonImmutable $end, string $type): array

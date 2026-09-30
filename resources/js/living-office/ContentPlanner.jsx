@@ -73,12 +73,14 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, createSc
     const [brandFilter, setBrandFilter] = useState('all');
     const [aiPlanOpen, setAiPlanOpen] = useState(false);
     const [reviewItem, setReviewItem] = useState(null);
+    const [selectedSchedules, setSelectedSchedules] = useState(new Set());
     const start = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
     const end = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0);
     useEffect(() => { loadPlanner(start.toISOString().slice(0, 10), end.toISOString().slice(0, 10)).catch(() => {}); }, [cursor]);
     const days = useMemo(() => Array.from({ length: end.getDate() }, (_, index) => new Date(cursor.getFullYear(), cursor.getMonth(), index + 1)), [cursor]);
     const visibleOccurrences = useMemo(() => (planner?.occurrences || []).filter(item => brandFilter === 'all' || item.brand?.id === brandFilter), [planner, brandFilter]);
     const visibleUpcoming = useMemo(() => (planner?.upcoming || []).filter(item => brandFilter === 'all' || item.brand?.id === brandFilter), [planner, brandFilter]);
+    const manageableSchedules = useMemo(() => (planner?.schedules || []).filter(item => brandFilter === 'all' || item.brand?.id === brandFilter), [planner, brandFilter]);
     const byDay = useMemo(() => visibleOccurrences.reduce((result, item) => { const key = dateKey(item.scheduledAt); result[key] = [...(result[key] || []), item]; return result; }, {}), [visibleOccurrences]);
     const monthTitle = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(cursor);
 
@@ -111,7 +113,7 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, createSc
                     })()}
                     <button onClick={() => setEditSchedule(schedule)} style={{fontSize: 11, padding: '4px 8px'}}>Edit</button>
                     <button onClick={() => togglePause(schedule)} style={{fontSize: 11, padding: '4px 8px'}}>{schedule.isActive ? 'Pause' : 'Resume'}</button>
-                    <button onClick={() => deleteSchedule(schedule)} style={{fontSize: 11, padding: '4px 8px', color: 'red'}}>Delete</button>
+                    <button onClick={() => deleteSchedule(schedule)} style={{fontSize: 11, padding: '4px 8px', color: 'red'}}>Hapus</button>
                 </div>
             </article>
         );
@@ -146,6 +148,15 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, createSc
         }
     };
 
+    const bulkAction = async (action, ids = [...selectedSchedules]) => {
+        if (!ids.length) return;
+        if (action === 'delete' && !window.confirm(`Hapus ${ids.length} planner?\nPlanner tidak akan dijalankan lagi. Konten yang sudah dibuat tetap tersimpan.`)) return;
+        const res = await fetch('/office/api/content-schedules/bulk-action', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=\"csrf-token\"]').content }, body: JSON.stringify({ action, schedule_ids: ids }) });
+        if (!res.ok) throw new Error('Bulk action failed');
+        setSelectedSchedules(new Set());
+        await loadPlanner(start.toISOString().slice(0, 10), end.toISOString().slice(0, 10));
+    };
+
     const updateSchedule = async (schedule, data) => {
         try {
             const res = await fetch(`/office/api/content-schedules/${schedule.id}`, {
@@ -162,17 +173,19 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, createSc
         }
     };
 
-    return <div className="content-view planner-view"><div className="view-heading"><div><span>CONTENT PLANNER</span><h1>Content Planner</h1><p>Calendar-based schedules in {TZ}. <b>Manual</b> saves the schedule without starting generation. <b>Automatic preference</b> sends content to worker automatically.</p></div><div className="planner-actions"><button onClick={() => setFormType('one_time')}><Plus size={15} /> One-time</button><button onClick={() => setFormType('recurring')}><Repeat2 size={15} /> Recurring</button><button onClick={() => setAiPlanOpen(true)}><Sparkles size={15} /> AI Plan</button></div></div>
-        <div className="planner-filter"><span>Workspace</span><select value={brandFilter} onChange={event => setBrandFilter(event.target.value)}><option value="all">All Brands</option>{brands.map(brand => <option key={brand.id} value={brand.id}>{brand.name}</option>)}</select></div>
-        <section className="planner-layout"><div className="planner-calendar"><header><div><button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))} aria-label="Bulan sebelumnya"><ChevronLeft size={18} /></button><strong>{monthTitle}</strong><button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))} aria-label="Bulan berikutnya"><ChevronRight size={18} /></button></div><small>{visibleOccurrences.length} visible occurrences</small></header><div className="calendar-weekdays">{['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => <span key={day}>{day}</span>)}</div><div className="calendar-grid">{Array.from({ length: (start.getDay() + 6) % 7 }, (_, index) => <i key={`gap-${index}`} />)}{days.map(day => { const entries = byDay[dateKey(day)] || []; return <article key={day.toISOString()} className={dateKey(day) === dateKey(new Date()) ? 'today' : ''}><time>{day.getDate()}</time>{entries.slice(0, 3).map(item => <div onClick={() => handleOccurrenceClick(item)} style={{cursor: 'pointer'}} className={`calendar-item ${item.scheduleType}`} title={`${item.brand?.name || 'No workspace'} · ${item.name} · ${prettyDate(item.scheduledAt)}`} key={item.id}><em>{item.brand?.name || 'Unassigned'}</em><b>{item.name}</b><small>{item.platform} · {item.contentType}</small><small>{item.scheduleType === 'recurring' ? `↻ ${item.recurrenceLabel}` : 'One-time'}</small></div>)}{entries.length > 3 && <small className="calendar-more">+{entries.length - 3} more</small>}</article>; })}</div></div><aside className="planner-upcoming"><header><CalendarDays size={16} /><div><span>UPCOMING</span><strong>Next scheduled content</strong></div></header>{loading ? <p>Loading schedules…</p> : visibleUpcoming.length ? visibleUpcoming.map(item => <article key={item.id}><div><em>{item.brand?.name || 'Unassigned'}</em><b>{item.name}</b><small>{item.platform} · {item.contentType}</small>{item.topic && <small>{item.topic}</small>}</div><time>{prettyDate(item.scheduledAt)}</time><span className={item.scheduleType}>{item.scheduleType === 'recurring' ? item.recurrenceLabel : 'One-time'}</span>
+    return <div className="content-view planner-view"><div className="view-heading"><div><span>CONTENT PLANNER</span><h1>Content Planner</h1><p>Calendar-based schedules in {TZ}. <b>Manual</b> saves the schedule without starting generation. <b>Automatic preference</b> sends content to worker automatically.</p></div><div className="planner-actions"><button onClick={() => setFormType('one_time')}><Plus size={15} /> Sekali</button><button onClick={() => setFormType('recurring')}><Repeat2 size={15} /> Berulang</button><button onClick={() => setAiPlanOpen(true)}><Sparkles size={15} /> AI Plan</button><a href="#kelola-planner">Kelola Planner</a></div></div>
+        <div className="planner-filter"><span>Workspace</span><select value={brandFilter} onChange={event => setBrandFilter(event.target.value)}><option value="all">Semua Brand</option>{brands.map(brand => <option key={brand.id} value={brand.id}>{brand.name}</option>)}</select></div>
+        <section className="planner-layout"><div className="planner-calendar"><header><div><button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))} aria-label="Bulan sebelumnya"><ChevronLeft size={18} /></button><strong>{monthTitle}</strong><button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))} aria-label="Bulan berikutnya"><ChevronRight size={18} /></button></div><small>{visibleOccurrences.length} visible occurrences</small></header><div className="calendar-weekdays">{['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => <span key={day}>{day}</span>)}</div><div className="calendar-grid">{Array.from({ length: (start.getDay() + 6) % 7 }, (_, index) => <i key={`gap-${index}`} />)}{days.map(day => { const entries = byDay[dateKey(day)] || []; return <article key={day.toISOString()} className={dateKey(day) === dateKey(new Date()) ? 'today' : ''}><time>{day.getDate()}</time>{entries.slice(0, 3).map(item => <div onClick={() => handleOccurrenceClick(item)} style={{cursor: 'pointer'}} className={`calendar-item ${item.scheduleType}`} title={`${item.brand?.name || 'No workspace'} · ${item.name} · ${prettyDate(item.scheduledAt)}`} key={item.id}><em>{item.brand?.name || 'Unassigned'}</em><b>{item.name}</b><small>{item.platform} · {item.contentType}</small><small>{item.scheduleType === 'recurring' ? `↻ ${item.recurrenceLabel}` : 'One-time'}</small></div>)}{entries.length > 3 && <small className="calendar-more">+{entries.length - 3} more</small>}</article>; })}</div></div><aside className="planner-upcoming"><header><CalendarDays size={16} /><div><span>AKAN DATANG BULAN INI</span><strong>Konten terjadwal berikutnya</strong></div></header>{loading ? <p>Loading schedules…</p> : visibleUpcoming.length ? visibleUpcoming.map(item => <article key={item.id}><div><em>{item.brand?.name || 'Unassigned'}</em><b>{item.name}</b><small>{item.platform} · {item.contentType}</small>{item.topic && <small>{item.topic}</small>}</div><time>{prettyDate(item.scheduledAt)}</time><span className={item.scheduleType}>{item.scheduleType === 'recurring' ? item.recurrenceLabel : 'One-time'}</span>
 <div style={{marginTop: 8}}>
     {(() => {
         const draft = contentItems.find(c => c.schedule_id === item.scheduleId && (c.metadata?.scheduled_at === item.scheduledAt || item.scheduleType === 'one_time'));
         if (!draft) return null;
-        return <button onClick={() => setReviewItem(draft)} className="primary-button" style={{fontSize: 11, padding: '4px 8px'}}>Draft: {draft.status}</button>;
+        return <button onClick={() => setReviewItem({ draft, schedule: planner?.schedules?.find(s => s.id === item.scheduleId), occurrence: item })} className="primary-button" style={{fontSize: 11, padding: '4px 8px'}}>Draft: {draft.status}</button>;
     })()}
 </div>
 </article>) : <p>No content scheduled in this visible month.</p>}</aside></section>
+
+        <section id="kelola-planner" className="planner-manage" style={{marginTop: 20}}><header><div><span>KELOLA PLANNER</span><h2>Semua Planner</h2></div><div className="planner-actions"><button onClick={() => setSelectedSchedules(new Set(manageableSchedules.map(item => item.id)))}>Pilih Semua</button><button onClick={() => bulkAction('pause')}>Jeda Terpilih</button><button onClick={() => bulkAction('resume')}>Lanjutkan Terpilih</button><button onClick={() => bulkAction('delete')}>Hapus Terpilih</button><button onClick={() => bulkAction('delete', manageableSchedules.map(item => item.id))}>Hapus Semua</button></div></header>{manageableSchedules.map(schedule => <article key={schedule.id} className={!schedule.isActive ? 'paused-schedule' : ''} style={{display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: 12, alignItems: 'center'}}><input type="checkbox" checked={selectedSchedules.has(schedule.id)} onChange={() => setSelectedSchedules(current => { const next = new Set(current); next.has(schedule.id) ? next.delete(schedule.id) : next.add(schedule.id); return next; })} /><div><strong>{schedule.brand?.name || 'Unassigned'} · {schedule.name}</strong><p>{schedule.scheduleType === 'recurring' ? 'Berulang' : 'Sekali'} · {schedule.recurrenceLabel || (schedule.scheduledAt ? prettyDate(schedule.scheduledAt) : '-')} · Source: {schedule.metadata?.source || 'manual'}</p><small>{schedule.isActive ? 'Status Aktif' : 'DIJEDA'}</small></div><div className="planner-actions"><button onClick={() => setEditSchedule(schedule)}>Edit</button><button onClick={() => togglePause(schedule)}>{schedule.isActive ? 'Jeda' : 'Lanjutkan'}</button><button onClick={() => deleteSchedule(schedule)}>Hapus</button></div></article>)}</section>
         {formType && <PlannerForm type={formType} brands={brands} onClose={() => setFormType(null)} onSave={createSchedule} />}
         {editSchedule && <PlannerForm type={editSchedule.scheduleType} brands={brands} initialData={editSchedule} onClose={() => setEditSchedule(null)} onSave={(data) => updateSchedule(editSchedule, data)} />}
         {aiPlanOpen && <AiPlanModal brands={brands} onClose={() => setAiPlanOpen(false)} onAnalyze={analyzePlan} onSave={createSchedule} />}

@@ -15,7 +15,17 @@ class OfficeContentPlannerAiService
 
     public function analyze(string $prompt, Collection $brands): array
     {
-        return $this->normalize($this->ai->completeJson($this->systemPrompt($brands), $prompt), $brands);
+        $result = $this->normalize($this->ai->completeJson($this->systemPrompt($brands), $prompt), $brands);
+        $batchId = (string) \Illuminate\Support\Str::uuid();
+        $result['plan']['items'] = collect($result['plan']['items'])->map(function (array $item) use ($batchId, $prompt) {
+            $item['metadata'] = array_merge($item['metadata'] ?? [], [
+                'source' => 'ai_plan',
+                'ai_plan_batch_id' => $batchId,
+                'ai_plan_prompt' => $prompt,
+            ]);
+            return $item;
+        })->all();
+        return $result;
     }
 
     private function systemPrompt(Collection $brands): string

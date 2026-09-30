@@ -26,8 +26,13 @@ class OfficeAnalystReportController extends Controller
             'report_type' => ['required', Rule::in(['daily', 'weekly', 'manual'])],
             'scope' => ['nullable', Rule::in(['today', 'last_7_days', 'content_planner', 'worker_performance', 'brand'])],
             'brand_id' => ['nullable', 'uuid', 'exists:office_content_brands,id'],
+            'planning_horizon' => ['nullable', Rule::in(['only_analysis', '7_days', '14_days', '30_days'])],
         ]);
-        return response()->json($this->payload($analyst->generate($data['report_type'], ['scope' => $data['scope'] ?? null, 'brand_id' => $data['brand_id'] ?? null])), 201);
+        return response()->json($this->payload($analyst->generate($data['report_type'], [
+            'scope' => $data['scope'] ?? null,
+            'brand_id' => $data['brand_id'] ?? null,
+            'planning_horizon' => $data['planning_horizon'] ?? '7_days',
+        ])), 201);
     }
 
     public function approve(Request $request, OfficeAnalystReport $report, OfficeAnalystReportService $analyst): JsonResponse
@@ -44,9 +49,17 @@ class OfficeAnalystReportController extends Controller
 
     private function payload(OfficeAnalystReport $report): array
     {
+        $researchRunId = $report->metadata['research_run_id'] ?? null;
+        $planItems = $researchRunId ? \App\Models\OfficeContentPlanItem::with('brand')->where('research_run_id', $researchRunId)->orderBy('scheduled_at')->get() : collect();
+
         return ['id' => $report->id, 'reportDate' => $report->report_date?->toDateString(), 'reportType' => $report->report_type,
             'status' => $report->status, 'summary' => $report->summary, 'findings' => $report->findings ?? [], 'conclusion' => $report->conclusion,
-            'recommendations' => $report->recommendations ?? [], 'nextActions' => $report->next_actions ?? [], 'metadata' => $report->metadata ?? [],
+            'recommendations' => $report->recommendations ?? [], 'nextActions' => $report->next_actions ?? [], 'contentPlans' => $planItems->map(fn ($plan) => [
+                'id' => $plan->id, 'status' => $plan->status, 'brand' => $plan->brand ? ['id' => $plan->brand->id, 'name' => $plan->brand->name, 'slug' => $plan->brand->slug] : null,
+                'platform' => $plan->platform, 'contentType' => $plan->content_type, 'topic' => $plan->topic, 'brief' => $plan->brief, 'reason' => $plan->reason,
+                'scheduledAt' => $plan->scheduled_at?->toIso8601String(), 'generationMode' => $plan->generation_mode, 'publishingMode' => $plan->publishing_mode,
+                'scheduleId' => $plan->schedule_id, 'metadata' => $plan->metadata ?? [],
+            ])->values(), 'metadata' => $report->metadata ?? [],
             'generatedAt' => $report->generated_at?->toIso8601String()];
     }
 }
