@@ -38,6 +38,7 @@ class OfficeCommandClient:
             data=json.dumps(payload).encode("utf-8"),
             headers={
                 "Authorization": "Bearer " + token,
+                "X-Office-Bridge-Token": token,
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "User-Agent": "JaukiContentBot-LivingOffice/1.0",

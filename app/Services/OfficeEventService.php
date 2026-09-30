@@ -131,7 +131,10 @@ class OfficeEventService
             $data['agent_id'], $platform, $contentType, $externalId ?? '',
             $content['title'] ?? '', $content['text'] ?? $content['caption'] ?? '', $content['image_url'] ?? '',
         ]));
-        $item = $externalId
+        $item = ! empty($content['content_id'])
+            ? OfficeContentItem::find($content['content_id'])
+            : null;
+        $item ??= $externalId
             ? OfficeContentItem::where('platform', $platform)->where('external_id', $externalId)->first()
             : OfficeContentItem::where('deduplication_key', $deduplicationKey)->first();
         if (! $item && $data['event'] === 'content.published' && ! empty($content['title'])) {
@@ -150,7 +153,10 @@ class OfficeEventService
             'external_id' => $externalId ?? $item->external_id,
             'public_url' => $content['public_url'] ?? $content['url'] ?? $item->public_url,
             'status' => $published ? 'published' : ($data['event'] === 'content.preview_ready' ? 'preview_ready' : 'ready_for_review'),
-            'metadata' => array_merge($item->metadata ?? [], $content['metadata'] ?? []),
+            'metadata' => array_merge($item->metadata ?? [], $content['metadata'] ?? [], [
+                'generated_payload' => $content,
+                'visual_asset' => array_filter(['url' => $content['image_url'] ?? $content['media_url'] ?? null, 'path' => $content['image_path'] ?? null]),
+            ]),
             'generated_at' => $item->generated_at ?? now(),
             'published_at' => $published ? now() : $item->published_at,
         ])->save();

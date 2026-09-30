@@ -70,6 +70,9 @@ class OfficeBridgeController extends Controller
     private function authorized(Request $request): bool
     {
         $token = (string) config('services.office_bridge.token');
-        return $token !== '' && hash_equals('Bearer '.$token, (string) $request->header('Authorization'));
+        if ($token === '') return false;
+        $authorization = (string) $request->header('Authorization');
+        $bridgeToken = (string) $request->header('X-Office-Bridge-Token');
+        return hash_equals('Bearer '.$token, $authorization) || hash_equals($token, $bridgeToken);
     }
 }

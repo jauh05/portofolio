@@ -7,6 +7,7 @@ use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentSchedule;
 use App\Services\OfficeAiGatewayException;
 use App\Services\OfficeContentPlannerAiService;
+use App\Services\OfficeScheduledGenerationService;
 use Carbon\CarbonInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
@@ -160,6 +161,7 @@ class OfficeContentPlannerController extends Controller
             'frequency' => $schedule->recurrence_rule['frequency'] ?? null, 'days' => $schedule->recurrence_rule['days'] ?? [],
             'time' => $schedule->recurrence_rule['time'] ?? null, 'starts_at' => $schedule->starts_at?->format('Y-m-d H:i:s'),
             'ends_at' => $schedule->ends_at?->format('Y-m-d H:i:s'), 'generation_mode' => $schedule->generation_mode,
+            'generation_timing' => $schedule->generation_timing ?? 'manual', 'generation_lead_minutes' => $schedule->generation_lead_minutes,
             'publishing_mode' => $schedule->publishing_mode, 'is_active' => $schedule->is_active, 'metadata' => $schedule->metadata,
         ];
         $this->fillSchedule($schedule, array_replace($existing, $request->validate($this->rules(true))));
@@ -172,19 +174,33 @@ class OfficeContentPlannerController extends Controller
         return response()->json(['status' => 'deleted']);
     }
 
-    public function bulkAction(Request $request): JsonResponse
+    public function bulkAction(Request $request, OfficeScheduledGenerationService $generation): JsonResponse
     {
         $data = $request->validate([
-            'action' => ['required', Rule::in(['pause', 'resume', 'delete'])],
+            'action' => ['required', Rule::in(['pause', 'resume', 'delete', 'generate', 'set_h1'])],
             'schedule_ids' => ['required', 'array', 'min:1'],
             'schedule_ids.*' => ['uuid'],
         ]);
 
-        $affected = DB::transaction(function () use ($data) {
+        if ($data['action'] === 'generate') {
+            $summary = ['eligible' => 0, 'generated' => 0, 'skipped' => 0, 'failed' => 0];
+            OfficeContentSchedule::whereIn('id', $data['schedule_ids'])->get()->each(function (OfficeContentSchedule $schedule) use (&$summary, $generation) {
+                $summary['eligible']++;
+                $result = $generation->generateSchedule($schedule);
+                $summary[$result['status'] === 'generated' ? 'generated' : ($result['status'] === 'failed' ? 'failed' : 'skipped')]++;
+            });
+            return response()->json(['action' => 'generate', 'summary' => $summary]);
+        }
+
+        $affected = DB::transaction(function () use ($data, $generation) {
             $schedules = OfficeContentSchedule::whereIn('id', $data['schedule_ids'])->lockForUpdate()->get();
             foreach ($schedules as $schedule) {
                 if ($data['action'] === 'delete') {
                     $schedule->delete();
+                    continue;
+                }
+                if ($data['action'] === 'set_h1') {
+                    $generation->setTiming($schedule, 'lead_time', 1440);
                     continue;
                 }
                 $schedule->is_active = $data['action'] === 'resume';
@@ -195,6 +211,39 @@ class OfficeContentPlannerController extends Controller
         });
 
         return response()->json(['action' => $data['action'], 'affected' => $affected]);
+    }
+
+    public function generateSchedule(OfficeContentSchedule $schedule, OfficeScheduledGenerationService $generation): JsonResponse
+    {
+        return response()->json($generation->generateSchedule($schedule));
+    }
+
+    public function generateMonth(Request $request, OfficeScheduledGenerationService $generation): JsonResponse
+    {
+        $data = $request->validate(['start' => ['required', 'date'], 'end' => ['required', 'date'], 'brand_id' => ['nullable', 'uuid']]);
+        $query = OfficeContentSchedule::where('is_active', true)
+            ->when($data['brand_id'] ?? null, fn ($q, $brandId) => $q->where('brand_id', $brandId))
+            ->where(function ($q) use ($data) {
+                $q->whereBetween('scheduled_at', [$data['start'], $data['end']])->orWhere('schedule_type', 'recurring');
+            });
+        $summary = ['eligible' => 0, 'generated' => 0, 'skipped' => 0, 'failed' => 0];
+        foreach ($query->limit(100)->get() as $schedule) {
+            $summary['eligible']++;
+            $result = $generation->generateSchedule($schedule);
+            $summary[$result['status'] === 'generated' ? 'generated' : ($result['status'] === 'failed' ? 'failed' : 'skipped')]++;
+        }
+        return response()->json(['action' => 'generate_month', 'summary' => $summary]);
+    }
+
+    public function generateAllActive(OfficeScheduledGenerationService $generation): JsonResponse
+    {
+        $summary = ['eligible' => 0, 'generated' => 0, 'skipped' => 0, 'failed' => 0];
+        foreach (OfficeContentSchedule::where('is_active', true)->limit(100)->get() as $schedule) {
+            $summary['eligible']++;
+            $result = $generation->generateSchedule($schedule);
+            $summary[$result['status'] === 'generated' ? 'generated' : ($result['status'] === 'failed' ? 'failed' : 'skipped')]++;
+        }
+        return response()->json(['action' => 'generate_all_active', 'summary' => $summary, 'limit' => 100]);
     }
 
     public function createContent(Request $request): JsonResponse
@@ -302,7 +351,8 @@ class OfficeContentPlannerController extends Controller
             'timezone' => ['nullable', 'timezone'], 'scheduled_at' => ['nullable', 'date'],
             'frequency' => ['nullable', Rule::in(['daily', 'weekly', 'monthly'])], 'days' => ['nullable', 'array'], 'days.*' => ['integer', 'between:1,7'],
             'time' => ['nullable', 'date_format:H:i'], 'starts_at' => ['nullable', 'date'], 'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
-            'generation_mode' => [$required, Rule::in(['manual', 'automatic'])], 'publishing_mode' => [$required, Rule::in(['review', 'automatic'])],
+            'generation_mode' => [$required, Rule::in(['manual', 'automatic'])], 'generation_timing' => ['nullable', Rule::in(['manual', 'immediate', 'lead_time'])],
+            'generation_lead_minutes' => ['nullable', 'integer', 'min:0', 'max:43200'], 'publishing_mode' => [$required, Rule::in(['review', 'automatic'])],
             'is_active' => ['sometimes', 'boolean'], 'metadata' => ['nullable', 'array'],
         ];
     }
@@ -394,7 +444,9 @@ class OfficeContentPlannerController extends Controller
         return ['id' => $schedule->id, 'name' => $schedule->name, 'brand' => $schedule->brand ? $this->brandPayload($schedule->brand) : null, 'brandId' => $schedule->brand_id, 'scheduleType' => $schedule->schedule_type, 'platform' => $schedule->platform,
             'contentType' => $schedule->content_type, 'topic' => $schedule->topic, 'brief' => $schedule->brief, 'assignedAgent' => $schedule->assigned_agent,
             'timezone' => $schedule->timezone, 'scheduledAt' => $schedule->scheduled_at?->toIso8601String(), 'recurrenceRule' => $schedule->recurrence_rule,
-            'recurrenceLabel' => $schedule->recurrence_label, 'generationMode' => $schedule->generation_mode, 'publishingMode' => $schedule->publishing_mode,
+            'recurrenceLabel' => $schedule->recurrence_label, 'generationMode' => $schedule->generation_mode,
+            'generationTiming' => $schedule->generation_timing ?? 'manual', 'generationLeadMinutes' => $schedule->generation_lead_minutes,
+            'publishingMode' => $schedule->publishing_mode,
             'isActive' => $schedule->is_active, 'startsAt' => $schedule->starts_at?->toIso8601String(), 'endsAt' => $schedule->ends_at?->toIso8601String(),
             'nextRunAt' => $schedule->next_run_at?->toIso8601String(), 'metadata' => $schedule->metadata];
     }

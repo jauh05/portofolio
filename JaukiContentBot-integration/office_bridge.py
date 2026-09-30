@@ -41,6 +41,7 @@ def _send_event_sync(payload: Dict[str, Any]) -> bool:
         return False
     headers = {
         "Authorization": f"Bearer {OFFICE_BRIDGE_TOKEN}",
+        "X-Office-Bridge-Token": OFFICE_BRIDGE_TOKEN,
         "Content-Type": "application/json"
     }
     data = json.dumps(payload).encode('utf-8')

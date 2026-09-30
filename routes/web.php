@@ -48,6 +48,9 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::get('/content-schedules', [OfficeContentPlannerController::class, 'index']);
         Route::post('/content-schedules', [OfficeContentPlannerController::class, 'store']);
         Route::post('/content-schedules/bulk-action', [OfficeContentPlannerController::class, 'bulkAction']);
+        Route::post('/content-schedules/generate-month', [OfficeContentPlannerController::class, 'generateMonth']);
+        Route::post('/content-schedules/generate-all-active', [OfficeContentPlannerController::class, 'generateAllActive']);
+        Route::post('/content-schedules/{schedule}/generate', [OfficeContentPlannerController::class, 'generateSchedule']);
         Route::get('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'show']);
         Route::patch('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'update']);
         Route::delete('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'destroy']);

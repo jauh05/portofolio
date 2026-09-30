@@ -79,10 +79,14 @@ export function ContentReview({ contentItem, onClose, generateContent, reviseCon
         }
     };
 
+    const imageUrl = contentItem.metadata?.generated_payload?.image_url || contentItem.metadata?.visual_asset?.url || contentItem.metadata?.image_url || contentItem.metadata?.media_url || payload.image_url || payload.visual_asset?.url;
+    const visualClass = contentItem.content_type === 'story' ? 'visual-preview story' : contentItem.content_type === 'article' ? 'visual-preview article' : 'visual-preview feed';
+
     const renderPayload = (data) => {
         if (!data) return null;
         return (
             <div className="content-payload">
+                {imageUrl ? <figure className={visualClass}><img src={imageUrl} alt="Visual konten" /><figcaption>Visual hasil worker</figcaption></figure> : <p className="visual-belum">{['generating', 'queued_for_generation'].includes(contentItem.status) ? 'Visual sedang dibuat' : 'Visual belum tersedia'}</p>}
                 {data.title && <p><strong>Title:</strong> {data.title}</p>}
                 {data.hook && <p><strong>Hook:</strong> {data.hook}</p>}
                 {data.content && <p><strong>Content:</strong> {data.content}</p>}
