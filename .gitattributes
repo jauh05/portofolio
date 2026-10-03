@@ -9,3 +9,6 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Vite output embeds shader source with intentional whitespace.
+public/build/assets/*.js -whitespace

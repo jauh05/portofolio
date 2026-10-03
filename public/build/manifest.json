@@ -1,10 +1,21 @@
 {
-  "_index-DmXw1Ymk.js": {
-    "file": "assets/index-DmXw1Ymk.js",
-    "name": "index"
+  "_Gltf-yVZBWDgG.js": {
+    "file": "assets/Gltf-yVZBWDgG.js",
+    "name": "Gltf",
+    "imports": [
+      "_preload-helper-pjp_9_r-.js"
+    ]
+  },
+  "_preload-helper-pjp_9_r-.js": {
+    "file": "assets/preload-helper-pjp_9_r-.js",
+    "name": "preload-helper"
+  },
+  "public/images/living-office/diorama-floor-v2.jpg": {
+    "file": "assets/diorama-floor-v2-NyvJZ32h.jpg",
+    "src": "public/images/living-office/diorama-floor-v2.jpg"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CxrCeIPi.css",
+    "file": "assets/app-DRzLbX1m.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -21,12 +32,13 @@
     "src": "resources/js/Components/Lanyard/lanyard.png"
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-SGbjmLAb.js",
+    "file": "assets/app-Br5l0Ggc.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
     "imports": [
-      "_index-DmXw1Ymk.js"
+      "_preload-helper-pjp_9_r-.js",
+      "_Gltf-yVZBWDgG.js"
     ],
     "assets": [
       "assets/card-BP4TWJmK.glb",
@@ -34,15 +46,35 @@
     ]
   },
   "resources/js/living-office/main.jsx": {
-    "file": "assets/main-BHL-10Tw.js",
+    "file": "assets/main-DOUCFHuE.js",
     "name": "main",
     "src": "resources/js/living-office/main.jsx",
     "isEntry": true,
     "imports": [
-      "_index-DmXw1Ymk.js"
+      "_preload-helper-pjp_9_r-.js"
+    ],
+    "dynamicImports": [
+      "resources/js/living-office/preview3d/Office3DPreview.jsx"
     ],
     "css": [
-      "assets/main-7O69IHB5.css"
+      "assets/main-DdOw66OP.css"
+    ],
+    "assets": [
+      "assets/diorama-floor-v2-NyvJZ32h.jpg"
+    ]
+  },
+  "resources/js/living-office/preview3d/Office3DPreview.jsx": {
+    "file": "assets/Office3DPreview-CEYk4G7X.js",
+    "name": "Office3DPreview",
+    "src": "resources/js/living-office/preview3d/Office3DPreview.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_preload-helper-pjp_9_r-.js",
+      "_Gltf-yVZBWDgG.js",
+      "resources/js/living-office/main.jsx"
+    ],
+    "css": [
+      "assets/Office3DPreview-D8UfU_MC.css"
     ]
   }
 }

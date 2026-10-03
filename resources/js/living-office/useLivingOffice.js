@@ -17,6 +17,7 @@ const statusPose = {
 };
 
 export function useLivingOffice(registry) {
+    const [domainData, setDomainData] = useState({rows: [], loading: true, stale: false, error: false});
     const timers = useRef([]);
     const ambientTimer = useRef(null);
     const agentsRef = useRef([]);
@@ -48,6 +49,8 @@ export function useLivingOffice(registry) {
                 }
                 if (res.ok) {
                     const serverAgents = await res.json();
+                    if (!Array.isArray(serverAgents)) throw new Error("Invalid Office roster");
+                    setDomainData({rows: serverAgents, loading: false, stale: false, error: false});
                     setVisualAgents((current) => current.map((agent) => {
                         const serverAgent = serverAgents.find(sa => sa.id === agent.id);
                         if (serverAgent) {
@@ -68,8 +71,9 @@ export function useLivingOffice(registry) {
                         }
                         return agent;
                     }));
-                }
+                } else { setDomainData(previous => ({...previous, loading: false, stale: true, error: true})); }
             } catch (error) {
+                setDomainData(previous => ({...previous, loading: false, stale: true, error: true}));
                 console.error('Office Bridge polling error:', error);
             }
         };
@@ -191,7 +195,7 @@ export function useLivingOffice(registry) {
     useEffect(() => scheduleAmbientVisit(), [scheduleAmbientVisit]);
 
     return {
-        visualAgents, activeEvent, simulateEvent: startMeeting, startMeeting, endMeeting,
+        domainData, visualAgents, activeEvent, simulateEvent: startMeeting, startMeeting, endMeeting,
         sendToMeeting, sendToRest, sendToServer, returnToDesk,
     };
 }
