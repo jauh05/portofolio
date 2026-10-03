@@ -68,20 +68,16 @@ test('paths are deterministic and pass through safe waypoints', () => {
     assert.equal(restRoute.at(-1), 'daybed1');
 });
 
-test('movement implementation keeps walks intentional, infrequent, and on fixed routes', () => {
+test('Office overview uses only the 3D renderer and a read-only roster transport', () => {
     const hook = readFileSync(new URL('../../resources/js/living-office/useLivingOffice.js', import.meta.url), 'utf8');
     const main = readFileSync(new URL('../../resources/js/living-office/main.jsx', import.meta.url), 'utf8');
-    const css = readFileSync(new URL('../../resources/js/living-office/living-office.css', import.meta.url), 'utf8');
-    const workerCss = css.split('\n').filter((line) => line.includes('.worker') || line.includes('@keyframes walk')).join('\n');
-
-    assert.doesNotMatch(hook, /Math\.atan2|\bangle\b|\brotation\b|rotate\(/i);
-    assert.match(main, /translate3d\(/);
-    assert.doesNotMatch(workerCss, /rotate\(/i);
-    assert.doesNotMatch(hook, /wander/i);
-    assert.match(hook, /const scheduleAmbientVisit/);
-    assert.match(hook, /90_000/);
-    assert.match(hook, /returnToDesk\(agent\.id/);
-    for (const command of ['sendToMeeting', 'sendToRest', 'sendToServer', 'returnToDesk', 'startMeeting', 'endMeeting']) {
-        assert.match(hook, new RegExp(`const ${command}`));
-    }
+    const renderer = readFileSync(new URL('../../resources/js/living-office/OfficeRenderer.jsx', import.meta.url), 'utf8');
+    const scene = readFileSync(new URL('../../resources/js/living-office/preview3d/full/FullScene.jsx', import.meta.url), 'utf8');
+    assert.match(main, /<OfficeRenderer domainData=/);
+    assert.doesNotMatch(main, /OfficeMap|OfficeFloor|OfficeRoomRail/);
+    assert.match(renderer, /Office3DPreview/);
+    assert.doesNotMatch(renderer, /office3d=0|office-renderer-tabs/);
+    assert.match(hook, /fetch\('\/office\/api\/agents'\)/);
+    assert.doesNotMatch(hook, /simulateEvent|sendToRest|scheduleAmbientVisit/);
+    assert.match(scene, /stepWorld\(world\.current/);
 });

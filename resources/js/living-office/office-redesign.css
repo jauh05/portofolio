@@ -37,107 +37,6 @@
 .office-redesign .sidebar nav button.active { color: #fff; background: #2e90fa; box-shadow: 0 8px 18px #2e90fa36; }
 .office-redesign .sidebar nav button:hover:not(.active),.office-redesign .back-site:hover { background: #eaf3ff; color: #1570ef; }
 .office-redesign .main-stage { left: 102px; top: 86px; padding: 12px; gap: 12px; grid-template-rows: minmax(0,1fr) 124px; background: #f7faff; }
-.office-redesign .office-shell { min-height: 0; overflow: hidden; grid-template-rows: 52px minmax(0,1fr); border: 1px solid var(--border); border-radius: 20px; background: #fff; box-shadow: var(--shadow); }
-.office-redesign .office-toolbar { height: 52px; min-height: 52px; padding: 7px 12px; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: #fff; box-shadow: none; }
-.office-redesign .office-toolbar > div:first-child { color: var(--text); font-size: 10px; font-weight: 800; letter-spacing: .04em; }
-.office-redesign .office-toolbar > div:first-child small { margin-left: 8px; color: var(--muted); font-size: 10px; font-weight: 500; letter-spacing: 0; }
-.office-redesign .live-dot { background: #28be78; box-shadow: 0 0 0 4px #e1f8eb; }
-.office-redesign .live-dot.inactive { background: #a8bbd1; box-shadow: 0 0 0 4px #edf2f8; }
-.office-redesign .event-control { min-width: 0; border: 1px solid var(--border); border-radius: 11px; background: #f8fbff; color: #42648d; }
-.office-redesign .event-control > span { max-width: 210px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.office-redesign .office-toolbar button { border-color: var(--border); background: #fff; color: #2468b7; }
-.office-redesign .office-toolbar .simulate-button { border-color: #2e90fa; background: #2e90fa; color: #fff; }
-.office-redesign .office-toolbar button:disabled { opacity: .42; cursor: not-allowed; }
-.office-redesign .map-controls { border: 0; background: transparent; }
-.office-redesign .map-controls b { color: var(--text); }
-.office-redesign .office-command-layout { min-height: 0; height: 100%; display: grid; grid-template-columns: minmax(0,1fr) 235px; gap: 12px; padding: 12px; background: #fff; }
-.office-redesign .office-command-layout > .office-viewport { min-height: 0; overflow: auto; border: 1px solid #d2e4f8; border-radius: 15px; background: #eef6ff; box-shadow: none; scrollbar-color: #b8d5f5 #edf5ff; }
-.office-redesign .office-map { filter: none !important; perspective: none; background: #edf5ff; box-shadow: none; }
-.office-redesign .office-map::before,.office-redesign .office-map::after { display: none; }
-.office-redesign .office-floor { position: absolute; inset: 0; background: #eef6ff; }
-.office-redesign .office-corridor { position: absolute; z-index: 1; display: block; border-radius: 18px; background: #dfeeff; box-shadow: inset 0 0 0 1px #d4e5f8; }
-.office-redesign .corridor-north { left: 2%; top: 35%; width: 96%; height: 3%; }
-.office-redesign .corridor-south { left: 2%; top: 65%; width: 96%; height: 3%; }
-.office-redesign .corridor-west { left: 24%; top: 37%; width: 3%; height: 29%; }
-.office-redesign .corridor-center { left: 55%; top: 3%; width: 3%; height: 93%; }
-.office-redesign .corridor-east { left: 76%; top: 3%; width: 3%; height: 93%; }
-.office-redesign .floor-room { position: absolute; z-index: 5; display: block; overflow: hidden; padding: 0; border: 2px solid #c8def6; border-radius: 15px; background: #fff; color: var(--text); text-align: left; box-shadow: 0 7px 0 #c5dcf3, 0 17px 25px #1c66b41c; transition: border-color .2s, box-shadow .2s, transform .2s; }
-.office-redesign .floor-room:hover,.office-redesign .floor-room.selected { border-color: #4c9cf4; box-shadow: 0 7px 0 #abcff8, 0 18px 28px #1c66b42a; }
-.office-redesign .floor-room.selected { outline: 3px solid #4c9cf43d; outline-offset: 2px; }
-.office-redesign .floor-room::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(145deg,#fff9,transparent 42%); }
-.office-redesign .floor-room-open { left: 2%; top: 3%; width: 30%; height: 31%; background: #f7fbff; }
-.office-redesign .floor-room-content { left: 35%; top: 3%; width: 20%; height: 31%; background: #f8fcff; }
-.office-redesign .floor-room-social { left: 58%; top: 3%; width: 18%; height: 31%; background: #f9faff; }
-.office-redesign .floor-room-server { left: 79%; top: 3%; width: 19%; height: 31%; background: #f2f8ff; }
-.office-redesign .floor-room-analyst { left: 2%; top: 38%; width: 22%; height: 26%; background: #f7fbff; }
-.office-redesign .floor-room-threads { left: 27%; top: 38%; width: 28%; height: 26%; background: #f8faff; }
-.office-redesign .floor-room-meeting { left: 58%; top: 38%; width: 40%; height: 26%; background: #f8fcff; }
-.office-redesign .floor-room-article { left: 2%; top: 69%; width: 22%; height: 27%; background: #f8fbff; }
-.office-redesign .floor-room-lounge { left: 27%; top: 69%; width: 28%; height: 27%; background: #f9fbff; }
-.office-redesign .floor-room-control { left: 58%; top: 69%; width: 40%; height: 27%; background: #f7fbff; }
-.office-redesign .floor-room-head { position: absolute; z-index: 15; top: 13px; left: 14px; right: 14px; display: flex; align-items: center; gap: 9px; width: max-content; max-width: calc(100% - 28px); min-height: 38px; padding: 5px 11px 5px 6px; border: 1px solid #d4e5f8; border-radius: 12px; background: #fff; box-shadow: 0 4px 10px #1b66ba13; }
-.office-redesign .floor-room-head strong { overflow: hidden; color: #153a72; font-size: 14px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
-.office-redesign .floor-room-icon { display: grid; width: 26px; height: 26px; flex: none; place-items: center; border-radius: 8px; background: #eaf3ff; color: #2e90fa; }
-.office-redesign .floor-room-status { display: inline-flex; align-items: center; gap: 5px; margin-left: 4px; color: #7290b4; font-size: 11px; font-weight: 700; white-space: nowrap; }
-.office-redesign .floor-room-status i { width: 7px; height: 7px; border-radius: 50%; background: #a8bbd1; }
-.office-redesign .floor-room-status.occupied i { background: #22bc72; }
-.office-redesign .room-furniture { position: absolute; inset: 0; display: block; pointer-events: none; }
-.office-redesign .room-furniture i { position: absolute; display: block; }
-.office-redesign .furniture-one,.office-redesign .furniture-two { width: 104px; height: 53px; border: 2px solid #c4d9f0; border-radius: 10px; background: #e8f2fd; box-shadow: 0 10px 0 #d0e2f5; }
-.office-redesign .furniture-one::before,.office-redesign .furniture-two::before { content: ''; position: absolute; top: 10px; left: 33px; width: 35px; height: 21px; border: 3px solid #77a8d9; border-radius: 4px; background: #d4e9fc; }
-.office-redesign .furniture-one::after,.office-redesign .furniture-two::after { content: ''; position: absolute; left: 38px; bottom: -21px; width: 27px; height: 14px; border-radius: 6px; background: #a4c8ec; }
-.office-redesign .furniture-three { width: 80px; height: 46px; border: 2px solid #d3e1f1; border-radius: 12px; background: #eaf3fc; }
-.office-redesign .furniture-plant { right: 22px; bottom: 20px; width: 18px; height: 23px; border-radius: 0 0 8px 8px; background: #9fbfe5; }
-.office-redesign .furniture-plant::before { content: ''; position: absolute; left: -7px; top: -15px; width: 32px; height: 26px; border-radius: 60% 40% 55% 45%; background: #63bd95; }
-.office-redesign .floor-room-open .furniture-one { left: 10%; top: 54%; }.office-redesign .floor-room-open .furniture-two { right: 8%; top: 54%; }
-.office-redesign .floor-room-content .furniture-one,.office-redesign .floor-room-social .furniture-one,.office-redesign .floor-room-analyst .furniture-one,.office-redesign .floor-room-threads .furniture-one,.office-redesign .floor-room-article .furniture-one,.office-redesign .floor-room-control .furniture-one { right: 8%; top: 53%; }
-.office-redesign .floor-room-content .furniture-two,.office-redesign .floor-room-social .furniture-two,.office-redesign .floor-room-analyst .furniture-two,.office-redesign .floor-room-threads .furniture-two,.office-redesign .floor-room-article .furniture-two,.office-redesign .floor-room-control .furniture-two { display: none; }
-.office-redesign .floor-room-server .furniture-one,.office-redesign .floor-room-server .furniture-two,.office-redesign .floor-room-server .furniture-three { top: 45%; width: 44px; height: 95px; border: 3px solid #78a9df; border-radius: 7px; background: repeating-linear-gradient(0deg,#a8d4fc 0 10px,#e5f3ff 11px 19px); box-shadow: 0 9px 0 #c6dff6; }
-.office-redesign .floor-room-server .furniture-one { left: 17%; }.office-redesign .floor-room-server .furniture-two { left: 40%; }.office-redesign .floor-room-server .furniture-three { left: 63%; }
-.office-redesign .floor-room-server .furniture-one::before,.office-redesign .floor-room-server .furniture-two::before,.office-redesign .floor-room-server .furniture-one::after,.office-redesign .floor-room-server .furniture-two::after { display: none; }
-.office-redesign .floor-room-meeting .furniture-one { left: 34%; top: 40%; width: 32%; height: 44%; border-radius: 48%; background: #e5f2ff; box-shadow: 0 8px 0 #c6dff6; }.office-redesign .floor-room-meeting .furniture-one::before,.office-redesign .floor-room-meeting .furniture-one::after { display: none; }
-.office-redesign .floor-room-meeting .furniture-two { display: none; }
-.office-redesign .floor-room-lounge .furniture-one { left: 30%; top: 49%; width: 40%; height: 32%; border-radius: 20px; background: #c7e0f8; }.office-redesign .floor-room-lounge .furniture-one::before,.office-redesign .floor-room-lounge .furniture-one::after { display: none; }
-.office-redesign .floor-room-lounge .furniture-two { left: 19%; top: 65%; width: 55px; height: 55px; border-radius: 50%; }.office-redesign .floor-room-lounge .furniture-two::before,.office-redesign .floor-room-lounge .furniture-two::after { display: none; }
-.office-redesign .floor-room-control .furniture-three { right: 10%; top: 47%; width: 95px; height: 65px; background: #dceeff; }
-.office-redesign .floor-desk-pod { z-index: 18; width: 158px; height: 118px; pointer-events: none; transform: translate3d(-50%,-45%,0); }
-.office-redesign .floor-desk-pod .desk-label { display: none; }
-.office-redesign .floor-desk-pod .workstation { transform: scale(.76); transform-origin: center center; }
-.office-redesign .floor-desk-pod.inactive { opacity: .45; filter: grayscale(.5); }
-.office-redesign .workstation-desk { border-color: #8fbbe5; background: #d9ebfc; box-shadow: 0 7px 0 #b5d5f4; }
-.office-redesign .workstation-monitor { border-color: #447db7; background: #3673af; box-shadow: none; }
-.office-redesign .workstation-monitor em { background: #66d9b0; box-shadow: none; }
-.office-redesign .workstation-chair { border-color: #9bbde1; background: #aacced; }
-.office-redesign .worker { z-index: 25; width: 54px; height: 72px; transition: transform var(--walk-duration) linear, filter .25s ease; }
-.office-redesign .worker.selected { filter: drop-shadow(0 5px 5px #2e90fa73); }
-.office-redesign .worker.selected .worker-body::after { border-color: #2e90fa; box-shadow: 0 0 0 3px #e3f2ff; animation: none; }
-.office-redesign .worker.selected .worker-name { border-color:#1570ef; background:#1570ef; color:#fff; font-weight:800; }
-.office-redesign .worker-name { border-color: #c3dbf6; background: #fff; color: #153a72; font-size: 7px; box-shadow: 0 3px 8px #1457a71a; }
-.office-redesign .worker-status { border-color: #c7def7; background: #fff; color: #286bb0; font-size: 6px; box-shadow: 0 3px 8px #1457a71a; }
-.office-redesign .worker-status.green { color: #119564; }.office-redesign .worker-status.amber { color: #ae7a1d; }.office-redesign .worker-status.muted { color: #8298b1; }
-.office-redesign .worker-body { filter: drop-shadow(0 3px 2px #2c5e9c30); }
-.office-redesign .worker.is-seated_work .worker-body,.office-redesign .worker.is-meeting .worker-body { animation: none; }
-.office-redesign .meeting-bubble { z-index: 120; right: 3%; top: 37%; border: 1px solid #b4d4f9; background: #fff; color: #153a72; box-shadow: 0 10px 22px #1457a71f; }
-.office-redesign .office-room-rail { display: flex; min-width: 0; min-height: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 15px; background: #f8fbff; }
-.office-redesign .room-rail-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 14px 10px; color: #6a86a7; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
-.office-redesign .room-rail-heading strong { color: #184780; font-size: 11px; letter-spacing: 0; }
-.office-redesign .room-rail-list { display: grid; align-content: start; gap: 6px; min-height: 0; overflow-y: auto; padding: 0 8px 8px; scrollbar-color: #c4dafa transparent; }
-.office-redesign .room-rail-item { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 59px; padding: 7px; border: 1px solid #e0ecfa; border-radius: 11px; background: #fff; color: var(--text); text-align: left; transition: border-color .2s, background-color .2s; }
-.office-redesign .room-rail-item:hover,.office-redesign .room-rail-item.selected { border-color: #89bfff; background: #edf6ff; }
-.office-redesign .room-rail-icon { display: grid; width: 43px; height: 43px; flex: none; place-items: center; border-radius: 9px; background: #eaf3ff; color: #2383ed; }
-.office-redesign .room-rail-icon.tone-sky { background: #e8f7ff; color: #188bbb; }.office-redesign .room-rail-icon.tone-lavender { background: #f0f0ff; color: #6575d9; }
-.office-redesign .room-rail-copy { display: grid; min-width: 0; gap: 3px; }
-.office-redesign .room-rail-copy strong { overflow: hidden; color: #153a72; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.office-redesign .room-rail-copy small { color: #7690ad; font-size: 10px; }
-.office-redesign .room-rail-arrow { margin-left: auto; color: #408de5; font-size: 21px; }
-.office-redesign .room-rail-detail { flex: none; padding: 11px 13px 13px; border-top: 1px solid var(--border); background: #fff; }
-.office-redesign .room-rail-detail > span { display: block; color: #7190b5; font-size: 8px; font-weight: 800; letter-spacing: .11em; }
-.office-redesign .room-rail-detail > strong { display: block; margin-top: 3px; color: #153a72; font-size: 12px; }
-.office-redesign .room-rail-detail p { margin: 7px 0 0; color: var(--muted); font-size: 10px; }
-.office-redesign .room-rail-workers { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-.office-redesign .room-rail-workers button { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; border: 0; background: none; color: #2b5b98; font-size: 9px; }
-.office-redesign .room-rail-workers button span { display: grid; width: 22px; height: 22px; flex: none; place-items: center; border-radius: 7px; background: var(--agent-color); color: #fff; font-weight: 800; }
-.office-redesign .room-rail-workers button b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .office-redesign .bottom-dock { gap: 10px; grid-template-columns: 1fr 1.2fr 1.2fr 1fr; background: transparent; box-shadow: none; border: 0; }
 .office-redesign .bottom-dock > section { min-width: 0; padding: 13px 15px; border: 1px solid var(--border); border-radius: 15px; background: #fff; box-shadow: var(--shadow); }
 .office-redesign .panel-label { color: #255b9d; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
@@ -189,20 +88,12 @@
 .office-redesign[data-theme="dark"] .office-toolbar .simulate-button { background:#287fee; border-color:#287fee; color:#fff; }
 .office-redesign[data-theme="dark"] .sidebar nav button { color:#bed5ee; }
 .office-redesign[data-theme="dark"] .sidebar nav button.active { background:#287fee; color:#fff; }
-.office-redesign[data-theme="dark"] :is(.room-rail-item:hover,.room-rail-item.selected) { background:#20446a; border-color:#5b9eef; }
-.office-redesign[data-theme="dark"] .room-rail-copy strong { color:#e6f2ff; }
-.office-redesign[data-theme="dark"] :is(.office-command-layout,.office-command-layout > .office-viewport,.office-map,.office-floor) { background:#183656; border-color:#31577c; }
-.office-redesign[data-theme="dark"] .office-corridor { background:#2c5277; box-shadow:inset 0 0 0 1px #41688e; }
-.office-redesign[data-theme="dark"] .floor-room { border-color:#739ecb; box-shadow:0 7px 0 #32608d,0 17px 25px #020d1d3d; }
-.office-redesign[data-theme="dark"] .floor-room.selected { border-color:#66adff; outline-color:#66adff75; }
 .office-redesign[data-theme="dark"] .dock-status-bar i { background:#2b4b6e; }
 .office-redesign[data-theme="dark"] .dock-status-bar i.active { background:#66adff; }
 .office-redesign[data-theme="dark"] :is(.kanban-column,.kanban-card,.planner-calendar,.planner-upcoming,.analyst-report-card,.content-review-card) { background:#163454; border-color:#31577c; }
 @media (max-width: 1350px) {
     .office-redesign .top-metric { min-width: 90px; }
     .office-redesign .top-metric small { display: none; }
-    .office-redesign .event-control > span { max-width: 130px; }
-    .office-redesign .office-command-layout { grid-template-columns: minmax(0,1fr) 204px; }
 }
 @media (max-width: 1050px) {
     .office-redesign .topbar { height: 68px; }
@@ -210,7 +101,6 @@
     .office-redesign .brand > div:last-child,.office-redesign .header-user .user-copy { display: none; }
     .office-redesign .sidebar { top: 68px; width: 80px; }
     .office-redesign .main-stage { left: 80px; top: 68px; grid-template-rows: minmax(530px,1fr) auto; }
-    .office-redesign .office-command-layout { grid-template-columns: minmax(0,1fr) 180px; }
     .office-redesign .bottom-dock { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 @media (max-width: 760px) {
@@ -220,130 +110,14 @@
     .office-redesign .sidebar nav { display: flex; min-width: 0; flex: 1; justify-content: flex-start; gap: 4px; overflow-x: auto; }
     .office-redesign .sidebar nav button:nth-child(n) { display: flex; min-width: 58px; min-height: 55px; padding: 4px 8px; }
     .office-redesign .main-stage { position: static; min-height: calc(100dvh - 64px); margin: 0 0 65px; padding: 9px; grid-template-rows: minmax(600px,1fr) auto; }
-    .office-redesign .office-command-layout { grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(450px,1fr) auto; }
-    .office-redesign .office-room-rail { height: 212px; }
-    .office-redesign .room-rail-list { display: flex; overflow-x: auto; overflow-y: hidden; }
-    .office-redesign .room-rail-item { min-width: 160px; }
-    .office-redesign .room-rail-detail { display: none; }
-    .office-redesign .office-shell { grid-template-rows: 70px minmax(0,1fr); }
-    .office-redesign .office-toolbar { flex-wrap: wrap; gap: 5px; height: 70px; min-height: 70px; }
 }
 @media (max-width: 520px) {
     .office-redesign .top-metrics .top-metric:nth-child(n+3) { display: none; }
     .office-redesign .bottom-dock { grid-template-columns: 1fr; }
-    .office-redesign .office-room-rail { height: 155px; }
-    .office-redesign .office-command-layout { grid-template-rows: 440px 155px; }
-    .office-redesign .event-control > button:not(.simulate-button),.office-redesign .event-control > span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .office-redesign .floor-room,.office-redesign .room-rail-item,.office-redesign .worker,.office-redesign .worker * { animation: none !important; transition-duration: .01ms !important; }
 }
 
-/* A single miniature office floor: the room scene stays below the flat UI labels. */
-.office-redesign .office-command-layout > .office-viewport { background: #e6f1ff; }
-.office-redesign .office-floor { background: linear-gradient(145deg,#f5faff 0%,#e7f2ff 48%,#dcecff 100%); }
-.office-redesign .office-building-floor { position:absolute; inset:1.4% 1.2% 1.8%; z-index:0; border-radius:22px; background:linear-gradient(135deg,#f9fcff,#e8f2ff 70%,#dcecff); box-shadow:0 11px 0 #c3ddf5,0 21px 34px #497fb236,inset 0 0 0 1px #fff; }
-.office-redesign .office-corridor { z-index:1; border-radius:12px; background:linear-gradient(180deg,#f8fbff 0%,#e1eeff 47%,#d6e8fc 100%); box-shadow:inset 0 2px 0 #fff,inset 0 -2px 0 #bfd8f4; }
-.office-redesign .corridor-north { top:33.7%; height:4.8%; }
-.office-redesign .corridor-south { top:63.9%; height:5.4%; }
-.office-redesign .corridor-west { top:36%; height:31%; }
-.office-redesign .corridor-center { top:2.5%; height:94%; width:3.6%; }
-.office-redesign .corridor-east { top:2.5%; height:94%; width:3.6%; }
-.office-redesign .office-corridor::after { content:''; position:absolute; inset:30% 0; border-top:1px dashed #b7d2ee9c; opacity:.75; }
-.office-redesign .floor-room { z-index:5; overflow:visible; border:0; border-radius:8px 8px 17px 17px; background:transparent!important; box-shadow:0 13px 0 #b5d1ed,0 22px 22px #4678a927; isolation:isolate; }
-.office-redesign .floor-room::after { display:none; }
-.office-redesign .floor-room:hover,.office-redesign .floor-room.selected { box-shadow:0 13px 0 #9bc5f2,0 22px 26px #3577bd39; }
-.office-redesign .floor-room.selected { outline:3px solid #2282eb9c; outline-offset:3px; }
-.office-redesign .diorama-world { position:absolute; inset:0; overflow:hidden; border-radius:8px 8px 17px 17px; pointer-events:none; background:#e7f2ff; perspective:700px; }
-.office-redesign .diorama-floor { position:absolute; inset:25% 3% 2%; border-radius:2px 2px 12px 12px; background:repeating-linear-gradient(90deg,transparent 0 39px,#b7d3ee28 40px 41px),linear-gradient(155deg,#fcfdff,#e5f2ff 58%,#d3e8ff); box-shadow:inset 0 16px 24px #80aedd20,inset 0 -10px 22px #86b2dc31; transform:rotateX(10deg); transform-origin:50% 100%; }
-.office-redesign .diorama-floor::after { content:''; position:absolute; inset:0; background:linear-gradient(70deg,#fff8,transparent 34%,#a9d6fa24 77%,transparent); border-radius:inherit; }
-.office-redesign .diorama-wall { position:absolute; display:block; }
-.office-redesign .wall-back { top:0; left:2.7%; right:2.7%; height:35%; border:1px solid #c3dff9; border-bottom:4px solid #b6d8f5; border-radius:7px 7px 0 0; background:linear-gradient(180deg,#fff 0%,#f3faff 35%,#d8eafb 100%); box-shadow:0 5px 11px #65a2d229,inset 0 2px 0 #fff; }
-.office-redesign .wall-back::after { content:''; position:absolute; bottom:-8px; left:0; right:0; height:8px; background:linear-gradient(180deg,#c9e2f6,#eaf6ff88); }
-.office-redesign .wall-back > i { position:absolute; left:17%; top:18%; width:24%; height:54%; border:5px solid #e5f3ff; border-radius:3px; background:linear-gradient(145deg,#afd8ff,#e9f7ff 58%,#c8e7ff); box-shadow:0 2px 0 #b7d7f0,inset 0 0 0 1px #a7d0f4; }
-.office-redesign .wall-left,.office-redesign .wall-right { top:3%; bottom:5%; width:3.7%; border:1px solid #b3d2f2; background:linear-gradient(90deg,#c5e0f7d9,#f6fbffb8 64%,#b5d8f46b); box-shadow:2px 0 9px #7db2e542; }
-.office-redesign .wall-left { left:0; transform:skewY(-10deg); transform-origin:0 0; }
-.office-redesign .wall-right { right:0; transform:skewY(10deg); transform-origin:100% 0; }
-.office-redesign .wall-front { bottom:0; height:13px; border-top:3px solid #f7fcff; border-bottom:3px solid #9fc8ed; background:linear-gradient(180deg,#d9ecfdc9,#b8daf4c9); box-shadow:0 -3px 7px #72a9d935,0 4px 7px #447db52e; }
-.office-redesign .front-left { left:0; width:65%; border-radius:0 0 0 12px; }
-.office-redesign .front-right { right:0; width:20%; border-radius:0 0 12px 0; }
-.office-redesign .front-right::before { content:''; position:absolute; right:100%; bottom:-3px; width:17px; height:30px; border:2px solid #a9ceef; border-bottom:0; border-radius:3px 3px 0 0; background:linear-gradient(90deg,#cde6fbbe,#f4fbff7a); transform:skewY(-5deg); box-shadow:3px 2px 4px #508cbe26; }
-.office-redesign .floor-room-head { z-index:30; top:9px; left:12px; right:auto; min-height:33px; padding:4px 9px 4px 5px; border-color:#d6e8fa; box-shadow:0 5px 11px #306aab21; }
-.office-redesign .floor-room-head strong { font-size:12px; }
-.office-redesign .floor-room-icon { width:25px; height:25px; }
-.office-redesign .floor-room-icon svg { width:17px; height:17px; }
-.office-redesign .floor-room-status { font-size:10px; }
-.office-redesign .diorama-furniture { position:absolute; inset:0; z-index:5; pointer-events:none; }
-.office-redesign .diorama-furniture > span { position:absolute; display:block; }
-.office-redesign .diorama-plant { width:27px; height:40px; filter:drop-shadow(2px 5px 2px #4985a638); }
-.office-redesign .diorama-plant b { position:absolute; left:7px; bottom:0; width:16px; height:15px; border:2px solid #9cc5df; border-radius:2px 2px 5px 5px; background:linear-gradient(90deg,#e4f1ff,#9ec9e6); }
-.office-redesign .diorama-plant i { position:absolute; bottom:12px; left:10px; width:9px; height:25px; border-radius:90% 0 90% 0; background:linear-gradient(115deg,#86d0a6,#2f947b); transform-origin:bottom center; }
-.office-redesign .diorama-plant i:nth-child(1) { transform:rotate(-38deg); }
-.office-redesign .diorama-plant i:nth-child(2) { height:32px; transform:rotate(-5deg); }
-.office-redesign .diorama-plant i:nth-child(3) { transform:rotate(38deg); }
-.office-redesign .plant-a { right:5%; bottom:14%; }
-.office-redesign .furniture-open .plant-a { right:7%; bottom:21%; }
-.office-redesign .furniture-open .plant-b { left:5%; bottom:12%; }
-.office-redesign .diorama-window { top:10%; left:37%; width:19%; height:27%; border:5px solid #f6fbff; background:linear-gradient(150deg,#acd7fb,#effaff 52%,#a8d4f7); box-shadow:0 2px 4px #438bc82e; }
-.office-redesign .diorama-station { width:100px; height:77px; filter:drop-shadow(0 9px 5px #5787b345); }
-.office-redesign .diorama-station .diorama-desk { position:absolute; left:8%; right:8%; top:28%; height:36%; border:2px solid #b7d4ed; border-bottom:7px solid #8fb8dc; border-radius:5px; background:linear-gradient(145deg,#fff,#dceefd); transform:skewX(-8deg); }
-.office-redesign .diorama-station .diorama-desk::after { content:''; position:absolute; left:9%; right:9%; bottom:-19px; height:13px; border-left:5px solid #a7cae8; border-right:5px solid #a7cae8; }
-.office-redesign .diorama-chair { position:absolute; left:34%; bottom:0; width:31%; height:30%; border:3px solid #759cc8; border-radius:7px; background:linear-gradient(#b7d8f4,#608bbf); box-shadow:0 4px 0 #678db5; }
-.office-redesign .diorama-monitor { position:absolute; left:35%; top:-25px; width:35%; height:28px; border:4px solid #2d5a91; border-radius:3px; background:linear-gradient(125deg,#153664,#277fba); box-shadow:0 3px 0 #638db7,inset 0 0 0 2px #5db5e5; }
-.office-redesign .diorama-monitor > i { position:absolute; left:15%; right:16%; bottom:5px; height:3px; border-radius:2px; background:#6ed5d0; }
-.office-redesign .diorama-monitor > b { position:absolute; left:42%; bottom:-8px; width:17%; height:5px; background:#749bbd; }
-.office-redesign .type-chart > i { height:11px; background:linear-gradient(135deg,transparent 47%,#68d1ed 48% 57%,transparent 58%); }
-.office-redesign .diorama-keyboard { position:absolute; left:36%; top:17px; width:32%; height:8px; border-radius:2px; background:repeating-linear-gradient(90deg,#769ec4 0 2px,#d9edfa 3px 5px); }
-.office-redesign .diorama-cup { position:absolute; right:11%; top:11px; width:9px; height:10px; border-radius:2px; background:#9ed5f7; }
-.office-redesign .prop-left { left:10%; top:51%; transform:scale(.72); }
-.office-redesign .prop-right { right:2%; top:51%; transform:scale(.72); }
-.office-redesign .prop-control { right:2%; top:52%; transform:scale(.66); }
-.office-redesign .diorama-board { top:13%; right:16%; width:27%; height:25%; border:5px solid #eaf6ff; border-radius:4px; background:linear-gradient(135deg,#1d4d83,#326fa6); box-shadow:0 3px 0 #a4c9e8,0 5px 9px #356ca338; }
-.office-redesign .diorama-board i { position:absolute; bottom:16%; width:14%; border-radius:2px 2px 0 0; background:#75d9e1; }
-.office-redesign .diorama-board i:nth-child(1) { left:21%; height:24%; }.office-redesign .diorama-board i:nth-child(2) { left:44%; height:48%; }.office-redesign .diorama-board i:nth-child(3) { left:67%; height:70%; }
-.office-redesign .board-content { right:12%; width:28%; background:#d9ebfb; }.office-redesign .board-content i { background:#82b9ea; }
-.office-redesign .board-analyst { right:7%; width:43%; }.office-redesign .board-threads { right:10%; width:26%; }.office-redesign .board-meeting { right:9%; width:22%; }.office-redesign .board-control { right:9%; width:34%; }
-.office-redesign .diorama-shelf { width:42px; height:65px; border:4px solid #b6d0e7; border-radius:3px; background:repeating-linear-gradient(0deg,#d6eaff 0 6px,#9ebddb 7px 9px); box-shadow:4px 5px 7px #4980b536; }
-.office-redesign .diorama-shelf i { position:absolute; width:6px; height:19px; bottom:12px; border-radius:1px; background:#6a9bc8; }
-.office-redesign .diorama-shelf i:nth-child(1) { left:5px; }.office-redesign .diorama-shelf i:nth-child(2) { left:14px; background:#a6d5e8; }.office-redesign .diorama-shelf i:nth-child(3) { left:25px; background:#789fc8; }
-.office-redesign .shelf-a { right:5%; bottom:18%; transform:scale(.75); }.office-redesign .shelf-article { right:9%; top:39%; transform:scale(.85); }.office-redesign .shelf-lounge { right:9%; top:33%; transform:scale(.72); }
-.office-redesign .diorama-rack { top:42%; width:19%; height:43%; border:4px solid #4d80b3; border-radius:5px; background:linear-gradient(90deg,#143862,#266096 55%,#163b66); box-shadow:6px 7px 0 #8bb9e1,8px 12px 10px #386aa643; }
-.office-redesign .diorama-rack::after { content:''; position:absolute; top:0; right:-7px; width:7px; bottom:0; background:#6d9dc6; transform:skewY(-19deg); transform-origin:top; }
-.office-redesign .diorama-rack i { display:block; height:16%; margin:17% 13% 0; border-radius:2px; background:repeating-linear-gradient(90deg,#2c89bf 0 5px,#63b6da 6px 9px); box-shadow:0 2px 0 #0e335b; }
-.office-redesign .diorama-rack b { position:absolute; bottom:7%; right:13%; width:5px; height:5px; border-radius:50%; background:#73d8ab; }
-.office-redesign .rack-a { left:12%; }.office-redesign .rack-b { left:40%; }.office-redesign .rack-c { left:68%; }
-.office-redesign .diorama-meeting-table { top:49%; left:29%; width:46%; height:33%; border:5px solid #bfdaf0; border-radius:50%; background:linear-gradient(135deg,#fff,#d9ecfd); box-shadow:0 9px 0 #9fc4e6,0 14px 10px #3c79b340; transform:rotateX(13deg); }
-.office-redesign .diorama-meeting-table i { position:absolute; width:16px; height:17px; border:3px solid #7398c4; border-radius:5px; background:#87acd6; }
-.office-redesign .diorama-meeting-table i:nth-child(1) { left:10%; top:-20px; }.office-redesign .diorama-meeting-table i:nth-child(2) { left:42%; top:-25px; }.office-redesign .diorama-meeting-table i:nth-child(3) { right:10%; top:-20px; }.office-redesign .diorama-meeting-table i:nth-child(4) { left:10%; bottom:-24px; }.office-redesign .diorama-meeting-table i:nth-child(5) { left:42%; bottom:-27px; }.office-redesign .diorama-meeting-table i:nth-child(6) { right:10%; bottom:-24px; }
-.office-redesign .diorama-sofa { top:49%; width:27%; height:30%; border:4px solid #87acd8; border-bottom:9px solid #709bc9; border-radius:12px; background:linear-gradient(140deg,#d5e9fb,#a9ceef); box-shadow:0 9px 9px #4784b343; }
-.office-redesign .diorama-sofa::before { content:''; position:absolute; inset:-6px 0 auto; height:13px; border:3px solid #99bde3; border-radius:10px; background:#c7e1f7; }
-.office-redesign .sofa-a { left:13%; }.office-redesign .sofa-b { right:15%; transform:scale(.76); }
-.office-redesign .diorama-coffee-table { top:65%; left:45%; width:20%; height:14%; border-radius:50%; border:3px solid #bbd9ee; background:#f9fcff; box-shadow:0 6px 0 #9fc4e1,0 9px 8px #4e83b035; }
-.office-redesign .diorama-coffee-table i { position:absolute; left:43%; top:30%; width:10px; height:10px; border-radius:50%; background:#75c3ad; }
-.office-redesign .floor-desk-pod { z-index:12; transform:translate3d(-50%,-21%,0); }
-.office-redesign .floor-desk-pod .workstation { transform:scale(.69); }
-.office-redesign .workstation-desk { border-width:3px; border-color:#8bb7df; border-top-color:#fff; background:linear-gradient(160deg,#fbfdff,#d4e8fb 70%,#a8cbe9); box-shadow:0 9px 0 #a3c8e8,0 15px 12px #3f80b348; }
-.office-redesign .workstation-monitor { background:linear-gradient(145deg,#133c71,#267ab1); box-shadow:0 5px 0 -2px #7aa6ca,0 8px 9px #276da648; }
-.office-redesign .workstation-chair { border-color:#6f99ca; background:linear-gradient(#b9d8f3,#739ed0); }
-.office-redesign .worker { width:70px; height:88px; margin-left:-8px; margin-top:-16px; }
-.office-redesign .worker-body { left:18px; top:18px; transform:scaleX(var(--flip)) scale(1.32); transform-origin:center bottom; filter:drop-shadow(0 5px 3px #2d69a15c); }
-.office-redesign .worker-shadow { top:67px; width:43px; height:13px; background:#19548a52; filter:blur(5px); }
-.office-redesign .worker.is-seated_work .worker-body,.office-redesign .worker.is-meeting .worker-body { transform:scaleX(var(--flip)) translateY(7px) scale(1.32); }
-.office-redesign .worker.is-resting .worker-body { transform:scaleX(var(--flip)) translateY(9px) scale(1.19,.98); }
-.office-redesign .worker-name { bottom:1px; font-size:8px; padding:2px 5px; }
-.office-redesign .worker-status { top:-8px; font-size:7px; padding:2px 5px; }
-.office-redesign .worker:not(.selected):not(.is-walking):not(.is-meeting) .worker-status { opacity:0; }
-.office-redesign .worker:not(.selected):not(.is-walking):not(.is-meeting):hover .worker-status,.office-redesign .worker:focus-visible .worker-status { opacity:1; }
-.office-redesign .worker.selected .worker-body::after { inset:-3px -5px; border-width:2px; }
-.office-redesign .worker.is-walking { z-index:190!important; }
-.office-redesign .meeting-bubble { top:38%; right:4%; }
-.office-redesign[data-theme="dark"] .office-floor { background:linear-gradient(145deg,#193758,#112c4e); }
-.office-redesign[data-theme="dark"] .office-building-floor { background:linear-gradient(135deg,#294e73,#1c3d62); box-shadow:0 11px 0 #113254,0 21px 34px #071a34; }
-.office-redesign[data-theme="dark"] .diorama-world { filter:brightness(.66) saturate(.85); }
-.office-redesign[data-theme="dark"] .floor-room-head { background:#173f66; border-color:#35628b; }
-.office-redesign[data-theme="dark"] .floor-room-head strong { color:#e7f4ff; }
-.office-redesign[data-theme="dark"] .floor-room-status { color:#bad3ef; }
-@media (prefers-reduced-motion:reduce) { .office-redesign .diorama-world * { animation:none!important; transition-duration:.01ms!important; } }
 .office-redesign .bottom-dock { grid-template-columns:1.06fr 1.22fr 1.1fr 1.06fr .94fr; }
 .office-redesign .bottom-dock > section { padding:12px; }
 .office-redesign .dock-insight { overflow:hidden; }
@@ -356,12 +130,6 @@
 @media (max-width:1350px) { .office-redesign .bottom-dock { grid-template-columns:repeat(5,minmax(0,1fr)); } .office-redesign .bottom-dock > section { padding:10px; } .office-redesign .dock-insight-content p { font-size:9px; } }
 @media (max-width:1050px) { .office-redesign .bottom-dock { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:520px) { .office-redesign .bottom-dock { grid-template-columns:1fr; } }
-.office-redesign .diorama-floor { background:repeating-linear-gradient(90deg,transparent 0 50px,#b4d2ed36 51px 52px),linear-gradient(150deg,#fff,#dfedfc 66%,#c9e0f8); transform:perspective(900px) rotateX(23deg); box-shadow:inset 0 19px 30px #75a6d740,inset 0 -12px 18px #83add42b; }
-.office-redesign .wall-back { background:linear-gradient(180deg,#fff 0%,#f2f9ff 34%,#d2e7fb 100%); box-shadow:0 9px 16px #4d8bc037,inset 0 2px 0 #fff; }
-.office-redesign .wall-left,.office-redesign .wall-right { width:5%; background:linear-gradient(90deg,#a6c9ec9e,#eff9ffc2 60%,#8dbde566); box-shadow:3px 0 10px #417cb045,inset 2px 0 #fff8; }
-.office-redesign .floor-room-head strong { font-size:15px; }
-.office-redesign .floor-room-head { min-height:37px; }
-.office-redesign .floor-room-icon { width:27px; height:27px; }
 .office-redesign .active-task strong,.office-redesign .active-task small { display:block; overflow:hidden; max-width:100%; text-overflow:ellipsis; white-space:nowrap; }
 .office-redesign .active-task { min-width:0; }
 .office-redesign .active-task > div { overflow:hidden; }
@@ -373,32 +141,3 @@
 .office-redesign[data-theme="dark"] .brand span,.office-redesign[data-theme="dark"] .top-metric small,.office-redesign[data-theme="dark"] .current-time small,.office-redesign[data-theme="dark"] .room-rail-heading,.office-redesign[data-theme="dark"] .current-agent small,.office-redesign[data-theme="dark"] .active-task small,.office-redesign[data-theme="dark"] .feed-list time,.office-redesign[data-theme="dark"] .dock-insight-content p { color:#adc5df; }
 .office-redesign[data-theme="dark"] .office-room-rail,.office-redesign[data-theme="dark"] .room-rail-item,.office-redesign[data-theme="dark"] .bottom-dock > section { background:#193955; border-color:#315475; box-shadow:0 10px 25px #04172b40; }
 .office-redesign[data-theme="dark"] .panel-label,.office-redesign[data-theme="dark"] .dock-insight > button { color:#82baff; }
-.office-redesign[data-theme="dark"] .floor-room-head { background:#eaf5ff; border-color:#c7def5; }
-.office-redesign[data-theme="dark"] .floor-room-head strong { color:#153a72; }
-.office-redesign[data-theme="dark"] .floor-room-status { color:#6484a9; }
-
-/* Original lightweight office illustration beneath live labels and stateful workers. */
-.office-redesign .office-floor { background:#e9f4ff url('../../../public/images/living-office/diorama-floor-v2.jpg') center center/100% 100% no-repeat; }
-.office-redesign .office-building-floor,.office-redesign .office-corridor,.office-redesign .diorama-world,.office-redesign .floor-desk-pod { display:none; }
-.office-redesign .floor-room,.office-redesign .floor-room:hover { border:0; border-radius:12px; background:transparent!important; box-shadow:none; }
-.office-redesign .floor-room:hover:not(.selected) { box-shadow:inset 0 0 0 3px #278afa6b; }
-.office-redesign .floor-room.selected { outline:3px solid #287ff0c2; outline-offset:-2px; box-shadow:inset 0 0 0 4px #fff8; }
-.office-redesign .floor-room-open { left:2%; top:1%; width:32%; height:30%; }
-.office-redesign .floor-room-content { left:37%; top:1%; width:18%; height:30%; }
-.office-redesign .floor-room-social { left:57%; top:1%; width:17%; height:30%; }
-.office-redesign .floor-room-server { left:76%; top:1%; width:22%; height:30%; }
-.office-redesign .floor-room-analyst { left:2%; top:34%; width:29%; height:27%; }
-.office-redesign .floor-room-threads { left:34%; top:34%; width:21%; height:27%; }
-.office-redesign .floor-room-meeting { left:59%; top:34%; width:38%; height:27%; }
-.office-redesign .floor-room-article { left:2%; top:65%; width:29%; height:32%; }
-.office-redesign .floor-room-lounge { left:34%; top:65%; width:23%; height:32%; }
-.office-redesign .floor-room-control { left:61%; top:65%; width:37%; height:32%; }
-.office-redesign .floor-room-head { top:10px; left:12px; }
-.office-redesign .room-rail-icon { position:relative; overflow:hidden; width:48px; height:46px; background-image:url('../../../public/images/living-office/diorama-floor-v2.jpg')!important; background-size:680% 300%!important; background-repeat:no-repeat!important; border:1px solid #d2e4f7; box-shadow:inset 0 0 0 1px #fff8; }
-.office-redesign .room-rail-icon svg { position:absolute; right:2px; bottom:2px; width:16px; height:16px; padding:2px; border-radius:5px; background:#fffecf; color:#247adb; }
-.office-redesign .room-rail-preview-open { background-position:18% 11%!important; }.office-redesign .room-rail-preview-content { background-position:45% 11%!important; }.office-redesign .room-rail-preview-social { background-position:65% 11%!important; }.office-redesign .room-rail-preview-server { background-position:87% 11%!important; }
-.office-redesign .room-rail-preview-analyst { background-position:17% 50%!important; }.office-redesign .room-rail-preview-threads { background-position:44% 50%!important; }.office-redesign .room-rail-preview-meeting { background-position:76% 50%!important; }
-.office-redesign .room-rail-preview-article { background-position:17% 88%!important; }.office-redesign .room-rail-preview-lounge { background-position:45% 88%!important; }.office-redesign .room-rail-preview-control { background-position:79% 88%!important; }
-.office-redesign[data-theme="dark"] .office-floor { background:#163453 url('../../../public/images/living-office/diorama-floor-v2.jpg') center center/100% 100% no-repeat; }
-.office-redesign[data-theme="dark"] .office-floor::before { content:''; position:absolute; z-index:2; inset:0; pointer-events:none; background:#071b3366; }
-.office-redesign[data-theme="dark"] .office-command-layout .office-floor { background:#163453 url('../../../public/images/living-office/diorama-floor-v2.jpg') center center/100% 100% no-repeat; }

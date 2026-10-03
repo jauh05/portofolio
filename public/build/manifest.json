@@ -10,10 +10,6 @@
     "file": "assets/preload-helper-pjp_9_r-.js",
     "name": "preload-helper"
   },
-  "public/images/living-office/diorama-floor-v2.jpg": {
-    "file": "assets/diorama-floor-v2-NyvJZ32h.jpg",
-    "src": "public/images/living-office/diorama-floor-v2.jpg"
-  },
   "resources/css/app.css": {
     "file": "assets/app-DRzLbX1m.css",
     "src": "resources/css/app.css",
@@ -46,7 +42,7 @@
     ]
   },
   "resources/js/living-office/main.jsx": {
-    "file": "assets/main-DOUCFHuE.js",
+    "file": "assets/main-_3hLrmi1.js",
     "name": "main",
     "src": "resources/js/living-office/main.jsx",
     "isEntry": true,
@@ -57,14 +53,11 @@
       "resources/js/living-office/preview3d/Office3DPreview.jsx"
     ],
     "css": [
-      "assets/main-DdOw66OP.css"
-    ],
-    "assets": [
-      "assets/diorama-floor-v2-NyvJZ32h.jpg"
+      "assets/main-uK2BwOtQ.css"
     ]
   },
   "resources/js/living-office/preview3d/Office3DPreview.jsx": {
-    "file": "assets/Office3DPreview-CEYk4G7X.js",
+    "file": "assets/Office3DPreview-Dix1nHfe.js",
     "name": "Office3DPreview",
     "src": "resources/js/living-office/preview3d/Office3DPreview.jsx",
     "isDynamicEntry": true,
@@ -74,7 +67,7 @@
       "resources/js/living-office/main.jsx"
     ],
     "css": [
-      "assets/Office3DPreview-D8UfU_MC.css"
+      "assets/Office3DPreview-CYiBkHO4.css"
     ]
   }
 }

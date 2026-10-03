@@ -1,7 +1,7 @@
 import React from 'react';
 import { Html } from '@react-three/drei';
 export default function TaskBubble({ worker, onSelect, showName=false, showTask=true }) {
-    const hasTask=showTask&&(worker.task||worker.stale||worker.error);
+    const hasTask=showTask&&Boolean(worker.task);
     if (!hasTask&&!showName) return null;
     return <Html center zIndexRange={[20,0]} style={{pointerEvents:'auto'}}><div className="office3d-bubble-group">
         {hasTask&&<button className="office3d-bubble" onClick={onSelect} title={worker.task||'Data belum tersedia'}>

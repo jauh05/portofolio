@@ -5,6 +5,9 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import * as THREE from 'three';
 import TaskBubble from './TaskBubble';
 const V = new THREE.Vector3(), Q = new THREE.Quaternion();
+const modelUrl = import.meta.env.DEV && window.location.pathname.startsWith('/tests/visual/')
+    ? '/public/models/living-office/casual-worker.glb' : '/models/living-office/casual-worker.glb';
+const modeFor = id => id === 'trent' ? 'monitor' : id.includes('planner') ? 'plan' : id.includes('analyst') ? 'analyze' : id.includes('article') || id.includes('threads') ? 'write' : 'design';
 function snapshot(bones) { return bones.map(b => ({ p: b.position.clone(), q: b.quaternion.clone() })); }
 function aim(bone, child, targetDirection) {
     bone.updateWorldMatrix(true,true);
@@ -17,7 +20,7 @@ function aim(bone, child, targetDirection) {
     bone.quaternion.copy(parent.multiply(world)); bone.updateWorldMatrix(true,true);
 }
 export default function WorkerModel({ motion, worker, selected, onSelect, reduced, paused, showBubble=true, onHover }) {
-    const gltf = useGLTF('/models/living-office/casual-worker.glb');
+    const gltf = useGLTF(modelUrl);
     const group = useRef(), bubble = useRef();
     const rig = useMemo(() => {
         const model = clone(gltf.scene); const bones = [];
@@ -42,7 +45,7 @@ export default function WorkerModel({ motion, worker, selected, onSelect, reduce
         // In-place gait only; world translation belongs to navigation.
         walkClip.tracks = walkClip.tracks.filter(t=>!/^Root\.position$/.test(t.name));
         const walk = mixer.clipAction(walkClip); walk.play(); walk.weight=0;
-        return { model,bones,neutral,sitting,mixer,idle,walk,head:bone('Head'),wrists:[bone('WristL'),bone('WristR')], locomotion:0 };
+        return { model,bones,neutral,sitting,mixer,idle,walk,head:bone('Head'),torso:bone('Torso'),wrists:[bone('WristL'),bone('WristR')], locomotion:0 };
     },[gltf,worker.id,worker.variant]);
     useEffect(()=>()=>{rig.mixer.stopAllAction();rig.mixer.uncacheRoot(rig.model);rig.model.traverse(o=>{if(o.isMesh)o.material.dispose();});},[rig]);
     useFrame((state,dt)=>{
@@ -54,7 +57,14 @@ export default function WorkerModel({ motion, worker, selected, onSelect, reduce
         }
         rig.mixer.update(paused||reduced?0:Math.min(dt,.05));
         if(m.seated>0) rig.bones.forEach((b,i)=>{b.position.lerp(rig.sitting[i].p,m.seated);b.quaternion.slerp(rig.sitting[i].q,m.seated);});
-        if(worker.working&&!worker.stale&&!worker.error&&m.seated>.99&&!reduced&&!paused) rig.wrists.forEach((b,i)=>{Q.setFromAxisAngle(V.set(1,0,0),Math.sin(state.clock.elapsedTime*5+i)*.025); b.quaternion.multiply(Q);});
+        if(worker.working&&!worker.stale&&!worker.error&&m.seated>.99&&!reduced&&!paused){
+            const phase=state.clock.elapsedTime+(worker.id.length*1.713),mode=modeFor(worker.id);
+            const cadence=mode==='write'?6.1:mode==='design'?4.8:mode==='monitor'?2.1:3.2;
+            rig.wrists.forEach((b,i)=>{const pulse=Math.sin(phase*cadence+i*2.3);Q.setFromAxisAngle(V.set(1,0,0),pulse*(mode==='monitor'?.012:.027));b.quaternion.multiply(Q);});
+            rig.head.rotation.y+=Math.sin(phase*(mode==='monitor'?.62:.35))*(mode==='monitor'?.09:.045);
+            rig.head.rotation.x+=Math.sin(phase*.71)*.025;
+            rig.torso.rotation.z+=Math.sin(phase*.8)*.012;
+        }
         group.current.updateWorldMatrix(true,true);rig.head.getWorldPosition(V);group.current.worldToLocal(V);bubble.current.position.copy(V);bubble.current.position.y+=.85;
     });
     return <group ref={group} userData={{officeWorkerId:worker.id}} onPointerOver={e=>{e.stopPropagation();onHover?.(true);}} onPointerOut={()=>onHover?.(false)} onClick={e=>{e.stopPropagation();onSelect();}}>

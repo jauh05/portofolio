@@ -9,20 +9,18 @@ import {
 } from 'lucide-react';
 import { agentRegistry, systems } from './agentRegistry';
 import { workerStates } from './stateMachine';
-import { OFFICE_WORLD, deskAssignments, officeEvents, officeStations } from './officeModel';
+import { officeStations } from './officeModel';
 import { useLivingOffice } from './useLivingOffice';
 import { useOfficeData } from './useOfficeData';
 import { OperationsView } from './OperationsViews';
 import { ContentPlanner } from './ContentPlanner';
 import { AnalystReports } from './AnalystReports';
 import { ApiStatus } from './ApiStatus';
-import { OfficeFloor, OfficeRoomRail } from './OfficeFloor';
 import OfficeRenderer from './OfficeRenderer';
 import { normalizeRoster } from './preview3d/full/roster';
 import './living-office.css';
 import './office-redesign.css';
 import './office-pages.css';
-import './office-interactions.css';
 
 const statusTone = (status) => ({
     monitoring: 'cyan', generating: 'violet', working: 'blue', planning: 'green', completed: 'green',
@@ -79,139 +77,11 @@ function Sidebar({ activeView, setActiveView }) {
     return <aside className="sidebar"><nav>{navItems.map(([id, Icon, label]) => <button key={id} className={activeView === id ? 'active' : ''} onClick={() => { if (window.location.hash === '#kelola-planner') window.history.replaceState(null, '', window.location.pathname + window.location.search); setActiveView(id); }}><Icon size={20} /><span>{label}</span></button>)}</nav><a className="back-site" href="/"><ArrowLeft size={18} /><span>Portfolio</span></a></aside>;
 }
 
-function Workstation({ variant = 'desk', worker = null }) {
-    if (variant === 'trent') return <div className="identity-desk trent-station"><div className="trent-monitors"><i /><i /><i /></div><span className="server-strip"><i /><i /><i /><i /></span><em>SYS</em></div>;
-    if (variant === 'servers') return <div className="server-racks"><span /><span /><span /></div>;
-    if (variant === 'board') return <div className="planning-board"><b>WEEK 39</b><span /><span /><span /></div>;
-    if (variant === 'lounge') return <div className="lounge"><i /><i /><span /></div>;
-    if (variant === 'article') return <div className="identity-desk article-station"><div className="angled-laptop"><i /></div><span className="book-stack"><i /><i /><i /></span><em>⌨</em></div>;
-    if (variant === 'content') return <div className="identity-desk content-station"><div className="dual-design"><i /><i /></div><span className="phone-prop">▯</span><em>COLOR</em></div>;
-    if (variant === 'community') return <div className="identity-desk community-station"><div className="wide-screen"><i /></div><span className="phone-prop">▯</span><em>@</em></div>;
-    if (variant === 'analytics') return <div className="identity-desk analytics-station"><div className="analytics-screens"><i /><i /><i /></div><span className="chart-prop">▥</span></div>;
-    if (variant === 'finance') return <div className="finance-station"><div className="finance-monitors"><i /><i /></div><span className="cost-graph"><b /><b /><b /><b /></span><em>$</em></div>;
-    if (variant === 'pantry') return <div className="pantry-station"><Coffee /><Refrigerator /><span><i /></span></div>;
-    if (variant === 'meeting') return <div className="meeting-table"><span /><i /><i /><i /><i /></div>;
-    if (variant === 'reception') return <div className="reception-desk"><BrandMark /><span>CONTROL</span></div>;
-    return <div className={`workstation ${worker?.status || 'idle'}`}><span className="workstation-shadow" /><span className="workstation-chair" /><span className="workstation-desk"><i className="workstation-monitor"><b>{worker?.shortName}</b><em /></i><i className="workstation-keyboard" /><i className="workstation-mouse" /></span></div>;
-}
-
-function DeskPod({ agent }) {
-    const assignment = deskAssignments[agent.id];
-    const seat = assignment.deskSeat;
-    const unavailable = ['not_installed', 'not_connected'].includes(agent.status);
-    return <div className={`desk-pod floor-desk-pod ${unavailable ? 'inactive' : ''}`} style={{ left: `${seat.x}%`, top: `${seat.y}%` }}>
-        <span className="desk-label"><i style={{ background: agent.color }} />{agent.name.replace(' Worker', '')}</span>
-        <Workstation worker={agent} />
-        {unavailable && <span className="desk-offline">NOT CONNECTED</span>}
-    </div>;
-}
-
 const officeStateLabel = {
     seated_work: 'Seated · Working', standing_idle: 'Standing', walking: 'Walking', meeting: 'In meeting',
     resting: 'Resting', server_check: 'Server check', returning_to_desk: 'Returning', offline: 'Offline',
     not_installed: 'Belum diinstal', error: 'Error',
 };
-
-function Worker({ agent, selected, onClick, reportReady, worldHeight }) {
-    const state = workerStates[agent.status] || workerStates.idle;
-    const worldX = (agent.position.x / 100) * OFFICE_WORLD.width;
-    const worldY = (agent.position.y / 100) * worldHeight;
-    return <button
-        className={`worker worker-${agent.animation || state.motion} status-${agent.status} is-${agent.movementState || 'idle'} facing-${agent.facing || 'right'} ${selected ? 'selected' : ''}`}
-        style={{ '--agent-color': agent.color, '--walk-duration': `${agent.walkDuration || 3.5}s`, transform: `translate3d(${worldX}px, ${worldY}px, 0) translate3d(-50%, -50%, 0)`, zIndex: 100 + Math.floor(agent.position.y) }}
-        onClick={() => onClick(agent.id)} aria-label={`Buka detail ${agent.name}`}
-    >
-        {agent.bubble && <span className="speech-bubble">{agent.bubble}</span>}
-        <span className={`worker-status ${reportReady ? 'violet' : statusTone(agent.status)}`}>{agent.status === 'not_installed' ? <Square size={10} /> : <i />}{reportReady ? 'Report ready' : officeStateLabel[agent.officeState] || state.label}</span>
-        <span className="worker-shadow" /><span className="worker-body"><i className="hair" /><i className="head"><b /><b /></i><i className="torso"><small>{agent.shortName}</small></i><i className="arm left" /><i className="arm right" /><i className="leg left" /><i className="leg right" /></span>
-        <span className="worker-name">{agent.name.replace(' Worker', '')}</span>
-    </button>;
-}
-
-function MeetingStatus({ event }) {
-    const [remaining, setRemaining] = useState(() => Math.max(0, Math.ceil((event.endsAt - Date.now()) / 1000)));
-    useEffect(() => { const timer = window.setInterval(() => setRemaining(Math.max(0, Math.ceil((event.endsAt - Date.now()) / 1000))), 1000); return () => window.clearInterval(timer); }, [event.endsAt]);
-    return <div className="meeting-bubble"><Users size={13} /><strong>{event.label}</strong><span>{event.message}</span><time>{String(Math.floor(remaining / 60)).padStart(2, '0')}:{String(remaining % 60).padStart(2, '0')}</time></div>;
-}
-
-function OfficeMap({ agents, selectedId, onSelect, summary, analystReport, activeEvent, onSimulateEvent, onServerCheck, onRest }) {
-    const [zoom, setZoom] = useState(.85);
-    const [selectedRoomId, setSelectedRoomId] = useState('open');
-    const [eventIndex, setEventIndex] = useState(0);
-    const viewportRef = useRef(null);
-    const dragRef = useRef(null);
-    const suppressClickRef = useRef(false);
-    const zoomTouchedRef = useRef(false);
-    const fitZoom = (showAll = false) => {
-        const viewport = viewportRef.current;
-        if (!viewport) return;
-        const fit = Math.min((viewport.clientWidth - 12) / OFFICE_WORLD.width, (viewport.clientHeight - 12) / OFFICE_WORLD.height);
-        setZoom(showAll ? Math.max(.25, fit) : Math.min(1.35, Math.max(.68, fit * 1.4)));
-    };
-    const adjustZoom = (amount) => { zoomTouchedRef.current = true; setZoom((current) => Math.max(.25, Math.min(1.5, Number((current + amount).toFixed(2))))); };
-    const resetView = () => { zoomTouchedRef.current = true; fitZoom(true); viewportRef.current?.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); };
-    useEffect(() => { const frame = window.requestAnimationFrame(() => viewportRef.current?.scrollTo({ left: 0, top: 0 })); return () => window.cancelAnimationFrame(frame); }, []);
-    useEffect(() => {
-        const viewport = viewportRef.current;
-        if (!viewport) return undefined;
-        const observer = new ResizeObserver(() => { if (!zoomTouchedRef.current) fitZoom(); });
-        observer.observe(viewport);
-        fitZoom();
-        return () => observer.disconnect();
-    }, []);
-    const onPointerDown = (event) => {
-        if (event.button !== 0 || event.target.closest('.worker')) return;
-        dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: viewportRef.current.scrollLeft, top: viewportRef.current.scrollTop, moved: false };
-    };
-    const onPointerMove = (event) => {
-        const drag = dragRef.current;
-        if (!drag || drag.pointerId !== event.pointerId) return;
-        const deltaX = event.clientX - drag.x;
-        const deltaY = event.clientY - drag.y;
-        if (!drag.moved && Math.hypot(deltaX, deltaY) < 6) return;
-        if (!drag.moved) {
-            drag.moved = true;
-            viewportRef.current.classList.add('is-dragging');
-            viewportRef.current.setPointerCapture(event.pointerId);
-        }
-        viewportRef.current.scrollLeft = drag.left - deltaX;
-        viewportRef.current.scrollTop = drag.top - deltaY;
-    };
-    const endDrag = (event) => {
-        const drag = dragRef.current;
-        if (!drag || drag.pointerId !== event.pointerId) return;
-        if (drag.moved) {
-            suppressClickRef.current = true;
-            window.setTimeout(() => { suppressClickRef.current = false; }, 0);
-        }
-        viewportRef.current?.classList.remove('is-dragging');
-        if (viewportRef.current?.hasPointerCapture(event.pointerId)) viewportRef.current.releasePointerCapture(event.pointerId);
-        dragRef.current = null;
-    };
-    const onMapClickCapture = (event) => {
-        if (!suppressClickRef.current) return;
-        event.preventDefault();
-        event.stopPropagation();
-        suppressClickRef.current = false;
-    };
-    const nextEvent = () => { const next = (eventIndex + 1) % officeEvents.length; setEventIndex(next); };
-    const activeWorkers = agents.filter(agent => !['offline', 'not_connected', 'not_installed'].includes(agent.status)).length;
-    const trentAvailable = agents.some(agent => agent.id === 'trent' && !['offline', 'not_connected', 'not_installed'].includes(agent.status));
-    const selectedAvailable = agents.some(agent => agent.id === selectedId && !['offline', 'not_connected', 'not_installed'].includes(agent.status));
-    return <div className="office-shell">
-        <div className="office-toolbar"><div><span className={`live-dot ${activeWorkers ? '' : 'inactive'}`} />OFFICE FLOOR · {agents.length} WORKERS <small>{summary.workingNow ?? 0} working now</small></div><div className="event-control"><span>{activeEvent ? `${activeEvent.label} · ${activeEvent.phase.replace('_', ' ')}` : `Visual command: ${officeEvents[eventIndex].label}`}</span><button onClick={nextEvent} aria-label="Event berikutnya"><ChevronRight size={14} /></button><button className="simulate-button" disabled={Boolean(activeEvent)} onClick={() => onSimulateEvent(officeEvents[eventIndex].id)}>Start meeting</button><button disabled={!trentAvailable} title={trentAvailable ? 'Trent checks the server room' : 'Trent belum terhubung'} onClick={onServerCheck}>Trent check</button><button disabled={!selectedAvailable} title={selectedAvailable ? 'Send selected worker to the lounge' : 'Worker belum terhubung'} onClick={onRest}>Rest selected</button></div><div className="map-controls"><span className="map-pan-hint">Geser peta</span><button onClick={() => adjustZoom(-.1)} aria-label="Zoom out"><ZoomOut size={14} /></button><b>{Math.round(zoom * 100)}%</b><button onClick={() => adjustZoom(.1)} aria-label="Zoom in"><ZoomIn size={14} /></button><button onClick={resetView} aria-label="Lihat seluruh peta"><RotateCcw size={14} /></button></div></div>
-        <div className="office-command-layout"><div className="office-viewport" ref={viewportRef} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endDrag} onPointerCancel={endDrag} onClickCapture={onMapClickCapture} aria-label="Peta Living AI Office, geser untuk menjelajah ruangan" role="region" tabIndex={0}>
-            <div className="office-canvas" style={{ width: OFFICE_WORLD.width * zoom, height: OFFICE_WORLD.height * zoom }}>
-                <div className="office-map" style={{ width: OFFICE_WORLD.width, height: OFFICE_WORLD.height, transform: `scale(${zoom})` }}>
-                    <OfficeFloor agents={agents} selectedRoomId={selectedRoomId} onRoomSelect={setSelectedRoomId} />
-                    {agents.map(agent => <DeskPod agent={agent} key={`desk-${agent.id}`} />)}
-                    {activeEvent && <MeetingStatus event={activeEvent} />}
-                    {agents.map(agent => <Worker key={agent.id} agent={agent} selected={selectedId === agent.id} onClick={onSelect} reportReady={agent.id === 'jauki-analyst' && analystReport?.status === 'ready'} worldHeight={OFFICE_WORLD.height} />)}
-                </div>
-            </div>
-        </div><OfficeRoomRail agents={agents} selectedRoomId={selectedRoomId} onRoomSelect={setSelectedRoomId} onSelectWorker={onSelect} /></div>
-    </div>;
-}
 
 function BottomDock({ selectedAgent, onSelect, agents, activity, analystReport, onOpenReports }) {
     if (!selectedAgent) return <div className="bottom-dock"><p>Belum ada worker pada roster Office.</p></div>;
@@ -258,7 +128,7 @@ function AgentDrawer({ agent, tasks, commands, enqueue, onClose }) {
 }
 
 function App() {
-    const { domainData, visualAgents: agents, activeEvent, simulateEvent, sendToRest, sendToServer } = useLivingOffice(agentRegistry);
+    const { domainData } = useLivingOffice();
     const office = useOfficeData();
     const ambience = useMemo(() => { const hour = new Date().getHours(); return hour >= 18 || hour < 6 ? 'night' : hour >= 16 ? 'evening' : 'day'; }, []);
     const [selectedId, setSelectedId] = useState('jauki-article');
@@ -269,7 +139,7 @@ function App() {
         try { return localStorage.getItem('living-office-theme') === 'dark' ? 'dark' : 'light'; } catch { return 'light'; }
     });
     const domainRoster = useMemo(() => normalizeRoster(domainData.rows, domainData).workers, [domainData]);
-    const displayAgents = domainData.loading ? agents : domainRoster;
+    const displayAgents = domainRoster;
     const selectedAgent = displayAgents.find(a => a.id === selectedId) || displayAgents[0];
     const selectAgent = (id) => { setSelectedId(id); setDrawerOpen(true); };
     useEffect(() => { try { localStorage.setItem('living-office-theme', theme); } catch {} }, [theme]);
@@ -281,7 +151,7 @@ function App() {
     return <div className="app-shell office-redesign" data-theme={theme} data-ambience={ambience}>
         <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} onNotificationOpen={() => setActiveView('reports')} theme={theme} onThemeToggle={() => setTheme(current => current === 'light' ? 'dark' : 'light')} />
         <Sidebar activeView={activeView} setActiveView={setActiveView} />
-        <main ref={mainRef} className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeRenderer domainData={domainData} selectedId={selectedId} onSelect={selectAgent}><OfficeMap agents={agents} selectedId={selectedId} onSelect={selectAgent} summary={office.summary} analystReport={office.reports[0]} activeEvent={activeEvent} onSimulateEvent={simulateEvent} onServerCheck={() => sendToServer('trent')} onRest={() => !['not_installed', 'not_connected'].includes(selectedAgent?.status) && selectedAgent && sendToRest(selectedAgent.id)} /></OfficeRenderer><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={displayAgents} activity={office.activity} analystReport={office.reports[0]} onOpenReports={() => setActiveView('reports')} /></> : activeView === 'planner' ? <ContentPlanner planner={office.planner} brands={office.brands} loading={office.loading} loadPlanner={office.loadPlanner} createSchedule={office.createSchedule} analyzePlan={office.analyzePlan} contentItems={office.content} generateContent={office.generateContent} reviseContent={office.reviseContent} updateContent={office.updateContent} approveContent={office.approveContent} /> : activeView === 'reports' ? <AnalystReports reports={office.reports} brands={office.brands} loading={office.loading} generateReport={office.generateReport} approveReport={office.approveReport} dismissReport={office.dismissReport} /> : activeView === 'api' ? <ApiStatus agents={displayAgents} onSelectWorker={selectAgent} /> : <OperationsView view={activeView} agents={displayAgents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} onSelectWorker={selectAgent} />}</main>
+        <main ref={mainRef} className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeRenderer domainData={domainData} selectedId={selectedId} onSelect={selectAgent} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={displayAgents} activity={office.activity} analystReport={office.reports[0]} onOpenReports={() => setActiveView('reports')} /></> : activeView === 'planner' ? <ContentPlanner planner={office.planner} brands={office.brands} loading={office.loading} loadPlanner={office.loadPlanner} createSchedule={office.createSchedule} analyzePlan={office.analyzePlan} contentItems={office.content} generateContent={office.generateContent} reviseContent={office.reviseContent} updateContent={office.updateContent} approveContent={office.approveContent} /> : activeView === 'reports' ? <AnalystReports reports={office.reports} brands={office.brands} loading={office.loading} generateReport={office.generateReport} approveReport={office.approveReport} dismissReport={office.dismissReport} /> : activeView === 'api' ? <ApiStatus agents={displayAgents} onSelectWorker={selectAgent} /> : <OperationsView view={activeView} agents={displayAgents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} onSelectWorker={selectAgent} />}</main>
         {drawerOpen && <AgentDrawer agent={selectedAgent} tasks={office.tasks} commands={office.commands} enqueue={office.enqueue} onClose={() => setDrawerOpen(false)} />}
         {office.toast && <div className={`office-toast ${office.toast.severity}`}><i>{office.toast.severity === 'error' ? '×' : '✓'}</i><div><strong>{office.toast.title}</strong><span>{office.toast.message}</span></div><button onClick={office.dismissToast}><X size={14} /></button></div>}
     </div>;

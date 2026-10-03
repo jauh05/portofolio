@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { Block, Plant, Workstation, Chair } from '../Furniture';
 import { canonicalRooms, ambientZones, stations } from './layout';
 import { palette as p } from '../palette';
+import WorkstationScreen from './WorkstationScreen';
 // Repeated opaque furniture is instanced once; animated doors and rigs stay independent.
 function StaticBatch({children}) {
  const root=useRef();
@@ -19,7 +20,9 @@ export function SlidingDoor({room,world}){
  const left=useRef(),right=useRef();useFrame(()=>{const open=world.current.doors.get(room.id)?.open||0;if(left.current){left.current.position.x=room.doorX-.43-open*.8;right.current.position.x=room.doorX+.43+open*.8;}});
  return <group><Block position={[room.doorX,1.65,room.front]} size={[2,.1,.18]} color={p.line}/>{[-1,1].map(s=><Block key={s} position={[room.doorX+s*.94,.8,room.front]} size={[.09,1.65,.16]} color={p.line}/>)}{[left,right].map((ref,i)=><group ref={ref} key={i} position={[room.doorX+(i? .43:-.43),0,room.front]}><Block position={[0,.22,0]} size={[.83,.44,.08]} color={p.line}/><mesh position={[0,.95,0]}><boxGeometry args={[.83,1,.035]}/><meshStandardMaterial color={p.blue} transparent opacity={.23} depthWrite={false}/></mesh><Block position={[i?-.3:.3,.85,.07]} size={[.035,.25,.04]} color={p.ink}/></group>)}</group>;
 }
-export default function Building(){return <StaticBatch>
+export default function Building({workers=[],world,selectedId,reduced=false}){
+ const stationWorkers=new Map(workers.map(w=>[world.current.assignments.get(w.id),w]));
+ return <><StaticBatch>
  <Block position={[0,-.22,3]} size={[40,.4,32]} color={p.line}/>
  <Block position={[0,-.008,3]} size={[39.6,.025,31.6]} color={p.soft}/>
  {[-3.2,5.2,13.4].map(z=><group key={z}><Block position={[0,.007,z]} size={[38,.02,1.5]} color={p.surface}/>{Array.from({length:38},(_,i)=><Block key={i} position={[-18.5+i,.022,z]} size={[.012,.006,1.5]} color={p.line}/>)}</group>)}
@@ -47,7 +50,9 @@ export default function Building(){return <StaticBatch>
  <Sofa x={-13} z={17.4}/><Screen x={-13} z={16.0} width={3.4}/><Block position={[-13,.65,16]} size={[.2,1.3,.2]} color={p.ink}/><Block position={[-13,.4,16.35]} size={[2,.13,.55]} color="#d3bb96"/>
  <Block position={[-1, .55,17.6]} size={[6,1.1,.65]} color={p.line}/><Block position={[-1,1.14,17.6]} size={[6,.08,.75]} color="#d3bb96"/><Block position={[-2.6,1.5,17.6]} size={[.7,.65,.55]} color={p.ink}/><Block position={[1.6,1,17.6]} size={[.7,2,.7]} color={p.white}/>
  <Block position={[11,.65,17.4]} size={[6,1.3,.9]} color={p.blue}/><Block position={[11,1.34,17.4]} size={[6.3,.08,1]} color={p.white}/>
- </StaticBatch>}
+ </StaticBatch>
+ {stations.filter(s=>s.kind==='desk').map(s=><group key={`screen-${s.id}`} position={[s.seat[0],0,s.seat[1]]} rotation={[0,s.yaw-Math.PI,0]}><group position={[0,0,-.05]}><WorkstationScreen worker={stationWorkers.get(s.id)} stationId={s.id} roomId={s.roomId} selected={stationWorkers.get(s.id)?.id===selectedId} reduced={reduced}/></group></group>)}
+ </>;}
 
 export function DecorativeServerLights({reduced}){
  const lamps=useRef(),material=useRef(),elapsed=useRef(0);

@@ -14,3 +14,6 @@
 .office3d-full .office3d-actions select{max-width:160px;background:var(--o-bg);color:var(--o-ink);border:1px solid var(--o-line);border-radius:8px;padding:6px;font-size:11px}
 
 .office-redesign[data-theme=dark] .office3d-full{color:#eaf3ff}.office-redesign[data-theme=dark] .office3d-full .office3d-toolbar b{color:#eaf3ff}.office3d-full .office3d-room small{color:#1570ef;font-weight:700}
+@media(max-width:600px){
+ .office3d-full .office3d-room,.office3d-full .office3d-zone,.office3d-full .office3d-bubble-group{display:none}
+}
