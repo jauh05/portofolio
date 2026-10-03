@@ -45,4 +45,11 @@ return [
         'model' => env('OFFICE_AI_MODEL'),
     ],
 
+    'telegram' => [
+        'enabled' => env('OFFICE_TELEGRAM_NOTIFICATIONS', false),
+        'level' => env('OFFICE_TELEGRAM_NOTIFY_LEVEL', 'all'),
+        'bot_token' => env('OFFICE_TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('OFFICE_TELEGRAM_CHAT_ID'),
+    ],
+
 ];
