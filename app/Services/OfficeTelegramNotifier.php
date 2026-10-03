@@ -49,7 +49,7 @@ class OfficeTelegramNotifier
         $message .= "Status: {$icon} {$status}\n";
 
         if ($command->status === 'failed' && $command->error) {
-            $message .= "\nError:\n" . substr($command->error, 0, 200) . ($strlen > 200 ? '...' : '');
+            $message .= "\nError:\n" . substr($command->error, 0, 200) . (strlen($command->error) > 200 ? '...' : '');
         }
 
         $this->dispatch($message, "cmd_stat_{$command->id}_{$command->status}");
