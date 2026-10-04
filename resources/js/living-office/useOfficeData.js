@@ -23,12 +23,15 @@ export function useOfficeData() {
     const [toast, setToast] = useState(null);
     const initialized = useRef(false);
     const seenNotifications = useRef(new Set());
+    const plannerRange = useRef(null);
 
     const refresh = useCallback(async () => {
         try {
+            const range = plannerRange.current;
+            const plannerUrl = range ? `/office/api/content-planner?${new URLSearchParams({ ...range, timezone: 'Asia/Jakarta' })}` : '/office/api/content-planner';
             const [tasks, activity, content, brands, planner, reports, notifications, commands, summary] = await Promise.all([
                 request('/office/api/tasks'), request('/office/api/activity'), request('/office/api/content'),
-                request('/office/api/content-brands'), request('/office/api/content-planner'), request('/office/api/analyst-reports'), request('/office/api/notifications'), request('/office/api/commands'), request('/office/api/summary'),
+                request('/office/api/content-brands'), request(plannerUrl), request('/office/api/analyst-reports'), request('/office/api/notifications'), request('/office/api/commands'), request('/office/api/summary'),
             ]);
             if (initialized.current) {
                 const important = notifications.data.find((item) => !item.readAt && !seenNotifications.current.has(item.id));
@@ -36,7 +39,9 @@ export function useOfficeData() {
             }
             notifications.data.forEach((item) => seenNotifications.current.add(item.id));
             initialized.current = true;
-            setData({ tasks: tasks.data, activity: activity.data, content: content.data, brands: brands.data, planner, reports: reports.data, notifications: notifications.data, commands: commands.data, summary, unread: notifications.unread });
+            setData(current => ({ tasks: tasks.data, activity: activity.data, content: content.data, brands: brands.data,
+                planner: plannerRange.current === range ? planner : current.planner,
+                reports: reports.data, notifications: notifications.data, commands: commands.data, summary, unread: notifications.unread }));
             setError(null);
         } catch (caught) {
             if (caught.message !== 'Session expired') setError(caught.message || 'Unable to load data');
@@ -62,9 +67,11 @@ export function useOfficeData() {
         return command;
     };
     const loadPlanner = async (start, end) => {
+        const range = { start, end };
+        plannerRange.current = range;
         const query = new URLSearchParams({ start, end, timezone: 'Asia/Jakarta' });
         const planner = await request(`/office/api/content-planner?${query}`);
-        setData(current => ({ ...current, planner }));
+        if (plannerRange.current === range) setData(current => ({ ...current, planner }));
         return planner;
     };
     const loadPlannerGeneration = useCallback(async (scheduleIds) => {

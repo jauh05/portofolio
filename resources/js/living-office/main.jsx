@@ -23,6 +23,7 @@ import './office-redesign.css';
 import './office-pages.css';
 import './office-refinement.css';
 import './planner-generation.css';
+import './planner-calendar.css';
 
 const statusTone = (status) => ({
     monitoring: 'cyan', generating: 'violet', working: 'blue', planning: 'green', completed: 'green',

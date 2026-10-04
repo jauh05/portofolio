@@ -9,6 +9,7 @@ import '../../resources/js/living-office/office-redesign.css';
 import '../../resources/js/living-office/office-pages.css';
 import '../../resources/js/living-office/office-refinement.css';
 import '../../resources/js/living-office/planner-generation.css';
+import '../../resources/js/living-office/planner-calendar.css';
 
 // Development fixture only. Every record below is synthetic and never reaches Office APIs.
 const agents=[

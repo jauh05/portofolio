@@ -1,12 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, ChevronLeft, ChevronRight, Plus, Repeat2, Sparkles, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { CalendarDays, Plus, Repeat2, Sparkles, X } from 'lucide-react';
 import { ContentReview } from './ContentReview';
+import { PlannerCalendar } from './PlannerCalendar';
+import { calendarRange, calendarTitle, occurrenceDateKey, readCalendarView, shiftCalendarDate, todayKey, writeCalendarView } from './calendarViewModel';
 import { PANEL_MODES, readPanelMode, writePanelMode } from './panelPreferences';
 import { PlannerGenerationCard } from './PlannerGenerationCard';
 import { articleReady, generationStatus, resolvePlannerOutput, runGenerationRequest, safeGenerationError, selectGenerationCommand, selectScheduleContent, shouldPollGeneration, STATUS_LABELS } from './plannerGeneration';
 
 const TZ = 'Asia/Jakarta';
-const dateKey = (value) => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date(value));
 const prettyDate = (value) => new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: TZ }).format(new Date(value));
 const initialForm = (type, brandId = '') => ({
     name: '', schedule_type: type, platform: 'instagram', content_type: 'feed', topic: '', brief: '', assigned_agent: '', timezone: TZ,
@@ -75,7 +76,8 @@ function AiPlanModal({ brands, onClose, onAnalyze, onSave }) {
 export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlannerGeneration, createSchedule, analyzePlan, contentItems = [], commands = [], agents = [], generateContent, reviseContent, updateContent, approveContent }) {
     const manageRef = useRef(null);
     const [panelMode, setPanelMode] = useState(() => readPanelMode('plannerPanelMode'));
-    const [cursor, setCursor] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+    const [calendarView, setCalendarView] = useState(readCalendarView);
+    const [selectedDate, setSelectedDate] = useState(todayKey);
     const [formType, setFormType] = useState(null);
     const [brandFilter, setBrandFilter] = useState('all');
     const [aiPlanOpen, setAiPlanOpen] = useState(false);
@@ -84,11 +86,9 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
     const [selectedSchedules, setSelectedSchedules] = useState(new Set());
     const [requests, setRequests] = useState({});
     const [notice, setNotice] = useState('');
-    const start = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
-    const end = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0);
-    const startKey = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-01`;
-    const endKey = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(end.getDate()).padStart(2, '0')}`;
-    const monthTitle = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(cursor);
+    const { start: startKey, end: endKey } = calendarRange(calendarView, selectedDate);
+    const monthRange = calendarRange('month', selectedDate);
+    const monthTitle = calendarTitle('month', selectedDate);
     const schedules = planner?.schedules || [];
     const manageableSchedules = schedules.filter(item => brandFilter === 'all' || item.brand?.id === brandFilter);
     const visibleOccurrences = (planner?.occurrences || []).filter(item => brandFilter === 'all' || item.brand?.id === brandFilter);
@@ -96,14 +96,12 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
     const contentFor = (id) => selectScheduleContent(contentItems, id);
     const commandFor = (content) => selectGenerationCommand(commands, content);
     const reviewContent = contentItems.find(item => item.id === reviewId) || null;
-    const days = useMemo(() => Array.from({ length: end.getDate() }, (_, index) => new Date(cursor.getFullYear(), cursor.getMonth(), index + 1)), [cursor]);
-    const byDay = useMemo(() => visibleOccurrences.reduce((result, item) => {
-        const key = dateKey(item.scheduledAt);
-        result[key] = [...(result[key] || []), item];
-        return result;
-    }, {}), [planner, brandFilter]);
-
-    useEffect(() => { loadPlanner(startKey, endKey).catch(() => setNotice('Jadwal belum dapat dimuat. Coba buka kembali Planner.')); }, [cursor]);
+    const loadedStart = occurrenceDateKey(planner?.range?.start);
+    const loadedEnd = occurrenceDateKey(planner?.range?.end);
+    useEffect(() => {
+        if (loadedStart && loadedEnd && loadedStart <= startKey && loadedEnd >= endKey) return;
+        loadPlanner(startKey, endKey).catch(() => setNotice('Jadwal belum dapat dimuat. Coba buka kembali Planner.'));
+    }, [startKey, endKey, loadedStart, loadedEnd]);
     const scheduleIds = schedules.map(item => item.id).join(',');
     useEffect(() => {
         if (!scheduleIds) return;
@@ -178,7 +176,7 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
     };
     const generateMonth = () => {
         if (!window.confirm(`Generate konten untuk ${monthTitle}?`)) return;
-        const candidates = manageableSchedules.filter(item => item.isActive && (item.scheduleType === 'recurring' || (item.scheduledAt && item.scheduledAt.slice(0, 10) >= startKey && item.scheduledAt.slice(0, 10) <= endKey)));
+        const candidates = manageableSchedules.filter(item => item.isActive && (item.scheduleType === 'recurring' || (item.scheduledAt && item.scheduledAt.slice(0, 10) >= monthRange.start && item.scheduledAt.slice(0, 10) <= monthRange.end)));
         bulkGenerate(candidates, `Generate ${monthTitle}`);
     };
     const generateAllActive = () => {
@@ -216,7 +214,17 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
         <div className="view-heading"><div><span>CONTENT PLANNER</span><h1>Content Planner</h1><p>Rencanakan output, pantau generation, dan lihat hasilnya langsung di sini. Jadwal mode Review menunggu persetujuan sebelum terbit.</p></div><div className="planner-actions"><button onClick={() => setFormType('one_time')}><Plus size={15} /> Sekali</button><button onClick={() => setFormType('recurring')}><Repeat2 size={15} /> Berulang</button><button onClick={() => setAiPlanOpen(true)}><Sparkles size={15} /> AI Plan</button><button type="button" onClick={openManage}>Kelola Planner</button></div></div>
         {notice && <div className="planner-notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice('')} aria-label="Tutup pesan">×</button></div>}
         <div className="planner-filter"><span>Workspace</span><select value={brandFilter} onChange={event => setBrandFilter(event.target.value)}><option value="all">Semua Brand</option>{brands.map(brand => <option key={brand.id} value={brand.id}>{brand.name}</option>)}</select></div>
-        <section className="planner-layout"><div className="planner-calendar"><header><div><button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))} aria-label="Bulan sebelumnya"><ChevronLeft size={18} /></button><strong>{monthTitle}</strong><button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))} aria-label="Bulan berikutnya"><ChevronRight size={18} /></button></div><small>{visibleOccurrences.length} jadwal</small></header><div className="calendar-weekdays">{['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map(day => <span key={day}>{day}</span>)}</div><div className="calendar-grid">{Array.from({ length: (start.getDay() + 6) % 7 }, (_, index) => <i key={`gap-${index}`} />)}{days.map(day => { const entries = byDay[dateKey(day)] || []; return <article key={day.toISOString()} className={dateKey(day) === dateKey(new Date()) ? 'today' : ''}><time>{day.getDate()}</time>{entries.slice(0, 3).map(item => <button type="button" onClick={() => openOccurrence(item)} className={`calendar-item ${item.scheduleType}`} key={item.id}><em>{item.brand?.name || 'Workspace'}</em><b>{item.name}</b><small>{resolvePlannerOutput(item).label}</small></button>)}{entries.length > 3 && <small className="calendar-more">+{entries.length - 3} lainnya</small>}</article>; })}</div></div><aside className="planner-upcoming"><header><CalendarDays size={16} /><div><span>AKAN DATANG BULAN INI</span><strong>Konten terjadwal berikutnya</strong></div></header>{loading ? <p>Memuat jadwal…</p> : visibleUpcoming.length ? visibleUpcoming.map(item => { const content = contentFor(item.scheduleId); const status = generationStatus(content, commandFor(content)); return <article key={item.id}><div><em>{item.brand?.name || 'Workspace'}</em><b>{item.name}</b><small>{resolvePlannerOutput(item).label} · {STATUS_LABELS[status] || 'Belum dibuat'}</small></div><time>{prettyDate(item.scheduledAt)}</time><button type="button" onClick={() => openOccurrence(item)}>{content ? 'Lihat konten' : 'Buka planner'}</button></article>; }) : <p>Belum ada konten terjadwal bulan ini.</p>}</aside></section>
+        <section className="planner-layout">
+            <PlannerCalendar view={calendarView} selectedDate={selectedDate} occurrences={visibleOccurrences} loading={loading}
+                statusFor={item => { const content = contentFor(item.scheduleId); return generationStatus(content, commandFor(content)); }}
+                onViewChange={view => setCalendarView(writeCalendarView(view))}
+                onPrevious={() => setSelectedDate(date => shiftCalendarDate(calendarView, date, -1))}
+                onNext={() => setSelectedDate(date => shiftCalendarDate(calendarView, date, 1))}
+                onToday={() => setSelectedDate(todayKey())}
+                onDateSelect={date => { setSelectedDate(date); setCalendarView(writeCalendarView('day')); }}
+                onOpenOccurrence={openOccurrence} />
+            <aside className="planner-upcoming"><header><CalendarDays size={16} /><div><span>AKAN DATANG</span><strong>Konten terjadwal berikutnya</strong></div></header>{loading ? <p>Memuat jadwal…</p> : visibleUpcoming.length ? visibleUpcoming.map(item => { const content = contentFor(item.scheduleId); const status = generationStatus(content, commandFor(content)); return <article key={item.id}><div><em>{item.brand?.name || 'Workspace'}</em><b>{item.name}</b><small>{resolvePlannerOutput(item).label} · {STATUS_LABELS[status] || 'Belum dibuat'}</small></div><time>{prettyDate(item.scheduledAt)}</time><button type="button" onClick={() => openOccurrence(item)}>{content ? 'Lihat konten' : 'Buka planner'}</button></article>; }) : <p>Belum ada konten terjadwal pada rentang ini.</p>}</aside>
+        </section>
         <section id="kelola-planner" ref={manageRef} className={`planner-manage planner-mode-${panelMode}`}><header><div><span>KELOLA PLANNER</span><h2>Semua Planner</h2><p>{manageableSchedules.length} jadwal pada workspace terpilih.</p><div className="panel-mode-control" role="group" aria-label="Ukuran Planner">{PANEL_MODES.map(mode => <button key={mode} type="button" aria-pressed={panelMode === mode} onClick={() => setPanelMode(writePanelMode('plannerPanelMode', mode))}>{mode === 'compact' ? 'Ringkas' : mode === 'expanded' ? 'Luas' : 'Normal'}</button>)}</div></div><div className="planner-actions"><button disabled={!manageableSchedules.length} onClick={() => setSelectedSchedules(new Set(manageableSchedules.map(item => item.id)))}>Pilih Semua</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('generate')}>Generate Terpilih</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('set_h1')}>Set H-1 Terpilih</button><button disabled={!manageableSchedules.length} onClick={generateMonth}>Generate Bulan Ini</button><button disabled={!manageableSchedules.length} onClick={generateAllActive}>Generate Semua Aktif</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('pause')}>Jeda Terpilih</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('resume')}>Lanjutkan Terpilih</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('delete')}>Hapus Terpilih</button><button disabled={!manageableSchedules.length} onClick={() => bulkAction('delete', manageableSchedules.map(item => item.id))}>Hapus Semua</button></div></header>
             {!manageableSchedules.length && <div className="planner-manage-empty"><CalendarDays size={22} /><strong>Belum ada jadwal untuk dikelola</strong><p>Buat jadwal sekali atau berulang terlebih dahulu.</p><button type="button" onClick={() => setFormType('one_time')}>Buat jadwal pertama</button></div>}
             {manageableSchedules.map(schedule => {
