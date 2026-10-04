@@ -67,6 +67,25 @@ export function useOfficeData() {
         setData(current => ({ ...current, planner }));
         return planner;
     };
+    const loadPlannerGeneration = useCallback(async (scheduleIds) => {
+        const ids = [...new Set(scheduleIds)].filter(Boolean);
+        if (!ids.length) return;
+        const batches = [];
+        for (let index = 0; index < ids.length; index += 100) batches.push(ids.slice(index, index + 100));
+        const [contents, commands] = await Promise.all([
+            Promise.all(batches.map(batch => {
+                const query = new URLSearchParams();
+                batch.forEach(id => query.append('schedule_ids[]', id));
+                return request(`/office/api/content?${query}`);
+            })),
+            request('/office/api/commands'),
+        ]);
+        setData(current => ({
+            ...current,
+            content: [...current.content.filter(item => !ids.includes(item.schedule_id)), ...contents.flatMap(result => result.data)],
+            commands: commands.data,
+        }));
+    }, []);
     const createSchedule = async (payload) => {
         const schedule = await request('/office/api/content-schedules', { method: 'POST', body: JSON.stringify(payload) });
         await refresh();
@@ -100,5 +119,5 @@ export function useOfficeData() {
         const report = await request(`/office/api/analyst-reports/${id}/dismiss`, { method: 'POST', body: JSON.stringify({ plan_ids: actionIds }) });
         await refresh(); return report;
     };
-    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, createSchedule, analyzePlan, updateSchedule, deactivateSchedule, generateReport, approveReport, dismissReport, generateContent, reviseContent, updateContent, approveContent };
+    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, loadPlannerGeneration, createSchedule, analyzePlan, updateSchedule, deactivateSchedule, generateReport, approveReport, dismissReport, generateContent, reviseContent, updateContent, approveContent };
 }

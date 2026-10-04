@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { X, Edit2, CheckCircle2, RefreshCw, Wand2 } from 'lucide-react';
+import { X, Edit2, CheckCircle2, Wand2 } from 'lucide-react';
 import './content-review.css';
+import { contentPreview } from './plannerGeneration';
+import { GeneratedImage } from './PlannerGenerationCard';
 
-export function ContentReview({ contentItem, onClose, generateContent, reviseContent, updateContent, approveContent }) {
-    if (!contentItem) return null;
+export function ContentReview(props) {
+    return props.contentItem ? <ContentReviewBody {...props} /> : null;
+}
+
+function ContentReviewBody({ contentItem, onClose, reviseContent, updateContent, approveContent }) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [payload, setPayload] = useState({});
     const [revisePrompt, setRevisePrompt] = useState('');
     const [isRevising, setIsRevising] = useState(false);
-    const [isGenerating, setIsGenerating] = useState(false);
     const [preview, setPreview] = useState(null);
     const [error, setError] = useState(null);
 
@@ -24,17 +28,6 @@ export function ContentReview({ contentItem, onClose, generateContent, reviseCon
             setPayload({});
         }
     }, [contentItem.text]);
-
-    const handleGenerate = async () => {
-        setIsGenerating(true); setError(null);
-        try {
-            await generateContent(contentItem.id);
-        } catch (e) {
-            setError(e.message || 'Gagal generate content');
-        } finally {
-            setIsGenerating(false);
-        }
-    };
 
     const handleRevise = async (e) => {
         e.preventDefault();
@@ -79,21 +72,22 @@ export function ContentReview({ contentItem, onClose, generateContent, reviseCon
         }
     };
 
-    const imageUrl = contentItem.metadata?.generated_payload?.image_url || contentItem.metadata?.visual_asset?.url || contentItem.metadata?.image_url || contentItem.metadata?.media_url || payload.image_url || payload.visual_asset?.url;
-    const visualClass = contentItem.content_type === 'story' ? 'visual-preview story' : contentItem.content_type === 'article' ? 'visual-preview article' : 'visual-preview feed';
+    const actual = contentPreview(contentItem);
+    const outputType = contentItem.contentType || contentItem.content_type;
 
     const renderPayload = (data) => {
         if (!data) return null;
         return (
             <div className="content-payload">
-                {imageUrl ? <figure className={visualClass}><img src={imageUrl} alt="Visual konten" /><figcaption>Visual hasil worker</figcaption></figure> : <p className="visual-belum">{['generating', 'queued_for_generation'].includes(contentItem.status) ? 'Visual sedang dibuat' : 'Visual belum tersedia'}</p>}
+                {['feed', 'post', 'story'].includes(outputType) && <GeneratedImage key={`${contentItem.id}-${actual.imageUrl}`} src={actual.imageUrl} story={outputType === 'story'} />}
+                {outputType !== 'story' && actual.text && <p className="review-actual-text">{actual.text}</p>}
                 {data.title && <p><strong>Title:</strong> {data.title}</p>}
                 {data.hook && <p><strong>Hook:</strong> {data.hook}</p>}
-                {data.content && <p><strong>Content:</strong> {data.content}</p>}
-                {data.caption && <p><strong>Caption:</strong> {data.caption}</p>}
+                {data.content && !actual.text && <p><strong>Content:</strong> {data.content}</p>}
+                {data.caption && !actual.text && outputType !== 'story' && <p><strong>Caption:</strong> {data.caption}</p>}
                 {data.cta && <p><strong>CTA:</strong> {data.cta}</p>}
                 {data.hashtags && <p><strong>Hashtags:</strong> {data.hashtags.join(' ')}</p>}
-                {data.visual_brief ? <p><strong>Visual Brief:</strong> {data.visual_brief}</p> : <p className="visual-belum">Visual belum dibuat</p>}
+                {data.visual_brief && <p><strong>Visual Brief:</strong> {data.visual_brief}</p>}
                 {data.frames && data.frames.map(f => (
                     <div key={f.frame} className="story-frame">
                         <p><strong>Frame {f.frame}:</strong></p>
@@ -128,12 +122,7 @@ export function ContentReview({ contentItem, onClose, generateContent, reviseCon
                     {error && <p className="planner-form-error">{error}</p>}
 
                     {contentItem.status === 'draft' || contentItem.status === 'failed' ? (
-                        <div className="generate-prompt">
-                            <p>{contentItem.status === 'failed' ? 'Draft belum berhasil dibuat.' : 'Content draft belum digenerate.'}</p>
-                            <button className="primary-button" onClick={handleGenerate} disabled={isGenerating}>
-                                {isGenerating ? 'Generating...' : (contentItem.status === 'failed' ? 'Try again' : 'Generate Content')}
-                            </button>
-                        </div>
+                        <div className="generate-prompt"><p>Jalankan generation dari kartu Planner agar jenis output dan status worker tetap sesuai.</p></div>
                     ) : contentItem.status === 'generating' ? (
                         <p>Generating content...</p>
                     ) : (
@@ -181,7 +170,6 @@ export function ContentReview({ contentItem, onClose, generateContent, reviseCon
                                 ) : (
                                     <>
                                         {contentItem.status !== 'approved' && <button onClick={() => setIsEditing(true)}><Edit2 size={14}/> Edit</button>}
-                                        {contentItem.status !== 'approved' && <button onClick={handleGenerate}><RefreshCw size={14}/> Regenerate</button>}
                                         {contentItem.status !== 'approved' && <button className="primary-button" onClick={() => approveContent(contentItem.id)}><CheckCircle2 size={14}/> Approve</button>}
                                     </>
                                 )}

@@ -61,15 +61,25 @@ class LivingOfficeController extends Controller
     {
         $filter = $request->string('filter')->lower()->value();
         $query = OfficeContentItem::with('brand')->latest('generated_at');
+        if ($request->filled('schedule_id')) {
+            $query->where('schedule_id', $request->string('schedule_id')->value());
+        }
+        if ($request->has('schedule_ids')) {
+            $ids = $request->validate(['schedule_ids' => ['array', 'max:100'], 'schedule_ids.*' => ['uuid']])['schedule_ids'];
+            $query->whereIn('schedule_id', $ids);
+        }
         if (in_array($filter, ['article', 'instagram', 'threads'], true)) {
             $query->where('platform', $filter);
         }
-        $items = $query->limit(100)->get()->map(fn (OfficeContentItem $item) => [
-            'id' => $item->id, 'agentId' => $item->agent_id, 'platform' => $item->platform,
+        $items = $query->limit($request->has('schedule_ids') ? 500 : 100)->get()->map(fn (OfficeContentItem $item) => [
+            'id' => $item->id, 'schedule_id' => $item->schedule_id, 'agentId' => $item->agent_id, 'platform' => $item->platform,
             'contentType' => $item->content_type, 'title' => $item->title, 'text' => $item->text,
             'imageUrl' => $item->image_url, 'externalId' => $item->external_id,
             'publicUrl' => $item->public_url, 'status' => $item->status,
             'brand' => $item->brand ? ['id' => $item->brand->id, 'name' => $item->brand->name, 'slug' => $item->brand->slug] : null,
+            'metadata' => ['generation_requested_at' => $item->metadata['generation_requested_at'] ?? null],
+            'createdAt' => $item->created_at?->toIso8601String(),
+            'updatedAt' => $item->updated_at?->toIso8601String(),
             'generatedAt' => $item->generated_at?->toIso8601String(), 'publishedAt' => $item->published_at?->toIso8601String(),
         ]);
         return response()->json(['data' => $items, 'empty' => $items->isEmpty()]);
@@ -128,7 +138,8 @@ class LivingOfficeController extends Controller
             $query->where('agent_id', $request->string('agent_id'));
         }
         return response()->json(['data' => $query->limit(100)->get()->map(fn (OfficeCommand $command) => [
-            'id' => $command->id, 'agentId' => $command->agent_id, 'action' => $command->action,
+            'id' => $command->id, 'contentId' => $command->payload['content_id'] ?? null,
+            'agentId' => $command->agent_id, 'action' => $command->action,
             'status' => $command->status, 'error' => $command->error,
             'createdAt' => $command->created_at?->toIso8601String(), 'completedAt' => $command->completed_at?->toIso8601String(),
         ])]);
