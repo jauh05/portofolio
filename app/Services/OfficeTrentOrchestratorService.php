@@ -7,7 +7,6 @@ use App\Models\OfficeContentPlanItem;
 use App\Models\OfficeContentSchedule;
 use App\Models\OfficeContentItem;
 use App\Models\OfficeContentBrand;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\CarbonImmutable;
@@ -42,7 +41,11 @@ class OfficeTrentOrchestratorService
         $context = $this->gatherContext($brand);
 
         // 3. Propose Plan
-        $proposal = $this->proposePlan($message, $brand, $context);
+        $analysis = $this->proposePlan($message, $brand, $context);
+        if (!empty($analysis['clarifications'])) {
+            return ['status' => 'ambiguous', 'summary' => implode(' ', $analysis['clarifications']), 'items' => []];
+        }
+        $proposal = $analysis['plan'] ?? ['items' => []];
 
         if (empty($proposal['items']) || !is_array($proposal['items'])) {
             return [
@@ -52,17 +55,30 @@ class OfficeTrentOrchestratorService
             ];
         }
 
-        // Filter out unsupported platforms (like article)
         $validItems = [];
         $unsupportedCount = 0;
+        $duplicateCount = 0;
+        $unsupportedRecurring = false;
+        $seen = [];
         foreach ($proposal['items'] as $item) {
-            if (in_array(strtolower($item['platform'] ?? ''), ['article', 'blog', 'website'])) {
+            $platform = strtolower((string) ($item['platform'] ?? ''));
+            $type = strtolower((string) ($item['content_type'] ?? ''));
+            if (!in_array($platform . ':' . $type, ['instagram:feed', 'instagram:story', 'threads:thread', 'threads:threads'], true)) {
                 $unsupportedCount++;
                 continue;
             }
+            if (($item['schedule_type'] ?? '') !== 'one_time' || empty($item['scheduled_at'])) {
+                $unsupportedRecurring = true;
+                continue;
+            }
+            $signature = $platform.':'.$type.':'.mb_strtolower(trim((string) ($item['topic'] ?? ''))).':'.substr((string) $item['scheduled_at'], 0, 10);
+            if (isset($seen[$signature]) || $this->isDuplicate($item, $context)) {
+                $duplicateCount++;
+                continue;
+            }
+            $seen[$signature] = true;
 
-            // Provide sensible defaults for timing based on AI suggestion
-            $timingStr = $item['generation_timing'] ?? 'H-1';
+            $timingStr = $this->timingFor($item, $message);
             if ($timingStr === 'H-1') {
                  $item['generation_timing_enum'] = 'lead_time';
                  $item['generation_lead_minutes'] = 1440;
@@ -85,16 +101,14 @@ class OfficeTrentOrchestratorService
             $validItems[] = $item;
         }
 
+        if ($unsupportedRecurring) return ['status' => 'ambiguous', 'summary' => 'Untuk rencana berulang, tentukan tanggal dan waktu konten satu kali terlebih dahulu.', 'items' => []];
         if (empty($validItems)) {
-             return [
-                'status' => 'error',
-                'summary' => 'Permintaan Anda mengarah ke artikel/blog, tetapi Worker artikel belum tersedia.',
-                'items' => []
-            ];
+            $message = $duplicateCount ? 'Semua usulan sudah ada di jadwal aktif. Ubah topik atau tanggalnya.' : 'Format konten belum didukung. Worker artikel belum tersedia; gunakan Instagram Feed, Story, atau Threads.';
+            return ['status' => 'error', 'summary' => $message, 'items' => []];
         }
 
         // 4. Create Analyst Report to persist the proposal
-        $report = $this->persistProposal($validItems, $brand, $message);
+        [$report, $planItems] = $this->persistProposal($validItems, $brand, $message);
 
         $summary = "Saya menemukan {$context['active_schedules_count']} jadwal aktif.\n\nUsulan konten:\n";
 
@@ -116,8 +130,9 @@ class OfficeTrentOrchestratorService
         }
 
         if ($unsupportedCount > 0) {
-            $summary .= "\n(Ada {$unsupportedCount} usulan artikel yang saya lewati karena Worker artikel belum tersedia)\n";
+            $summary .= "\n({$unsupportedCount} usulan format yang belum didukung dilewati)\n";
         }
+        if ($duplicateCount > 0) $summary .= "\n({$duplicateCount} usulan duplikat dilewati)\n";
 
         $summary .= "\nPembuatan: Sesuai usulan per item\nPublikasi: Review\n\nApakah rencana ini dibuat?";
 
@@ -125,8 +140,9 @@ class OfficeTrentOrchestratorService
             'status' => 'needs_confirmation',
             'report_id' => $report->id,
             'summary' => $summary,
-            'items' => collect($validItems)->map(function($i) {
+            'items' => collect($validItems)->map(function($i, $index) use ($planItems) {
                 return [
+                    'plan_id' => $planItems[$index]->id,
                     'topic' => $i['topic'],
                     'platform' => $i['platform'],
                     'content_type' => $i['content_type'],
@@ -172,14 +188,18 @@ class OfficeTrentOrchestratorService
         return [
             'active_schedules_count' => $activeSchedules->count(),
             'active_topics' => $activeSchedules->pluck('topic')->filter()->values()->all(),
-            'recent_topics' => $recentContent->pluck('topic')->filter()->values()->all(),
+            'recent_topics' => $recentContent->pluck('title')->filter()->values()->all(),
+            'active_schedules' => $activeSchedules->map(fn ($schedule) => [
+                'platform' => $schedule->platform, 'content_type' => $schedule->content_type, 'schedule_type' => $schedule->schedule_type,
+                'topic' => $schedule->topic, 'date' => $schedule->scheduled_at?->toDateString(),
+            ])->all(),
         ];
     }
 
     private function proposePlan(string $message, OfficeContentBrand $brand, array $context): array
     {
         $brands = collect([$brand]);
-        $enrichedMessage = $message . "\n\nAvoid these existing topics: " . implode(', ', $context['active_topics']);
+        $enrichedMessage = $message . "\n\nAvoid these existing topics: " . implode(', ', array_merge($context['active_topics'], $context['recent_topics']));
         $enrichedMessage .= "\n\nIf the user doesn't specify time, date, or topics, generate sensible defaults instead of asking for clarification. Start dates should be tomorrow. Pick sensible topics for the brand. Generate daily content if frequency is not specified."
                           . "\nCRITICAL INSTRUCTION: You MUST predict a generation_timing field for each item string exact match: 'H-1' (default), 'H-2', 'now', or 'manual'.";
 
@@ -189,15 +209,40 @@ class OfficeTrentOrchestratorService
 
         $result = $this->plannerAi->analyze($enrichedMessage, $brands);
 
-        return $result['plan'] ?? ['items' => []];
+        return $result;
     }
 
-    private function persistProposal(array $items, OfficeContentBrand $brand, string $prompt): OfficeAnalystReport
+    private function timingFor(array $item, string $message): string
     {
+        if (preg_match('/\b(manual|h-?2|h-?1|now|immediate|sekarang)\b/i', $message, $matches)) {
+            return match (strtolower($matches[1])) {
+                'h-2', 'h2' => 'H-2', 'h-1', 'h1' => 'H-1', 'now', 'immediate', 'sekarang' => 'now', default => 'manual',
+            };
+        }
+        return match (strtolower(trim((string) ($item['generation_timing'] ?? 'h-1')))) {
+            'h-2', 'h2' => 'H-2', 'now', 'immediate' => 'now', 'manual' => 'manual', default => 'H-1',
+        };
+    }
+
+    private function isDuplicate(array $item, array $context): bool
+    {
+        $topic = mb_strtolower(trim((string) ($item['topic'] ?? '')));
+        $date = substr((string) $item['scheduled_at'], 0, 10);
+        if ($topic === '') return false;
+        foreach ($context['active_schedules'] as $existing) {
+            if (mb_strtolower(trim((string) $existing['topic'])) === $topic && $existing['platform'] === $item['platform']
+                && $existing['content_type'] === $item['content_type'] && ($existing['date'] === $date || $existing['schedule_type'] === 'recurring')) return true;
+        }
+        return false;
+    }
+
+    private function persistProposal(array $items, OfficeContentBrand $brand, string $prompt): array
+    {
+        return DB::transaction(function () use ($items, $brand, $prompt) {
         $report = OfficeAnalystReport::create([
             'report_date' => now('Asia/Jakarta')->toDateString(),
             'report_type' => 'manual',
-            'status' => 'approved', // Auto approve report itself to hold items
+            'status' => 'draft',
             'summary' => 'Proposal based on: ' . $prompt,
             'metadata' => [
                 'trent_proposal' => true,
@@ -207,8 +252,9 @@ class OfficeTrentOrchestratorService
 
         $batchId = Str::uuid()->toString();
 
+        $planItems = [];
         foreach ($items as $item) {
-            OfficeContentPlanItem::create([
+            $planItems[] = OfficeContentPlanItem::create([
                 'brand_id' => $brand->id,
                 'platform' => $item['platform'],
                 'content_type' => $item['content_type'],
@@ -231,6 +277,7 @@ class OfficeTrentOrchestratorService
         $report->metadata = array_merge($report->metadata ?? [], ['has_trent_items' => true]);
         $report->save();
 
-        return $report;
+        return [$report, $planItems];
+        });
     }
 }

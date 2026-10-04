@@ -220,8 +220,8 @@ class OfficeAnalystReportService
                     'next_run_at' => $plan->scheduled_at,
                     'timezone' => 'Asia/Jakarta',
                     'generation_mode' => $plan->generation_mode,
-                    'generation_timing' => $plan->metadata['generation_timing'] ?? 'lead_time',
-                    'generation_lead_minutes' => $plan->metadata['generation_lead_minutes'] ?? 1440,
+                    'generation_timing' => $plan->metadata['generation_timing'] ?? ($plan->generation_mode === 'manual' ? 'manual' : 'lead_time'),
+                    'generation_lead_minutes' => $plan->metadata['generation_lead_minutes'] ?? ($plan->generation_mode === 'manual' ? null : 1440),
                     'publishing_mode' => $plan->publishing_mode,
                     'metadata' => array_merge($plan->metadata ?? [], [
                         'source' => 'analyst',
@@ -260,13 +260,19 @@ class OfficeAnalystReportService
     {
         return DB::transaction(function () use ($report, $planIds) {
             $report = OfficeAnalystReport::whereKey($report->id)->lockForUpdate()->firstOrFail();
-            \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
-                        ->whereIn('id', $planIds)
-                        ->where('status', 'proposed')
-                        ->update(['status' => 'dismissed']);
+            $researchRunId = $report->metadata['research_run_id'] ?? null;
+            $query = \App\Models\OfficeContentPlanItem::whereIn('id', $planIds)->where('status', 'proposed');
+            $unresolvedQuery = \App\Models\OfficeContentPlanItem::where('status', 'proposed');
+            if ($researchRunId) {
+                $query->where('research_run_id', $researchRunId);
+                $unresolvedQuery->where('research_run_id', $researchRunId);
+            } else {
+                $query->where('metadata->analyst_report_id', $report->id);
+                $unresolvedQuery->where('metadata->analyst_report_id', $report->id);
+            }
+            $query->update(['status' => 'dismissed']);
 
-            $unresolved = \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
-                            ->where('status', 'proposed')->exists();
+            $unresolved = $unresolvedQuery->exists();
             if (!$unresolved) {
                 $report->update(['status' => 'reviewed']);
             }

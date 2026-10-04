@@ -6,7 +6,6 @@ use App\Services\OfficeTrentOrchestratorService;
 use App\Models\OfficeContentBrand;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class OfficeTrentController extends Controller
 {
@@ -16,12 +15,6 @@ class OfficeTrentController extends Controller
         if ($token === '') return false;
         $authorization = (string) $request->header('Authorization');
         $bridgeToken = (string) $request->header('X-Office-Bridge-Token');
-
-        Log::info('OfficeTrentController Auth Check', [
-            'expected' => $token,
-            'header_auth' => $authorization,
-            'header_x' => $bridgeToken
-        ]);
 
         return hash_equals('Bearer '.$token, $authorization) || hash_equals($token, $bridgeToken);
     }
@@ -33,8 +26,8 @@ class OfficeTrentController extends Controller
         }
 
         $data = $request->validate([
-            'message' => ['required', 'string', 'max:2000'],
-            'workspace_id' => ['nullable', 'string']
+            'message' => ['required', 'string', 'min:3', 'max:2000'],
+            'workspace_id' => ['nullable', 'uuid', 'exists:office_content_brands,id']
         ]);
 
         $workspaceId = $data['workspace_id'] ?? null;
