@@ -4,6 +4,7 @@ import { useGLTF } from '@react-three/drei';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import * as THREE from 'three';
 import TaskBubble from './TaskBubble';
+import { workerVisualVariant } from './full/visualProfiles';
 const V = new THREE.Vector3(), Q = new THREE.Quaternion();
 const modelUrl = import.meta.env.DEV && window.location.pathname.startsWith('/tests/visual/')
     ? '/public/models/living-office/casual-worker.glb' : '/models/living-office/casual-worker.glb';
@@ -22,9 +23,18 @@ function aim(bone, child, targetDirection) {
 export default function WorkerModel({ motion, worker, selected, onSelect, reduced, paused, showBubble=true, onHover }) {
     const gltf = useGLTF(modelUrl);
     const group = useRef(), bubble = useRef();
+    const visual = useMemo(() => workerVisualVariant(worker.id), [worker.id]);
     const rig = useMemo(() => {
         const model = clone(gltf.scene); const bones = [];
-        model.traverse(o => { if(o.isBone) bones.push(o); if(o.isMesh) {o.castShadow=true;o.receiveShadow=true; o.material=o.material.clone(); if(['Red_Dark','LightBlue'].includes(o.material.name)) o.material.color.set(worker.variant || '#2e90fa'); if(o.material.name==='LightBrown') o.material.color.set(worker.variant || '#42526b');} });
+        model.traverse(o => { if(o.isBone) bones.push(o); if(o.isMesh) {o.castShadow=true;o.receiveShadow=true; o.material=o.material.clone();
+            const name=o.material.name;
+            if(name==='Red_Dark')o.material.color.set(visual.pants);
+            if(name==='LightBlue')o.material.color.set(visual.shirt);
+            if(name==='LightBrown')o.material.color.set(visual.jacket?visual.pants:visual.shirt);
+            if(name==='Hair'||name==='Eyebrows')o.material.color.set(visual.hair);
+            if(name==='Skin')o.material.color.set(visual.skin);
+            if(name==='Skin_Darker')o.material.color.set(visual.skin).multiplyScalar(.83);
+        } });
         const mixer = new THREE.AnimationMixer(model);
         const idle = mixer.clipAction(gltf.animations.find(c=>c.name==='Idle_Neutral')); idle.play(); mixer.update(0); model.updateMatrixWorld(true);
         const neutral = snapshot(bones);
@@ -46,7 +56,7 @@ export default function WorkerModel({ motion, worker, selected, onSelect, reduce
         walkClip.tracks = walkClip.tracks.filter(t=>!/^Root\.position$/.test(t.name));
         const walk = mixer.clipAction(walkClip); walk.play(); walk.weight=0;
         return { model,bones,neutral,sitting,mixer,idle,walk,head:bone('Head'),torso:bone('Torso'),wrists:[bone('WristL'),bone('WristR')], locomotion:0 };
-    },[gltf,worker.id,worker.variant]);
+    },[gltf,worker.id,visual]);
     useEffect(()=>()=>{rig.mixer.stopAllAction();rig.mixer.uncacheRoot(rig.model);rig.model.traverse(o=>{if(o.isMesh)o.material.dispose();});},[rig]);
     useFrame((state,dt)=>{
         const m=motion.current; if(!group.current)return;
@@ -57,18 +67,30 @@ export default function WorkerModel({ motion, worker, selected, onSelect, reduce
         }
         rig.mixer.update(paused||reduced?0:Math.min(dt,.05));
         if(m.seated>0) rig.bones.forEach((b,i)=>{b.position.lerp(rig.sitting[i].p,m.seated);b.quaternion.slerp(rig.sitting[i].q,m.seated);});
-        if(worker.working&&!worker.stale&&!worker.error&&m.seated>.99&&!reduced&&!paused){
-            const phase=state.clock.elapsedTime+(worker.id.length*1.713),mode=modeFor(worker.id);
+        if(m.seated>.99&&!reduced&&!paused){
+            const phase=state.clock.elapsedTime+(visual.hairStyle*3.7),mode=modeFor(worker.id);
+            const active=worker.working&&!worker.stale&&!worker.error;
+            const typing=active&&Math.sin(phase*.31)<.74;
             const cadence=mode==='write'?6.1:mode==='design'?4.8:mode==='monitor'?2.1:3.2;
-            rig.wrists.forEach((b,i)=>{const pulse=Math.sin(phase*cadence+i*2.3);Q.setFromAxisAngle(V.set(1,0,0),pulse*(mode==='monitor'?.012:.027));b.quaternion.multiply(Q);});
-            rig.head.rotation.y+=Math.sin(phase*(mode==='monitor'?.62:.35))*(mode==='monitor'?.09:.045);
+            rig.wrists.forEach((b,i)=>{const pulse=Math.sin(phase*cadence+i*2.3);Q.setFromAxisAngle(V.set(1,0,0),pulse*(typing?(mode==='monitor'?.012:.027):.003));b.quaternion.multiply(Q);});
+            rig.head.rotation.y+=Math.sin(phase*(active?.28:.16))*(active?.12:.19);
             rig.head.rotation.x+=Math.sin(phase*.71)*.025;
             rig.torso.rotation.z+=Math.sin(phase*.8)*.012;
+        }else if(m.phase==='idle'&&!reduced&&!paused){
+            const phase=state.clock.elapsedTime+visual.hairStyle*2;
+            rig.head.rotation.y+=Math.sin(phase*.24)*.14;
+            rig.torso.rotation.z+=Math.sin(phase*.65)*.025;
         }
         group.current.updateWorldMatrix(true,true);rig.head.getWorldPosition(V);group.current.worldToLocal(V);bubble.current.position.copy(V);bubble.current.position.y+=.85;
     });
     return <group ref={group} userData={{officeWorkerId:worker.id}} onPointerOver={e=>{e.stopPropagation();onHover?.(true);}} onPointerOut={()=>onHover?.(false)} onClick={e=>{e.stopPropagation();onSelect();}}>
         <primitive object={rig.model} />
+        <group position={[0,1.79,0]}>
+            {visual.hairStyle===1&&<mesh position={[0,.085,-.06]}><sphereGeometry args={[.105,12,8]}/><meshStandardMaterial color={visual.hair}/></mesh>}
+            {visual.hairStyle===2&&<mesh position={[0,.06,0]}><cylinderGeometry args={[.12,.13,.07,12]}/><meshStandardMaterial color={visual.hair}/></mesh>}
+            {visual.hairStyle===3&&<mesh position={[0,.09,-.07]}><sphereGeometry args={[.065,10,8]}/><meshStandardMaterial color={visual.hair}/></mesh>}
+            {visual.glasses&&<group position={[0,-.075,.153]}>{[-.052,.052].map(x=><mesh key={x} position={[x,0,0]}><torusGeometry args={[.041,.008,5,12]}/><meshStandardMaterial color="#1d344f"/></mesh>)}<mesh><boxGeometry args={[.04,.008,.01]}/><meshStandardMaterial color="#1d344f"/></mesh></group>}
+        </group>
         {selected&&<mesh rotation={[-Math.PI/2,0,0]} position={[0,.08,0]}><ringGeometry args={[.39,.44,48]} /><meshBasicMaterial color="#1570ef" transparent opacity={.85} /></mesh>}
         <group ref={bubble}><TaskBubble worker={worker} onSelect={onSelect} showName={selected} showTask={showBubble}/></group>
     </group>;

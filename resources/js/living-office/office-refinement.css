@@ -1,0 +1,98 @@
+/* Dense control surfaces. Scene styling remains independent of panel state. */
+.office-redesign .content-view,.office-redesign .analyst-view{padding:clamp(16px,2vw,28px)}
+.office-redesign .view-heading{margin-bottom:16px}
+.office-redesign .view-heading h1{font-size:clamp(23px,2vw,30px)}
+.office-redesign .analyst-view{gap:12px}
+.office-redesign .analyst-hero{display:grid;grid-template-columns:minmax(0,.85fr) minmax(510px,1.15fr);align-items:center;gap:14px;padding:13px 16px;border-radius:15px}
+.office-redesign .analyst-intro{display:block;padding:0}
+.office-redesign .analyst-title-line{display:flex;align-items:flex-start;flex-direction:column;gap:6px}
+.office-redesign .analyst-intro h1{margin:4px 0 2px;font-size:clamp(19px,1.6vw,25px)}
+.office-redesign .analyst-intro>p,.office-redesign .analyst-title-line p{font-size:11px}
+.office-redesign .analyst-intro-meta{margin:0;gap:6px}
+.office-redesign .analyst-intro-meta span{padding:5px 8px;font-size:9px;white-space:nowrap}
+.office-redesign .analyst-runner{display:flex;align-items:end;gap:10px;padding:0;border:0;background:transparent}
+.office-redesign .analyst-runner-fields{display:flex;flex:1;gap:10px}
+.office-redesign .analyst-runner-fields label{flex:1;min-width:0;font-size:9px}
+.office-redesign .analyst-runner-fields label:last-child:nth-child(3){grid-column:auto}
+.office-redesign .analyst-runner select{min-height:34px;padding:6px 9px}
+.office-redesign .analyst-runner .primary-button{width:auto;min-width:120px;min-height:34px;padding:7px 11px!important}
+
+.office-redesign .panel-mode-control{display:inline-flex;gap:3px;width:max-content;max-width:100%;padding:3px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2)}
+.office-redesign .panel-mode-control button{min-height:30px;padding:4px 10px;border:0;border-radius:7px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;cursor:pointer}
+.office-redesign .panel-mode-control button[aria-pressed="true"]{background:var(--surface);color:var(--accent-strong);box-shadow:0 2px 7px #152a4a18}
+.office-redesign .operations-view>.panel-mode-control{margin:0 0 12px}
+.office-redesign .kanban-mode-compact .kanban-board{min-width:890px;grid-template-columns:repeat(5,minmax(170px,1fr));gap:7px}
+.office-redesign .kanban-mode-compact .kanban-column{min-height:250px}
+.office-redesign .kanban-mode-compact .kanban-cards{gap:5px;padding:6px;min-height:210px;max-height:calc(100vh - 260px)}
+.office-redesign .kanban-mode-compact .kanban-card{gap:4px;padding:8px}
+.office-redesign .kanban-mode-compact .kanban-card dl div:nth-child(n+2){display:none}
+.office-redesign .kanban-mode-compact .kanban-card h3{font-size:11px}
+.office-redesign .kanban-mode-expanded .kanban-board{min-width:1550px;grid-template-columns:repeat(5,minmax(300px,1fr))}
+.office-redesign .kanban-mode-expanded .kanban-cards{max-height:none;min-height:520px}
+
+.office-redesign .operations-activity{padding-top:16px}
+.office-redesign .operations-activity .operations-heading{margin-bottom:9px;padding-bottom:10px}
+.office-redesign .operations-activity .operations-heading h1{margin:3px 0;font-size:24px}
+.office-redesign .operations-activity .operations-heading p{margin:0}
+.office-redesign .operations-activity .operations-heading-badge{padding:8px 11px;min-width:116px}
+.office-redesign .operations-activity .operations-heading-badge strong{font-size:17px}
+.office-redesign .activity-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1050px;margin-bottom:8px}
+.office-redesign .activity-controls label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;font-weight:700}
+.office-redesign .activity-controls select{min-height:34px;padding:5px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font:inherit}
+.office-redesign .activity-controls small{color:var(--muted)}
+.office-redesign .activity-card-list{display:grid;gap:0;max-width:1050px;overflow:hidden;border:1px solid var(--border);border-radius:13px;background:var(--surface)}
+.office-redesign .activity-card.activity-row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:62px;padding:9px 13px;border:0;border-bottom:1px solid var(--border);border-radius:0;background:var(--surface);box-shadow:none}
+.office-redesign .activity-card.activity-row:last-child{border-bottom:0}
+.office-redesign .activity-row .activity-card-icon{width:28px;height:28px}
+.office-redesign .activity-row .activity-card-icon svg{width:15px}
+.office-redesign .activity-row .activity-card-meta{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:5px 11px}
+.office-redesign .activity-row .activity-card-meta time{order:0;min-width:43px;color:var(--muted);font-size:10px}
+.office-redesign .activity-row .activity-card-meta strong{order:1;color:var(--text);font-size:11px}
+.office-redesign .activity-row .activity-card-meta span{order:2;color:var(--muted);font-size:10px;text-transform:none}
+.office-redesign .activity-row p{margin:4px 0 0;color:var(--text);font-size:11px;line-height:1.4}
+.office-redesign .activity-status{padding:4px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent-strong);font-size:9px;font-weight:800;text-transform:uppercase;white-space:nowrap}
+.office-redesign .activity-status.is-failed{background:#fff0f2;color:#a72246}
+.office-redesign .activity-row.is-warning{box-shadow:inset 3px 0 #d64967}
+.office-redesign .activity-more{display:block;margin:10px 0 0;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--accent-strong);font-weight:700;cursor:pointer}
+
+.office-redesign .api-status-note{margin-bottom:12px;padding:10px 12px}
+.office-redesign .api-readiness-summary{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.office-redesign .api-readiness-summary span{display:flex;gap:8px;padding:8px 11px;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--muted);font-size:10px}
+.office-redesign .api-readiness-summary b{color:var(--text)}
+.office-redesign .api-channel-grid{gap:10px}
+.office-redesign .api-channel-card{min-height:0;padding:14px;border-radius:13px}
+.office-redesign .api-channel-top{align-items:center;margin-bottom:7px}
+.office-redesign .api-channel-icon{width:36px;height:36px;border-radius:9px}
+.office-redesign .api-channel-card h2{font-size:17px}
+.office-redesign .api-readiness-rows{display:grid;gap:0;margin:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.office-redesign .api-readiness-rows div{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.office-redesign .api-readiness-rows div:last-child{border:0}
+.office-redesign .api-readiness-rows dt,.office-redesign .api-readiness-rows dd{margin:0;font-size:10px}
+.office-redesign .api-readiness-rows dt{color:var(--muted)}
+.office-redesign .api-readiness-rows dd{color:var(--text);font-weight:800;text-align:right}
+.office-redesign .readiness-tag{padding:5px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent-strong);font-size:9px;font-weight:800}
+.office-redesign .readiness-tag.ready{background:#e1f7ec;color:#126d48}
+.office-redesign .readiness-tag.error{background:#fff0f2;color:#a72246}
+.office-redesign .api-channel-capabilities{gap:5px;margin:0 0 12px;padding:9px}
+.office-redesign .api-channel-capabilities>div{font-size:10px}
+
+.office-redesign .planner-manage{min-height:0;gap:9px;padding:14px}
+.office-redesign .planner-manage>header{gap:12px;padding-bottom:10px}
+.office-redesign .planner-manage>header>.planner-actions{flex:1 1 460px;gap:5px}
+.office-redesign .planner-manage>header .panel-mode-control{margin-top:9px}
+.office-redesign .planner-manage>article{gap:8px;padding:10px}
+.office-redesign .planner-row-copy{min-width:0}
+.office-redesign .planner-row-copy p{margin:3px 0}
+.office-redesign .planner-mode-compact>article{grid-template-columns:18px minmax(0,1fr) auto;align-items:center;padding:8px 10px}
+.office-redesign .planner-mode-compact .planner-row-copy small{display:none}
+.office-redesign .planner-compact-actions{display:flex;align-items:center;gap:5px}
+.office-redesign .planner-compact-actions>button,.office-redesign .planner-row-menu summary{padding:7px 9px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--accent-strong);font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+.office-redesign .planner-row-menu{position:relative}
+.office-redesign .planner-row-menu[open]>.planner-actions{position:absolute;right:0;z-index:12;display:grid;min-width:145px;gap:4px;padding:7px;border:1px solid var(--border);border-radius:9px;background:var(--surface);box-shadow:var(--shadow)}
+.office-redesign .planner-mode-expanded>article{grid-template-columns:18px minmax(0,1fr) auto;align-items:center}
+.office-redesign .planner-mode-expanded>article>.planner-actions{grid-column:auto}
+
+@media(max-width:1050px){.office-redesign .analyst-hero{grid-template-columns:1fr}.office-redesign .analyst-title-line{flex-direction:row;align-items:center;justify-content:space-between}}
+@media(max-width:900px){.office-redesign .analyst-title-line{align-items:flex-start;flex-direction:column;gap:8px}.office-redesign .planner-mode-expanded>article{grid-template-columns:18px minmax(0,1fr)}.office-redesign .planner-mode-expanded>article>.planner-actions{grid-column:2}}
+@media(max-width:600px){.office-redesign .analyst-runner{align-items:stretch;flex-direction:column}.office-redesign .analyst-runner-fields{flex-direction:column}.office-redesign .analyst-intro-meta{flex-wrap:wrap}.office-redesign .activity-card.activity-row{grid-template-columns:24px minmax(0,1fr);padding:8px}.office-redesign .activity-status{grid-column:2;justify-self:start}.office-redesign .planner-mode-compact>article{grid-template-columns:18px minmax(0,1fr)}.office-redesign .planner-compact-actions{grid-column:2;justify-self:start}.office-redesign .api-readiness-summary span{flex:1 1 130px;justify-content:space-between}}
+@media(prefers-reduced-motion:reduce){.office-redesign .panel-mode-control button,.office-redesign .activity-more{transition:none}}

@@ -1,6 +1,15 @@
 import { canonicalRooms, stations, stationById, roomById, obstacles, hashId, allocateStations } from './layout.js';
 const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 export const BODY_RADIUS=.24;
+export const MAX_AMBIENT_WALKERS=2;
+export function ambientDestination(id){
+  return ['recreation-1','pantry-1','recreation-2','pantry-2'][hashId(id)%4];
+}
+export function ambientEligible(m,elapsed,reduced=false){
+  const w=m.worker;
+  return !reduced&&w?.available&&!w.stale&&!w.error&&!['error','warning'].includes(w.status)&&!w.working&&!w.meeting&&!w.resting&&
+    m.phase==='seated'&&m.station===m.home&&m.target===m.home&&elapsed>=m.nextRoam;
+}
 export function makeGraph(){
   const nodes=new Map(),edges=new Map();
   const add=(id,p,kind='room')=>{nodes.set(id,{id,p,kind});edges.set(id,[]);};
@@ -53,7 +62,7 @@ export function syncWorld(world,workers){
   for(const [id] of world.motions)if(!valid.has(id)){world.motions.delete(id);for(const d of world.doors.values()){d.queue=d.queue.filter(v=>v!==id);d.users.delete(id);if(d.owner===id)d.owner=null;}}
   for(const w of workers){const home=world.assignments.get(w.id);if(!home)continue;
     let m=world.motions.get(w.id);
-    if(!m){const s=stationById[home];m={id:w.id,x:s.seat[0],z:s.seat[1],yaw:s.yaw,seated:1,phase:'seated',anchor:home,station:home,target:home,home,route:[],index:0,moving:false,nextRoam:world.elapsed+420+hashId(w.id)%360,returnAt:0,pending:null,blocked:0};world.motions.set(w.id,m);}
+    if(!m){const s=stationById[home];m={id:w.id,x:s.seat[0],z:s.seat[1],yaw:s.yaw,seated:1,phase:'seated',anchor:home,station:home,target:home,home,route:[],index:0,moving:false,nextRoam:world.elapsed+6+hashId(w.id)%30,returnAt:0,pending:null,blocked:0};world.motions.set(w.id,m);}
     m.worker=w;m.home=home;
   }
   const claimed=new Set([...world.motions.values()].map(m=>m.target));
@@ -68,7 +77,7 @@ export function syncWorld(world,workers){
   }
 }
 export function requestDestination(world,id,destination,reason='preview'){
-  const m=world.motions.get(id),station=stationById[destination];if(!m||!station||!m.worker.available)return false;
+  const m=world.motions.get(id),station=stationById[destination];if(!m||!station||(!m.worker.available&&reason!=='return'))return false;
   if([...world.motions.values()].some(other=>other.id!==id&&other.target===destination))return false;
   if(m.target===destination&&['seated','idle'].includes(m.phase))return true;
   if(['sitting','turning-seat'].includes(m.phase)){m.deferred={destination,reason};return true;}
@@ -82,14 +91,20 @@ const toward=(a,b,d)=>a+Math.sign(b-a)*Math.min(Math.abs(b-a),d);
 export function stepWorld(world,dt,{reduced=false,ambience=true}={}){
   dt=Math.min(.05,Math.max(0,dt));world.elapsed+=dt;
   const motions=[...world.motions.values()].sort((a,b)=>a.id.localeCompare(b.id));
-  let roaming=motions.some(m=>(m.reason==='ambience'||m.reason==='return')&&m.phase!=='seated');
-  for(const m of motions){m.moving=false;if(!m.worker.available)continue;
+  let roaming=motions.filter(m=>(m.reason==='ambience'||m.reason==='return')&&m.phase!=='seated').length;
+  for(const m of motions){m.moving=false;
+    if(!m.worker.available){
+      if(m.target!==m.home&&(m.reason==='ambience'||m.reason==='return'))requestDestination(world,m.id,m.home,'return');
+      if(m.reason!=='return')continue;
+    }
     if(m.deferred&&['seated','idle'].includes(m.phase)){const next=m.deferred;m.deferred=null;requestDestination(world,m.id,next.destination,next.reason);}
     if(m.worker.working&&m.target!==m.home)requestDestination(world,m.id,m.home,'domain');
     if(m.returnAt&&world.elapsed>=m.returnAt)requestDestination(world,m.id,m.home,'return');
-    if(ambience&&!reduced&&!roaming&&!m.worker.stale&&!m.worker.error&&!m.worker.working&&!m.worker.meeting&&!m.worker.resting&&m.phase==='seated'&&world.elapsed>m.nextRoam){
-      const choice=['recreation-1','pantry-1','recreation-2'][hashId(m.id)%3];if(requestDestination(world,m.id,choice,'ambience'))roaming=true;
-      m.nextRoam=world.elapsed+600+hashId(m.id)%360;
+    if(ambience&&roaming<MAX_AMBIENT_WALKERS&&ambientEligible(m,world.elapsed,reduced)){
+      if(requestDestination(world,m.id,ambientDestination(m.id),'ambience')){
+        roaming++;
+        m.nextRoam=world.elapsed+110+hashId(`${m.id}:cooldown`)%100;
+      }
     }
     if(reduced&&m.reason==='ambience'&&m.target!==m.home)requestDestination(world,m.id,m.home,'return');
     if(m.phase==='standing'){

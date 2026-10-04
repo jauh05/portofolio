@@ -49,6 +49,8 @@ export default function Building({workers=[],world,selectedId,reduced=false}){
  {ambientZones.map(z=><group key={z.id}><Block position={[z.x+z.width/2,.03,z.z+z.depth/2]} size={[z.width,.04,z.depth]} color={p.white}/><Plant position={[z.x+z.width-.6,0,z.z+z.depth-.5]}/></group>)}
  <Sofa x={-13} z={17.4}/><Screen x={-13} z={16.0} width={3.4}/><Block position={[-13,.65,16]} size={[.2,1.3,.2]} color={p.ink}/><Block position={[-13,.4,16.35]} size={[2,.13,.55]} color="#d3bb96"/>
  <Block position={[-1, .55,17.6]} size={[6,1.1,.65]} color={p.line}/><Block position={[-1,1.14,17.6]} size={[6,.08,.75]} color="#d3bb96"/><Block position={[-2.6,1.5,17.6]} size={[.7,.65,.55]} color={p.ink}/><Block position={[1.6,1,17.6]} size={[.7,2,.7]} color={p.white}/>
+ {[[-2.1,16.9],[-.5,16.9],[1,16.9]].map(([x,z])=><group key={x}><Block position={[x,.52,z]} size={[.48,.07,.45]} color={p.blueDark}/><Block position={[x,.27,z]} size={[.07,.5,.07]} color={p.ink}/><mesh position={[x,1.22,17.15]}><cylinderGeometry args={[.09,.075,.16,12]}/><meshStandardMaterial color={p.white}/></mesh></group>)}
+ <Block position={[-2.6,1.51,17.87]} size={[.48,.17,.1]} color={p.blue}/>
  <Block position={[11,.65,17.4]} size={[6,1.3,.9]} color={p.blue}/><Block position={[11,1.34,17.4]} size={[6.3,.08,1]} color={p.white}/>
  </StaticBatch>
  {stations.filter(s=>s.kind==='desk').map(s=><group key={`screen-${s.id}`} position={[s.seat[0],0,s.seat[1]]} rotation={[0,s.yaw-Math.PI,0]}><group position={[0,0,-.05]}><WorkstationScreen worker={stationWorkers.get(s.id)} stationId={s.id} roomId={s.roomId} selected={stationWorkers.get(s.id)?.id===selectedId} reduced={reduced}/></group></group>)}

@@ -25,4 +25,5 @@ Thumbs.db
 *cPanel*
 *_files
 *.html
+!tests/visual/office-panels.html
 *.png [0-9][0-9]*
