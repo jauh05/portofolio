@@ -36,7 +36,7 @@ class OfficeContentPlannerAiService
             .'{"type":"schedule_plan","items":[],"clarifications":[]}. '
             .'Today is '.now('Asia/Jakarta')->toDateString().' in Asia/Jakarta. '
             .'Each item needs schedule_type (one_time or recurring), brand_slug, platform, content_type, topic, timezone, and time in HH:MM. '
-            .'One-time requires scheduled_at as ISO-8601. Recurring requires frequency (daily, weekly, monthly), weekdays as English weekday names when weekly, and starts_at as ISO-8601 date. '
+            .'One-time requires scheduled_at as ISO-8601. Recurring requires frequency (daily, weekly, monthly), weekdays as English weekday names when weekly, and starts_at as ISO-8601 date. Include generation_timing if requested. '
             .'If any requested detail is ambiguous, put a concise message in clarifications instead of guessing. '
             .'Available brands: '.json_encode($brandList, JSON_THROW_ON_ERROR);
     }
@@ -87,7 +87,7 @@ class OfficeContentPlannerAiService
         $base = [
             'name' => $topic !== '' ? $topic : ucfirst($contentType).' for '.$brand->name,
             'brand_id' => $brand->id, 'schedule_type' => $type, 'platform' => $platform, 'content_type' => $contentType,
-            'topic' => $topic ?: null, 'timezone' => $timezone, 'generation_mode' => 'manual', 'publishing_mode' => 'review',
+            'topic' => $topic ?: null, 'timezone' => $timezone, 'generation_mode' => 'manual', 'publishing_mode' => 'review', 'generation_timing' => $item['generation_timing'] ?? null,
         ];
         if ($type === 'one_time') {
             try {

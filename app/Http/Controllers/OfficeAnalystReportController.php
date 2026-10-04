@@ -50,7 +50,11 @@ class OfficeAnalystReportController extends Controller
     private function payload(OfficeAnalystReport $report): array
     {
         $researchRunId = $report->metadata['research_run_id'] ?? null;
-        $planItems = $researchRunId ? \App\Models\OfficeContentPlanItem::with('brand')->where('research_run_id', $researchRunId)->orderBy('scheduled_at')->get() : collect();
+        if ($researchRunId) {
+            $planItems = \App\Models\OfficeContentPlanItem::with('brand')->where('research_run_id', $researchRunId)->orderBy('scheduled_at')->get();
+        } else {
+            $planItems = \App\Models\OfficeContentPlanItem::with('brand')->where('metadata->analyst_report_id', $report->id)->orderBy('scheduled_at')->get();
+        }
 
         return ['id' => $report->id, 'reportDate' => $report->report_date?->toDateString(), 'reportType' => $report->report_type,
             'status' => $report->status, 'summary' => $report->summary, 'findings' => $report->findings ?? [], 'conclusion' => $report->conclusion,

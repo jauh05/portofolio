@@ -11,4 +11,5 @@ Route::prefix('office')->group(function () {
     Route::post('/events', [OfficeBridgeController::class, 'ingest']);
     Route::post('/commands/claim', [OfficeBridgeController::class, 'claim']);
     Route::patch('/commands/{command}', [OfficeBridgeController::class, 'updateCommand']);
+    Route::post('/trent/intent', [\App\Http\Controllers\OfficeTrentController::class, 'intent']);
 });

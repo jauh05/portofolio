@@ -66,7 +66,7 @@ class OfficeAnalystReportService
         $filters = $report->metadata['filters'] ?? [];
         [$start, $end] = $this->range($type, $filters);
         $context = $this->collect($start, $end, $filters);
-        
+
         $body = $this->factualReport($context, $start, $end, $type);
         $analysisMode = 'fallback_internal';
         try {
@@ -93,11 +93,11 @@ class OfficeAnalystReportService
             'recommendations' => $body['recommendations'],
             'next_actions' => [], // Plan items handle actions now
             'metadata' => array_merge($report->metadata ?? [], [
-                'source' => 'agent_reach', 
-                'analysis_mode' => $analysisMode, 
-                'range_start' => $start->toIso8601String(), 
-                'range_end' => $end->toIso8601String(), 
-                'metrics' => $context['metrics'], 
+                'source' => 'agent_reach',
+                'analysis_mode' => $analysisMode,
+                'range_start' => $start->toIso8601String(),
+                'range_end' => $end->toIso8601String(),
+                'metrics' => $context['metrics'],
                 'performance_available' => false,
                 'research_run_id' => $run->id,
                 'source_count' => is_array($run->sources) ? count($run->sources) : 0,
@@ -197,11 +197,16 @@ class OfficeAnalystReportService
     {
         return DB::transaction(function () use ($report, $planIds) {
             $report = OfficeAnalystReport::whereKey($report->id)->lockForUpdate()->firstOrFail();
-            $plans = \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
-                        ->whereIn('id', $planIds)
-                        ->where('status', 'proposed')
-                        ->get();
-            
+            $researchRunId = $report->metadata['research_run_id'] ?? null;
+
+            $query = \App\Models\OfficeContentPlanItem::whereIn('id', $planIds)->where('status', 'proposed');
+            if ($researchRunId) {
+                $query->where('research_run_id', $researchRunId);
+            } else {
+                $query->where('metadata->analyst_report_id', $report->id);
+            }
+            $plans = $query->get();
+
             foreach ($plans as $plan) {
                 $schedule = \App\Models\OfficeContentSchedule::create([
                     'brand_id' => $plan->brand_id,
@@ -215,6 +220,8 @@ class OfficeAnalystReportService
                     'next_run_at' => $plan->scheduled_at,
                     'timezone' => 'Asia/Jakarta',
                     'generation_mode' => $plan->generation_mode,
+                    'generation_timing' => $plan->metadata['generation_timing'] ?? 'lead_time',
+                    'generation_lead_minutes' => $plan->metadata['generation_lead_minutes'] ?? 1440,
                     'publishing_mode' => $plan->publishing_mode,
                     'metadata' => array_merge($plan->metadata ?? [], [
                         'source' => 'analyst',
@@ -223,9 +230,10 @@ class OfficeAnalystReportService
                         'research_run_id' => $plan->research_run_id,
                     ]),
                 ]);
+
                 $plan->update(['status' => 'approved', 'schedule_id' => $schedule->id]);
-                
-                if ($plan->generation_mode === 'automatic') {
+
+                if ($plan->generation_mode === 'automatic' && $schedule->generation_timing === 'immediate') {
                     // Trigger draft and generator immediately
                     $generator = app(\App\Services\OfficeContentGenerator::class);
                     $draft = $generator->ensureDraft($schedule);
@@ -233,10 +241,15 @@ class OfficeAnalystReportService
                     app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchGeneration($draft);
                 }
             }
-            
-            $unresolved = \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
-                            ->where('status', 'proposed')->exists();
-            if (!$unresolved) {
+
+            $unresolvedQuery = \App\Models\OfficeContentPlanItem::where('status', 'proposed');
+            if ($researchRunId) {
+                $unresolvedQuery->where('research_run_id', $researchRunId);
+            } else {
+                $unresolvedQuery->where('metadata->analyst_report_id', $report->id);
+            }
+
+            if (!$unresolvedQuery->exists()) {
                 $report->update(['status' => 'reviewed']);
             }
             return $report->fresh();
@@ -251,7 +264,7 @@ class OfficeAnalystReportService
                         ->whereIn('id', $planIds)
                         ->where('status', 'proposed')
                         ->update(['status' => 'dismissed']);
-            
+
             $unresolved = \App\Models\OfficeContentPlanItem::where('research_run_id', $report->metadata['research_run_id'] ?? '')
                             ->where('status', 'proposed')->exists();
             if (!$unresolved) {
