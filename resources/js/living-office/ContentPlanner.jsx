@@ -183,11 +183,11 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
     const generateMonth = () => {
         if (!window.confirm(`Generate konten untuk ${monthTitle}?`)) return;
         const candidates = manageableSchedules.filter(item => item.isActive && (item.scheduleType === 'recurring' || (item.scheduledAt && item.scheduledAt.slice(0, 10) >= monthRange.start && item.scheduledAt.slice(0, 10) <= monthRange.end)));
-        bulkGenerate(candidates, `Generate ${monthTitle}`);
+        postJson('/office/api/content-schedules/generate-month', { start: monthRange.start, end: monthRange.end, brand_id: domainData?.brands?.[0]?.id || null }).then(res => setNotice(`Generate ${monthTitle}: ${res.summary?.generated || 0} berhasil, ${res.summary?.skipped || 0} dilewati, ${res.summary?.failed || 0} gagal.`)).catch(err => setNotice(`Generate ${monthTitle} gagal: ${err.message}`));
     };
     const generateAllActive = () => {
         if (!window.confirm('Generate semua schedule aktif yang eligible? Maksimal 100 item.')) return;
-        bulkGenerate(manageableSchedules.filter(item => item.isActive), 'Generate Semua Aktif');
+        postJson('/office/api/content-schedules/generate-all-active', {}).then(res => setNotice(`Generate Semua Aktif: ${res.summary?.generated || 0} berhasil, ${res.summary?.skipped || 0} dilewati, ${res.summary?.failed || 0} gagal.`)).catch(err => setNotice(`Generate Semua Aktif gagal: ${err.message}`));
     };
     const updateSchedule = async (schedule, data) => {
         const response = await fetch(`/office/api/content-schedules/${schedule.id}`, { method: 'PATCH', headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf() }, body: JSON.stringify(data) });
