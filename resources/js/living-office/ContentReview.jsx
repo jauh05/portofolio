@@ -115,7 +115,7 @@ function ContentReviewBody({ contentItem, onClose, reviseContent, updateContent,
 
                 <div className="review-body">
                     <div className="review-meta">
-                        <span>Status: <strong>{contentItem.status}</strong></span>
+                        <span>Status: <strong>{contentItem.status === 'approved' ? 'Disetujui • Menunggu Publikasi' : contentItem.status}</strong></span>
                         <span>Date: {contentItem.metadata?.scheduled_at ? new Date(contentItem.metadata.scheduled_at).toLocaleString() : 'N/A'}</span>
                     </div>
 
@@ -170,7 +170,7 @@ function ContentReviewBody({ contentItem, onClose, reviseContent, updateContent,
                                 ) : (
                                     <>
                                         {contentItem.status !== 'approved' && <button onClick={() => setIsEditing(true)}><Edit2 size={14}/> Edit</button>}
-                                        {contentItem.status !== 'approved' && <button className="primary-button" onClick={() => approveContent(contentItem.id)}><CheckCircle2 size={14}/> Approve</button>}
+                                        {contentItem.status !== 'approved' && <button className="primary-button" onClick={() => approveContent(contentItem.id)}><CheckCircle2 size={14}/> Setujui</button>}
                                     </>
                                 )}
                             </div>

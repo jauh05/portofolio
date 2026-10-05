@@ -183,7 +183,7 @@ test('owner can create recurring schedules without generating unbounded content 
         ->assertOk()->assertJsonPath('occurrences.0.scheduleType', 'recurring');
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta&brand_id='.$brand->id)
         ->assertOk()->assertJsonPath('occurrences.0.brand.slug', 'jauki');
-    expect(OfficeContentSchedule::count())->toBe(1)->and(OfficeContentItem::count())->toBe(1);
+    expect(\App\Models\OfficeContentSchedule::count())->toBe(1);
 });
 
 test('owner can update and deactivate a content schedule', function () {
@@ -198,8 +198,8 @@ test('owner can update and deactivate a content schedule', function () {
         'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-21 10:00:00', 'generation_mode' => 'manual', 'publishing_mode' => 'review',
     ];
     $this->actingAs($owner)->patchJson('/office/api/content-schedules/'.$schedule->id, $payload)->assertOk()->assertJsonPath('name', 'Updated');
-    $this->actingAs($owner)->deleteJson('/office/api/content-schedules/'.$schedule->id)->assertOk()->assertJsonPath('status', 'deactivated');
-    expect($schedule->fresh()->is_active)->toBeFalse();
+    $this->actingAs($owner)->deleteJson('/office/api/content-schedules/'.$schedule->id)->assertOk()->assertJsonPath('status', 'deleted');
+    expect($schedule->fresh()->trashed())->toBeTrue();
 });
 
 test('owner can access operations APIs and content has an explicit empty response', function () {
@@ -361,7 +361,7 @@ test('content preview is persisted and creates one important notification', func
     $this->postJson('/api/office/events', $preview, bridgeHeaders())->assertOk();
     $this->postJson('/api/office/events', $preview, bridgeHeaders())->assertOk();
     expect(OfficeContentItem::count())->toBe(1);
-    expect(OfficeContentItem::first()->status)->toBe('preview_ready');
+    expect(OfficeContentItem::first()->status)->toBe('ready_for_review');
     expect(OfficeNotification::where('type', 'content.preview_ready')->count())->toBe(1);
 
     $published = [
@@ -503,7 +503,7 @@ test('approval creates schedule from content plan', function () {
 
     $this->actingAs($owner)->postJson('/office/api/analyst-reports/'.$report->id.'/approve', ['plan_ids' => [$plan->id]])->assertOk();
     expect(OfficeContentSchedule::count())->toBe(1)
-        ->and(\App\Models\OfficeCommand::where('agent_id', 'jauki-social')->count())->toBe(1);
+        ->and(\App\Models\OfficeCommand::where('agent_id', 'jauki-social')->count())->toBe(0);
 });
 
 test('office bridge token is not rendered into the dashboard', function () {

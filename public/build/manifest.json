@@ -11,7 +11,7 @@
     "name": "preload-helper"
   },
   "resources/css/app.css": {
-    "file": "assets/app-Ct6GABsC.css",
+    "file": "assets/app-CRyrCSX1.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -42,7 +42,7 @@
     ]
   },
   "resources/js/living-office/main.jsx": {
-    "file": "assets/main-CafrqY3o.js",
+    "file": "assets/main-DJ2oenNq.js",
     "name": "main",
     "src": "resources/js/living-office/main.jsx",
     "isEntry": true,
@@ -57,7 +57,7 @@
     ]
   },
   "resources/js/living-office/preview3d/Office3DPreview.jsx": {
-    "file": "assets/Office3DPreview-Bl02xSej.js",
+    "file": "assets/Office3DPreview-Di03FX6L.js",
     "name": "Office3DPreview",
     "src": "resources/js/living-office/preview3d/Office3DPreview.jsx",
     "isDynamicEntry": true,
