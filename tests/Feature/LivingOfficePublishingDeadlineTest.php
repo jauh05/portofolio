@@ -59,7 +59,7 @@ class LivingOfficePublishingDeadlineTest extends TestCase
         ]);
 
         Carbon::setTestNow(Carbon::parse('2026-10-10 15:00:00', 'Asia/Jakarta'));
-        
+
         $response = $this->actingAs($this->owner)
                          ->postJson("/office/api/content/{$item->id}/approve");
 
@@ -79,7 +79,7 @@ class LivingOfficePublishingDeadlineTest extends TestCase
         // Run scheduler at 18:00
         Carbon::setTestNow(Carbon::parse('2026-10-10 18:00:00', 'Asia/Jakarta'));
         app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchScheduledPublishing();
-        
+
         $this->assertEquals('publishing', $item->fresh()->status);
         $this->assertDatabaseHas('office_commands', [
             'action' => 'publish_last',
@@ -120,10 +120,10 @@ class LivingOfficePublishingDeadlineTest extends TestCase
 
         Carbon::setTestNow(Carbon::parse('2026-10-10 18:00:00', 'Asia/Jakarta'));
         app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchScheduledPublishing();
-        
+
         $this->assertEquals('publishing', $item->fresh()->status);
     }
-    
+
     public function test_review_approved_early_publishes_at_deadline()
     {
         $schedule = OfficeContentSchedule::create([
@@ -162,7 +162,7 @@ class LivingOfficePublishingDeadlineTest extends TestCase
         app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchScheduledPublishing();
         $this->assertEquals('publishing', $item->fresh()->status);
     }
-    
+
     public function test_review_never_approved_does_not_publish()
     {
         $schedule = OfficeContentSchedule::create([
@@ -194,7 +194,7 @@ class LivingOfficePublishingDeadlineTest extends TestCase
         app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchScheduledPublishing();
         $this->assertEquals('ready_for_review', $item->fresh()->status);
     }
-    
+
     public function test_scheduler_runs_twice_is_idempotent()
     {
         $schedule = OfficeContentSchedule::create([
@@ -221,16 +221,16 @@ class LivingOfficePublishingDeadlineTest extends TestCase
             'agent_id' => 'jauki-social',
             'deduplication_key' => 'test-5',
         ]);
-        
+
         Carbon::setTestNow(Carbon::parse('2026-10-10 18:00:00', 'Asia/Jakarta'));
         app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchScheduledPublishing();
-        
+
         $this->assertEquals('publishing', $item->fresh()->status);
         $this->assertDatabaseCount('office_commands', 1);
-        
+
         Carbon::setTestNow(Carbon::parse('2026-10-10 18:01:00', 'Asia/Jakarta'));
         app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchScheduledPublishing();
-        
+
         // No duplicate command should be created since status is already 'publishing'
         $this->assertDatabaseCount('office_commands', 1);
     }
