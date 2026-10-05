@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "brands": {
+    "jauki": {
+      "name": "Jauki",
+      "palette_locked": true,
+      "palette_verified": true,
+      "palette_source": "/Users/mac/Desktop/github_proyek/jaukitugas/resources/views/material/dash.blade.php:33-44",
+      "palette": {
+        "primary": "#4834d4",
+        "secondary": "#686de0",
+        "accent": "#f0932b",
+        "ink": "#2d3436",
+        "muted": "#636e72",
+        "background": "#f0f3f7",
+        "white": "#ffffff"
+      },
+      "visual_personality": "Confident, supportive academic editorial design with crisp hierarchy and restrained glass surfaces",
+      "typography": "Plus Jakarta Sans, bold clear headlines",
+      "series_label": "Jauki Tugas"
+    },
+    "kauiz": {
+      "name": "Kauiz",
+      "palette_locked": true,
+      "palette_verified": false,
+      "palette_source": null,
+      "palette": {},
+      "visual_personality": "",
+      "typography": "",
+      "series_label": ""
+    }
+  }
+}

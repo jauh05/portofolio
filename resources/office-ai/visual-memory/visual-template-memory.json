@@ -1,0 +1,851 @@
+{
+  "version": "3.0",
+  "name": "Living Office Visual Template Memory",
+  "description": "27 reusable composition templates derived from visual references. Reference colors, logos, and copy are never copied. Brand palette and identity always come from brand memory.",
+  "runtime": {
+    "default_model": "meta/muse-image",
+    "stream": true,
+    "palette_source": "brand_memory",
+    "palette_locked": true,
+    "copy_reference_branding": false,
+    "copy_reference_text": false
+  },
+  "output_modes": {
+    "feed_square": {
+      "aspect_ratio": "1:1",
+      "instruction": "Compose as a square social feed post. Preserve the template hierarchy and keep all important content inside safe margins."
+    },
+    "feed_portrait": {
+      "aspect_ratio": "4:5",
+      "instruction": "Reflow the composition vertically for a portrait social feed post. Preserve the visual hierarchy and do not simply crop a square composition."
+    },
+    "story": {
+      "aspect_ratio": "9:16",
+      "instruction": "Recompose the same visual grammar into a vertical story. Increase vertical breathing room, stack content naturally, keep headline and focal object inside safe story areas, and do not simply stretch or crop the feed layout."
+    },
+    "article": {
+      "aspect_ratio": "16:9",
+      "instruction": "Recompose as a horizontal editorial article hero image. Reduce text density, move the main subject and headline into a strong horizontal composition, and preserve the original template family rather than cropping the feed."
+    }
+  },
+  "runtime_inputs": [
+    "brand.name",
+    "brand.palette",
+    "brand.visual_personality",
+    "brand.series_label",
+    "content.topic",
+    "content.headline",
+    "content.subheadline",
+    "content.cta",
+    "analysis.pattern",
+    "analysis.pillar",
+    "analysis.visual_subject",
+    "analysis.visual_intent",
+    "analysis.key_points",
+    "analysis.stat_value",
+    "analysis.stat_label",
+    "analysis.text_density",
+    "output.aspect_ratio",
+    "output.layout_instruction",
+    "variation"
+  ],
+  "global_rules": [
+    "Use only the active brand palette supplied by brand memory.",
+    "Never copy logos, names, typography, slogans, or exact artwork from reference images.",
+    "Reference images define composition grammar only.",
+    "Replace every reference subject with a subject appropriate to the analyzed content.",
+    "Keep headline text concise.",
+    "Do not render large paragraphs inside the generated image.",
+    "Avoid introducing unrelated dominant colors.",
+    "Maintain the active brand visual personality.",
+    "Adapt layout intelligently for feed, story, and article aspect ratios.",
+    "Do not simply crop another output format.",
+    "Keep important text and subjects inside safe margins."
+  ],
+  "templates": [
+    {
+      "id": "T01",
+      "reference": "reference_1_row_1_col_1",
+      "name": "3D Technology Hero",
+      "family": "hero_object",
+      "content_matches": [
+        "technology",
+        "AI",
+        "branding",
+        "digital transformation",
+        "announcement"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a premium {{output.aspect_ratio}} visual for {{brand.name}} using ONLY the locked palette {{brand.palette}}. Topic: {{content.topic}}. {{output.layout_instruction}} Use a bold technology campaign composition: strong oversized headline '{{content.headline}}' in the upper section, a single polished 3D hero object representing {{analysis.visual_subject}} in the lower or central section, and a few small floating contextual elements around it. Keep the hero object memorable and dimensional with premium studio lighting. Add a subtle {{brand.series_label}} identifier where appropriate. Visual personality: {{brand.visual_personality}}. Variation: {{variation}}. Do not reproduce any logo or copy from the reference.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, dimensional object below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, dimensional object below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, dimensional object centered, small elements orbiting it. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, dimensional object right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T02",
+      "reference": "reference_1_row_1_col_2",
+      "name": "Strategic Concept Photography",
+      "family": "conceptual_photography",
+      "content_matches": [
+        "strategy",
+        "business",
+        "marketing",
+        "decision making",
+        "planning"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create an editorial campaign visual for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Feature a conceptual photographic scene representing {{analysis.visual_subject}}, such as a hand interacting with an object or metaphor. Place the large headline '{{content.headline}}' partially interacting with the photographic subject. Supporting copy '{{content.subheadline}}' should remain secondary. Use generous negative space, refined editorial typography and a sophisticated conceptual-advertising composition. Theme: {{content.topic}}. Variation: {{variation}}.",
+      "layout_by_output": {
+        "feed_square": "Square composition: concept photograph centered, headline overlaps its edge. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: concept photograph centered, headline overlaps its edge; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline high, concept photograph below with clear overlap. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, concept photograph right with edge overlap. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T03",
+      "reference": "reference_1_row_1_col_3",
+      "name": "Typography Trust Campaign",
+      "family": "typography_hero",
+      "content_matches": [
+        "trust",
+        "branding",
+        "security",
+        "service",
+        "value proposition"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Design a bold typography-led visual for {{brand.name}}, strictly using {{brand.palette}}. {{output.layout_instruction}} Headline '{{content.headline}}' should dominate the composition with large expressive typography. Surround it with two or three small floating objects representing {{analysis.visual_subject}}. Supporting line '{{content.subheadline}}' sits below the main statement. Keep the design clean, trustworthy, contemporary and memorable. Do not use the reference brand or exact reference copy.",
+      "layout_by_output": {
+        "feed_square": "Square composition: oversized headline central, small trust objects around it. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: oversized headline central, small trust objects around it; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: oversized headline in upper third, trust objects staggered beneath. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: oversized headline left, trust objects on right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T04",
+      "reference": "reference_1_row_2_col_1",
+      "name": "Diagram Funnel Explainer",
+      "family": "diagram_explainer",
+      "content_matches": [
+        "process",
+        "funnel",
+        "how_to",
+        "business",
+        "education"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a diagram-led educational visual for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Use a large hand-drawn or editorial diagram representing {{analysis.visual_subject}} as the main focal point. Show a clear process, funnel, relationship, or flow. Add headline '{{content.headline}}' and a compact CTA-style element '{{content.cta}}'. Keep supporting text minimal and use expressive marker-like diagram lines combined with clean modern typography. Variation: {{variation}}.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, large diagram in center, CTA below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, large diagram in center, CTA below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, diagram flows vertically through middle, CTA in lower safe area. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, wide diagram flows across right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T05",
+      "reference": "reference_1_row_2_col_2",
+      "name": "Human Poster Statement",
+      "family": "human_editorial",
+      "content_matches": [
+        "branding",
+        "campaign",
+        "opinion",
+        "announcement",
+        "creative"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a fashion-editorial-inspired social visual for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Place a human figure centrally holding a large poster or card. The card contains the concise headline '{{content.headline}}'. Behind the subject use oversized abstract typography or brand-colored graphic forms. Theme: {{content.topic}}. Subject styling should support {{analysis.visual_intent}}. Premium editorial photography, controlled shadows, bold composition, minimal supporting copy.",
+      "layout_by_output": {
+        "feed_square": "Square composition: person holding headline card centered. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: person holding headline card centered; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: person and headline card in middle, background type above and below. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: person holding headline card on right, clear left background. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T06",
+      "reference": "reference_1_row_2_col_3",
+      "name": "Surreal Digital Explorer",
+      "family": "surreal_hero",
+      "content_matches": [
+        "digital transformation",
+        "technology",
+        "innovation",
+        "future",
+        "AI"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a surreal technology campaign for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Headline '{{content.headline}}' appears strongly in the upper section. Feature an unexpected human or character metaphor representing {{analysis.visual_subject}} using a laptop, device or digital object. Use spacious composition, premium realistic materials and subtle surrealism. Supporting line: '{{content.subheadline}}'. Keep it sophisticated rather than cartoonish.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, surreal device explorer below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, surreal device explorer below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline at top, explorer and device in tall central scene. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, explorer and device on right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T07",
+      "reference": "reference_1_row_3_col_1",
+      "name": "Device Product Showcase",
+      "family": "device_showcase",
+      "content_matches": [
+        "website",
+        "application",
+        "product",
+        "feature",
+        "digital service"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Design a premium digital-product visual for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Use oversized headline '{{content.headline}}' in the upper half and a realistic laptop, smartphone, browser window or device mockup in the lower half showing a visual related to {{analysis.visual_subject}}. Add minimal contextual graphic accents. Supporting text '{{content.subheadline}}'. Clean tech-campaign aesthetic with strong depth.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, device mockup below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, device mockup below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, device mockup upright in middle, subline below. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, device mockup right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T08",
+      "reference": "reference_1_row_3_col_2",
+      "name": "Keyword Cluster",
+      "family": "keyword_typography",
+      "content_matches": [
+        "tips",
+        "concepts",
+        "terminology",
+        "marketing",
+        "education"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a typography and keyword-driven social visual for {{brand.name}} using {{brand.palette}} only. {{output.layout_instruction}} Headline '{{content.headline}}' should appear prominently. Arrange key concepts from {{analysis.key_points}} as expressive rounded labels, outlined word capsules or floating typographic elements across the central area. Maintain a controlled composition and strong readability. Use visual rhythm rather than illustrations as the main storytelling device.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, keyword capsules across center. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, keyword capsules across center; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, keyword capsules stacked down center. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, keyword capsules distributed on right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T09",
+      "reference": "reference_1_row_3_col_3",
+      "name": "Sculptural Digital Hero",
+      "family": "sculptural_hero",
+      "content_matches": [
+        "problem",
+        "question",
+        "technology",
+        "branding",
+        "creative campaign"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create an artistic campaign visual for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Feature a sculptural or classical-inspired human figure interacting with a modern device representing {{analysis.visual_subject}}. Headline '{{content.headline}}' sits prominently above or beside the figure. Blend classical visual language with contemporary technology. Supporting text '{{content.subheadline}}'. Premium surreal editorial advertising.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, sculptural figure and device centered. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, sculptural figure and device centered; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, sculpture and device in central vertical portrait. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, sculpture and device right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T10",
+      "reference": "reference_2_row_1_col_1",
+      "name": "Robot Assisted Course Intro",
+      "family": "course_intro",
+      "content_matches": [
+        "education",
+        "course",
+        "guide",
+        "launch",
+        "feature"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a clean educational campaign for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Use a strong headline '{{content.headline}}' aligned toward one side. Introduce a futuristic hand, tool or object interacting with a small title block representing {{analysis.visual_subject}}. Below the headline place three concise benefits derived from {{analysis.key_points}}, each paired with a simple icon. White or light neutral negative space should dominate while brand colors provide hierarchy.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline to one side, assisting tool opposite, three benefits below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline to one side, assisting tool opposite, three benefits below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, assisting tool central, three benefits stacked below. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, assisting tool and three brief benefits right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T11",
+      "reference": "reference_2_row_1_col_2",
+      "name": "Vertical Feature List",
+      "family": "feature_list",
+      "content_matches": [
+        "features",
+        "benefits",
+        "tips",
+        "education",
+        "course"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a structured feature-list visual for {{brand.name}} using {{brand.palette}} only. {{output.layout_instruction}} Place headline '{{content.headline}}' at the top followed by three to five concise key points from {{analysis.key_points}}. Each point uses a consistent brand-colored icon tile with short supporting text. Keep large breathing room, strong typography and a clean educational system. Supporting message: '{{content.subheadline}}'.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline top, three to five icon rows below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline top, three to five icon rows below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, icon rows stacked in central column. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, icon rows in two columns on right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T12",
+      "reference": "reference_2_row_1_col_3",
+      "name": "Photo Evidence Cards",
+      "family": "photo_gallery",
+      "content_matches": [
+        "case study",
+        "community",
+        "event",
+        "testimonial",
+        "proof"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Design a clean evidence-based post for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Place headline '{{content.headline}}' at the top. Under it show two or three rounded photographic cards depicting {{analysis.visual_subject}} from complementary perspectives. Add compact supporting copy '{{content.subheadline}}' and a concise CTA '{{content.cta}}'. Use a highly organized editorial structure with generous white space.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline top, photo evidence cards below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline top, photo evidence cards below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, photo cards stacked vertically. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, photo evidence cards arranged horizontally right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T13",
+      "reference": "reference_2_row_2_col_1",
+      "name": "Problem Explainer Illustration",
+      "family": "problem_explainer",
+      "content_matches": [
+        "problem",
+        "awareness",
+        "analysis",
+        "education",
+        "myth"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create an editorial problem-explainer graphic for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Use headline '{{content.headline}}', several concise problem statements from {{analysis.key_points}}, and one expressive metaphorical illustration representing {{analysis.visual_subject}}. The illustration may use silhouettes, simple line art or conceptual objects. Keep the message intelligent, clear and slightly provocative without becoming cluttered.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, problem statements beside metaphor. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, problem statements beside metaphor; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, metaphor center, short problem statements below. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, metaphor and problem labels right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T14",
+      "reference": "reference_2_row_2_col_2",
+      "name": "Information Panel",
+      "family": "information_panel",
+      "content_matches": [
+        "education",
+        "course",
+        "framework",
+        "steps",
+        "guide"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a modern educational information card for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Headline '{{content.headline}}' appears above a large rounded brand-colored information panel. Inside the panel organize {{analysis.key_points}} into short structured sections. Add one small contextual icon or object representing {{analysis.visual_subject}} outside the panel. Maintain clear hierarchy, substantial whitespace and premium educational design.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, rounded information panel below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, rounded information panel below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, tall information panel through middle. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, wide information panel right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T15",
+      "reference": "reference_2_row_2_col_3",
+      "name": "Launch Event Hero",
+      "family": "event_launch",
+      "content_matches": [
+        "launch",
+        "event",
+        "announcement",
+        "special day",
+        "course"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create an event-launch visual for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Place headline '{{content.headline}}', important date or numeric information '{{analysis.stat_value}}', and a large polished 3D hero object representing {{analysis.visual_subject}} in the center. Add a compact format or CTA badge '{{content.cta}}'. Use clean white space, soft 3D lighting, premium educational campaign styling and strong emphasis on the event information.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline and date above, event object central, CTA below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline and date above, event object central, CTA below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, date prominent, event object center, CTA low. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline and date left, event object right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T16",
+      "reference": "reference_2_row_3_col_1",
+      "name": "Character Metaphor",
+      "family": "character_metaphor",
+      "content_matches": [
+        "analysis",
+        "tips",
+        "problem solving",
+        "education",
+        "insight"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a character-metaphor editorial visual for {{brand.name}} using {{brand.palette}} only. {{output.layout_instruction}} Headline '{{content.headline}}' occupies a strong text zone. Feature an original character or archetype representing {{analysis.visual_subject}}, styled as a cutout, folded-paper figure, editorial collage or conceptual photography. Add one concise supporting insight '{{content.subheadline}}' and directional graphic accents. Do not depict copyrighted characters.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline beside original character metaphor. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline beside original character metaphor; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, original character metaphor central, insight below. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, character metaphor right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T17",
+      "reference": "reference_2_row_3_col_2",
+      "name": "Survey Result Bars",
+      "family": "survey_results",
+      "content_matches": [
+        "survey",
+        "statistics",
+        "findings",
+        "research",
+        "comparison"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Design a research-results social visual for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Use headline '{{content.headline}}' at the top and display three major findings from {{analysis.key_points}} as bold horizontal brand-colored bars. Add a small contextual conceptual object representing {{analysis.visual_subject}}. Include a concise conclusion '{{content.subheadline}}'. Highly readable, editorial and data-focused.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline top, three horizontal data bars below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline top, three horizontal data bars below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, data bars stacked with generous vertical spacing. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, three data bars horizontally aligned on right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T18",
+      "reference": "reference_2_row_3_col_3",
+      "name": "Analytical Checklist",
+      "family": "analytical_checklist",
+      "content_matches": [
+        "analysis",
+        "checklist",
+        "tips",
+        "comparison",
+        "guide"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create an analytical checklist visual for {{brand.name}}, restricted to {{brand.palette}}. {{output.layout_instruction}} Headline '{{content.headline}}' leads the composition. Add one strong pill-shaped statement or toggle containing the main takeaway. Below, place three equal analytical cards representing {{analysis.key_points}}, each with a simple icon and concise label. Add CTA '{{content.cta}}' at the bottom. Clean, systematic, professional layout.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline top, takeaway pill, three equal cards below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline top, takeaway pill, three equal cards below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, takeaway pill below, analytical cards stacked. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, takeaway pill and three cards right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T19",
+      "reference": "reference_3_row_1_col_1",
+      "name": "Oversized Typography and Tool",
+      "family": "typography_object_overlap",
+      "content_matches": [
+        "design",
+        "technology",
+        "education",
+        "creative",
+        "branding"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a bold educational campaign visual for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Make oversized typography based on '{{content.headline}}' fill much of the background. Place a large realistic creative tool, device or object representing {{analysis.visual_subject}} across and in front of the typography, creating strong depth. Add a small CTA '{{content.cta}}'. Premium graphic-design-school aesthetic without copying any original branding.",
+      "layout_by_output": {
+        "feed_square": "Square composition: oversized typography behind a realistic tool. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: oversized typography behind a realistic tool; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: oversized typography top to middle, tool crossing the central letters. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: oversized typography left, realistic tool crossing toward right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T20",
+      "reference": "reference_3_row_1_col_2",
+      "name": "Cinematic Learning Scene",
+      "family": "cinematic_photo",
+      "content_matches": [
+        "education",
+        "learning",
+        "creative process",
+        "behind the scenes",
+        "course"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a cinematic educational campaign for {{brand.name}}. Use {{brand.palette}} as the controlled grading and graphic accent system. {{output.layout_instruction}} Feature a realistic top-down or environmental scene of a person engaged with {{analysis.visual_subject}}. Use dramatic but tasteful lighting. Overlay concise headline '{{content.headline}}' and CTA '{{content.cta}}'. Keep the photograph dominant while brand graphics support the message.",
+      "layout_by_output": {
+        "feed_square": "Square composition: cinematic learning photograph full frame, short text in clear space. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: cinematic learning photograph full frame, short text in clear space; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: cinematic vertical learning photograph, headline in upper safe area. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: wide cinematic learning photograph on right, short headline left. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T21",
+      "reference": "reference_3_row_1_col_3",
+      "name": "Course Typography and UI",
+      "family": "typography_ui",
+      "content_matches": [
+        "course",
+        "product",
+        "feature",
+        "education",
+        "digital service"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Design a premium digital education visual for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Use large stacked headline typography '{{content.headline}}' as the upper focal element. Float small topic badges around the headline when useful. In the lower portion show translucent or realistic interface cards relevant to {{analysis.visual_subject}}. Add a compact CTA '{{content.cta}}'. Modern digital-product editorial aesthetic.",
+      "layout_by_output": {
+        "feed_square": "Square composition: stacked headline above, topic badges and UI cards below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: stacked headline above, topic badges and UI cards below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: stacked headline top, badges mid, UI cards in lower safe area. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: stacked headline left, UI cards right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T22",
+      "reference": "reference_3_row_2_col_1",
+      "name": "Code or Screen Perspective",
+      "family": "screen_perspective",
+      "content_matches": [
+        "coding",
+        "software",
+        "tutorial",
+        "technology",
+        "product"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a clean technology explainer for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Place headline '{{content.headline}}' in the upper section. Feature a large angled laptop, code editor, browser screen or digital interface emerging from the lower edge representing {{analysis.visual_subject}}. Use subtle brand-colored gradient depth near the bottom and generous white or neutral space above.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, angled screen emerging from lower edge. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, angled screen emerging from lower edge; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, angled screen rises through middle. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, angled screen enters from right edge. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T23",
+      "reference": "reference_3_row_2_col_2",
+      "name": "Glass UI Showcase",
+      "family": "glassmorphism_ui",
+      "content_matches": [
+        "UI",
+        "application",
+        "feature",
+        "product",
+        "design"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a polished UI-focused visual for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Headline '{{content.headline}}' should remain clean and readable above the main visual. Build an elegant cluster of semi-transparent interface cards representing {{analysis.visual_subject}}, using depth, glass-like surfaces and soft shadows. Cards may include avatars, metrics, controls or diagrams appropriate to the topic. Premium product-design presentation.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, glass UI card cluster below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, glass UI card cluster below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, glass UI cards stacked with depth in middle. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, glass UI card cluster right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T24",
+      "reference": "reference_3_row_2_col_3",
+      "name": "Typography App Collage",
+      "family": "app_collage",
+      "content_matches": [
+        "creative tools",
+        "education",
+        "software",
+        "course",
+        "design"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Design a bold creative-technology visual for {{brand.name}} using {{brand.palette}} only. {{output.layout_instruction}} Use a large headline '{{content.headline}}' with a few small contextual software/tool badges integrated around the typography. Build a layered collage of visual cards or creative outputs along the lower section representing {{analysis.visual_subject}}. Keep the typography dominant and the collage secondary.",
+      "layout_by_output": {
+        "feed_square": "Square composition: dominant headline above, app collage below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: dominant headline above, app collage below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: dominant headline top, app collage layered vertically below. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: dominant headline left, app collage right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T25",
+      "reference": "reference_3_row_3_col_1",
+      "name": "Design System Grid",
+      "family": "component_grid",
+      "content_matches": [
+        "tips",
+        "framework",
+        "components",
+        "guide",
+        "education"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a structured educational visual for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Headline '{{content.headline}}' appears near the top with supporting line '{{content.subheadline}}'. Below it build a tidy grid of four to six small cards derived from {{analysis.key_points}}, each representing a concept, component, example or category. Add CTA '{{content.cta}}'. Use clean system-design aesthetics and restrained visual complexity.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline top, tidy concept grid below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline top, tidy concept grid below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, concept cards in narrow two-column grid. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, wide concept grid right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T26",
+      "reference": "reference_3_row_3_col_2",
+      "name": "Floating Dashboard Cards",
+      "family": "floating_cards",
+      "content_matches": [
+        "statistics",
+        "tips",
+        "digital product",
+        "analytics",
+        "insight"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a dynamic digital insight visual for {{brand.name}} using ONLY {{brand.palette}}. {{output.layout_instruction}} Make headline '{{content.headline}}' prominent near the upper center. Across the central and lower area float several tilted interface cards containing visual interpretations of {{analysis.key_points}}, such as charts, metrics, sliders, percentages or status indicators. Use perspective and layered shadows to create depth while keeping the composition clean.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, floating dashboard cards below. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, floating dashboard cards below; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, floating dashboard cards staggered vertically. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, floating dashboard cards right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    },
+    {
+      "id": "T27",
+      "reference": "reference_3_row_3_col_3",
+      "name": "Benefit List with Pointer",
+      "family": "benefit_list",
+      "content_matches": [
+        "benefits",
+        "career",
+        "tips",
+        "CTA",
+        "education",
+        "service"
+      ],
+      "model": "meta/muse-image",
+      "stream": true,
+      "palette_locked": true,
+      "supported_outputs": [
+        "feed_square",
+        "feed_portrait",
+        "story",
+        "article"
+      ],
+      "prompt": "Create a clean benefit-focused campaign for {{brand.name}} using only {{brand.palette}}. {{output.layout_instruction}} Center headline '{{content.headline}}' near the upper area with short supporting line '{{content.subheadline}}'. List three to five benefits from {{analysis.key_points}} vertically with simple plus marks, bullets or micro-icons. Add one oversized cursor, pointer, arrow or contextual object representing {{analysis.visual_subject}} near the lower edge. Strong CTA-oriented composition with spacious editorial layout.",
+      "layout_by_output": {
+        "feed_square": "Square composition: headline above, benefit list centered, pointer near lower edge. Keep generous safe margins and a balanced 1:1 hierarchy.",
+        "feed_portrait": "Portrait 4:5 composition: headline above, benefit list centered, pointer near lower edge; reflow with more vertical breathing room and a taller central visual. Do not crop a square image.",
+        "story": "Original 9:16 story composition: headline top, benefits stacked, pointer in lower safe area. Keep headline and CTA in safe areas. Do not stretch or crop a feed image.",
+        "article": "Original 16:9 editorial hero composition: headline left, benefit list and pointer right. Reduce text density and use wide negative space. Do not crop a feed image."
+      }
+    }
+  ]
+}

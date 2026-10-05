@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "minimum_template_gap": 3,
+  "recent_family_penalty": 9,
+  "pattern_weights": {
+    "definition": {"T04": 8, "T11": 8, "T14": 8, "T21": 7},
+    "explainer": {"T04": 8, "T11": 8, "T14": 8, "T21": 7},
+    "statistics": {"T17": 10, "T18": 8, "T26": 9},
+    "research": {"T17": 10, "T18": 8, "T26": 9},
+    "tips": {"T11": 9, "T18": 9, "T25": 8, "T27": 8},
+    "branding": {"T01": 9, "T03": 9, "T05": 8, "T09": 8, "T19": 8},
+    "technology": {"T01": 9, "T06": 8, "T07": 9, "T22": 8, "T23": 8},
+    "event": {"T12": 7, "T15": 10},
+    "announcement": {"T12": 7, "T15": 10},
+    "strategy": {"T02": 10, "T04": 8},
+    "quiz": {"T10": 8, "T11": 8, "T14": 8, "T21": 9},
+    "facts": {"T04": 8, "T11": 9, "T14": 9, "T25": 8},
+    "challenge": {"T05": 8, "T10": 8, "T15": 7, "T27": 9},
+    "security": {"T03": 10, "T13": 8, "T18": 7}
+  }
+}
