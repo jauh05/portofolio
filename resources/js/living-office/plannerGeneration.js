@@ -63,7 +63,7 @@ export function shouldPollGeneration(content, command, optimisticQueued = false)
 export const STATUS_LABELS = {
     draft: 'Belum dibuat', queued_for_generation: 'Antre', generating: 'Sedang dibuat',
     preview_ready: 'Preview siap', ready_for_review: 'Siap direview', ready: 'Siap direview',
-    approved: 'Disetujui', published: 'Terbit', failed: 'Gagal', worker_unavailable: 'Worker belum tersedia',
+    approved: 'Disetujui • Menunggu jadwal', published: 'Terbit', failed: 'Gagal', worker_unavailable: 'Worker belum tersedia',
 };
 
 export function safeGenerationError(reason) {
