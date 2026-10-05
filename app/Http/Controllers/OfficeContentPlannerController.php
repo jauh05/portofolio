@@ -142,7 +142,9 @@ class OfficeContentPlannerController extends Controller
     public function store(Request $request, \App\Services\OfficeContentGenerator $generator): JsonResponse
     {
         $schedule = new OfficeContentSchedule;
-        $this->fillSchedule($schedule, $request->validate($this->rules()));
+        $data = $request->validate($this->rules());
+        $data['generation_timing'] = $data['generation_timing'] ?? 'manual';
+        $this->fillSchedule($schedule, $data);
         $draft = $generator->ensureDraft($schedule);
         if ($schedule->generation_mode === 'automatic') {
             $this->dispatchGeneration($draft);
@@ -152,7 +154,7 @@ class OfficeContentPlannerController extends Controller
 
     public function update(Request $request, OfficeContentSchedule $schedule): JsonResponse
     {
-        $existing = [
+        $existing = ['generation_timing' => $schedule->generation_timing ?? 'manual',
             'name' => $schedule->name, 'schedule_type' => $schedule->schedule_type, 'platform' => $schedule->platform,
             'brand_id' => $schedule->brand_id,
             'content_type' => $schedule->content_type, 'topic' => $schedule->topic, 'brief' => $schedule->brief,
