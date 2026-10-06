@@ -208,7 +208,7 @@ class VisualPromptCompiler:
             "brand.visual_personality": brand["visual_personality"],
             "brand.series_label": brand["series_label"],
             "content.topic": _short(analysis.get("topic"), 15),
-            "content.headline": _short(analysis.get("headline"), 12),
+            "content.headline": _short(analysis.get("headline") or analysis.get("topic"), 12),
             "content.subheadline": _short(analysis.get("subheadline"), 20),
             "content.cta": _short(analysis.get("cta"), 6),
             "analysis.pattern": _short(analysis.get("pattern"), 6),
@@ -226,6 +226,8 @@ class VisualPromptCompiler:
         prompt = TOKEN.sub(lambda match: str(fields[match.group(1)]), template["prompt"])
         if "{{" in prompt:
             raise ValueError(f"Unresolved prompt token in {template_id}")
+        if fields["content.topic"]:
+            prompt += f" Content topic: {fields['content.topic']}."
         prompt += f" Brand visual personality: {brand['visual_personality']}."
         prompt += f" Brand font metadata (style cues, not exact font-file rendering): {typography}. Typography direction: {brand['typography_prompt']}."
         prompt += f" Dominant color family: {brand['dominant_color_family']}. Use primary and secondary for dominant surfaces; remaining colors in the active brand palette are supporting accents."
