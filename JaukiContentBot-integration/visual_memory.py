@@ -26,7 +26,7 @@ def _read_json(name: str) -> dict[str, Any]:
 def _short(value: Any, words: int) -> str:
     if value is None:
         return ""
-    text = " ".join(str(value).split())
+    text = re.sub(r"#[0-9a-fA-F]{3,8}\b", "[brand color]", " ".join(str(value).split()))
     return " ".join(text.split()[:words])
 
 
@@ -43,6 +43,13 @@ class VisualBrandMemory:
         palette = brand["palette"]
         if not all(re.fullmatch(r"#[0-9a-fA-F]{6}", color) for color in palette.values()):
             raise ValueError(f"Invalid palette token for {slug}")
+        typography = brand.get("typography")
+        if not isinstance(typography, dict) or not all(
+            isinstance(font, str) and font.strip() for font in typography.values()
+        ) or not {"headline", "body"}.issubset(typography):
+            raise ValueError(f"Named headline and body fonts required for {slug}")
+        if brand.get("dominant_color_family") not in {"green", "blue"}:
+            raise ValueError(f"Dominant color family required for {slug}")
         return copy.deepcopy(brand)
 
 
@@ -59,8 +66,10 @@ class VisualTemplateRepository:
         for template in self.templates.values():
             if template.get("model") != "meta/muse-image" or template.get("stream") is not True:
                 raise ValueError(f"Invalid Muse payload in {template['id']}")
-            if template.get("palette_locked") is not True:
-                raise ValueError(f"Unlocked palette in {template['id']}")
+            if template.get("palette_source") != "brand_memory":
+                raise ValueError(f"Template palette must come from brand memory in {template['id']}")
+            if re.search(r"#[0-9a-fA-F]{3,8}\b", json.dumps(template)):
+                raise ValueError(f"Template-specific color in {template['id']}")
             if set(template.get("supported_outputs", [])) != set(OUTPUT_MODES):
                 raise ValueError(f"Missing output mode in {template['id']}")
             if set(template.get("layout_by_output", {})) != set(OUTPUT_MODES):
@@ -79,6 +88,17 @@ class VisualTemplateRepository:
 class VisualTemplateSelector:
     HERO_POSITIONS = ("left", "right", "center", "lower_center")
     TREATMENTS = ("solid", "soft_gradient", "editorial_texture", "light_studio")
+    FIELD_WEIGHTS = {
+        "pattern": 2.0,
+        "topic": 1.5,
+        "pillar": 1.2,
+        "visual_subject": 1.7,
+        "visual_intent": 1.2,
+        "key_points": 0.8,
+        "stat_label": 1.1,
+    }
+    DENSE_FAMILIES = {"diagram_explainer", "feature_list", "information_panel", "survey_results", "analytical_checklist", "component_grid", "floating_cards", "benefit_list"}
+    SPARSE_FAMILIES = {"hero_object", "conceptual_photography", "typography_hero", "human_editorial", "surreal_hero", "sculptural_hero", "cinematic_photo"}
 
     def __init__(self, repository: VisualTemplateRepository | None = None, rules: Mapping[str, Any] | None = None):
         self.repository = repository or VisualTemplateRepository()
@@ -87,31 +107,43 @@ class VisualTemplateSelector:
     def select(self, analysis: Mapping[str, Any], history: list[Mapping[str, Any]] | None = None, seed: int | None = None) -> dict[str, Any]:
         history = history or []
         rng = random.Random(seed)
-        terms = " ".join(str(analysis.get(key, "")) for key in ("pattern", "pillar", "topic", "visual_intent")).lower()
-        if not terms.strip():
-            raise ValueError("Content analysis needs a pattern, pillar, topic, or visual intent")
-        pattern = str(analysis.get("pattern", "")).lower().strip()
-        candidates: dict[str, float] = {}
+        if not isinstance(analysis.get("key_points", []), list):
+            raise ValueError("key_points must be a list")
+        fields = {
+            key: " ".join(str(item) for item in analysis.get(key, [])) if key == "key_points"
+            else str(analysis.get(key) or "")
+            for key in self.FIELD_WEIGHTS
+        }
+        fields = {key: value.lower().strip() for key, value in fields.items()}
+        stat_value = str(analysis.get("stat_value") or "").strip()
+        if not any(fields.values()) and not stat_value:
+            raise ValueError("Content analysis needs a topic, pattern, pillar, visual subject, visual intent, key point, or statistic")
+        candidates: dict[str, float] = {template_id: 0.05 for template_id in self.repository.templates}
         for rule_name, weights in self.rules["pattern_weights"].items():
-            if rule_name == pattern or re.search(r"\b" + re.escape(rule_name) + r"\b", terms):
-                for template_id, weight in weights.items():
-                    candidates[template_id] = candidates.get(template_id, 0) + weight
+            for field, field_text in fields.items():
+                if re.search(r"\b" + re.escape(rule_name) + r"\b", field_text):
+                    for template_id, weight in weights.items():
+                        candidates[template_id] += weight * self.FIELD_WEIGHTS[field]
         for template in self.repository.templates.values():
-            matches = sum(1 for tag in template["content_matches"] if re.search(r"\b" + re.escape(tag.lower()) + r"\b", terms))
-            if matches:
-                candidates[template["id"]] = candidates.get(template["id"], 0) + matches * 3
-        if not candidates:
-            candidates = {template_id: 1 for template_id in ("T04", "T14", "T16", "T21")}
+            for field, field_text in fields.items():
+                matches = sum(bool(re.search(r"\b" + re.escape(tag.lower()) + r"\b", field_text)) for tag in template["content_matches"])
+                candidates[template["id"]] += matches * 3 * self.FIELD_WEIGHTS[field]
+        if stat_value:
+            for template_id, weight in self.rules["pattern_weights"]["statistics"].items():
+                candidates[template_id] += weight * 1.5
+        density = str(analysis.get("text_density") or "low").lower()
+        if density not in {"low", "medium", "high"}:
+            raise ValueError("text_density must be low, medium, or high")
+        for template_id, template in self.repository.templates.items():
+            if density in {"medium", "high"} and template["family"] in self.DENSE_FAMILIES:
+                candidates[template_id] += 3 if density == "medium" else 6
+            if density == "low" and template["family"] in self.SPARSE_FAMILIES:
+                candidates[template_id] += 2
 
         gap = self.rules["minimum_template_gap"]
         recent = history[-gap:]
         recent_ids = {entry.get("template_id") for entry in recent}
-        if len(set(candidates) - recent_ids) > 0:
-            candidates = {key: value for key, value in candidates.items() if key not in recent_ids}
-        else:
-            for key in candidates:
-                if key in recent_ids:
-                    candidates[key] *= 0.15
+        candidates = {key: value for key, value in candidates.items() if key not in recent_ids}
         recent_families = {self.repository.get(entry["template_id"])["family"] for entry in recent if entry.get("template_id") in self.repository.templates}
         for key in candidates:
             if self.repository.get(key)["family"] in recent_families:
@@ -120,7 +152,7 @@ class VisualTemplateSelector:
         template = self.repository.get(chosen_id)
 
         def least_recent(options: tuple[str, ...], field: str) -> str:
-            latest = {entry.get(field) for entry in recent}
+            latest = {entry.get(field, entry.get("background_treatment") if field == "visual_treatment" else None) for entry in recent}
             available = [option for option in options if option not in latest] or list(options)
             return rng.choice(available)
 
@@ -132,7 +164,7 @@ class VisualTemplateSelector:
             "card_position": rng.choice(("lower", "side", "staggered")),
             "object_scale": rng.choice(("medium", "large")),
             "visual_weight": rng.choice(("balanced", "subject_dominant", "type_dominant")),
-            "text_density": str(analysis.get("text_density", "low")) if analysis.get("text_density") in ("low", "medium") else "low",
+            "text_density": "medium" if density in {"medium", "high"} else "low",
             "decorative_density": rng.choice(("minimal", "restrained")),
         }
         return {"template_id": chosen_id, "template": template, "variation": variation, "score": candidates[chosen_id]}
@@ -164,6 +196,7 @@ class VisualPromptCompiler:
         if any(name not in allowed or value not in allowed[name] for name, value in variation.items()):
             raise ValueError("Invalid controlled variation")
         palette = ", ".join(f"{name} {color}" for name, color in brand["palette"].items())
+        typography = ", ".join(f"{role.replace('_', ' ')}: {font}" for role, font in brand["typography"].items())
         key_points = analysis.get("key_points", [])
         if not isinstance(key_points, list):
             raise ValueError("key_points must be a list")
@@ -191,7 +224,9 @@ class VisualPromptCompiler:
         prompt = TOKEN.sub(lambda match: str(fields[match.group(1)]), template["prompt"])
         if "{{" in prompt:
             raise ValueError(f"Unresolved prompt token in {template_id}")
-        prompt += f" Brand typography: {brand['typography']}. Use only these palette colors: {palette}. Never use reference palette, branding, or copy. "
+        prompt += f" Brand typography: {typography}. Dominant color family: {brand['dominant_color_family']}. Use primary and secondary for dominant surfaces; other brand colors are supporting accents. "
+        prompt += f" Use only these palette colors: {palette}. Never use reference palette, branding, or copy. "
+        prompt += "The output-specific composition and subject placement take precedence over controlled variation; apply variation only within that layout. "
         prompt += "Keep text to a short headline, short subheadline, short badge, one statistic, or short CTA; leave detailed copy for a precise downstream overlay. "
         prompt += f"Canvas {fields['output.aspect_ratio']}; compose directly for this canvas, with safe margins."
         return {"model": template["model"], "prompt": prompt, "stream": template["stream"]}

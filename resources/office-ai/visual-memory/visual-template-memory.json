@@ -77,7 +77,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -106,7 +106,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -135,7 +135,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -164,7 +164,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -193,7 +193,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -222,7 +222,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -251,7 +251,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -280,7 +280,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -309,7 +309,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -338,7 +338,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -367,7 +367,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -396,7 +396,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -425,7 +425,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -454,7 +454,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -483,7 +483,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -512,7 +512,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -541,7 +541,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -570,7 +570,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -599,7 +599,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -628,7 +628,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -657,7 +657,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -686,7 +686,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -715,7 +715,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -744,7 +744,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -773,7 +773,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -802,7 +802,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
@@ -832,7 +832,7 @@
       ],
       "model": "meta/muse-image",
       "stream": true,
-      "palette_locked": true,
+      "palette_source": "brand_memory",
       "supported_outputs": [
         "feed_square",
         "feed_portrait",
