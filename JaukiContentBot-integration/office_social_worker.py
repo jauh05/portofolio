@@ -91,6 +91,17 @@ def _progress(context: Dict[str, Any], progress: int, activity: str) -> None:
     _emit_required("task.progress", task_id=context["task_id"], progress=progress, activity=activity)
 
 
+def preview_visual_command(command_payload: Dict[str, Any], *, history=None, seed=None) -> Dict[str, Any]:
+    """Explicit offline preview for a social command; never enters live dispatch."""
+    from visual_worker_preview import preview_visual_memory
+
+    if command_payload.get("platform", "instagram") != "instagram":
+        raise ValueError("Visual social preview requires Instagram content")
+    if command_payload.get("content_type") not in {"feed", "feed_square", "feed_portrait", "story"}:
+        raise ValueError("Visual social preview supports feed or story only")
+    return preview_visual_memory(command_payload, history=history, seed=seed)
+
+
 def _do_generate(context: Dict[str, Any], mode: str) -> None:
     # Importing bot functions that don't depend on telegram classes
     from bot import generate_content, build_muse_prompt, generate_muse_image, save_latest_state, choose_new_variant, feed_caption, create_public_media
