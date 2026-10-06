@@ -23,6 +23,7 @@
         "body": "Poppins",
         "ui": "Inter"
       },
+      "typography_prompt": "Rounded, friendly academic headline with soft heavy letterforms; clear practical body copy and accessible UI labels",
       "series_label": "Jauki Tugas"
     },
     "kauiz": {
@@ -46,6 +47,7 @@
         "headline_alt": "Archivo Black",
         "body": "Plus Jakarta Sans"
       },
+      "typography_prompt": "Bold condensed geometric uppercase headline; structured study-board hierarchy with clean readable supporting text",
       "series_label": "Kauiz"
     }
   }

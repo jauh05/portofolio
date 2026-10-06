@@ -50,6 +50,8 @@ class VisualBrandMemory:
             raise ValueError(f"Named headline and body fonts required for {slug}")
         if brand.get("dominant_color_family") not in {"green", "blue"}:
             raise ValueError(f"Dominant color family required for {slug}")
+        if not isinstance(brand.get("typography_prompt"), str) or not brand["typography_prompt"].strip():
+            raise ValueError(f"Typography prompt style required for {slug}")
         return copy.deepcopy(brand)
 
 
@@ -224,8 +226,11 @@ class VisualPromptCompiler:
         prompt = TOKEN.sub(lambda match: str(fields[match.group(1)]), template["prompt"])
         if "{{" in prompt:
             raise ValueError(f"Unresolved prompt token in {template_id}")
-        prompt += f" Brand typography: {typography}. Dominant color family: {brand['dominant_color_family']}. Use primary and secondary for dominant surfaces; other brand colors are supporting accents. "
-        prompt += f" Use only these palette colors: {palette}. Never use reference palette, branding, or copy. "
+        prompt += f" Brand visual personality: {brand['visual_personality']}."
+        prompt += f" Brand font metadata (style cues, not exact font-file rendering): {typography}. Typography direction: {brand['typography_prompt']}."
+        prompt += f" Dominant color family: {brand['dominant_color_family']}. Use primary and secondary for dominant surfaces; remaining colors in the active brand palette are supporting accents."
+        prompt += f" Use only these palette colors: {palette}. Never use reference palette, branding, or copy."
+        prompt += " The image model cannot guarantee exact font families; preserve exact font assignment for a future deterministic text overlay. "
         prompt += "The output-specific composition and subject placement take precedence over controlled variation; apply variation only within that layout. "
         prompt += "Keep text to a short headline, short subheadline, short badge, one statistic, or short CTA; leave detailed copy for a precise downstream overlay. "
         prompt += f"Canvas {fields['output.aspect_ratio']}; compose directly for this canvas, with safe margins."

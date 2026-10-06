@@ -31,6 +31,8 @@ class VisualMemoryTests(unittest.TestCase):
             self.assertEqual(template["palette_source"], "brand_memory")
             self.assertNotIn("palette", template)
             self.assertEqual(len(set(template["layout_by_output"].values())), 4)
+            for mode in ("feed_portrait", "story", "article"):
+                self.assertIn("crop", template["layout_by_output"][mode].lower())
             number = int(template["id"][1:]) - 1
             self.assertEqual(template["reference"], f"reference_{number // 9 + 1}_row_{number % 9 // 3 + 1}_col_{number % 3 + 1}")
 
@@ -121,8 +123,13 @@ class VisualMemoryTests(unittest.TestCase):
                         self.assertEqual(set(payload), {"model", "prompt", "stream"})
                         self.assertIn(own, payload["prompt"])
                         self.assertNotIn(other, payload["prompt"])
+                        memory = VisualBrandMemory().get(brand)
+                        self.assertIn(memory["visual_personality"], payload["prompt"])
+                        for font in memory["typography"].values():
+                            self.assertIn(font, payload["prompt"])
                         self.assertNotIn("{{", payload["prompt"])
                         self.assertIn(self.repository.data["output_modes"][mode]["aspect_ratio"], payload["prompt"])
+                        self.assertIn(self.repository.get(template_id)["layout_by_output"][mode], payload["prompt"])
         self.assertEqual(combinations, 108)
 
     def test_unverified_palette_fails_closed(self):
@@ -158,6 +165,8 @@ class VisualMemoryTests(unittest.TestCase):
                 self.assertIn(font, prompts[slug])
         self.assertIn("Dominant color family: green", prompts["jauki"])
         self.assertIn("Dominant color family: blue", prompts["kauiz"])
+        self.assertIn("style cues, not exact font-file rendering", prompts["jauki"])
+        self.assertIn("image model cannot guarantee exact font families", prompts["kauiz"])
         self.assertIn("League Spartan", prompts["kauiz"])
         self.assertIn("Archivo Black", prompts["kauiz"])
         self.assertIn("Plus Jakarta Sans", prompts["kauiz"])
