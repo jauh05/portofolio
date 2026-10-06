@@ -29,7 +29,8 @@ class TelegramNotifierTest extends TestCase
         $command = OfficeCommand::create([
             'agent_id' => 'jauki-social',
             'action' => 'generate_weekly',
-            'status' => 'queued'
+            'status' => 'queued',
+            'requested_by' => \App\Models\User::factory()->create(['is_office_owner' => true])->id
         ]);
 
         Queue::assertPushed(SendTelegramNotification::class, function ($job) {

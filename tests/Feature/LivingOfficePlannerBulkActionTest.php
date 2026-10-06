@@ -21,7 +21,7 @@ class LivingOfficePlannerBulkActionTest extends TestCase
     {
         parent::setUp();
         $this->owner = User::factory()->create(['is_office_owner' => true]);
-        $this->brand = OfficeContentBrand::create(['name' => 'Jauki', 'slug' => 'jauki']);
+        $this->brand = OfficeContentBrand::create(['name' => 'Jauki ' . uniqid(), 'slug' => 'jauki-' . uniqid()]);
     }
 
     public function test_manual_ai_and_analyst_schedules_are_listed_for_management(): void
@@ -74,13 +74,14 @@ class LivingOfficePlannerBulkActionTest extends TestCase
 
     public function test_upcoming_is_scoped_to_requested_month(): void
     {
-        $this->schedule('September', [], '2026-09-30 10:00:00');
-        $this->schedule('October', [], '2026-10-02 10:00:00');
+        $this->schedule('September', [], now('Asia/Jakarta')->subDays(5)->format('Y-m-d H:i:s'));
+        $this->schedule('October', [], now('Asia/Jakarta')->addDays(5)->format('Y-m-d H:i:s'));
 
-        $response = $this->actingAs($this->owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31');
+        $response = $this->actingAs($this->owner)->getJson('/office/api/content-planner?start=' . now('Asia/Jakarta')->startOfMonth()->toDateString() . '&end=' . now('Asia/Jakarta')->endOfMonth()->toDateString());
 
         $response->assertOk();
-        $this->assertCount(1, $response->json('upcoming'));
+        
+		$this->assertCount(1, $response->json('upcoming'));
         $this->assertSame('October', $response->json('upcoming.0.name'));
     }
 
@@ -93,8 +94,8 @@ class LivingOfficePlannerBulkActionTest extends TestCase
             'platform' => 'instagram',
             'content_type' => 'feed',
             'topic' => $name,
-            'scheduled_at' => Carbon::parse($scheduledAt, 'Asia/Jakarta'),
-            'next_run_at' => Carbon::parse($scheduledAt, 'Asia/Jakarta'),
+            'scheduled_at' => Carbon::parse($scheduledAt),
+            'next_run_at' => Carbon::parse($scheduledAt),
             'generation_mode' => 'manual',
             'publishing_mode' => 'review',
             'is_active' => true,
