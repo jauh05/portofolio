@@ -252,6 +252,29 @@ DISPATCH = {
     ("jauki-social", "publish_last"): handle_publish_last,
 }
 
+PREVIEW_VISUAL_ACTION = "preview_visual"
+
+
+def _process_preview_visual(command: Dict[str, Any], command_id: str, client: OfficeCommandClient) -> bool:
+    """Preview-only path: never consults DISPATCH, emits no Office events, calls no provider."""
+    try:
+        from visual_preview_bridge import format_preview_message, run_preview_visual
+
+        result = run_preview_visual(command)
+    except Exception:
+        result = {"ok": False, "error": "preview_visual bridge unavailable", "provider_called": False}
+
+    if not result.get("ok"):
+        try:
+            client.update(command_id, "failed", _safe_error(RuntimeError(result.get("error") or "Invalid preview_visual command")))
+        except Exception as update_error:
+            logger.warning("Could not mark command %s failed: %s", command_id, _safe_error(update_error))
+        return False
+
+    logger.info("%s", format_preview_message(result))
+    client.update(command_id, "completed")
+    return True
+
 
 def process_command(
     command: Dict[str, Any],
@@ -265,6 +288,8 @@ def process_command(
 
     context: Dict[str, Any] = {"task_id": None, "task_started": False}
     client.update(command_id, "running")
+    if command.get("action") == PREVIEW_VISUAL_ACTION:
+        return _process_preview_visual(command, command_id, client)
     handler = DISPATCH.get((command.get("agent_id"), command.get("action")))
 
     try:
