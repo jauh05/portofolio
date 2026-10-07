@@ -60,6 +60,27 @@ After a future service restart, submit `preview_visual` commands to the normal S
 
 The first must return `primary_palette: "#173D26"`, the second `"#1F49E7"`; both must report `ok: true`, `dry_run: true`, and `provider_called: false`. Skipping the provider is successful preview behavior, not a failed preview. A payload with `dry_run: false` must return `ok: false`. No generation fallback, real image, or content publication is part of this check.
 
+If a live report labels Kauiz's `font` as `Inter`, inspect the structured `headline_font` field and the active runtime resources before changing source. This repository has no Kauiz UI font or `Inter` fallback in the preview path: `visual_worker_preview.py` returns the active brand's typography object and `visual_preview_bridge.py` reads its `headline` key directly. A read-only check from the runtime directory, with the service's Python interpreter and dummy bridge values, can print the loaded module/resource paths and the relevant result without calling a provider:
+
+```sh
+cd /home/jauhar/jauki-content-bot
+OFFICE_BRIDGE_URL=http://127.0.0.1:9 OFFICE_BRIDGE_TOKEN=offline-check PYTHONDONTWRITEBYTECODE=1 ./venv/bin/python -B - <<'PY'
+from visual_memory import MEMORY_DIR, VisualBrandMemory
+from visual_preview_bridge import run_preview_visual
+import visual_memory, visual_preview_bridge
+print('memory module:', visual_memory.__file__)
+print('bridge module:', visual_preview_bridge.__file__)
+print('resource directory:', MEMORY_DIR)
+print('Kauiz typography:', VisualBrandMemory().get('kauiz')['typography'])
+result = run_preview_visual({'agent_id': 'jauki-social', 'action': 'preview_visual', 'payload': {
+    'brand': 'kauiz', 'topic': 'Fokus Satu Tugas dalam Satu Waktu', 'output_mode': 'story', 'dry_run': True,
+}})
+print('preview:', {key: result.get(key) for key in ('ok', 'brand', 'template_id', 'headline_font', 'provider_called')})
+PY
+```
+
+Compare the printed `headline_font` with the reported `font` label. If they differ, trace the reporting or display field. If the loaded typography itself differs from the reviewed brand memory, compare the installed `brands.json` and Python file hashes against the deployment record. Do not overwrite a live file solely from the summary label.
+
 For `run_preview_visual()`, pass the full command envelope: `{"agent_id":"jauki-social","action":"preview_visual","payload":{...}}`. The standalone `visual_preview_bridge.py` CLI instead accepts only the inner payload JSON and creates that envelope itself. Passing the full envelope to the CLI nests it under `payload` and is rejected as unsupported fields. Likewise, calling `run_preview_visual()` with only the inner payload is rejected for missing `action`. A staged `ok: false` result should be checked against these invocation shapes and its `error` field; the exact Hermes invocation was not available during this audit.
 
 ## Rollback contract
