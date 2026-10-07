@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "source": "JaukiContentBot-integration/office_social_worker.py",
+      "destination": "/home/jauhar/jauki-content-bot/office_social_worker.py"
+    },
+    {
+      "source": "JaukiContentBot-integration/visual_preview_bridge.py",
+      "destination": "/home/jauhar/jauki-content-bot/visual_preview_bridge.py"
+    },
+    {
+      "source": "JaukiContentBot-integration/visual_worker_preview.py",
+      "destination": "/home/jauhar/jauki-content-bot/visual_worker_preview.py"
+    },
+    {
+      "source": "JaukiContentBot-integration/visual_memory.py",
+      "destination": "/home/jauhar/jauki-content-bot/visual_memory.py"
+    },
+    {
+      "source": "resources/office-ai/visual-memory/brands.json",
+      "destination": "/home/jauhar/resources/office-ai/visual-memory/brands.json"
+    },
+    {
+      "source": "resources/office-ai/visual-memory/visual-template-memory.json",
+      "destination": "/home/jauhar/resources/office-ai/visual-memory/visual-template-memory.json"
+    },
+    {
+      "source": "resources/office-ai/visual-memory/selection-rules.json",
+      "destination": "/home/jauhar/resources/office-ai/visual-memory/selection-rules.json"
+    }
+  ]
+}
