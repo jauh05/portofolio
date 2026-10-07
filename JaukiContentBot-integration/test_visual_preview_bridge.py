@@ -109,6 +109,7 @@ class PreviewBridgeBrandTests(PreviewSafetyMixin, unittest.TestCase):
         self.assertTrue(ok)
         self.assertEqual([u[1] for u in client.updates], ["running", "completed"])
         result = self.results[-1]
+        self.assertTrue(result["ok"])
         self.assertRegex(result["template_id"], TEMPLATE_ID)
         self.assertEqual(result["output_mode"], "story")
         self.assertEqual(result["primary_palette"], "#1F49E7")

@@ -1,11 +1,15 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
 
-from deploy_live_worker_preview import deploy, load_manifest, sha256
+from deploy_live_worker_preview import BACKUP_ROOT, deploy, load_manifest, sha256
 
 
 class DeployPreviewTests(unittest.TestCase):
+    def test_default_backup_root_is_durable(self):
+        self.assertEqual(BACKUP_ROOT, Path("/home/jauhar/backups/jauki-content-bot"))
+
     def test_manifest_maps_resources_to_visual_memory_parent(self):
         source_root = Path(__file__).resolve().parents[1]
         entries = load_manifest(source_root)
@@ -53,7 +57,11 @@ class DeployPreviewTests(unittest.TestCase):
             self.assertFalse(plan[1]["existed_before"])
             self.assertEqual(plan[0]["destination_sha256_before"], plan[0]["backup_sha256"])
             self.assertTrue(all(item["source_sha256"] == item["installed_sha256"] for item in plan))
-            self.assertTrue((backup_dir / "deployment-record.json").exists())
+            record = json.loads((backup_dir / "deployment-record.json").read_text())
+            self.assertEqual(record["files"], plan)
+            self.assertEqual(record["files"][0]["backup_sha256"], record["files"][0]["destination_sha256_before"])
+            self.assertFalse(record["files"][1]["existed_before"])
+            self.assertEqual(record["files"][1]["destination"], str(new_destination))
 
     def test_missing_source_blocks_all_copies(self):
         with tempfile.TemporaryDirectory() as root:

@@ -58,7 +58,9 @@ After a future service restart, submit `preview_visual` commands to the normal S
 {"brand":"kauiz","topic":"Fokus Satu Tugas dalam Satu Waktu","output_mode":"story","dry_run":true}
 ```
 
-The first must return `primary_palette: "#173D26"`, the second `"#1F49E7"`; both must report `provider_called: false`. A payload with `dry_run: false` must be rejected. No generation fallback, real image, or content publication is part of this check. The bridge's standalone CLI can run the same JSON payloads offline before connecting a command channel.
+The first must return `primary_palette: "#173D26"`, the second `"#1F49E7"`; both must report `ok: true`, `dry_run: true`, and `provider_called: false`. Skipping the provider is successful preview behavior, not a failed preview. A payload with `dry_run: false` must return `ok: false`. No generation fallback, real image, or content publication is part of this check.
+
+For `run_preview_visual()`, pass the full command envelope: `{"agent_id":"jauki-social","action":"preview_visual","payload":{...}}`. The standalone `visual_preview_bridge.py` CLI instead accepts only the inner payload JSON and creates that envelope itself. Passing the full envelope to the CLI nests it under `payload` and is rejected as unsupported fields. Likewise, calling `run_preview_visual()` with only the inner payload is rejected for missing `action`. A staged `ok: false` result should be checked against these invocation shapes and its `error` field; the exact Hermes invocation was not available during this audit.
 
 ## Rollback contract
 
