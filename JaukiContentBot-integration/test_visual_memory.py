@@ -196,6 +196,12 @@ class VisualMemoryTests(unittest.TestCase):
                 for font in fonts:
                     self.assertNotIn(font, serialized)
 
+    def test_live_reported_t15_uses_kauiz_font_memory(self):
+        prompt = self.compiler.compile_prompt("kauiz", self.analysis, "T15", {}, "story")["prompt"]
+        for font in ("League Spartan", "Archivo Black", "Plus Jakarta Sans"):
+            self.assertIn(font, prompt)
+        self.assertNotIn("Inter", prompt)
+
 
 if __name__ == "__main__":
     unittest.main()
