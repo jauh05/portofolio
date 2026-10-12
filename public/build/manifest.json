@@ -42,7 +42,7 @@
     ]
   },
   "resources/js/living-office/main.jsx": {
-    "file": "assets/main-BTcFVnHY.js",
+    "file": "assets/main-CNeogwRa.js",
     "name": "main",
     "src": "resources/js/living-office/main.jsx",
     "isEntry": true,
@@ -53,11 +53,11 @@
       "resources/js/living-office/preview3d/Office3DPreview.jsx"
     ],
     "css": [
-      "assets/main-D93cs4_p.css"
+      "assets/main-BXxz9xd6.css"
     ]
   },
   "resources/js/living-office/preview3d/Office3DPreview.jsx": {
-    "file": "assets/Office3DPreview-C4FuIPAS.js",
+    "file": "assets/Office3DPreview-D59CRpZU.js",
     "name": "Office3DPreview",
     "src": "resources/js/living-office/preview3d/Office3DPreview.jsx",
     "isDynamicEntry": true,

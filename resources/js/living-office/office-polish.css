@@ -1,22 +1,26 @@
-/* Final polish pass: topbar, planner, activity, agents and analyst cards.
+/* Final polish pass: topbar, planner, activity, agents, analyst cards and the bottom dock.
    Loaded last so these rules win over the older stacked overrides. */
 
-/* Topbar: fixed slots so labels never collide or squeeze */
-.office-redesign .topbar { gap: 16px; padding: 0 22px; }
-.office-redesign .brand { flex: 0 0 auto; width: auto; max-width: 240px; }
+/* Topbar: one segmented metrics capsule and one utility capsule, with fixed slots so nothing collides */
+.office-redesign .topbar { gap: 16px; padding: 0 20px; background: rgba(255, 255, 255, .96); border-bottom: 1px solid var(--border); box-shadow: 0 14px 30px -26px rgba(15, 46, 92, .45); }
+.office-redesign .brand { flex: 0 0 auto; width: auto; max-width: 230px; }
 .office-redesign .brand > div { min-width: 0; }
 .office-redesign .brand strong,
 .office-redesign .brand span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.office-redesign .top-metrics { flex: 1 1 auto; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.office-redesign .top-metric { min-width: 0; height: 56px; padding: 6px 14px 6px 6px; grid-template-columns: 38px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 10px; align-items: center; overflow: hidden; border: 0; border-radius: 999px; background: var(--surface-2); box-shadow: none; }
-.office-redesign .top-metric .metric-icon { grid-row: 1 / 3; width: 38px; height: 38px; border-radius: 50%; }
-.office-redesign .top-metric strong { font: 800 18px/1.05 Sora, sans-serif; letter-spacing: -.02em; white-space: nowrap; }
+.office-redesign .top-metrics { flex: 1 1 auto; min-width: 0; display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: var(--surface-2); }
+.office-redesign .top-metric { flex: 1 1 0; min-width: 0; height: 50px; padding: 0 14px 0 5px; display: grid; grid-template-columns: 36px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 10px; align-items: center; overflow: hidden; border: 0; border-radius: 999px; background: transparent; box-shadow: none; }
+.office-redesign .top-metric:hover { background: var(--surface); }
+.office-redesign .top-metric .metric-icon { grid-row: 1 / 3; width: 36px; height: 36px; border-radius: 50%; }
+.office-redesign .top-metric strong { font: 800 17px/1.05 Sora, sans-serif; letter-spacing: -.02em; white-space: nowrap; }
 .office-redesign .top-metric small { display: block; min-width: 0; overflow: hidden; color: var(--muted); font-size: 11px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
-.office-redesign .header-user { flex: 0 0 auto; width: auto; display: flex; align-items: center; gap: 8px; }
+.office-redesign .header-user { flex: 0 0 auto; width: auto; display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 999px; background: var(--surface-2); }
 .office-redesign .header-user > * { flex: 0 0 auto; }
-.office-redesign .current-time { display: grid; justify-items: end; white-space: nowrap; }
-.office-redesign .current-time strong { font: 800 15px/1.1 Sora, sans-serif; }
+.office-redesign .header-user .icon-button { background: var(--surface); }
+.office-redesign .current-time { display: grid; justify-items: start; gap: 1px; padding: 0 10px 0 12px; white-space: nowrap; }
+.office-redesign .current-time small { font-size: 10px; }
+.office-redesign .current-time strong { font: 800 14px/1.1 Sora, sans-serif; }
 @media (max-width: 1360px) { .office-redesign .user-copy { display: none; } }
+@media (max-width: 1180px) { .office-redesign .current-time { display: none; } }
 @media (max-width: 1100px) {
     .office-redesign .top-metric small { display: none; }
     .office-redesign .top-metric { grid-template-rows: 1fr; }
@@ -24,27 +28,57 @@
 @media (max-width: 480px) {
     .office-redesign .top-metrics,
     .office-redesign .current-time { display: none; }
-    .office-redesign .header-user { flex: 1; justify-content: flex-end; }
+    .office-redesign .header-user { flex: 1; justify-content: flex-end; background: transparent; }
 }
+/* Dark mode keeps the same capsule shapes */
+.office-redesign[data-theme="dark"] .top-metrics,
+.office-redesign[data-theme="dark"] .header-user { background: #0c2440; }
+.office-redesign[data-theme="dark"] .top-metric { background: transparent; }
+.office-redesign[data-theme="dark"] .top-metric:hover { background: #10304f; }
 
 /* Planner heading: in the stacked layout, the 360px flex basis would turn into a minimum height */
 @media (max-width: 760px) {
     .office-redesign .planner-view .view-heading > div:first-child { flex: 0 0 auto; width: 100%; }
 }
 
+/* Kelola Planner header: eyebrow, title, description and a segmented size switch */
+.office-redesign .planner-manage > header { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 14px 18px; padding: 0 0 16px; margin-bottom: 14px; border-bottom: 1px solid var(--border); }
+.office-redesign .planner-manage > header > div:first-child { display: grid; flex: 1 1 340px; gap: 6px; min-width: 0; }
+.office-redesign .planner-manage > header > div:first-child > span { color: var(--accent-strong); font: 800 11px 'JetBrains Mono', monospace; letter-spacing: .12em; }
+.office-redesign .planner-manage > header h2 { margin: 0; color: var(--text); font: 800 22px/1.15 Sora, sans-serif; letter-spacing: -.02em; }
+.office-redesign .planner-manage > header > div:first-child > p { margin: 0; color: var(--muted); font-size: 13px; }
+.office-redesign .panel-mode-control { display: inline-flex; justify-self: start; gap: 4px; margin-top: 6px; padding: 4px; border-radius: 999px; background: var(--surface-2); }
+.office-redesign .panel-mode-control button { padding: 7px 14px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 700 12px Inter, sans-serif; cursor: pointer; }
+.office-redesign .panel-mode-control button[aria-pressed="true"] { background: var(--highlight); color: #fff; box-shadow: var(--pill-shadow); }
+/* Bulk actions: a full-width row that wraps and never runs off the edge */
+.office-redesign .planner-actions { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.office-redesign .planner-actions button { padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--accent-strong); font: 700 12px Inter, sans-serif; white-space: nowrap; }
+.office-redesign .planner-actions button:disabled { border-color: transparent; background: var(--surface-2); color: var(--muted); opacity: 1; cursor: not-allowed; }
+
 /* Planner: the upcoming list sits below the calendar, not beside it */
 .office-redesign .planner-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; min-width: 0; }
 .office-redesign .planner-upcoming { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 16px 22px; align-items: start; min-width: 0; }
 .office-redesign .planner-upcoming > .pc-mini { grid-column: 1; grid-row: 1 / span 2; }
 .office-redesign .planner-upcoming > header { grid-column: 2; grid-row: 1; }
-.office-redesign .planner-upcoming-list { grid-column: 2; grid-row: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; min-width: 0; }
+.office-redesign .planner-upcoming-list { grid-column: 2; grid-row: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; min-width: 0; }
 .office-redesign .planner-upcoming-list > p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12px; }
+/* AKAN DATANG items stack vertically so titles, dates and buttons never overlap */
+.office-redesign .planner-upcoming article { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-width: 0; padding: 16px; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 20px; background: var(--surface); box-shadow: 0 14px 28px -26px rgba(15, 46, 92, .5); }
+.office-redesign .planner-upcoming article > div { display: grid; gap: 4px; min-width: 0; }
+.office-redesign .planner-upcoming article em { justify-self: start; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font: 800 9.5px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .08em; text-transform: uppercase; }
+.office-redesign .planner-upcoming article b { display: -webkit-box; overflow: hidden; color: var(--text); font: 800 14px/1.3 Sora, sans-serif; overflow-wrap: anywhere; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.office-redesign .planner-upcoming article small { color: var(--muted); font-size: 11px; line-height: 1.4; }
+.office-redesign .planner-upcoming article time { justify-self: start; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--text); font: 700 11px 'JetBrains Mono', monospace; white-space: nowrap; }
+.office-redesign .planner-upcoming article button { justify-self: stretch; padding: 9px 12px; border: 0; border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font: 700 12px Inter, sans-serif; }
 @media (max-width: 760px) {
     .office-redesign .planner-upcoming { grid-template-columns: minmax(0, 1fr); }
     .office-redesign .planner-upcoming > .pc-mini,
     .office-redesign .planner-upcoming > header,
     .office-redesign .planner-upcoming-list { grid-column: 1; grid-row: auto; }
 }
+
+/* Bottom dock: breathing room under the 3D frame instead of touching the viewport edge */
+.office-redesign .bottom-dock { margin-bottom: 20px; }
 
 /* Activity: each event reads as a card, with time, actor and type as pills */
 .office-redesign .activity-card-list { max-width: none; gap: 12px; }
