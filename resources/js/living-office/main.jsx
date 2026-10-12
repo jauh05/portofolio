@@ -22,6 +22,7 @@ import './living-office.css';
 import './office-redesign.css';
 import './office-views.css';
 import './analyst-report-cards.css';
+import './office-polish.css';
 
 const statusTone = (status) => ({
     monitoring: 'cyan', generating: 'violet', working: 'blue', planning: 'green', completed: 'green',

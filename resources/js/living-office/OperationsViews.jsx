@@ -25,10 +25,12 @@ function State({ icon: Icon = Inbox, title, detail, retry }) {
 function AgentCard({ agent, onSelect }) {
     const connected = !unavailable.has(agent.status);
     const progress = Math.max(0, Math.min(100, Number(agent.progress) || 0));
+    const busy = ['running', 'working', 'busy', 'active'].includes(agent.status);
+    const taskLabel = busy ? 'SEDANG DIKERJAKAN' : agent.status === 'completed' ? 'SELESAI' : agent.status === 'offline' ? 'OFFLINE' : connected ? 'MENUNGGU TUGAS' : 'BELUM TERHUBUNG';
     return <button type="button" className="roster-card" onClick={() => onSelect?.(agent.id)} style={{ '--worker-color': agent.color }} aria-label={`Buka detail ${agent.name}`}>
         <div className="roster-card-top"><span className="roster-avatar">{agent.shortName}</span><span className={`roster-state ${connected ? 'is-online' : 'is-offline'}`}><i />{agent.status.replaceAll('_', ' ')}</span></div>
         <div className="roster-card-title"><strong>{agent.name}</strong><small>{agent.role}</small></div>
-        <div className="roster-card-task"><span>SEDANG DIKERJAKAN</span><p>{agent.currentTask || (connected ? 'Menunggu tugas berikutnya' : 'Integrasi belum terhubung')}</p></div>
+        <div className="roster-card-task"><span>{taskLabel}</span><p>{agent.currentTask || (connected ? 'Menunggu tugas berikutnya' : 'Integrasi belum terhubung')}</p></div>
         <div className="roster-card-progress"><span>Progress <b>{progress}%</b></span><i><em style={{ width: `${progress}%` }} /></i></div>
         <div className="roster-card-bottom"><small>{agent.parentSystem}</small><span>Detail worker <ArrowUpRight size={15} /></span></div>
     </button>;
