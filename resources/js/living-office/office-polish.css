@@ -77,8 +77,39 @@
     .office-redesign .planner-upcoming-list { grid-column: 1; grid-row: auto; }
 }
 
-/* Bottom dock: breathing room under the 3D frame instead of touching the viewport edge */
-.office-redesign .bottom-dock { margin-bottom: 20px; }
+/* Overview: the roster sits under the 3D frame. The canvas keeps its previous width (frame minus the old 220px roster column) and height */
+.office-redesign .main-stage:has(.office3d.office3d-full) { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.office-redesign .office3d.office3d-full { flex: 0 0 auto; height: auto; }
+.office-redesign .main-stage:has(.office3d.office3d-full) > .office-renderer { flex: none; height: auto; min-height: 0; overflow: visible; contain: none; }
+.office-redesign .office3d-full .office3d-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; height: auto; min-height: 0; }
+.office-redesign .office3d-full .office3d-canvas { width: calc(100% - 220px); margin: 0 auto; }
+@media (min-width: 1001px) {
+    .office-redesign .office3d-full .office3d-canvas { height: clamp(540px, calc(100vh - 170px), 760px); min-height: 0; }
+}
+@media (max-width: 1000px) {
+    .office-redesign .office3d-full .office3d-canvas { width: 100%; }
+}
+.office-redesign .office3d-full .office3d-detail { display: grid; grid-template-columns: 220px minmax(0, 1fr) 260px; gap: 12px 22px; align-items: start; max-height: none; padding: 18px 22px 22px; border-top: 1px solid var(--border); }
+.office-redesign .office3d-full .office3d-detail > .office3d-eyebrow { grid-column: 1; grid-row: 1; }
+.office-redesign .office3d-full .office3d-detail > h2 { grid-column: 1; grid-row: 2; }
+.office-redesign .office3d-full .office3d-detail > .office3d-roster { grid-column: 2; grid-row: 1 / span 3; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.office-redesign .office3d-full .office3d-detail > details { grid-column: 3; grid-row: 1; }
+.office-redesign .office3d-full .office3d-detail > .office3d-selected { grid-column: 3; grid-row: 2; }
+.office-redesign .office3d-full .office3d-detail > .office3d-note { grid-column: 1; grid-row: 3; }
+@media (max-width: 1000px) {
+    .office-redesign .office3d-full .office3d-detail { grid-template-columns: minmax(0, 1fr); }
+    .office-redesign .office3d-full .office3d-detail > * { grid-column: 1 !important; grid-row: auto !important; }
+    .office-redesign .office3d-full .office3d-detail > .office3d-roster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Bottom dock: two cards per row, larger, with breathing room from the viewport edge */
+.office-redesign .bottom-dock { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.office-redesign .bottom-dock > section { min-height: 180px; padding: 20px 22px; border-radius: 24px; }
+.office-redesign .bottom-dock > .dock-status { grid-column: 1 / -1; min-height: 0; }
+.office-redesign .bottom-dock p { font-size: 13px; line-height: 1.5; }
+@media (max-width: 560px) {
+    .office-redesign .bottom-dock { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* Activity: each event reads as a card, with time, actor and type as pills */
 .office-redesign .activity-card-list { max-width: none; gap: 12px; }
@@ -113,3 +144,23 @@
 .office-redesign .plan-action > span > b { font: 800 15px/1.3 Sora, sans-serif; }
 /* Legacy proposals carry only a <strong> title (no topic <b>), so it reads as a title, not a tag */
 .office-redesign .plan-action > span:not(:has(> b)) > strong { font: 800 14px/1.35 Sora, sans-serif; letter-spacing: 0; text-transform: none; color: var(--text); }
+
+/* Kelola Planner bulk actions sit on their own full-width row under the title */
+.office-redesign .planner-manage > header > .planner-actions { flex: 1 1 100%; justify-content: flex-start; }
+
+/* Generation result: image and text sit side by side across the card, not in a narrow column */
+.office-redesign .planner-result { display: grid; grid-template-columns: minmax(170px, 240px) minmax(0, 1fr); align-items: start; gap: 10px 18px; width: 100%; max-width: none; justify-items: stretch; }
+.office-redesign .planner-result:not(:has(> .planner-generated-image)),
+.office-redesign .planner-result:has(> .planner-generated-image.story) { grid-template-columns: minmax(0, 1fr); }
+.office-redesign .planner-result > .planner-success { grid-column: 1 / -1; justify-self: start; }
+.office-redesign .planner-result > .planner-generated-image { width: 100%; max-width: 240px; }
+.office-redesign .planner-result > .planner-generated-image.story { width: 100%; max-width: 160px; }
+.office-redesign .planner-result > .planner-result-text { max-width: none; }
+.office-redesign .planner-card-expanded .planner-result { grid-template-columns: minmax(200px, 280px) minmax(0, 1fr); max-width: none; }
+.office-redesign .planner-card-expanded .planner-result > .planner-generated-image { max-width: 280px; }
+.office-redesign .planner-card-expanded .planner-result:has(> .planner-generated-image.story) { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 640px) {
+    .office-redesign .planner-result,
+    .office-redesign .planner-card-expanded .planner-result { grid-template-columns: minmax(0, 1fr); }
+    .office-redesign .planner-result > .planner-generated-image { max-width: 100%; }
+}
