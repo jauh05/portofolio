@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { BarChart3, Check, ChevronRight, ClipboardCheck, Clock3, FileClock, Lightbulb, Play, Sparkles, X } from 'lucide-react';
-import './analyst-reports.css';
-import './analyst-report-mode.css';
 
 const scopeLabels = {
     today: 'Today', last_7_days: 'Last 7 days', content_planner: 'Content planner', worker_performance: 'Worker activity', brand: 'Brand workspace',

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { X, Edit2, CheckCircle2, Wand2 } from 'lucide-react';
-import './content-review.css';
 import { contentPreview } from './plannerGeneration';
 import { GeneratedImage } from './PlannerGenerationCard';
 
