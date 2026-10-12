@@ -4,10 +4,7 @@ import { PlannerCalendar } from '../../resources/js/living-office/PlannerCalenda
 import { calendarRange, readCalendarView, shiftCalendarDate, todayKey, writeCalendarView } from '../../resources/js/living-office/calendarViewModel';
 import '../../resources/js/living-office/living-office.css';
 import '../../resources/js/living-office/office-redesign.css';
-import '../../resources/js/living-office/office-pages.css';
-import '../../resources/js/living-office/office-refinement.css';
-import '../../resources/js/living-office/planner-generation.css';
-import '../../resources/js/living-office/planner-calendar.css';
+import '../../resources/js/living-office/office-views.css';
 
 // Synthetic visual QA. No Office API or production data is accessed.
 const events = [

@@ -20,10 +20,7 @@ import OfficeRenderer from './OfficeRenderer';
 import { normalizeRoster } from './preview3d/full/roster';
 import './living-office.css';
 import './office-redesign.css';
-import './office-pages.css';
-import './office-refinement.css';
-import './planner-generation.css';
-import './planner-calendar.css';
+import './office-views.css';
 
 const statusTone = (status) => ({
     monitoring: 'cyan', generating: 'violet', working: 'blue', planning: 'green', completed: 'green',
@@ -32,7 +29,7 @@ const statusTone = (status) => ({
 }[status] || 'slate');
 
 function BrandMark() {
-    return <div className="brand-mark" aria-hidden="true"><span /><Bot size={24} /></div>;
+    return <div className="brand-mark" aria-hidden="true"><b>JF</b></div>;
 }
 
 function Header({ summary, notifications, unread, onRead, onReadAll, onNotificationOpen, theme, onThemeToggle }) {

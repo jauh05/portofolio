@@ -3,9 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { PlannerGenerationCard } from '../../resources/js/living-office/PlannerGenerationCard';
 import '../../resources/js/living-office/living-office.css';
 import '../../resources/js/living-office/office-redesign.css';
-import '../../resources/js/living-office/office-pages.css';
-import '../../resources/js/living-office/office-refinement.css';
-import '../../resources/js/living-office/planner-generation.css';
+import '../../resources/js/living-office/office-views.css';
 
 // Synthetic visual QA only. No Office API is called and no data is persisted.
 const base = { id: 'demo', name: 'Tips belajar teknologi kompleks', platform: 'instagram', contentType: 'feed', generationMode: 'manual', publishingMode: 'review', isActive: true, metadata: { source: 'analyst' } };

@@ -6,10 +6,7 @@ import {AnalystReports} from '../../resources/js/living-office/AnalystReports';
 import {ContentPlanner} from '../../resources/js/living-office/ContentPlanner';
 import '../../resources/js/living-office/living-office.css';
 import '../../resources/js/living-office/office-redesign.css';
-import '../../resources/js/living-office/office-pages.css';
-import '../../resources/js/living-office/office-refinement.css';
-import '../../resources/js/living-office/planner-generation.css';
-import '../../resources/js/living-office/planner-calendar.css';
+import '../../resources/js/living-office/office-views.css';
 
 // Development fixture only. Every record below is synthetic and never reaches Office APIs.
 const agents=[
