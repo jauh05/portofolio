@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OfficeAnalystReport;
+use App\Models\OfficeResearchRun;
 use App\Services\OfficeAnalystReportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,60 @@ class OfficeAnalystReportController extends Controller
     public function index(): JsonResponse
     {
         return response()->json(['data' => OfficeAnalystReport::latest('generated_at')->limit(30)->get()->map(fn (OfficeAnalystReport $report) => $this->payload($report))]);
+    }
+
+    public function researchStats(): JsonResponse
+    {
+        $timezone = 'Asia/Jakarta';
+        $today = now($timezone)->startOfDay();
+        $days = collect(range(13, 0))->map(fn (int $ago) => $today->copy()->subDays($ago)->toDateString());
+        $runs = OfficeResearchRun::query()->latest('created_at')->limit(500)
+            ->get(['id', 'query', 'status', 'sources', 'findings', 'trends', 'content_ideas', 'created_at']);
+
+        $count = fn (?array $value) => is_array($value) ? count($value) : 0;
+        $byDay = $runs->groupBy(fn (OfficeResearchRun $run) => $run->created_at?->setTimezone($timezone)->toDateString());
+        $series = $days->map(function (string $date) use ($byDay) {
+            $items = $byDay->get($date, collect());
+            return [
+                'date' => $date,
+                'total' => $items->count(),
+                'completed' => $items->where('status', 'completed')->count(),
+                'running' => $items->whereIn('status', ['queued', 'running'])->count(),
+                'failed' => $items->where('status', 'failed')->count(),
+            ];
+        })->values();
+
+        $totals = [
+            'runs' => $runs->count(),
+            'completed' => $runs->where('status', 'completed')->count(),
+            'running' => $runs->whereIn('status', ['queued', 'running'])->count(),
+            'failed' => $runs->where('status', 'failed')->count(),
+            'sources' => $runs->sum(fn (OfficeResearchRun $run) => $count($run->sources)),
+            'findings' => $runs->sum(fn (OfficeResearchRun $run) => $count($run->findings)),
+            'trends' => $runs->sum(fn (OfficeResearchRun $run) => $count($run->trends)),
+            'contentIdeas' => $runs->sum(fn (OfficeResearchRun $run) => $count($run->content_ideas)),
+        ];
+
+        $topics = $runs->groupBy(fn (OfficeResearchRun $run) => $run->query ?: 'General Trends')
+            ->map(fn ($items, $topic) => ['topic' => $topic, 'runs' => $items->count(), 'sources' => $items->sum(fn (OfficeResearchRun $run) => $count($run->sources))])
+            ->sortByDesc('sources')->take(5)->values();
+
+        $recent = $runs->take(6)->map(fn (OfficeResearchRun $run) => [
+            'id' => $run->id,
+            'query' => $run->query ?: 'General Trends',
+            'status' => $run->status,
+            'sources' => $count($run->sources),
+            'findings' => $count($run->findings),
+            'createdAt' => $run->created_at?->toIso8601String(),
+        ])->values();
+
+        return response()->json(['data' => [
+            'generatedAt' => now($timezone)->toIso8601String(),
+            'totals' => $totals,
+            'series' => $series,
+            'topics' => $topics,
+            'recent' => $recent,
+        ]]);
     }
 
     public function show(OfficeAnalystReport $report): JsonResponse

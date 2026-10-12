@@ -3,6 +3,7 @@ import { ArrowUpRight, AtSign, CalendarDays, FileText, Instagram, PlugZap, Searc
 import { channelReadiness } from './connectionReadiness';
 
 const unavailable = new Set(['offline', 'not_connected', 'not_installed']);
+const readinessPercent = readiness => Math.round(['worker', 'generator', 'account', 'publishing'].filter(key => readiness[key] === 'READY').length / 4 * 100);
 const channels = [
     { id: 'jauki-social', name: 'Instagram', label: 'Social content', icon: Instagram, tone: 'violet', outputs: [{ action: 'generate_feed', label: 'Feed & caption' }, { action: 'generate_story', label: 'Story' }] },
     { id: 'jauki-article', name: 'Artikel Web', label: 'Editorial', icon: FileText, tone: 'cyan', outputs: [{ action: 'generate_article', label: 'Draft artikel & SEO' }] },
@@ -30,6 +31,7 @@ export function ApiStatus({ agents, onSelectWorker }) {
                 <div className="api-channel-top"><span className="api-channel-icon"><Icon size={22} /></span><span className={`readiness-tag ${readiness.worker.toLowerCase().replaceAll(' ','-')}`}>Worker {readiness.worker}</span></div>
                 <small>{channel.label}</small><h2>{channel.name}</h2><p>{agent?.name || 'Worker belum terdaftar'} · {agent?.role || 'Integrasi belum tersedia'}</p>
                 <dl className="api-readiness-rows"><div><dt>Worker</dt><dd>{readiness.worker}</dd></div><div><dt>Generator</dt><dd>{readiness.generator}</dd></div><div><dt>Account connection</dt><dd>{readiness.account}</dd></div><div><dt>Publishing</dt><dd>{readiness.publishing}</dd></div></dl>
+                <div className="api-progress"><span>Kesiapan</span><b>{readinessPercent(readiness)}%</b><i><em style={{ width: `${readinessPercent(readiness)}%` }} /></i></div>
                 <div className="api-channel-capabilities"><span>AKSI YANG TERSEDIA</span>{outputs.length ? outputs.map(output => <div key={output.action}><Sparkles size={15} />{output.label}</div>) : <div>Belum ada aksi generasi yang tersedia.</div>}</div>
                 <button type="button" disabled={!connected} onClick={() => onSelectWorker(channel.id)}>Buka worker <ArrowUpRight size={16} /></button>
             </article>;
