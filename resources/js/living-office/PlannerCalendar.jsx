@@ -19,6 +19,21 @@ function EventButton({ item, compact = false, statusFor, onOpen }) {
     </button>;
 }
 
+export function PlannerMiniMonth({ selectedDate, occurrences = [], onSelect }) {
+    const range = calendarRange('month', selectedDate);
+    const today = todayKey();
+    const byDay = groupCalendarOccurrences(occurrences);
+    const dates = datesInRange(range.start, range.end);
+    return <section className="pc-mini" aria-label="Mini kalender bulan ini">
+        <header><strong>{calendarTitle('month', selectedDate)}</strong></header>
+        <div className="pc-mini-grid">
+            {WEEKDAYS.map(day => <span key={day} className="pc-mini-weekday" aria-hidden="true">{day}</span>)}
+            {Array.from({ length: weekdayIndex(range.start) }, (_, index) => <span key={`gap-${index}`} aria-hidden="true" />)}
+            {dates.map(key => <button type="button" key={key} className={`pc-mini-day ${key === today ? 'is-today' : ''} ${key === selectedDate ? 'is-selected' : ''}`} aria-label={dateLabel(key)} aria-pressed={key === selectedDate} onClick={() => onSelect(key)}>{dateNumber(key)}{byDay[key]?.length ? <i aria-hidden="true" /> : null}</button>)}
+        </div>
+    </section>;
+}
+
 export function PlannerCalendar({ view, selectedDate, occurrences = [], loading = false, onViewChange, onPrevious, onNext, onToday, onDateSelect, onOpenOccurrence, statusFor }) {
     const range = calendarRange(view, selectedDate);
     const today = todayKey();

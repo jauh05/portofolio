@@ -107,7 +107,7 @@ function ContentReviewBody({ contentItem, onClose, reviseContent, updateContent,
                 <header>
                     <div>
                         <span>CONTENT REVIEW</span>
-                        <h2>{contentItem.brand?.name} · {contentItem.platform} {contentItem.content_type}</h2>
+                        <h2>{[contentItem.brand?.name, [contentItem.platform, outputType].filter(Boolean).join(' ')].filter(Boolean).join(' · ')}</h2>
                     </div>
                     <button onClick={onClose}><X size={18} /></button>
                 </header>
