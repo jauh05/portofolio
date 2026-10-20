@@ -98,7 +98,7 @@ export function useOfficeData() {
         await refresh();
         return schedule;
     };
-    const analyzePlan = async (prompt) => request('/office/api/content-planner/analyze', { method: 'POST', body: JSON.stringify({ prompt }) });
+    const analyzePlan = async (prompt, extra = {}) => request('/office/api/content-planner/analyze', { method: 'POST', body: JSON.stringify({ prompt, ...extra }) });
     const updateSchedule = async (id, payload) => {
         const schedule = await request(`/office/api/content-schedules/${id}`, { method: 'PATCH', body: JSON.stringify(payload) });
         await refresh();

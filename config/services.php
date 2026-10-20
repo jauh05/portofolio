@@ -43,6 +43,12 @@ return [
         'base_url' => env('OFFICE_AI_BASE_URL'),
         'api_key' => env('OFFICE_AI_API_KEY'),
         'model' => env('OFFICE_AI_MODEL'),
+        'fallback' => [
+            'enabled' => env('OFFICE_AI_FALLBACK_ENABLED', true),
+            'base_url' => env('OFFICE_AI_FALLBACK_BASE_URL'),
+            'api_key' => env('OFFICE_AI_FALLBACK_API_KEY'),
+            'model' => env('OFFICE_AI_FALLBACK_MODEL'),
+        ],
     ],
 
     'telegram' => [

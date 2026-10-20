@@ -8,6 +8,7 @@ use App\Models\OfficeContentSchedule;
 use App\Services\OfficeAiGatewayException;
 use App\Services\OfficeContentPlannerAiService;
 use App\Services\OfficeScheduledGenerationService;
+use App\Services\OfficeTrentOrchestratorService;
 use Carbon\CarbonInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
@@ -127,11 +128,77 @@ class OfficeContentPlannerController extends Controller
         return response()->json($this->brandPayload($brand->fresh()));
     }
 
-    public function analyze(Request $request, OfficeContentPlannerAiService $planner): JsonResponse
+    public function analyze(Request $request, OfficeTrentOrchestratorService $trent, OfficeContentPlannerAiService $planner): JsonResponse
     {
         $prompt = $request->validate(['prompt' => ['required', 'string', 'min:8', 'max:2000']])['prompt'];
         try {
-            return response()->json($planner->analyze($prompt, OfficeContentBrand::where('is_active', true)->orderBy('name')->get()));
+            $brands = OfficeContentBrand::where('is_active', true)->orderBy('name')->get();
+            $brandId = $request->input('brand_id') ?: $request->input('workspace_id') ?: $brands->first()?->id;
+
+            if ($brandId && $brands->pluck('id')->contains($brandId)) {
+                $result = $trent->processIntent($prompt, (string) $brandId);
+                if (($result['status'] ?? null) === 'needs_confirmation') {
+                    $items = [];
+                    foreach ($result['items'] ?? [] as $item) {
+                        $items[] = [
+                            'name' => $item['topic'] ?? ucfirst((string) ($item['content_type'] ?? 'Konten')),
+                            'brand_id' => $brandId,
+                            'schedule_type' => 'one_time',
+                            'platform' => $item['platform'] ?? null,
+                            'content_type' => $item['content_type'] ?? null,
+                            'topic' => $item['topic'] ?? null,
+                            'scheduled_at' => $item['scheduled_at'] ?? null,
+                            'timezone' => 'Asia/Jakarta',
+                            'generation_timing' => $item['generation_timing'] ?? $item['generation_timing_label'] ?? null,
+                            'generation_mode' => in_array($item['generation_timing'] ?? null, ['immediate', 'lead_time'], true) ? 'automatic' : 'manual',
+                            'publishing_mode' => $item['publishing_mode'] ?? 'review',
+                            'metadata' => [
+                                'source' => 'agent_reach',
+                                'trent_plan_id' => $item['plan_id'] ?? null,
+                                'generation_timing_label' => $item['generation_timing_label'] ?? null,
+                                'agent' => 'Agent-Reach',
+                            ],
+                        ];
+                    }
+
+                    return response()->json([
+                        'plan' => [
+                            'type' => 'schedule_plan',
+                            'items' => $items,
+                        ],
+                        'clarifications' => [],
+                        'source' => 'agent_reach',
+                        'summary' => $result['summary'] ?? null,
+                        'report_id' => $result['report_id'] ?? null,
+                    ]);
+                }
+
+                if (($result['status'] ?? null) === 'ambiguous') {
+                    $summary = $result['summary'] ?? 'Perlu klarifikasi.';
+                    $clarifications = collect(preg_split('/[\n\r]+/', (string) $summary))
+                        ->map(fn ($line) => trim($line))
+                        ->filter(fn ($line) => $line !== '')
+                        ->values()->all();
+                    if ($clarifications === []) {
+                        $clarifications[] = $summary;
+                    }
+
+                    return response()->json([
+                        'plan' => ['type' => 'schedule_plan', 'items' => []],
+                        'clarifications' => $clarifications,
+                        'source' => 'agent_reach',
+                    ]);
+                }
+
+                if (($result['status'] ?? null) === 'error') {
+                    return response()->json([
+                        'message' => $result['summary'] ?? 'Gagal membuat rencana dari Agent-Reach.',
+                        'source' => 'agent_reach',
+                    ], 422);
+                }
+            }
+
+            return response()->json($planner->analyze($prompt, $brands));
         } catch (OfficeAiGatewayException $exception) {
             return response()->json(['message' => $exception->getMessage()], $exception->getCode() ?: 422);
         } catch (\RuntimeException $exception) {
