@@ -7,12 +7,12 @@ const PLATFORM_LABELS = {
     'threads:threads': 'Threads',
 };
 
-const TIMING_LABELS = {
-    'H-1': 'H-1 · otomatis',
-    'H-2': 'H-2 · otomatis',
-    now: 'Sekarang',
-    manual: 'Manual',
-};
+export const TIMING_OPTIONS = [
+    { value: 'H-1', label: 'H-1 · otomatis' },
+    { value: 'H-2', label: 'H-2 · otomatis' },
+    { value: 'now', label: 'Sekarang' },
+    { value: 'manual', label: 'Manual' },
+];
 
 export const SUGGESTIONS = [
     'Buat 2 konten Instagram Feed besok jam 10',
@@ -27,7 +27,17 @@ export function platformLabel(item) {
 }
 
 export function timingLabel(item) {
-    return TIMING_LABELS[item.generation_timing_label] || 'Manual';
+    return TIMING_OPTIONS.find(option => option.value === item.generation_timing_label)?.label || 'Manual';
+}
+
+/* Each proposed item starts with the timing Trent chose for it. The owner can change it before approving. */
+export function timingMapFrom(items) {
+    return Object.fromEntries(items.map(item => [item.plan_id, item.generation_timing_label]));
+}
+
+/* 'plan' keeps each selected item's own timing. 'now' and 'manual' apply one timing to every selected item. */
+export function timingPayload(ids, timings, mode = 'plan') {
+    return Object.fromEntries(ids.map(id => [id, mode === 'plan' ? timings[id] : mode]));
 }
 
 /* The backend sends Asia/Jakarta wall time without an offset ("Y-m-d H:i:s"). */
@@ -58,8 +68,11 @@ export function toggleSelection(selected, planId) {
     return selected.includes(planId) ? selected.filter(id => id !== planId) : [...selected, planId];
 }
 
-export function approvalNotice(count) {
-    return `${count} jadwal dibuat. Timing Sekarang langsung masuk antrean generate. H-1 dan H-2 berjalan otomatis sesuai tanggalnya.`;
+export function approvalNotice(count, mode = 'plan') {
+    const summary = `${count} jadwal dibuat.`;
+    if (mode === 'now') return `${summary} Generate dimulai sekarang.`;
+    if (mode === 'manual') return `${summary} Tidak ada generate otomatis.`;
+    return `${summary} Timing Sekarang langsung masuk antrean generate. H-1 dan H-2 berjalan otomatis sesuai tanggalnya.`;
 }
 
 export function dismissNotice() {

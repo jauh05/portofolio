@@ -159,10 +159,10 @@ class OfficeContentPlannerController extends Controller
             'brand_id' => $schedule->brand_id,
             'content_type' => $schedule->content_type, 'topic' => $schedule->topic, 'brief' => $schedule->brief,
             'assigned_agent' => $schedule->assigned_agent, 'timezone' => $schedule->timezone,
-            'scheduled_at' => $schedule->scheduled_at?->format('Y-m-d H:i:s'),
+            'scheduled_at' => $this->immutable($schedule->scheduled_at, $schedule->timezone ?? 'Asia/Jakarta')?->format('Y-m-d H:i:s'),
             'frequency' => $schedule->recurrence_rule['frequency'] ?? null, 'days' => $schedule->recurrence_rule['days'] ?? [],
-            'time' => $schedule->recurrence_rule['time'] ?? null, 'starts_at' => $schedule->starts_at?->format('Y-m-d H:i:s'),
-            'ends_at' => $schedule->ends_at?->format('Y-m-d H:i:s'), 'generation_mode' => $schedule->generation_mode,
+            'time' => $schedule->recurrence_rule['time'] ?? null, 'starts_at' => $this->immutable($schedule->starts_at, $schedule->timezone ?? 'Asia/Jakarta')?->format('Y-m-d H:i:s'),
+            'ends_at' => $this->immutable($schedule->ends_at, $schedule->timezone ?? 'Asia/Jakarta')?->format('Y-m-d H:i:s'), 'generation_mode' => $schedule->generation_mode,
             'generation_timing' => $schedule->generation_timing ?? 'manual', 'generation_lead_minutes' => $schedule->generation_lead_minutes,
             'publishing_mode' => $schedule->publishing_mode, 'is_active' => $schedule->is_active, 'metadata' => $schedule->metadata,
         ];
@@ -226,7 +226,9 @@ class OfficeContentPlannerController extends Controller
         $query = OfficeContentSchedule::where('is_active', true)
             ->when($data['brand_id'] ?? null, fn ($q, $brandId) => $q->where('brand_id', $brandId))
             ->where(function ($q) use ($data) {
-                $q->whereBetween('scheduled_at', [$data['start'], $data['end']])->orWhere('schedule_type', 'recurring');
+                $from = CarbonImmutable::parse($data['start'], 'Asia/Jakarta')->startOfDay()->utc()->format('Y-m-d H:i:s');
+                $to = CarbonImmutable::parse($data['end'], 'Asia/Jakarta')->endOfDay()->utc()->format('Y-m-d H:i:s');
+                $q->whereBetween('scheduled_at', [$from, $to])->orWhere('schedule_type', 'recurring');
             });
         $summary = ['eligible' => 0, 'generated' => 0, 'skipped' => 0, 'failed' => 0];
         foreach ($query->limit(100)->get() as $schedule) {

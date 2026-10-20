@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\UtcDatetime;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ class OfficeContentPlanItem extends Model
     protected function casts(): array
     {
         return [
-            'scheduled_at' => 'datetime',
+            'scheduled_at' => UtcDatetime::class,
             'metadata' => 'array',
         ];
     }

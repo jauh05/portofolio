@@ -1,31 +1,38 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Bot, Send, Sparkles, X } from 'lucide-react';
 import { request } from './useOfficeData';
-import { SUGGESTIONS, approvalNotice, dismissNotice, formatScheduledAt, historyFrom, platformLabel, selectAll, timingLabel, toggleSelection } from './plannerChat';
+import { SUGGESTIONS, TIMING_OPTIONS, approvalNotice, dismissNotice, formatScheduledAt, historyFrom, platformLabel, selectAll, timingMapFrom, timingPayload, toggleSelection } from './plannerChat';
 
 let messageSeq = 0;
 const newId = () => `chat-${Date.now()}-${messageSeq++}`;
 
-function ProposalCard({ message, onToggle, onApprove, onDismiss, onRevise }) {
+function ProposalCard({ message, onToggle, onTiming, onApprove, onDismiss, onRevise }) {
     const { proposal } = message;
     const locked = proposal.state !== 'open';
+    const hasSelection = proposal.selected.length > 0;
     return <div className="pchat-proposal">
         <ul className="pchat-items">
             {proposal.items.map(item => {
                 const checked = proposal.selected.includes(item.plan_id);
+                const timing = proposal.timings[item.plan_id];
                 return <li key={item.plan_id} className={checked ? 'is-checked' : ''}>
                     <label>
                         <input type="checkbox" checked={checked} disabled={locked} onChange={() => onToggle(message.id, item.plan_id)} />
                         <span><strong>{item.topic}</strong><small>{platformLabel(item)} · {formatScheduledAt(item.scheduled_at)}</small></span>
-                        <em className={`pchat-timing t-${item.generation_timing_label}`}>{timingLabel(item)}</em>
                     </label>
+                    <select className={`pchat-timing t-${timing}`} aria-label={`Timing untuk ${item.topic}`} value={timing} disabled={locked}
+                        onChange={event => onTiming(message.id, item.plan_id, event.target.value)}>
+                        {TIMING_OPTIONS.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    </select>
                 </li>;
             })}
         </ul>
         {proposal.state === 'open' && <div className="pchat-actions">
-            <button type="button" className="pchat-primary" disabled={!proposal.selected.length} onClick={() => onApprove(message)}>Buat jadwal</button>
-            <button type="button" onClick={() => onRevise()}>Ubah</button>
-            <button type="button" onClick={() => onDismiss(message)} disabled={!proposal.selected.length}>Batal</button>
+            <button type="button" className="pchat-primary" disabled={!hasSelection} onClick={() => onApprove(message, 'plan')}>Buat jadwal</button>
+            <button type="button" disabled={!hasSelection} onClick={() => onApprove(message, 'now')}>Buat &amp; Generate</button>
+            <button type="button" disabled={!hasSelection} onClick={() => onApprove(message, 'manual')}>Buat aja (manual)</button>
+            <button type="button" onClick={() => onRevise()}>Edit</button>
+            <button type="button" onClick={() => onDismiss(message)}>Batal</button>
         </div>}
         {proposal.state === 'saving' && <p className="pchat-muted">Menyimpan…</p>}
         {proposal.state === 'approved' && <p className="pchat-done">Jadwal sudah dibuat.</p>}
@@ -62,7 +69,7 @@ export function ContentPlannerChat({ workspaceId, onChanged }) {
             });
             if (result.status === 'needs_confirmation') {
                 const items = result.items || [];
-                append({ role: 'assistant', text: result.summary, proposal: { reportId: result.report_id, items, selected: selectAll(items), state: 'open' } });
+                append({ role: 'assistant', text: result.summary, proposal: { reportId: result.report_id, items, selected: selectAll(items), timings: timingMapFrom(items), state: 'open' } });
             } else if (result.status === 'ambiguous') {
                 append({ role: 'assistant', text: result.summary || 'Bisa tambahkan detail yang kurang?' });
             } else {
@@ -75,14 +82,16 @@ export function ContentPlannerChat({ workspaceId, onChanged }) {
         }
     }
 
-    async function decide(message, action) {
-        const { reportId, selected } = message.proposal;
-        if (!selected.length) return;
+    async function decide(message, action, mode = 'plan') {
+        const { reportId, items, selected, timings } = message.proposal;
+        const ids = action === 'dismiss' ? items.map(item => item.plan_id) : selected;
+        if (!ids.length) return;
         patch(message.id, { proposal: { ...message.proposal, state: 'saving' } });
         try {
-            await request(`/office/api/analyst-reports/${reportId}/${action}`, { method: 'POST', body: JSON.stringify({ plan_ids: selected }) });
+            const body = action === 'approve' ? { plan_ids: ids, timings: timingPayload(ids, timings, mode) } : { plan_ids: ids };
+            await request(`/office/api/analyst-reports/${reportId}/${action}`, { method: 'POST', body: JSON.stringify(body) });
             patch(message.id, { proposal: { ...message.proposal, state: action === 'approve' ? 'approved' : 'dismissed' } });
-            append(action === 'approve' ? { role: 'system', tone: 'success', text: approvalNotice(selected.length) } : { role: 'system', text: dismissNotice() });
+            append(action === 'approve' ? { role: 'system', tone: 'success', text: approvalNotice(ids.length, mode) } : { role: 'system', text: dismissNotice() });
             onChanged?.();
         } catch (failure) {
             patch(message.id, { proposal: { ...message.proposal, state: 'open' } });
@@ -93,6 +102,12 @@ export function ContentPlannerChat({ workspaceId, onChanged }) {
     function toggle(messageId, planId) {
         setMessages(current => current.map(message => (message.id === messageId
             ? { ...message, proposal: { ...message.proposal, selected: toggleSelection(message.proposal.selected, planId) } }
+            : message)));
+    }
+
+    function setTiming(messageId, planId, value) {
+        setMessages(current => current.map(message => (message.id === messageId
+            ? { ...message, proposal: { ...message.proposal, timings: { ...message.proposal.timings, [planId]: value } } }
             : message)));
     }
 
@@ -121,7 +136,7 @@ export function ContentPlannerChat({ workspaceId, onChanged }) {
                     if (message.role === 'user') return <div key={message.id} className="pchat-bubble is-user">{message.text}</div>;
                     return <div key={message.id} className="pchat-bubble is-assistant">
                         <p>{message.text}</p>
-                        {message.proposal && <ProposalCard message={message} onToggle={toggle} onApprove={item => decide(item, 'approve')} onDismiss={item => decide(item, 'dismiss')} onRevise={revise} />}
+                        {message.proposal && <ProposalCard message={message} onToggle={toggle} onTiming={setTiming} onApprove={(item, mode) => decide(item, 'approve', mode)} onDismiss={item => decide(item, 'dismiss')} onRevise={revise} />}
                     </div>;
                 })}
                 {pending && <div className="pchat-typing" role="status" aria-label="Trent sedang mengetik"><i /><i /><i /></div>}

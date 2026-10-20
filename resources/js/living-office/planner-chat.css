@@ -22,14 +22,16 @@
 .office-redesign .pchat-notice.success { background: #e7f7ef; color: #137456; }
 .office-redesign .pchat-proposal { display: grid; gap: 10px; }
 .office-redesign .pchat-items { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.office-redesign .pchat-items label { display: grid; grid-template-columns: 18px minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-2); cursor: pointer; }
-.office-redesign .pchat-items li.is-checked label { border-color: var(--accent); background: var(--accent-soft); }
+.office-redesign .pchat-items li { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-2); }
+.office-redesign .pchat-items li.is-checked { border-color: var(--accent); background: var(--accent-soft); }
+.office-redesign .pchat-items label { display: grid; grid-template-columns: 18px minmax(0,1fr); align-items: center; gap: 10px; min-width: 0; cursor: pointer; }
+.office-redesign .pchat-timing { padding: 5px 24px 5px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-3); color: var(--accent-strong); font: 800 10px Inter, sans-serif; white-space: nowrap; cursor: pointer; }
+.office-redesign .pchat-timing:disabled { opacity: .6; cursor: default; }
+.office-redesign .pchat-timing.t-now { background: var(--highlight); color: #fff; border-color: transparent; }
+.office-redesign .pchat-timing.t-manual { color: var(--muted); }
 .office-redesign .pchat-items input { width: 16px; height: 16px; accent-color: var(--accent); }
 .office-redesign .pchat-items strong { display: block; color: var(--text); font: 800 13px Sora, sans-serif; }
 .office-redesign .pchat-items small { color: var(--muted); font-size: 11px; }
-.office-redesign .pchat-timing { padding: 4px 9px; border-radius: 999px; background: var(--surface-3); color: var(--accent-strong); font: 800 10px Inter, sans-serif; font-style: normal; white-space: nowrap; }
-.office-redesign .pchat-timing.t-now { background: var(--highlight); color: #fff; }
-.office-redesign .pchat-timing.t-manual { color: var(--muted); }
 .office-redesign .pchat-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 .office-redesign .pchat-actions button { padding: 8px 13px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 12px Inter, sans-serif; cursor: pointer; }
 .office-redesign .pchat-actions button:disabled { opacity: .45; cursor: not-allowed; }

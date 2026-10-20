@@ -96,7 +96,7 @@ class LivingOfficeContentScheduleTest extends TestCase
         $schedule->refresh();
         $this->assertEquals([3], $schedule->recurrence_rule['days']);
         $this->assertEquals('19:00', $schedule->recurrence_rule['time']);
-        $this->assertEquals('2026-09-30 19:00:00', $schedule->next_run_at->format('Y-m-d H:i:s'));
+        $this->assertEquals('2026-09-30 19:00:00', $schedule->next_run_at->copy()->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
     }
 
     public function test_can_pause_and_resume_schedule()
@@ -135,7 +135,7 @@ class LivingOfficeContentScheduleTest extends TestCase
         $schedule->refresh();
         $this->assertTrue($schedule->is_active);
         $this->assertNotNull($schedule->next_run_at);
-        $this->assertEquals('2026-09-30 10:00:00', $schedule->next_run_at->format('Y-m-d H:i:s'));
+        $this->assertEquals('2026-09-30 10:00:00', $schedule->next_run_at->copy()->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
     }
 
     public function test_can_delete_schedule()

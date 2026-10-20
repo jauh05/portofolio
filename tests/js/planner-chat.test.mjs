@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { approvalNotice, formatScheduledAt, historyFrom, platformLabel, selectAll, timingLabel, toggleSelection } from '../../resources/js/living-office/plannerChat.js';
+import { TIMING_OPTIONS, approvalNotice, formatScheduledAt, historyFrom, platformLabel, selectAll, timingLabel, timingMapFrom, timingPayload, toggleSelection } from '../../resources/js/living-office/plannerChat.js';
 
 test('platform labels match the planner names and fall back for unknown outputs', () => {
     assert.equal(platformLabel({ platform: 'instagram', content_type: 'feed' }), 'Instagram Feed');
@@ -55,3 +55,23 @@ test('approval notice states the count and explains immediate versus scheduled g
     assert.match(text, /^2 jadwal dibuat/);
     assert.match(text, /Sekarang langsung masuk antrean generate/);
 });
+
+test('each proposed item starts with the timing Trent chose, and the owner can change it per item', () => {
+    const items = [{ plan_id: 'a', generation_timing_label: 'H-1' }, { plan_id: 'b', generation_timing_label: 'now' }];
+    assert.deepEqual(timingMapFrom(items), { a: 'H-1', b: 'now' });
+    assert.deepEqual(TIMING_OPTIONS.map(option => option.value), ['H-1', 'H-2', 'now', 'manual']);
+});
+
+test('plan approval keeps each selected item timing, while Generate and manual apply one timing to all selected', () => {
+    const timings = { a: 'H-1', b: 'now', c: 'manual' };
+    assert.deepEqual(timingPayload(['a', 'b'], timings, 'plan'), { a: 'H-1', b: 'now' });
+    assert.deepEqual(timingPayload(['a', 'b'], timings, 'now'), { a: 'now', b: 'now' });
+    assert.deepEqual(timingPayload(['a', 'c'], timings, 'manual'), { a: 'manual', c: 'manual' });
+});
+
+test('approval notice matches the timing that was applied', () => {
+    assert.match(approvalNotice(1, 'now'), /Generate dimulai sekarang/);
+    assert.match(approvalNotice(1, 'manual'), /Tidak ada generate otomatis/);
+    assert.match(approvalNotice(2, 'plan'), /H-1 dan H-2 berjalan otomatis/);
+});
+

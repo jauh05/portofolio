@@ -103,6 +103,25 @@ class OfficeTrentOrchestratorTest extends TestCase
         $this->assertSame(0, \App\Models\OfficeCommand::where('action', 'like', 'publish%')->count());
     }
 
+    public function test_timing_override_on_approval_replaces_the_proposed_timing(): void
+    {
+        $proposal = $this->proposal('Topik nanti', 'H-1');
+        $proposal['plan']['items'][] = array_merge($proposal['plan']['items'][0], ['topic' => 'Topik manual', 'scheduled_at' => '2026-10-11 14:00:00']);
+        $this->fakeAi($proposal);
+        $response = $this->requestIntent('Buat dua feed')->assertOk()->assertJsonPath('status', 'needs_confirmation');
+        $report = OfficeAnalystReport::findOrFail($response->json('report_id'));
+        $now = $response->json('items.0.plan_id');
+        $manual = $response->json('items.1.plan_id');
+
+        app(OfficeAnalystReportService::class)->approve($report, [$now, $manual], [$now => 'now', $manual => 'manual']);
+
+        $immediate = OfficeContentSchedule::where('topic', 'Topik nanti')->firstOrFail();
+        $this->assertSame('immediate', $immediate->generation_timing);
+        $this->assertSame('automatic', $immediate->generation_mode);
+        $this->assertSame('manual', OfficeContentSchedule::where('topic', 'Topik manual')->firstOrFail()->generation_timing);
+        $this->assertSame(1, \App\Models\OfficeCommand::where('action', 'generate_feed')->count());
+    }
+
     public function test_cancel_dismisses_plan_without_creating_schedule(): void
     {
         $this->fakeAi($this->proposal());

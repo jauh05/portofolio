@@ -118,7 +118,7 @@ class OfficeTrentOrchestratorService
         ];
 
         foreach ($validItems as $item) {
-            $dt = CarbonImmutable::parse($item['scheduled_at'])->timezone('Asia/Jakarta');
+            $dt = CarbonImmutable::parse($item['scheduled_at'], 'Asia/Jakarta');
             $dayName = $dayMap[$dt->format('l')] ?? $dt->format('l');
 
             $summary .= "\n{$dayName}\n";
@@ -191,7 +191,7 @@ class OfficeTrentOrchestratorService
             'recent_topics' => $recentContent->pluck('title')->filter()->values()->all(),
             'active_schedules' => $activeSchedules->map(fn ($schedule) => [
                 'platform' => $schedule->platform, 'content_type' => $schedule->content_type, 'schedule_type' => $schedule->schedule_type,
-                'topic' => $schedule->topic, 'date' => $schedule->scheduled_at?->toDateString(),
+                'topic' => $schedule->topic, 'date' => $schedule->scheduled_at ? CarbonImmutable::instance($schedule->scheduled_at)->setTimezone('Asia/Jakarta')->toDateString() : null,
             ])->all(),
         ];
     }
@@ -203,7 +203,7 @@ class OfficeTrentOrchestratorService
         $enrichedMessage .= "\n\nIf the user doesn't specify time, date, or topics, generate sensible defaults instead of asking for clarification. Start dates should be tomorrow. Pick sensible topics for the brand. Generate daily content if frequency is not specified."
                           . "\nCRITICAL INSTRUCTION: You MUST predict a generation_timing field for each item string exact match: 'H-1' (default), 'H-2', 'now', or 'manual'.";
 
-        if (stripos($message, 'now') !== false || stripos($message, 'sekarang') !== false || stripos($message, 'immediate') !== false) {
+        if (preg_match('/\\b(now|sekarang|immediate)\\b/i', $message)) {
             $enrichedMessage .= "\nUser asked for immediate preparation. You MUST set generation_timing = 'now' for all items.";
         }
 

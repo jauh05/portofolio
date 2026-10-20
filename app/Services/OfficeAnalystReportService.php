@@ -193,9 +193,10 @@ class OfficeAnalystReportService
         return $agent && in_array($action, OfficeRegistry::COMMANDS[$agent] ?? [], true) ? $agent : null;
     }
 
-    public function approve(OfficeAnalystReport $report, array $planIds): OfficeAnalystReport
+    /** @param array<string, string> $timings plan id => now|H-1|H-2|manual, overrides the timing stored on each item */
+    public function approve(OfficeAnalystReport $report, array $planIds, array $timings = []): OfficeAnalystReport
     {
-        return DB::transaction(function () use ($report, $planIds) {
+        return DB::transaction(function () use ($report, $planIds, $timings) {
             $report = OfficeAnalystReport::whereKey($report->id)->lockForUpdate()->firstOrFail();
             $researchRunId = $report->metadata['research_run_id'] ?? null;
 
@@ -208,6 +209,10 @@ class OfficeAnalystReportService
             $plans = $query->get();
 
             foreach ($plans as $plan) {
+                if (isset($timings[$plan->id])) {
+                    $this->applyTiming($plan, $timings[$plan->id]);
+                }
+
                 $schedule = \App\Models\OfficeContentSchedule::create([
                     'brand_id' => $plan->brand_id,
                     'name' => 'Plan: ' . $plan->topic,
@@ -254,6 +259,23 @@ class OfficeAnalystReportService
             }
             return $report->fresh();
         });
+    }
+
+    private function applyTiming(\App\Models\OfficeContentPlanItem $plan, string $timing): void
+    {
+        [$mode, $generationTiming, $leadMinutes] = match ($timing) {
+            'now' => ['automatic', 'immediate', 0],
+            'H-1' => ['automatic', 'lead_time', 1440],
+            'H-2' => ['automatic', 'lead_time', 2880],
+            default => ['manual', 'manual', null],
+        };
+
+        $plan->generation_mode = $mode;
+        $plan->metadata = array_merge($plan->metadata ?? [], [
+            'generation_timing' => $generationTiming,
+            'generation_lead_minutes' => $leadMinutes,
+        ]);
+        $plan->save();
     }
 
     public function dismiss(OfficeAnalystReport $report, array $planIds): OfficeAnalystReport
