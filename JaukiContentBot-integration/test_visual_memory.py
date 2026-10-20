@@ -1,5 +1,6 @@
 """Offline contract tests. No image generation or provider calls."""
 
+import json
 import unittest
 
 from visual_memory import (
@@ -171,6 +172,35 @@ class VisualMemoryTests(unittest.TestCase):
         self.assertIn("Archivo Black", prompts["kauiz"])
         self.assertIn("Plus Jakarta Sans", prompts["kauiz"])
         self.assertEqual(selected["template_id"], self.selector.select(self.analysis, seed=19)["template_id"])
+
+    def test_brand_typography_roles_are_isolated(self):
+        brands = VisualBrandMemory()
+        jauki = brands.get("jauki")["typography"]
+        kauiz = brands.get("kauiz")["typography"]
+        self.assertEqual(jauki, {
+            "headline": "Baloo 2", "headline_alt": "Fredoka", "body": "Poppins", "ui": "Inter",
+        })
+        self.assertEqual(kauiz, {
+            "headline": "League Spartan", "headline_alt": "Archivo Black", "body": "Plus Jakarta Sans",
+        })
+        self.assertTrue(set(jauki.values()).isdisjoint(kauiz.values()))
+
+    def test_templates_do_not_hardcode_brand_font_families(self):
+        fonts = {
+            font for slug in ("jauki", "kauiz")
+            for font in VisualBrandMemory().get(slug)["typography"].values()
+        }
+        for template in self.repository.templates.values():
+            with self.subTest(template=template["id"]):
+                serialized = json.dumps(template)
+                for font in fonts:
+                    self.assertNotIn(font, serialized)
+
+    def test_live_reported_t15_uses_kauiz_font_memory(self):
+        prompt = self.compiler.compile_prompt("kauiz", self.analysis, "T15", {}, "story")["prompt"]
+        for font in ("League Spartan", "Archivo Black", "Plus Jakarta Sans"):
+            self.assertIn(font, prompt)
+        self.assertNotIn("Inter", prompt)
 
 
 if __name__ == "__main__":
