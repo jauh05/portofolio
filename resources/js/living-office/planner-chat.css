@@ -1,0 +1,57 @@
+/* AI Content Planner chat: floating launcher and side panel. Blue palette, colors follow the theme tokens (light and dark). */
+.office-redesign .pchat-fab { position: fixed; right: 24px; bottom: 24px; z-index: 950; display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 18px 0 14px; border: 0; border-radius: 999px; background: var(--highlight); color: #fff; font: 800 13px Inter, sans-serif; box-shadow: 0 18px 32px -16px #1570ef; cursor: pointer; transition: transform .2s ease; }
+.office-redesign .pchat-fab:hover { transform: translateY(-2px); }
+.office-redesign .pchat-panel { position: fixed; right: 24px; bottom: 84px; z-index: 960; display: grid; grid-template-rows: auto minmax(0,1fr) auto; width: min(420px, calc(100vw - 32px)); height: min(640px, calc(100vh - 150px)); overflow: hidden; border: 1px solid var(--border); border-radius: 26px; background: var(--surface); color: var(--text); box-shadow: 0 30px 60px -28px rgba(2,12,28,.55); }
+.office-redesign .pchat-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; background: var(--highlight); color: #fff; }
+.office-redesign .pchat-kicker { display: block; color: #dbeafe; font: 800 9px 'JetBrains Mono', monospace; letter-spacing: .12em; }
+.office-redesign .pchat-header strong { font: 800 15px Sora, sans-serif; }
+.office-redesign .pchat-close { display: grid; width: 32px; height: 32px; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.2); color: #fff; cursor: pointer; }
+.office-redesign .pchat-body { display: grid; align-content: start; gap: 10px; min-height: 0; padding: 16px; overflow-y: auto; background: var(--surface-2); }
+.office-redesign .pchat-empty { display: grid; justify-items: start; gap: 10px; padding: 16px; border: 1px dashed var(--border); border-radius: 20px; background: var(--surface); }
+.office-redesign .pchat-empty svg { color: var(--accent); }
+.office-redesign .pchat-empty p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.office-redesign .pchat-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.office-redesign .pchat-chips button { padding: 7px 11px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); color: var(--accent-strong); font: 700 11px Inter, sans-serif; text-align: left; cursor: pointer; }
+.office-redesign .pchat-chips button:disabled { opacity: .5; cursor: not-allowed; }
+.office-redesign .pchat-bubble { max-width: 90%; padding: 11px 14px; border-radius: 18px; font-size: 13px; line-height: 1.55; }
+.office-redesign .pchat-bubble p { margin: 0; white-space: pre-line; }
+.office-redesign .pchat-bubble.is-user { justify-self: end; background: var(--highlight); color: #fff; border-bottom-right-radius: 6px; }
+.office-redesign .pchat-bubble.is-assistant { display: grid; gap: 10px; justify-self: start; border: 1px solid var(--border); border-bottom-left-radius: 6px; background: var(--surface); color: var(--text); }
+.office-redesign .pchat-notice { margin: 0; padding: 9px 12px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-strong); font-size: 12px; line-height: 1.5; }
+.office-redesign .pchat-notice.error { background: #fff0f2; color: #a72246; }
+.office-redesign .pchat-notice.success { background: #e7f7ef; color: #137456; }
+.office-redesign .pchat-proposal { display: grid; gap: 10px; }
+.office-redesign .pchat-items { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.office-redesign .pchat-items label { display: grid; grid-template-columns: 18px minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-2); cursor: pointer; }
+.office-redesign .pchat-items li.is-checked label { border-color: var(--accent); background: var(--accent-soft); }
+.office-redesign .pchat-items input { width: 16px; height: 16px; accent-color: var(--accent); }
+.office-redesign .pchat-items strong { display: block; color: var(--text); font: 800 13px Sora, sans-serif; }
+.office-redesign .pchat-items small { color: var(--muted); font-size: 11px; }
+.office-redesign .pchat-timing { padding: 4px 9px; border-radius: 999px; background: var(--surface-3); color: var(--accent-strong); font: 800 10px Inter, sans-serif; font-style: normal; white-space: nowrap; }
+.office-redesign .pchat-timing.t-now { background: var(--highlight); color: #fff; }
+.office-redesign .pchat-timing.t-manual { color: var(--muted); }
+.office-redesign .pchat-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.office-redesign .pchat-actions button { padding: 8px 13px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 12px Inter, sans-serif; cursor: pointer; }
+.office-redesign .pchat-actions button:disabled { opacity: .45; cursor: not-allowed; }
+.office-redesign .pchat-actions .pchat-primary { border-color: transparent; background: var(--highlight); color: #fff; }
+.office-redesign .pchat-muted { margin: 0; color: var(--muted); font-size: 12px; }
+.office-redesign .pchat-done { margin: 0; color: #137456; font: 800 12px Inter, sans-serif; }
+.office-redesign .pchat-typing { display: inline-flex; gap: 4px; justify-self: start; padding: 10px 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+.office-redesign .pchat-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pchat-bounce 1.2s infinite ease-in-out; }
+.office-redesign .pchat-typing i:nth-child(2) { animation-delay: .15s; }
+.office-redesign .pchat-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes pchat-bounce { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+.office-redesign .pchat-form { display: grid; grid-template-columns: minmax(0,1fr) 44px; gap: 8px; padding: 12px; border-top: 1px solid var(--border); background: var(--surface); }
+.office-redesign .pchat-form textarea { min-height: 44px; max-height: 120px; padding: 10px 13px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-2); color: var(--text); font: 500 13px Inter, sans-serif; resize: none; outline: none; }
+.office-redesign .pchat-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(46,144,250,.18); }
+.office-redesign .pchat-send { display: grid; width: 44px; height: 44px; place-items: center; align-self: end; border: 0; border-radius: 50%; background: var(--highlight); color: #fff; cursor: pointer; }
+.office-redesign .pchat-send:disabled { opacity: .45; cursor: not-allowed; }
+@media (max-width: 600px) {
+    .office-redesign .pchat-panel { left: 8px; right: 8px; bottom: 8px; width: auto; height: min(78vh, 680px); }
+    .office-redesign .pchat-fab { right: 14px; bottom: 14px; }
+    .office-redesign .pchat-fab span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .office-redesign .pchat-typing i { animation: none; }
+    .office-redesign .pchat-fab { transition: none; }
+}
