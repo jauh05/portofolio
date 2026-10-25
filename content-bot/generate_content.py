@@ -51,8 +51,8 @@ LLM_ATTEMPTS = 3
 DEFAULT_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
 WIDTH, HEIGHT, FPS = 1080, 1920, 30
-FONT_SIZE = 76
-WRAP_CHARS = 18
+FONT_SIZE = 66
+WRAP_CHARS = 20
 MUSIC_EXT = {".mp3", ".m4a", ".aac", ".wav", ".ogg"}
 RAW_EXT = {".mp4", ".mov"}
 MUSIC_FADE_IN_S = 0.5
@@ -60,22 +60,19 @@ MUSIC_FADE_OUT_S = 1.5
 RECENT_MUSIC_COUNT = 3
 
 # Setiap nilai adalah rantai filter ffmpeg. Satu dipilih acak per video.
+# Hanya tone natural, supaya teks putih tetap kontras dan tidak bentrok dengan warna video.
 GRADES = {
-    "hangat": "eq=saturation=1.15:contrast=1.05,colorbalance=rs=0.08:gs=0.02:bs=-0.08",
-    "dingin": "eq=contrast=1.08:saturation=0.95,colorbalance=rs=-0.06:gs=0.02:bs=0.1",
-    "vintage": "hue=s=0.6,colorbalance=rs=0.1:gs=0.05:bs=-0.1,eq=contrast=0.95:brightness=0.03",
-    "vivid": "eq=saturation=1.4:contrast=1.1",
-    "moody": "eq=brightness=-0.06:contrast=1.15:saturation=0.85",
-    "pastel": "eq=saturation=0.75:brightness=0.06:contrast=0.95",
-    "hitam_putih": "hue=s=0,eq=contrast=1.2",
-    "magenta": "colorbalance=rm=0.08:bm=0.1,eq=saturation=1.3",
+    "natural": "eq=saturation=1.0:contrast=1.03",
+    "hangat": "eq=saturation=1.08:contrast=1.04,colorbalance=rs=0.05:gs=0.02:bs=-0.05",
+    "dingin": "eq=contrast=1.05:saturation=0.95,colorbalance=rs=-0.04:gs=0.01:bs=0.06",
+    "vintage": "hue=s=0.7,colorbalance=rs=0.06:gs=0.03:bs=-0.06,eq=contrast=0.98:brightness=-0.02",
+    "moody": "eq=brightness=-0.08:contrast=1.1:saturation=0.85",
+    "hitam_putih": "hue=s=0,eq=contrast=1.12:brightness=-0.02",
 }
-# (warna teks, warna kotak). Satu dipilih acak per video.
-TEXT_STYLES = {
-    "putih_di_hitam": ("white", "black@0.55"),
-    "hitam_di_kuning": ("black", "0xFFD400@0.95"),
-    "kuning_di_hitam": ("0xFFD400", "black@0.6"),
-}
+# Teks selalu putih dengan garis tepi dan bayangan gelap, tanpa kotak di belakang.
+TEXT_STYLE = "borderw=3:bordercolor=black@0.75:shadowcolor=black@0.6:shadowx=2:shadowy=2"
+# Sedikit menggelapkan video supaya teks putih terbaca.
+DIM = "eq=brightness=-0.04"
 
 # (overlay, caption) dipakai jika LiteLLM gagal. Urutannya mengikuti services.
 FALLBACK_COPY = [
@@ -98,8 +95,8 @@ SYSTEM_PROMPT = (
     "Layanan: joki tugas, formatting makalah dan skripsi, desain slide presentasi estetik, "
     "dan bimbingan belajar. Tulis dalam Bahasa Indonesia yang santai dan relatable untuk mahasiswa. "
     "Balas HANYA dengan JSON valid tanpa markdown, berisi kunci: "
-    '"overlay" (satu kalimat, maksimal 12 kata, tanpa emoji dan tanpa tanda kutip, '
-    "tampil di tengah video), "
+    '"overlay" (satu sampai dua kalimat pendek, 10 sampai 25 kata, bergaya kutipan '
+    "atau curhat mahasiswa, tanpa emoji dan tanpa tanda kutip, tampil di tengah video), "
     '"caption" (maksimal 2 kalimat, boleh berisi ajakan chat atau DM), '
     '"hashtags" (array 5 sampai 10 string, diawali #, huruf kecil, tanpa spasi), '
     '"mood" (salah satu dari: {moods}; pilih yang paling cocok dengan suasana teksnya).'
@@ -183,7 +180,7 @@ def validate_copy(data, moods):
     if not isinstance(data, dict):
         raise ValueError("jawaban bukan objek JSON")
     overlay = " ".join(re.sub(r'["“”]', "", str(data.get("overlay", ""))).split())
-    if not overlay or len(overlay.split()) > 12:
+    if not 6 <= len(overlay.split()) <= 25:
         raise ValueError(f"overlay tidak valid: {overlay!r}")
     caption = " ".join(str(data.get("caption", "")).split())
     if not caption:
@@ -357,7 +354,7 @@ def pick_segment(history, cfg, rng):
     return None
 
 
-def build_filter_complex(seg, grade, vignette, style, text_path, font, volume):
+def build_filter_complex(seg, grade, vignette, text_path, font, volume):
     duration = seg["duration"]
     setpts = f"setpts=PTS/{seg['speed']}," if seg["speed"] != 1.0 else ""
     if seg["landscape"]:
@@ -374,13 +371,12 @@ def build_filter_complex(seg, grade, vignette, style, text_path, font, volume):
             f"[0:v]{setpts}scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,"
             f"crop={WIDTH}:{HEIGHT}[base];"
         )
-    fontcolor, boxcolor = TEXT_STYLES[style]
     drawtext = (
         f"drawtext=textfile={text_path}:expansion=none:fontfile={font}:fontsize={FONT_SIZE}:"
-        f"fontcolor={fontcolor}:line_spacing=14:box=1:boxcolor={boxcolor}:boxborderw=28:"
+        f"fontcolor=white:line_spacing=12:{TEXT_STYLE}:"
         "x=(w-text_w)/2:y=(h-text_h)/2"
     )
-    effects = [f"fps={FPS}", "setsar=1", GRADES[grade]]
+    effects = [f"fps={FPS}", "setsar=1", DIM, GRADES[grade]]
     if vignette:
         effects.append("vignette=PI/5")
     effects.append(drawtext)
@@ -393,7 +389,7 @@ def build_filter_complex(seg, grade, vignette, style, text_path, font, volume):
     return f"{video};{audio}"
 
 
-def render(seg, track, music_offset, music_loop, grade, vignette, style, overlay, volume, font, out_path):
+def render(seg, track, music_offset, music_loop, grade, vignette, overlay, volume, font, out_path):
     fd, text_name = tempfile.mkstemp(suffix=".txt")
     os.close(fd)
     text_path = Path(text_name)
@@ -403,7 +399,7 @@ def render(seg, track, music_offset, music_loop, grade, vignette, style, overlay
         cmd += ["-stream_loop", "-1"]
     cmd += ["-ss", f"{music_offset:.2f}", "-i", str(track)]
     cmd += [
-        "-filter_complex", build_filter_complex(seg, grade, vignette, style, text_path, font, volume),
+        "-filter_complex", build_filter_complex(seg, grade, vignette, text_path, font, volume),
         "-map", "[v]", "-map", "[a]", "-t", str(seg["duration"]),
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
         "-profile:v", "high", "-level", "4.2", "-pix_fmt", "yuv420p",
@@ -496,7 +492,6 @@ def main():
     last_grade = history[-1].get("grade") if history else None
     grade = rng.choice([g for g in GRADES if g != last_grade])
     vignette = rng.random() < 0.5
-    style = rng.choice(list(TEXT_STYLES))
 
     track_dur = probe_duration(track)
     if track_dur >= duration + 1:
@@ -510,8 +505,8 @@ def main():
         "Sumber: %s, ambil dari %.2f dtk (buang %d dtk awal dan akhir), span %.2f dtk",
         seg["name"], seg["start"], cfg["skip_head_s"], seg["span"],
     )
-    log.info("Output %d dtk, kecepatan %.1fx, grade %s, vignette %s, gaya teks %s",
-             duration, seg["speed"], grade, vignette, style)
+    log.info("Output %d dtk, kecepatan %.1fx, grade %s, vignette %s",
+             duration, seg["speed"], grade, vignette)
     log.info("Overlay: %s", copy["overlay"])
     log.info("Caption: %s", copy["caption"])
 
@@ -522,7 +517,7 @@ def main():
     stamp = datetime.now(tz)
     entry_id = uuid.uuid4().hex[:8]
     out_path = OUT_DIR / f"reel_{stamp:%Y%m%d_%H%M%S}_{entry_id}.mp4"
-    render(seg, track, music_offset, music_loop, grade, vignette, style, copy["overlay"],
+    render(seg, track, music_offset, music_loop, grade, vignette, copy["overlay"],
            cfg["music_volume"], font, out_path)
     actual = check_output(out_path)
     out_path.with_suffix(".txt").write_text(f"{copy['caption']}\n\n{' '.join(hashtags)}\n", encoding="utf-8")
@@ -548,7 +543,6 @@ def main():
         "music": music_rel,
         "grade": grade,
         "vignette": vignette,
-        "text_style": style,
     })
     save_history(history)
     log.info("Selesai: %s (%.2f dtk)", out_path.name, actual)
