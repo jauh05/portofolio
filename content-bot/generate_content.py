@@ -71,8 +71,8 @@ GRADES = {
     "magenta": "colorbalance=rm=0.1:bm=0.06,eq=saturation=1.2",
     "hitam_putih": "hue=s=0,eq=contrast=1.2",
 }
-# Teks putih tanpa garis tepi, hanya bayangan gelap tipis, dan tanpa kotak di belakang.
-TEXT_STYLE = "shadowcolor=black@0.45:shadowx=2:shadowy=2"
+# Teks putih dengan garis tepi hitam dan bayangan gelap yang jelas, tanpa kotak di belakang.
+TEXT_STYLE = "borderw=3:bordercolor=black@0.9:shadowcolor=black@0.7:shadowx=3:shadowy=3"
 # Sedikit menggelapkan video supaya teks putih terbaca.
 DIM = "eq=brightness=-0.04"
 
