@@ -35,6 +35,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from ig_publisher import GraphError, PublishError, ReelsClient, publish_reel
+
 BASE_DIR = Path(__file__).resolve().parent
 RAW_DIR = BASE_DIR / "raw_videos"
 OUT_DIR = BASE_DIR / "output"
@@ -478,6 +480,8 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="tampilkan rencana, tanpa render dan tanpa mengubah history")
     parser.add_argument("--force", action="store_true", help="lewati cek jadwal mingguan")
     parser.add_argument("--no-llm", action="store_true", help="pakai teks fallback, tanpa memanggil LiteLLM")
+    parser.add_argument("--live", action="store_true",
+                        help="publish ke Instagram Reels; tanpa flag ini tidak ada panggilan API")
     args = parser.parse_args()
 
     for folder in (RAW_DIR, OUT_DIR, MUSIC_DIR, LOG_DIR):
@@ -544,6 +548,8 @@ def main():
     if args.dry_run:
         log.info("Dry run selesai. Tidak ada file yang dibuat.")
         return 0
+    if args.live and not all(os.environ.get(k) for k in ("IG_USER_ID", "IG_ACCESS_TOKEN", "PUBLIC_VIDEO_BASE_URL")):
+        raise BotError("Untuk --live, isi IG_USER_ID, IG_ACCESS_TOKEN, dan PUBLIC_VIDEO_BASE_URL di .env.")
 
     stamp = datetime.now(tz)
     entry_id = uuid.uuid4().hex[:8]
@@ -551,7 +557,18 @@ def main():
     render(seg, track, music_offset, music_loop, grade, vignette, copy["overlay"],
            cfg["music_volume"], font, out_path)
     actual = check_output(out_path)
-    out_path.with_suffix(".txt").write_text(f"{copy['caption']}\n\n{' '.join(hashtags)}\n", encoding="utf-8")
+    caption_text = f"{copy['caption']}\n\n{' '.join(hashtags)}"
+    out_path.with_suffix(".txt").write_text(f"{caption_text}\n", encoding="utf-8")
+    post_id, post_error = None, None
+    if args.live:
+        video_url = f"{os.environ['PUBLIC_VIDEO_BASE_URL'].rstrip('/')}/{out_path.name}"
+        try:
+            client = ReelsClient(os.environ["IG_ACCESS_TOKEN"], os.environ["IG_USER_ID"])
+            post_id = publish_reel(client, video_url, caption_text)
+            log.info("Terposting ke Instagram Reels, id media %s", post_id)
+        except (GraphError, PublishError) as exc:
+            post_error = str(exc)
+            log.error("Gagal posting ke Instagram: %s", post_error)
 
     history.append({
         "id": entry_id,
@@ -574,10 +591,12 @@ def main():
         "music": music_rel,
         "grade": grade,
         "vignette": vignette,
+        "instagram_media_id": post_id,
+        "post_error": post_error,
     })
     save_history(history)
     log.info("Selesai: %s (%.2f dtk)", out_path.name, actual)
-    return 0
+    return 1 if post_error else 0
 
 
 if __name__ == "__main__":
