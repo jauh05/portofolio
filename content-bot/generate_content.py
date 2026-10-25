@@ -54,6 +54,7 @@ WIDTH, HEIGHT, FPS = 1080, 1920, 30
 FONT_SIZE = 76
 WRAP_CHARS = 18
 MUSIC_EXT = {".mp3", ".m4a", ".aac", ".wav", ".ogg"}
+RAW_EXT = {".mp4", ".mov"}
 MUSIC_FADE_IN_S = 0.5
 MUSIC_FADE_OUT_S = 1.5
 RECENT_MUSIC_COUNT = 3
@@ -320,7 +321,7 @@ def pick_slot(history, name, size, src_dur, span, skip_head, skip_tail, rng):
 
 def pick_segment(history, cfg, rng):
     sources = {}
-    for path in sorted(RAW_DIR.glob("*.mp4")):
+    for path in sorted(p for p in RAW_DIR.iterdir() if p.suffix.lower() in RAW_EXT and not p.name.startswith(".")):
         try:
             duration, width, height = probe_source(path)
         except (subprocess.CalledProcessError, KeyError, IndexError, ValueError) as exc:
@@ -328,7 +329,7 @@ def pick_segment(history, cfg, rng):
             continue
         sources[path] = (duration, width, height, path.stat().st_size)
     if not sources:
-        raise BotError("raw_videos/ kosong atau tidak ada .mp4 yang bisa dibaca.")
+        raise BotError("raw_videos/ kosong atau tidak ada .mp4/.mov yang bisa dibaca.")
 
     items = list(sources.items())
     rng.shuffle(items)
