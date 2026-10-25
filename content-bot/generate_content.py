@@ -48,11 +48,11 @@ LOCK_FILE = BASE_DIR / ".lock"
 LLM_URL = "http://127.0.0.1:4000/v1/chat/completions"
 LLM_MODEL = "google/gemini-2.5-flash"
 LLM_ATTEMPTS = 3
-DEFAULT_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+DEFAULT_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 WIDTH, HEIGHT, FPS = 1080, 1920, 30
-FONT_SIZE = 66
-WRAP_CHARS = 20
+FONT_SIZE = 62
+WRAP_CHARS = 22
 MUSIC_EXT = {".mp3", ".m4a", ".aac", ".wav", ".ogg"}
 RAW_EXT = {".mp4", ".mov"}
 MUSIC_FADE_IN_S = 0.5
@@ -60,17 +60,19 @@ MUSIC_FADE_OUT_S = 1.5
 RECENT_MUSIC_COUNT = 3
 
 # Setiap nilai adalah rantai filter ffmpeg. Satu dipilih acak per video.
-# Hanya tone natural, supaya teks putih tetap kontras dan tidak bentrok dengan warna video.
+# Warnanya dibuat terlihat, teks putih tetap dijaga kontras lewat DIM dan bayangan.
 GRADES = {
-    "natural": "eq=saturation=1.0:contrast=1.03",
-    "hangat": "eq=saturation=1.08:contrast=1.04,colorbalance=rs=0.05:gs=0.02:bs=-0.05",
-    "dingin": "eq=contrast=1.05:saturation=0.95,colorbalance=rs=-0.04:gs=0.01:bs=0.06",
-    "vintage": "hue=s=0.7,colorbalance=rs=0.06:gs=0.03:bs=-0.06,eq=contrast=0.98:brightness=-0.02",
-    "moody": "eq=brightness=-0.08:contrast=1.1:saturation=0.85",
-    "hitam_putih": "hue=s=0,eq=contrast=1.12:brightness=-0.02",
+    "teal_oranye": "colorbalance=rs=-0.12:gs=0.04:bs=0.14:rh=0.08:bh=-0.08,eq=saturation=1.2:contrast=1.08",
+    "keemasan": "colorbalance=rs=0.14:gs=0.06:bs=-0.12,eq=saturation=1.15:brightness=0.02",
+    "dingin": "colorbalance=rs=-0.1:gs=0.02:bs=0.12,eq=saturation=0.95:contrast=1.05",
+    "vivid": "eq=saturation=1.35:contrast=1.08",
+    "vintage_pudar": "hue=s=0.7,eq=saturation=0.75:contrast=0.9:brightness=0.05",
+    "moody": "eq=brightness=-0.06:contrast=1.15:saturation=0.9",
+    "magenta": "colorbalance=rm=0.1:bm=0.06,eq=saturation=1.2",
+    "hitam_putih": "hue=s=0,eq=contrast=1.2",
 }
-# Teks selalu putih dengan garis tepi dan bayangan gelap, tanpa kotak di belakang.
-TEXT_STYLE = "borderw=3:bordercolor=black@0.75:shadowcolor=black@0.6:shadowx=2:shadowy=2"
+# Teks putih tipis dengan bayangan gelap, tanpa kotak di belakang.
+TEXT_STYLE = "borderw=1:bordercolor=black@0.5:shadowcolor=black@0.5:shadowx=2:shadowy=2"
 # Sedikit menggelapkan video supaya teks putih terbaca.
 DIM = "eq=brightness=-0.04"
 
