@@ -51,8 +51,8 @@ LLM_ATTEMPTS = 3
 DEFAULT_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 WIDTH, HEIGHT, FPS = 1080, 1920, 30
-FONT_SIZE = 62
-WRAP_CHARS = 22
+FONT_SIZE = 50
+WRAP_CHARS = 28
 MUSIC_EXT = {".mp3", ".m4a", ".aac", ".wav", ".ogg"}
 RAW_EXT = {".mp4", ".mov"}
 MUSIC_FADE_IN_S = 0.5
@@ -71,35 +71,62 @@ GRADES = {
     "magenta": "colorbalance=rm=0.1:bm=0.06,eq=saturation=1.2",
     "hitam_putih": "hue=s=0,eq=contrast=1.2",
 }
-# Teks putih tipis dengan bayangan gelap, tanpa kotak di belakang.
-TEXT_STYLE = "borderw=1:bordercolor=black@0.5:shadowcolor=black@0.5:shadowx=2:shadowy=2"
+# Teks putih tanpa garis tepi, hanya bayangan gelap tipis, dan tanpa kotak di belakang.
+TEXT_STYLE = "shadowcolor=black@0.45:shadowx=2:shadowy=2"
 # Sedikit menggelapkan video supaya teks putih terbaca.
 DIM = "eq=brightness=-0.04"
 
 # (overlay, caption) dipakai jika LiteLLM gagal. Urutannya mengikuti services.
 FALLBACK_COPY = [
-    ("Tugas numpuk dan deadline mepet? Biar Jauki Academy yang bantu.",
+    ("Tugas numpuk, deadline makin mepet, dan kepala udah mau meledak? Tenang dulu, "
+     "kamu nggak harus ngerjain semuanya sendirian. Serahin ke Jauki Academy, "
+     "kami bantu rapi dan tepat waktu.",
      "Tugas numpuk? Chat kami sekarang, dikerjakan rapi dan tepat waktu."),
-    ("Skripsi sudah jadi, tinggal rapikan format? Serahkan ke kami.",
+    ("Skripsi udah jadi, daftar pustaka udah rapi, tapi nomor halaman masih berantakan? "
+     "Relate banget kan. Biar nggak ada revisi berulang, format skripsi dan makalahmu "
+     "kami rapikan sesuai standar kampus. Tinggal kirim, kami kerjain, kamu tinggal cetak.",
      "Formatting skripsi dan makalah sesuai panduan kampus. Cek jaukitugas.my.id."),
-    ("Slide presentasi biasa aja? Yuk, bikin yang estetik bareng kami.",
+    ("Slide presentasi kamu masih polos dan bikin ngantuk? Yuk, kita bikin desain slide "
+     "yang estetik, rapi, dan konsisten dari halaman pertama sampai terakhir. "
+     "Presentasi kamu jadi beda dan bikin kamu lebih pede tampil di depan kelas.",
      "Desain slide estetik untuk presentasi kelas. DM kami untuk konsultasi."),
-    ("Bingung olah data dan coding? Kami bantu dari nol.",
+    ("Bingung olah data, coding, atau materi kuliah yang rasanya nggak masuk-masuk? "
+     "Itu wajar banget, kok. Kamu nggak harus paham sendirian. Jauki Academy siap bimbing "
+     "kamu dari dasar, step by step, sampai kamu benar-benar ngerti dan bisa jalan sendiri.",
      "Bimbingan belajar dari dasar sampai paham. Chat kami untuk jadwal."),
-    ("Skripsi berat itu wajar. Jangan menyerah, kami temani.",
+    ("Skripsi berat itu bukan tanda kamu gagal. Ada hari kamu capek, ada hari kamu mau nyerah, "
+     "dan itu manusiawi banget. Yang penting kamu tetap jalan pelan-pelan, karena satu bab "
+     "yang selesai tetap satu langkah lebih dekat ke wisuda.",
      "Kamu tidak sendirian menghadapi skripsi. Yuk, diskusi dulu lewat DM."),
 ]
 FALLBACK_HASHTAGS = ["#jokitugas", "#skripsi", "#mahasiswa", "#desainslide", "#bimbinganbelajar"]
 COPY_STYLES = ["relatable mahasiswa", "motivasi", "lucu ringan", "promo halus", "gaya POV"]
 
+# Istilah suku, agama, ras, dan golongan. Teks yang memuatnya ditolak dan dipakai fallback.
+SARA_TERMS = [
+    "islam", "kristen", "katolik", "katholik", "kristiani", "nasrani", "hindu", "buddha", "budha",
+    "konghucu", "kafir", "muslim", "yahudi", "jawa", "sunda", "batak", "madura", "bugis",
+    "makassar", "minang", "betawi", "aceh", "melayu", "dayak", "papua", "ambon", "flores", "bali",
+    "tionghoa", "cina", "china", "arab", "pribumi", "negro", "suku", "agama", "ras",
+]
+SARA_PATTERN = re.compile(r"\b(?:" + "|".join(SARA_TERMS) + r")\b")
+
+
+def has_sara(text):
+    return SARA_PATTERN.search(text.lower()) is not None
+
 SYSTEM_PROMPT = (
-    "Kamu copywriter media sosial untuk Jauki Academy (jaukitugas.my.id). "
+    "Kamu menulis konten TikTok dan Reels untuk akun Jauki Academy (jaukitugas.my.id). "
     "Layanan: joki tugas, formatting makalah dan skripsi, desain slide presentasi estetik, "
-    "dan bimbingan belajar. Tulis dalam Bahasa Indonesia yang santai dan relatable untuk mahasiswa. "
+    "dan bimbingan belajar. Gaya bahasanya harus seperti konten TikTok Indonesia yang real dan relatable: "
+    "santai, pakai bahasa gaul yang wajar (misalnya banget, sih, deh, relate, real), "
+    "seperti curhat mahasiswa yang lagi capek skripsi. Jangan pakai bahasa baku atau kalimat iklan yang kaku. "
+    "Dilarang menyinggung atau menyebut suku, agama, ras, atau golongan apa pun, dilarang kasar, "
+    "dilarang kekerasan, dan dilarang topik politik. "
     "Balas HANYA dengan JSON valid tanpa markdown, berisi kunci: "
-    '"overlay" (satu sampai dua kalimat pendek, 10 sampai 25 kata, bergaya kutipan '
-    "atau curhat mahasiswa, tanpa emoji dan tanpa tanda kutip, tampil di tengah video), "
-    '"caption" (maksimal 2 kalimat, boleh berisi ajakan chat atau DM), '
+    '"overlay" (22 sampai 40 kata, satu sampai tiga kalimat pendek, tanpa emoji dan tanpa tanda kutip, '
+    "tampil di tengah video dengan gaya kutipan atau curhat), "
+    '"caption" (satu sampai dua kalimat gaya TikTok, boleh berisi ajakan DM atau chat), '
     '"hashtags" (array 5 sampai 10 string, diawali #, huruf kecil, tanpa spasi), '
     '"mood" (salah satu dari: {moods}; pilih yang paling cocok dengan suasana teksnya).'
 )
@@ -182,7 +209,7 @@ def validate_copy(data, moods):
     if not isinstance(data, dict):
         raise ValueError("jawaban bukan objek JSON")
     overlay = " ".join(re.sub(r'["“”]', "", str(data.get("overlay", ""))).split())
-    if not 6 <= len(overlay.split()) <= 25:
+    if not 22 <= len(overlay.split()) <= 40:
         raise ValueError(f"overlay tidak valid: {overlay!r}")
     caption = " ".join(str(data.get("caption", "")).split())
     if not caption:
@@ -197,6 +224,8 @@ def validate_copy(data, moods):
             tags.append(tag)
     if len(tags) < 5:
         raise ValueError("hashtag kurang dari 5")
+    if has_sara(" ".join([overlay, caption, *tags])):
+        raise ValueError("teks mengandung istilah SARA")
     mood = str(data.get("mood", "")).strip().lower()
     return {
         "overlay": overlay,
