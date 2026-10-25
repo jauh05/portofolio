@@ -66,6 +66,9 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::post('/content/{content}/revise', [\App\Http\Controllers\OfficeContentPlannerController::class, 'reviseContent']);
         Route::post('/content/{content}/approve', [\App\Http\Controllers\OfficeContentPlannerController::class, 'approveContent']);
 
+        Route::get('/reels-settings', [\App\Http\Controllers\OfficeReelsSettingsController::class, 'show']);
+        Route::put('/reels-settings', [\App\Http\Controllers\OfficeReelsSettingsController::class, 'update']);
+
         Route::get('/summary', [LivingOfficeController::class, 'summary']);
         Route::get('/notifications', [LivingOfficeController::class, 'getNotifications']);
         Route::patch('/notifications/read-all', [LivingOfficeController::class, 'readAllNotifications']);
