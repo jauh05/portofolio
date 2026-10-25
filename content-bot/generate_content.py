@@ -156,7 +156,12 @@ def load_env():
 
 
 def load_config():
-    return json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+    cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+    # Pengaturan dari dashboard menimpa config.json. File ini dibaca ulang tiap jalan.
+    settings_file = os.environ.get("REELS_SETTINGS_FILE")
+    if settings_file and Path(settings_file).exists():
+        cfg.update(json.loads(Path(settings_file).read_text(encoding="utf-8")))
+    return cfg
 
 
 def load_history():
