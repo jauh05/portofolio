@@ -59,18 +59,22 @@ class OfficeInstagramMediaMatcher
     {
         $host = rtrim((string) config('services.instagram.host'), '/');
         $version = (string) config('services.instagram.version');
-        $url = "{$host}/{$version}/me/media";
+        // Halaman berikutnya diminta dengan cursor dan token yang sama. URL "next" dari Meta tidak dipakai.
         $query = ['fields' => 'id,caption', 'limit' => 50, 'access_token' => $token];
         $media = collect();
 
-        for ($page = 0; $page < self::MAX_PAGES && $url; $page++) {
-            $response = Http::timeout(20)->get($url, $query)->throw();
+        for ($page = 0; $page < self::MAX_PAGES; $page++) {
+            $response = Http::timeout(20)->get("{$host}/{$version}/me/media", $query)->throw();
             $media = $media->concat(collect($response->json('data', []))->map(fn (array $row) => [
                 'id' => (string) $row['id'],
                 'caption' => $this->normalize($row['caption'] ?? ''),
             ]));
-            $url = $response->json('paging.next');
-            $query = [];
+
+            $after = $response->json('paging.cursors.after');
+            if (! $response->json('paging.next') || $after === null) {
+                break;
+            }
+            $query['after'] = $after;
         }
 
         return $media;

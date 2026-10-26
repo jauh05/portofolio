@@ -70,6 +70,32 @@ class OfficeInstagramMediaMatcherTest extends TestCase
         Http::assertSent(fn ($request) => str_contains($request->url(), '/18001/insights') && str_contains($request->url(), 'token-kauiz'));
     }
 
+    public function test_later_pages_of_media_are_requested_with_the_same_token(): void
+    {
+        Http::fake(function ($request) {
+            if (! str_contains($request->url(), '/me/media')) {
+                return Http::response(['data' => []]);
+            }
+            if (str_contains($request->url(), 'after=')) {
+                // Halaman berikutnya harus memakai token yang sama. URL "next" dari Meta tidak boleh dipakai begitu saja.
+                return str_contains($request->url(), 'access_token=token-jauki')
+                    ? Http::response(['data' => [['id' => '17999', 'caption' => 'Tulis tangan rapi']], 'paging' => []])
+                    : Http::response(['error' => ['message' => 'Invalid OAuth 2.0 Access Token', 'code' => 190]], 400);
+            }
+
+            return Http::response(['data' => [['id' => '17001', 'caption' => 'Post lain']], 'paging' => [
+                'cursors' => ['after' => 'abc'],
+                'next' => 'https://graph.instagram.com/v23.0/me/media?after=abc&access_token=token-lama',
+            ]]);
+        });
+        $item = $this->item('jauki', 'Tulis tangan rapi', 'uuid-jauki');
+
+        $result = app(OfficeInstagramMediaMatcher::class)->match(false);
+
+        $this->assertSame(1, $result['matched']);
+        $this->assertSame('17999', $item->fresh()->metadata['instagram_media_id']);
+    }
+
     /** @param array<int, array{id: string, caption: string}> $jauki @param array<int, array{id: string, caption: string}> $kauiz */
     private function fakeInstagram(array $jauki, array $kauiz): void
     {
