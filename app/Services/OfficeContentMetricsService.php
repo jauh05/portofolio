@@ -58,7 +58,7 @@ class OfficeContentMetricsService
         $fetched = 0;
         $failed = 0;
         foreach ($this->mediaList() as $media) {
-            $token = self::tokenFor($media['brand_slug']);
+            $token = self::tokenForAccount($media['account']);
             if ($token === '') {
                 $failed++;
 
@@ -90,10 +90,10 @@ class OfficeContentMetricsService
         return ['status' => 'ok', 'fetched' => $fetched, 'failed' => $failed];
     }
 
-    /** Akun Kauiz memakai tokennya sendiri. Brand lain memakai INSTAGRAM_ACCESS_TOKEN (Jauki). */
-    public static function tokenFor(?string $brandSlug): string
+    /** Akun Kauiz memakai tokennya sendiri. Akun lain memakai INSTAGRAM_ACCESS_TOKEN (Jauki). */
+    public static function tokenForAccount(string $account): string
     {
-        return (string) ($brandSlug === 'kauiz' ? config('services.instagram.kauiz_token') : config('services.instagram.token'));
+        return (string) ($account === 'kauiz' ? config('services.instagram.kauiz_token') : config('services.instagram.token'));
     }
 
     /** @return array{views: int, likes: int} */
@@ -114,29 +114,45 @@ class OfficeContentMetricsService
         return ['views' => (int) $values->get('views', 0), 'likes' => (int) $values->get('likes', 0)];
     }
 
-    /** @return array<int, array{platform: string, media_id: string, brand_slug: ?string, topic: ?string, published_at: mixed}> */
+    /** @return array<int, array{platform: string, media_id: string, account: string, brand_slug: ?string, topic: ?string, published_at: mixed}> */
     private function mediaList(): array
     {
         $items = OfficeContentItem::with(['brand', 'schedule'])
             ->whereNotNull('external_id')->where('platform', 'instagram')->get()
-            ->map(fn (OfficeContentItem $item) => [
-                'platform' => 'instagram',
-                'media_id' => (string) (($item->metadata ?? [])['instagram_media_id'] ?? $item->external_id),
-                'brand_slug' => $item->brand?->slug,
-                'topic' => self::topicOf($item->schedule?->topic),
-                'published_at' => $item->published_at,
-            ]);
+            ->map(fn (OfficeContentItem $item) => $this->itemMedia($item))
+            ->filter()
+            ->values();
 
         $reels = collect(ReelsHistoryReader::all())
             ->filter(fn (array $row) => ! empty($row['mediaId']))
             ->map(fn (array $row) => [
                 'platform' => 'instagram',
                 'media_id' => (string) $row['mediaId'],
+                'account' => 'jauki',
                 'brand_slug' => 'jauki',
                 'topic' => self::topicOf($row['title'] ?? null),
                 'published_at' => $row['publishedAt'] ?? null,
             ]);
 
         return $items->concat($reels)->unique(fn (array $row) => $row['platform'].':'.$row['media_id'])->values()->all();
+    }
+
+    /** Konten hanya diambil metriknya kalau ID medianya sudah diketahui: dari pencocokan, atau external_id yang memang ID Instagram. */
+    private function itemMedia(OfficeContentItem $item): ?array
+    {
+        $metadata = $item->metadata ?? [];
+        $mediaId = $metadata['instagram_media_id'] ?? (ctype_digit((string) $item->external_id) ? (string) $item->external_id : null);
+        if ($mediaId === null) {
+            return null;
+        }
+
+        return [
+            'platform' => 'instagram',
+            'media_id' => (string) $mediaId,
+            'account' => $metadata['instagram_account'] ?? ($item->brand?->slug === 'kauiz' ? 'kauiz' : 'jauki'),
+            'brand_slug' => $item->brand?->slug,
+            'topic' => self::topicOf($item->schedule?->topic),
+            'published_at' => $item->published_at,
+        ];
     }
 }

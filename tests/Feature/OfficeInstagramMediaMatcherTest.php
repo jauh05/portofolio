@@ -31,7 +31,9 @@ class OfficeInstagramMediaMatcherTest extends TestCase
 
         $this->assertSame(['matched' => 2, 'ambiguous' => 0, 'not_found' => 0], $result);
         $this->assertSame('17999', $jauki->fresh()->metadata['instagram_media_id']);
+        $this->assertSame('jauki', $jauki->fresh()->metadata['instagram_account']);
         $this->assertSame('18001', $kauiz->fresh()->metadata['instagram_media_id']);
+        $this->assertSame('kauiz', $kauiz->fresh()->metadata['instagram_account']);
         $this->assertSame('uuid-jauki', $jauki->fresh()->external_id);
     }
 
@@ -57,7 +59,20 @@ class OfficeInstagramMediaMatcherTest extends TestCase
         $this->assertArrayNotHasKey('instagram_media_id', $item->fresh()->metadata);
     }
 
-    public function test_metrics_are_fetched_with_the_matched_media_id_and_the_brand_token(): void
+    public function test_kauiz_item_posted_on_the_jauki_account_is_matched_and_fetched_with_the_jauki_token(): void
+    {
+        $this->fakeInstagram([['id' => '17999', 'caption' => 'Silang akun']], []);
+        $item = $this->item('kauiz', 'Silang akun', 'uuid-silang');
+
+        $result = app(OfficeInstagramMediaMatcher::class)->match(false);
+        app(OfficeContentMetricsService::class)->refresh();
+
+        $this->assertSame(1, $result['matched']);
+        $this->assertSame('jauki', $item->fresh()->metadata['instagram_account']);
+        Http::assertSent(fn ($request) => str_contains($request->url(), '/17999/insights') && str_contains($request->url(), 'token-jauki'));
+    }
+
+    public function test_metrics_are_fetched_with_the_matched_media_id_and_the_account_token(): void
     {
         $this->fakeInstagram([['id' => '17999', 'caption' => 'Tulis tangan rapi']], [['id' => '18001', 'caption' => 'Tugas kuliah cepat']]);
         $this->item('jauki', 'Tulis tangan rapi', 'uuid-jauki');
@@ -77,10 +92,14 @@ class OfficeInstagramMediaMatcherTest extends TestCase
                 return Http::response(['data' => []]);
             }
             if (str_contains($request->url(), 'after=')) {
-                // Halaman berikutnya harus memakai token yang sama. URL "next" dari Meta tidak boleh dipakai begitu saja.
+                // URL "next" dari Meta membawa token lama dan ditolak. Halaman berikutnya harus diminta dengan token akun itu.
+                if (str_contains($request->url(), 'access_token=token-lama')) {
+                    return Http::response(['error' => ['message' => 'Invalid OAuth 2.0 Access Token', 'code' => 190]], 400);
+                }
+
                 return str_contains($request->url(), 'access_token=token-jauki')
                     ? Http::response(['data' => [['id' => '17999', 'caption' => 'Tulis tangan rapi']], 'paging' => []])
-                    : Http::response(['error' => ['message' => 'Invalid OAuth 2.0 Access Token', 'code' => 190]], 400);
+                    : Http::response(['data' => [], 'paging' => []]);
             }
 
             return Http::response(['data' => [['id' => '17001', 'caption' => 'Post lain']], 'paging' => [
