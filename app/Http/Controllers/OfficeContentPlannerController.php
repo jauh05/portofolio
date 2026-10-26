@@ -83,18 +83,18 @@ class OfficeContentPlannerController extends Controller
         $schedules = OfficeContentSchedule::with('brand')
             ->when($brandId, fn ($query) => $query->where('brand_id', $brandId))
             ->orderBy('next_run_at')->get();
-        // Kalender mengikuti grid: hanya jadwal mingguan yang aktif dan punya jam, ditambah slot Reels dari file slot.
+        // Kalender mengikuti grid: jadwal mingguan aktif dan slot Reels. Kartu tanpa jam ditandai timeless dan tampil di awal hari.
         $occurrences = $schedules
-            ->filter(fn (OfficeContentSchedule $schedule) => $schedule->is_active && ($schedule->recurrence_rule['frequency'] ?? null) === 'weekly' && ! empty($schedule->recurrence_rule['time']))
-            ->flatMap(fn (OfficeContentSchedule $schedule) => $this->weeklyOccurrences($schedule->recurrence_rule['days'] ?? [], $schedule->recurrence_rule['time'], $schedule->timezone ?? $timezone, $start, $end)
-                ->map(fn (CarbonImmutable $when) => $this->occurrencePayload($schedule, $when)))
+            ->filter(fn (OfficeContentSchedule $schedule) => $schedule->is_active && ($schedule->recurrence_rule['frequency'] ?? null) === 'weekly')
+            ->flatMap(fn (OfficeContentSchedule $schedule) => $this->weeklyOccurrences($schedule->recurrence_rule['days'] ?? [], $schedule->recurrence_rule['time'] ?? null, $schedule->timezone ?? $timezone, $start, $end)
+                ->map(fn (CarbonImmutable $when) => $this->occurrencePayload($schedule, $when) + ['timeless' => empty($schedule->recurrence_rule['time'])]))
             ->concat($this->reelsOccurrences($timezone, $start, $end))
             ->sortBy('scheduledAt')->values();
 
         return response()->json([
             'range' => ['start' => $start->toIso8601String(), 'end' => $end->toIso8601String(), 'timezone' => $timezone],
             'occurrences' => $occurrences,
-            'upcoming' => $occurrences->filter(fn (array $item) => CarbonImmutable::parse($item['scheduledAt'])->greaterThanOrEqualTo(now($timezone)))->take(12)->values(),
+            'upcoming' => $occurrences->filter(fn (array $item) => ($item['timeless'] ? CarbonImmutable::parse($item['scheduledAt'])->endOfDay() : CarbonImmutable::parse($item['scheduledAt']))->greaterThanOrEqualTo(now($timezone)))->take(12)->values(),
             'schedules' => $schedules->map(fn (OfficeContentSchedule $schedule) => $this->schedulePayload($schedule)),
         ]);
     }
@@ -541,10 +541,10 @@ class OfficeContentPlannerController extends Controller
         return $occurrence ? CarbonImmutable::parse($occurrence['scheduledAt']) : null;
     }
 
-    /** Kemunculan mingguan dalam rentang, sama dengan grid: tanpa batas starts_at dan ends_at. */
-    private function weeklyOccurrences(array $days, string $time, string $timezone, CarbonImmutable $start, CarbonImmutable $end): \Illuminate\Support\Collection
+    /** Kemunculan mingguan dalam rentang, sama dengan grid: tanpa batas starts_at dan ends_at. Tanpa jam dimulai pukul 00:00. */
+    private function weeklyOccurrences(array $days, ?string $time, string $timezone, CarbonImmutable $start, CarbonImmutable $end): \Illuminate\Support\Collection
     {
-        [$hour, $minute] = array_map('intval', explode(':', $time));
+        [$hour, $minute] = $time ? array_map('intval', explode(':', $time)) : [0, 0];
         $items = collect();
         for ($day = $start->startOfDay(); $day->lessThanOrEqualTo($end); $day = $day->addDay()) {
             if (! in_array($day->isoWeekday(), array_map('intval', $days), true)) {
@@ -563,14 +563,14 @@ class OfficeContentPlannerController extends Controller
     private function reelsOccurrences(string $timezone, CarbonImmutable $start, CarbonImmutable $end): \Illuminate\Support\Collection
     {
         return collect(SlotFile::read(config('reels.slots_path')))
-            ->filter(fn ($slot) => is_array($slot) && ($slot['active'] ?? true) && ! empty($slot['time']) && isset($slot['day']))
-            ->flatMap(fn (array $slot) => $this->weeklyOccurrences([(int) $slot['day']], (string) $slot['time'], $timezone, $start, $end)
+            ->filter(fn ($slot) => is_array($slot) && ($slot['active'] ?? true) && isset($slot['day']))
+            ->flatMap(fn (array $slot) => $this->weeklyOccurrences([(int) $slot['day']], $slot['time'] ?? null, $timezone, $start, $end)
                 ->map(fn (CarbonImmutable $when) => [
                     'id' => 'reels:'.$slot['id'].'@'.$when->format('YmdHi'),
                     'scheduleId' => null, 'name' => $slot['label'] ?? 'Reels Jauki', 'topic' => null,
                     'platform' => 'instagram', 'contentType' => 'reels', 'assignedAgent' => null, 'scheduleType' => 'recurring',
                     'brand' => ['id' => null, 'name' => 'Jauki', 'slug' => 'jauki'], 'recurrenceLabel' => 'Reels setiap minggu',
-                    'scheduledAt' => $when->toIso8601String(), 'status' => 'scheduled',
+                    'scheduledAt' => $when->toIso8601String(), 'status' => 'scheduled', 'timeless' => empty($slot['time']),
                 ]));
     }
 

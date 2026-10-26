@@ -147,7 +147,7 @@ class AnalystCleanupTest extends TestCase
         $this->assertSame(1, $topics->count(), 'konten dismissed tidak dihitung');
     }
 
-    public function test_calendar_shows_weekly_schedules_with_time_and_reels_slots_like_the_grid(): void
+    public function test_calendar_shows_weekly_cards_with_and_without_time_and_reels_slots_like_the_grid(): void
     {
         $this->schedule('tips belajar');
         $this->schedule('tanpa jam', ['recurrence_rule' => ['frequency' => 'weekly', 'days' => [1], 'time' => null]]);
@@ -158,14 +158,19 @@ class AnalystCleanupTest extends TestCase
         ]);
         File::put($this->dir.'/slots.json', json_encode([
             ['id' => 'slot-1', 'label' => 'Reels Jauki', 'day' => 2, 'time' => '16:00', 'active' => true],
+            ['id' => 'slot-2', 'label' => 'Reels tanpa jam', 'day' => 3, 'time' => null, 'active' => true],
         ]));
 
         $occurrences = collect($this->actingAs($this->owner)
             ->getJson('/office/api/content-planner?start=2026-10-26&end=2026-11-01')->assertOk()->json('occurrences'));
 
         $this->assertSame(['feed', 'reels'], $occurrences->pluck('contentType')->unique()->sort()->values()->all());
-        $this->assertCount(2, $occurrences, 'satu mingguan dengan jam, satu slot Reels; sekali jalan dan tanpa jam tidak tampil');
-        $this->assertSame('2026-10-26T09:00:00+07:00', $occurrences->firstWhere('contentType', 'feed')['scheduledAt']);
-        $this->assertSame('2026-10-27T16:00:00+07:00', $occurrences->firstWhere('contentType', 'reels')['scheduledAt']);
+        $this->assertCount(4, $occurrences, 'dua mingguan (dengan dan tanpa jam) dan dua slot Reels; sekali jalan tidak tampil');
+        $this->assertSame('2026-10-26T09:00:00+07:00', $occurrences->firstWhere('name', 'tips belajar')['scheduledAt']);
+        $this->assertFalse($occurrences->firstWhere('name', 'tips belajar')['timeless']);
+        $this->assertSame('2026-10-26T00:00:00+07:00', $occurrences->firstWhere('name', 'tanpa jam')['scheduledAt']);
+        $this->assertTrue($occurrences->firstWhere('name', 'tanpa jam')['timeless']);
+        $this->assertSame('2026-10-27T16:00:00+07:00', $occurrences->firstWhere('name', 'Reels Jauki')['scheduledAt']);
+        $this->assertTrue($occurrences->firstWhere('name', 'Reels tanpa jam')['timeless']);
     }
 }

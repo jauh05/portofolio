@@ -42,7 +42,7 @@
     ]
   },
   "resources/js/living-office/main.jsx": {
-    "file": "assets/main-jLIMo-CQ.js",
+    "file": "assets/main-CxqoJ6pc.js",
     "name": "main",
     "src": "resources/js/living-office/main.jsx",
     "isEntry": true,
@@ -57,7 +57,7 @@
     ]
   },
   "resources/js/living-office/preview3d/Office3DPreview.jsx": {
-    "file": "assets/Office3DPreview-fyCz0_12.js",
+    "file": "assets/Office3DPreview-BpdXveAq.js",
     "name": "Office3DPreview",
     "src": "resources/js/living-office/preview3d/Office3DPreview.jsx",
     "isDynamicEntry": true,

@@ -9,6 +9,7 @@ import { articleReady, generationStatus, resolvePlannerOutput, runGenerationRequ
 
 const TZ = 'Asia/Jakarta';
 const prettyDate = (value) => new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: TZ }).format(new Date(value));
+const prettyDay = (value) => new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeZone: TZ }).format(new Date(value));
 const initialForm = (type, brandId = '') => ({
     name: '', schedule_type: type, platform: 'instagram', content_type: 'feed', topic: '', brief: '', assigned_agent: '', timezone: TZ,
     brand_id: brandId, scheduled_at: '', frequency: 'weekly', days: [1], time: '09:00', starts_at: new Date().toISOString().slice(0, 10), ends_at: '', generation_mode: 'manual', generation_timing: 'manual', generation_lead_minutes: null, publishing_mode: 'review', is_active: true,
@@ -220,7 +221,7 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
                 onToday={() => setSelectedDate(todayKey())}
                 onDateSelect={date => { setSelectedDate(date); setCalendarView(writeCalendarView('day')); }}
                 onOpenOccurrence={openOccurrence} />
-            <aside className="planner-next"><header><CalendarDays size={16} /><div><span>JADWAL BERIKUTNYA</span><strong>Konten yang akan di-generate</strong></div></header>{loading ? <p>Memuat jadwal…</p> : nextItem ? <article key={nextItem.id}><div><em>{nextItem.brand?.name || 'Workspace'}</em><b>{nextItem.name}</b><small>{resolvePlannerOutput(nextItem).label}</small></div><time>{prettyDate(nextItem.scheduledAt)}</time></article> : visibleUpcoming.length ? <p>Semua jadwal berikutnya sudah dibuat.</p> : <p>Belum ada konten terjadwal pada rentang ini.</p>}</aside>
+            <aside className="planner-next"><header><CalendarDays size={16} /><div><span>JADWAL BERIKUTNYA</span><strong>Konten yang akan di-generate</strong></div></header>{loading ? <p>Memuat jadwal…</p> : nextItem ? <article key={nextItem.id}><div><em>{nextItem.brand?.name || 'Workspace'}</em><b>{nextItem.name}</b><small>{resolvePlannerOutput(nextItem).label}</small></div><time>{nextItem.timeless ? `${prettyDay(nextItem.scheduledAt)} · Tanpa jam` : prettyDate(nextItem.scheduledAt)}</time></article> : visibleUpcoming.length ? <p>Semua jadwal berikutnya sudah dibuat.</p> : <p>Belum ada konten terjadwal pada rentang ini.</p>}</aside>
         </section>
         <ContentReview contentItem={reviewContent} onClose={() => setReviewId(null)} generateContent={generateContent} reviseContent={reviseContent} updateContent={updateContent} approveContent={approveContent} />
     </div>;
