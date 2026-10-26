@@ -45,7 +45,7 @@ class OfficeContentMetricsService
 
     public function configured(): bool
     {
-        return (string) config('services.instagram.token') !== '';
+        return (string) config('services.instagram.token') !== '' || (string) config('services.instagram.kauiz_token') !== '';
     }
 
     /** @return array{status: string, fetched: int, failed: int, reason?: string} */
@@ -58,8 +58,15 @@ class OfficeContentMetricsService
         $fetched = 0;
         $failed = 0;
         foreach ($this->mediaList() as $media) {
+            $token = $this->tokenFor($media['brand_slug']);
+            if ($token === '') {
+                $failed++;
+
+                continue;
+            }
+
             try {
-                $metrics = $this->insights($media['media_id']);
+                $metrics = $this->insights($media['media_id'], $token);
             } catch (\Throwable) {
                 $failed++;
 
@@ -83,15 +90,21 @@ class OfficeContentMetricsService
         return ['status' => 'ok', 'fetched' => $fetched, 'failed' => $failed];
     }
 
+    /** Akun Kauiz memakai tokennya sendiri. Brand lain memakai INSTAGRAM_ACCESS_TOKEN (Jauki). */
+    private function tokenFor(?string $brandSlug): string
+    {
+        return (string) ($brandSlug === 'kauiz' ? config('services.instagram.kauiz_token') : config('services.instagram.token'));
+    }
+
     /** @return array{views: int, likes: int} */
-    public function insights(string $mediaId): array
+    public function insights(string $mediaId, ?string $token = null): array
     {
         $host = rtrim((string) config('services.instagram.host'), '/');
         $version = (string) config('services.instagram.version');
 
         $response = Http::timeout(20)->get("{$host}/{$version}/{$mediaId}/insights", [
             'metric' => self::METRICS,
-            'access_token' => config('services.instagram.token'),
+            'access_token' => $token ?? config('services.instagram.token'),
         ])->throw();
 
         $values = collect($response->json('data', []))->mapWithKeys(fn (array $metric) => [

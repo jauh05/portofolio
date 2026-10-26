@@ -54,6 +54,8 @@ return [
     // Instagram Insights untuk views dan likes. Token perlu izin instagram_manage_insights.
     'instagram' => [
         'token' => env('INSTAGRAM_ACCESS_TOKEN'),
+        // Token akun Kauiz. Kosong berarti metrik konten Kauiz tidak diambil.
+        'kauiz_token' => env('INSTAGRAM_ACCESS_TOKEN_KAUIZ'),
         'host' => env('INSTAGRAM_GRAPH_HOST', 'https://graph.instagram.com'),
         'version' => env('INSTAGRAM_GRAPH_VERSION', 'v23.0'),
     ],
