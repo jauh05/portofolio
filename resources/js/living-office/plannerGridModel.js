@@ -1,5 +1,4 @@
 export const PLANNER_DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-export const PLANNER_HOURS = Array.from({ length: 18 }, (_, index) => index + 6);
 export const TZ = 'Asia/Jakarta';
 
 // Jenis chip. Kunci = brand + tipe konten. Warna dipakai lewat kelas tone-* di planner-grid.css.
@@ -21,20 +20,23 @@ export function chipKey(brandSlug, contentType) {
 
 export const chipLabel = (key) => CHIP_TYPES[key]?.label ?? key;
 export const chipTone = (key) => CHIP_TYPES[key]?.tone ?? 'other';
-export const hourOf = (time) => Number(String(time || '00:00').split(':')[0]);
 
-// Jadwal mingguan dari database (satu chip per hari) dan slot Reels dari file.
+// Kartu tanpa jam tampil lebih dulu, lalu kartu berjam diurutkan dari jam paling awal.
+export const sortChips = (chips) => [...chips].sort((a, b) => (a.time ? 1 : 0) - (b.time ? 1 : 0) || String(a.time || '').localeCompare(String(b.time || '')));
+
+// Jadwal mingguan dari database (satu kartu per hari) dan slot Reels dari file. Jam boleh kosong.
+// Jadwal harian dan bulanan belum ditampilkan di grid.
 export function buildChips(schedules, reelsSlots) {
     const chips = [];
     schedules.forEach((schedule) => {
         const rule = schedule.recurrenceRule || {};
-        if (rule.frequency !== 'weekly' || !rule.time) return;
+        if (rule.frequency !== 'weekly') return;
         (rule.days || []).forEach((day) => chips.push({
             id: `db:${schedule.id}:${day}`,
             source: 'db',
             refId: schedule.id,
             day,
-            time: rule.time,
+            time: rule.time || null,
             key: chipKey(schedule.brand?.slug, schedule.contentType),
             label: schedule.name,
         }));
@@ -44,7 +46,7 @@ export function buildChips(schedules, reelsSlots) {
         source: 'reels',
         refId: slot.id,
         day: Number(slot.day),
-        time: slot.time,
+        time: slot.time || null,
         key: 'jauki-reels',
         label: slot.label || 'Reels Jauki',
     }));

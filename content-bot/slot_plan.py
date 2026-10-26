@@ -44,7 +44,8 @@ def due_actions(slots, state, now, tz):
     """Daftar tindakan yang harus dilakukan sekarang, berdasarkan slot dan status tiap kemunculan."""
     actions = []
     for slot in slots:
-        if not slot.get("active", True):
+        # Slot tanpa jam belum punya tanggal tayang, jadi dilewati sampai jamnya diisi.
+        if not slot.get("active", True) or not slot.get("time"):
             continue
         lead = timedelta(minutes=int(slot.get("lead_minutes", DEFAULT_LEAD_MINUTES)))
         for at in occurrences(slot, now, tz):

@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CalendarDays, Plus, Repeat2, Sparkles, X } from 'lucide-react';
+import { CalendarDays, X } from 'lucide-react';
 import { ContentReview } from './ContentReview';
 import { PlannerCalendar, PlannerMiniMonth } from './PlannerCalendar';
 import { ContentPlannerChat } from './ContentPlannerChat';
 import { calendarRange, calendarTitle, occurrenceDateKey, readCalendarView, shiftCalendarDate, todayKey, writeCalendarView } from './calendarViewModel';
-import { PANEL_MODES, readPanelMode, writePanelMode } from './panelPreferences';
 import { PlannerGenerationCard } from './PlannerGenerationCard';
 import { articleReady, generationStatus, resolvePlannerOutput, runGenerationRequest, safeGenerationError, selectGenerationCommand, selectScheduleContent, shouldPollGeneration, STATUS_LABELS } from './plannerGeneration';
 
@@ -82,8 +81,6 @@ function AiPlanModal({ brands, onClose, onAnalyze, onSave }) {
 }
 
 export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlannerGeneration, createSchedule, analyzePlan, contentItems = [], commands = [], agents = [], generateContent, reviseContent, updateContent, approveContent }) {
-    const manageRef = useRef(null);
-    const [panelMode, setPanelMode] = useState(() => readPanelMode('plannerPanelMode'));
     const [calendarView, setCalendarView] = useState(readCalendarView);
     const [selectedDate, setSelectedDate] = useState(todayKey);
     const [formType, setFormType] = useState(null);
@@ -115,11 +112,6 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
         if (!scheduleIds) return;
         loadPlannerGeneration(scheduleIds.split(',')).catch(() => setNotice('Hasil generation belum dapat dimuat. Planner akan mencoba lagi.'));
     }, [scheduleIds, loadPlannerGeneration]);
-    useEffect(() => {
-        if (window.location.hash !== '#kelola-planner') return;
-        const frame = window.requestAnimationFrame(() => manageRef.current?.scrollIntoView({ block: 'start' }));
-        return () => window.cancelAnimationFrame(frame);
-    }, []);
     const activeIds = manageableSchedules.filter(schedule => {
         const content = contentFor(schedule.id);
         return shouldPollGeneration(content, commandFor(content), requests[schedule.id]?.phase === 'queued');
@@ -138,10 +130,6 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
         return () => window.clearInterval(timer);
     }, [activeIds, loadPlannerGeneration]);
 
-    const openManage = () => {
-        window.history.replaceState(null, '', '#kelola-planner');
-        manageRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
-    };
     const refreshPlanner = () => loadPlanner(startKey, endKey);
     const csrf = () => document.querySelector('meta[name="csrf-token"]')?.content || '';
     const postJson = async (url, body = {}) => {
@@ -216,10 +204,11 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
         if (!schedule) { setNotice('Jadwal tidak ditemukan.'); return; }
         const content = contentFor(schedule.id);
         if (content && ['preview_ready', 'ready_for_review', 'ready', 'approved', 'published'].includes(content.status)) setReviewId(content.id);
-        else { openManage(); }
+        else setNotice('Konten untuk jadwal ini belum dibuat.');
     };
+    const nextItem = visibleUpcoming.find(item => !contentFor(item.scheduleId));
     return <div className="content-view planner-view">
-        <div className="view-heading"><div><span>CONTENT PLANNER</span><h1>Content Planner</h1><p>Rencanakan output, pantau generation, dan lihat hasilnya langsung di sini. Jadwal mode Review menunggu persetujuan sebelum terbit.</p></div><div className="planner-actions"><button onClick={() => setFormType('one_time')}><Plus size={15} /> Sekali</button><button onClick={() => setFormType('recurring')}><Repeat2 size={15} /> Berulang</button><button onClick={() => setAiPlanOpen(true)}><Sparkles size={15} /> AI Plan</button><button type="button" onClick={openManage}>Kelola Planner</button></div></div>
+        <div className="view-heading"><div><span>CONTENT PLANNER</span><h1>Content Planner</h1><p>Kalender</p></div></div>
         {notice && <div className="planner-notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice('')} aria-label="Tutup pesan">×</button></div>}
         <div className="planner-filter"><span>Workspace</span><select value={brandFilter} onChange={event => setBrandFilter(event.target.value)}><option value="all">Semua Brand</option>{brands.map(brand => <option key={brand.id} value={brand.id}>{brand.name}</option>)}</select></div>
         <section className="planner-layout">
@@ -231,19 +220,8 @@ export function ContentPlanner({ planner, brands, loading, loadPlanner, loadPlan
                 onToday={() => setSelectedDate(todayKey())}
                 onDateSelect={date => { setSelectedDate(date); setCalendarView(writeCalendarView('day')); }}
                 onOpenOccurrence={openOccurrence} />
-            <aside className="planner-upcoming"><PlannerMiniMonth selectedDate={selectedDate} occurrences={visibleOccurrences} onSelect={setSelectedDate} /><header><CalendarDays size={16} /><div><span>AKAN DATANG</span><strong>Konten terjadwal berikutnya</strong></div></header>{loading ? <p>Memuat jadwal…</p> : visibleUpcoming.length ? visibleUpcoming.map(item => { const content = contentFor(item.scheduleId); const status = generationStatus(content, commandFor(content)); return <article key={item.id}><div><em>{item.brand?.name || 'Workspace'}</em><b>{item.name}</b><small>{resolvePlannerOutput(item).label} · {STATUS_LABELS[status] || 'Belum dibuat'}</small></div><time>{prettyDate(item.scheduledAt)}</time><button type="button" onClick={() => openOccurrence(item)}>{content ? 'Lihat konten' : 'Buka planner'}</button></article>; }) : <p>Belum ada konten terjadwal pada rentang ini.</p>}</aside>
+            <aside className="planner-next"><header><CalendarDays size={16} /><div><span>JADWAL BERIKUTNYA</span><strong>Konten yang akan di-generate</strong></div></header>{loading ? <p>Memuat jadwal…</p> : nextItem ? <article key={nextItem.id}><div><em>{nextItem.brand?.name || 'Workspace'}</em><b>{nextItem.name}</b><small>{resolvePlannerOutput(nextItem).label}</small></div><time>{prettyDate(nextItem.scheduledAt)}</time></article> : visibleUpcoming.length ? <p>Semua jadwal berikutnya sudah dibuat.</p> : <p>Belum ada konten terjadwal pada rentang ini.</p>}</aside>
         </section>
-        <ContentPlannerChat workspaceId={(brandFilter !== 'all' ? brandFilter : brands?.[0]?.id) || ''} onChanged={() => loadPlanner(startKey, endKey).catch(() => {})} />
-        <section id="kelola-planner" ref={manageRef} className={`planner-manage planner-mode-${panelMode}`}><header><div><span>KELOLA PLANNER</span><h2>Semua Planner</h2><p>{manageableSchedules.length} jadwal pada workspace terpilih.</p><div className="panel-mode-control" role="group" aria-label="Ukuran Planner">{PANEL_MODES.map(mode => <button key={mode} type="button" aria-pressed={panelMode === mode} onClick={() => setPanelMode(writePanelMode('plannerPanelMode', mode))}>{mode === 'compact' ? 'Ringkas' : mode === 'expanded' ? 'Luas' : 'Normal'}</button>)}</div></div><div className="planner-actions"><button disabled={!manageableSchedules.length} onClick={() => setSelectedSchedules(new Set(manageableSchedules.map(item => item.id)))}>Pilih Semua</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('generate')}>Generate Terpilih</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('set_h1')}>Set H-1 Terpilih</button><button disabled={!manageableSchedules.length} onClick={generateMonth}>Generate Bulan Ini</button><button disabled={!manageableSchedules.length} onClick={generateAllActive}>Generate Semua Aktif</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('pause')}>Jeda Terpilih</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('resume')}>Lanjutkan Terpilih</button><button disabled={!selectedSchedules.size} onClick={() => bulkAction('delete')}>Hapus Terpilih</button><button disabled={!manageableSchedules.length} onClick={() => bulkAction('delete', manageableSchedules.map(item => item.id))}>Hapus Semua</button></div></header>
-            {!manageableSchedules.length && <div className="planner-manage-empty"><CalendarDays size={22} /><strong>Belum ada jadwal untuk dikelola</strong><p>Buat jadwal sekali atau berulang terlebih dahulu.</p><button type="button" onClick={() => setFormType('one_time')}>Buat jadwal pertama</button></div>}
-            {manageableSchedules.map(schedule => {
-                const content = contentFor(schedule.id);
-                return <PlannerGenerationCard key={schedule.id} schedule={schedule} content={content} command={commandFor(content)} mode={panelMode} agents={agents} requestState={requests[schedule.id]} optimisticQueued={requests[schedule.id]?.phase === 'queued'} selected={selectedSchedules.has(schedule.id)} onSelect={() => setSelectedSchedules(current => { const next = new Set(current); next.has(schedule.id) ? next.delete(schedule.id) : next.add(schedule.id); return next; })} onGenerate={() => generateScheduleNow(schedule)} onReview={() => content && setReviewId(content.id)} onEdit={() => setEditSchedule(schedule)} onPause={() => togglePause(schedule)} onDelete={() => deleteSchedule(schedule)} onSetH1={() => updateSchedule(schedule, { ...mapScheduleToForm(schedule), generation_mode: 'automatic', generation_timing: 'lead_time', generation_lead_minutes: 1440 }).catch(error => setNotice(safeGenerationError(error.message)))} />;
-            })}
-        </section>
-        {formType && <PlannerForm type={formType} brands={brands} onClose={() => setFormType(null)} onSave={createSchedule} />}
-        {editSchedule && <PlannerForm type={editSchedule.scheduleType} brands={brands} initialData={editSchedule} onClose={() => setEditSchedule(null)} onSave={data => updateSchedule(editSchedule, data)} />}
-        {aiPlanOpen && <AiPlanModal brands={brands} onClose={() => setAiPlanOpen(false)} onAnalyze={analyzePlan} onSave={createSchedule} />}
         <ContentReview contentItem={reviewContent} onClose={() => setReviewId(null)} generateContent={generateContent} reviseContent={reviseContent} updateContent={updateContent} approveContent={approveContent} />
     </div>;
 }

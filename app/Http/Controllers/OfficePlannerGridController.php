@@ -23,7 +23,7 @@ class OfficePlannerGridController extends Controller
     {
         $slots = SlotFile::read(config('reels.slots_path'));
         $slot = array_merge(
-            ['id' => (string) Str::uuid(), 'brand' => 'jauki', 'label' => 'Reels Jauki', 'lead_minutes' => 120, 'active' => true],
+            ['id' => (string) Str::uuid(), 'brand' => 'jauki', 'label' => 'Reels Jauki', 'time' => null, 'lead_minutes' => 120, 'active' => true],
             $this->validatedSlot($request, true),
         );
         $slots[] = $slot;
@@ -94,7 +94,7 @@ class OfficePlannerGridController extends Controller
         return $request->validate([
             'label' => [$rule, 'string', 'max:80'],
             'day' => [$rule, 'integer', 'between:1,7'],
-            'time' => [$rule, 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
+            'time' => ['sometimes', 'nullable', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
             'lead_minutes' => ['sometimes', 'integer', 'between:0,1440'],
             'active' => ['sometimes', 'boolean'],
         ]);

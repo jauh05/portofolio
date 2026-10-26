@@ -36,6 +36,7 @@ state_done = {sp.occurrence_key(slot, datetime(2026, 10, 26, 16, 0, tzinfo=TZ)):
 check(kinds(datetime(2026, 10, 26, 16, 20, tzinfo=TZ), state_done) == [], "sudah posted tidak diulang")
 check(kinds(datetime(2026, 10, 26, 10, 0, tzinfo=TZ)) == [], "slot lusa tidak diproses lebih awal")
 check(sp.due_actions([dict(slot, active=False)], {}, datetime(2026, 10, 26, 14, 10, tzinfo=TZ), TZ) == [], "slot nonaktif diabaikan")
+check(sp.due_actions([dict(slot, time=None)], {}, datetime(2026, 10, 26, 14, 10, tzinfo=TZ), TZ) == [], "slot tanpa jam dilewati tanpa crash")
 
 # 2. Alur auto dengan render dan posting palsu
 tmp = Path(tempfile.mkdtemp())

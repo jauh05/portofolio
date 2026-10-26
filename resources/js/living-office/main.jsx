@@ -138,7 +138,7 @@ function App() {
     const [selectedId, setSelectedId] = useState('jauki-article');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const mainRef = useRef(null);
-    const [activeView, setActiveView] = useState(() => window.location.hash === '#kelola-planner' ? 'planner' : 'overview');
+    const [activeView, setActiveView] = useState('overview');
     const [theme, setTheme] = useState(() => {
         try { return localStorage.getItem('living-office-theme') === 'dark' ? 'dark' : 'light'; } catch { return 'light'; }
     });
@@ -148,7 +148,6 @@ function App() {
     const selectAgent = (id) => { setSelectedId(id); setDrawerOpen(true); };
     useEffect(() => { try { localStorage.setItem('living-office-theme', theme); } catch {} }, [theme]);
     useEffect(() => {
-        if (activeView === 'planner' && window.location.hash === '#kelola-planner') return;
         mainRef.current?.scrollTo({ top: 0, left: 0 });
         if (window.innerWidth <= 760) window.scrollTo({ top: 0, left: 0 });
     }, [activeView]);

@@ -23,6 +23,12 @@ async function request(url, options = {}) {
 
 const todayKey = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
 
+const generateNotice = (result) => {
+    if (result.status === 'generated') return 'Generate ulang masuk antrean.';
+    if (result.status === 'skipped') return `Dilewati: ${result.reason}.`;
+    return `Gagal: ${result.reason || 'tidak diketahui'}.`;
+};
+
 export function PlannerGrid({ calendarProps }) {
     const [view, setView] = useState('grid');
     const [schedules, setSchedules] = useState([]);
@@ -58,16 +64,25 @@ export function PlannerGrid({ calendarProps }) {
 
     const chips = buildChips(schedules, reelsSlots);
 
-    const moveChip = async (chip, day, hour) => {
-        const time = `${String(hour).padStart(2, '0')}:00`;
+    // Pindah hari tidak mengirim jam, jadi jam kartu tetap sama.
+    const moveChip = async (chip, day) => {
         if (chip.source === 'reels') {
-            await request(`/office/api/reels-slots/${chip.refId}`, { method: 'PATCH', body: JSON.stringify({ day, time }) });
+            await request(`/office/api/reels-slots/${chip.refId}`, { method: 'PATCH', body: JSON.stringify({ day }) });
         } else {
-            const schedule = schedules.find((item) => item.id === chip.refId);
-            const days = (schedule?.recurrenceRule?.days || []).map((item) => (item === chip.day ? day : item));
-            await request(`/office/api/content-schedules/${chip.refId}`, { method: 'PATCH', body: JSON.stringify({ days: [...new Set(days)], time }) });
+            await request(`/office/api/content-schedules/${chip.refId}/move`, { method: 'POST', body: JSON.stringify({ from_day: chip.day, day }) });
         }
-        setNotice('Jadwal dipindah.');
+        setNotice('Kartu dipindah. Jamnya tetap.');
+        await load();
+    };
+
+    // Jam kosong dikirim sebagai null, dan kartu itu kembali ke bagian "Belum ada jam".
+    const setChipTime = async (chip, time) => {
+        if (chip.source === 'reels') {
+            await request(`/office/api/reels-slots/${chip.refId}`, { method: 'PATCH', body: JSON.stringify({ time }) });
+        } else {
+            await request(`/office/api/content-schedules/${chip.refId}/move`, { method: 'POST', body: JSON.stringify({ from_day: chip.day, day: chip.day, time }) });
+        }
+        setNotice(time ? `Jam diubah ke ${time}.` : 'Jam dikosongkan.');
         await load();
     };
 
@@ -75,7 +90,7 @@ export function PlannerGrid({ calendarProps }) {
         const type = CHIP_TYPES[key];
         try {
             if (type.contentType === 'reels') {
-                await request('/office/api/reels-slots', { method: 'POST', body: JSON.stringify({ label: type.label, day: 1, time: '09:00' }) });
+                await request('/office/api/reels-slots', { method: 'POST', body: JSON.stringify({ label: type.label, day: 1 }) });
             } else {
                 const brand = brands.find((item) => item.slug === type.brand);
                 await request('/office/api/content-schedules', {
@@ -83,23 +98,27 @@ export function PlannerGrid({ calendarProps }) {
                     body: JSON.stringify({
                         name: type.label, schedule_type: 'recurring', platform: type.platform, content_type: type.contentType,
                         topic: '', brief: '', assigned_agent: '', timezone: TZ, brand_id: brand?.id ?? null,
-                        frequency: 'weekly', days: [1], time: '09:00', starts_at: todayKey(),
+                        frequency: 'weekly', days: [1], time: null, starts_at: todayKey(),
                         generation_mode: 'manual', generation_timing: 'lead_time', generation_lead_minutes: 120,
                         publishing_mode: 'automatic', is_active: true,
                     }),
                 });
             }
-            setNotice(`${type.label} ditambahkan di Senin 09.00. Geser ke hari dan jam yang kamu mau.`);
+            setNotice(`${type.label} ditambahkan ke Senin. Isi jamnya dengan ikon pensil.`);
             await load();
         } catch (error) {
             setNotice(error.message);
         }
     };
 
+    // Generate ulang untuk satu kemunculan. Baris ini sudah punya tanggal, jadi bukan jadwal berikutnya.
     const regenerate = async (row) => {
         try {
-            await request(`/office/api/content-schedules/${row.scheduleId}/generate`, { method: 'POST', body: '{}' });
-            setNotice('Generate ulang dimulai.');
+            const result = await request(`/office/api/content-schedules/${row.scheduleId}/generate`, {
+                method: 'POST',
+                body: JSON.stringify({ occurrence_at: row.scheduledAt, regenerate: true }),
+            });
+            setNotice(generateNotice(result));
             await load();
         } catch (error) {
             setNotice(error.message);
@@ -126,7 +145,7 @@ export function PlannerGrid({ calendarProps }) {
             <header className="planner-grid-toolbar">
                 <div className="planner-grid-title">
                     <h2>Content Planner</h2>
-                    <p>Geser chip ke hari dan jam mana pun. Jadwal langsung berubah dan tersimpan.</p>
+                    <p>Seret kartu ke hari lain, jamnya tetap. Ubah jam dengan ikon pensil atau double-click kartu.</p>
                 </div>
                 <div className="planner-grid-actions">
                     <div className="planner-add">
@@ -141,7 +160,11 @@ export function PlannerGrid({ calendarProps }) {
                 </div>
             </header>
             {notice && <p className="planner-notice" role="status">{notice}</p>}
-            <ContentSlotGrid chips={chips} onMove={(chip, day, hour) => moveChip(chip, day, hour).catch((error) => setNotice(error.message))} />
+            <ContentSlotGrid
+                chips={chips}
+                onMove={(chip, day) => moveChip(chip, day).catch((error) => setNotice(error.message))}
+                onSetTime={(chip, time) => setChipTime(chip, time).catch((error) => setNotice(error.message))}
+            />
             <ContentResultsTable results={results} density={density} onDensity={changeDensity} onRegenerate={regenerate} />
         </div>
     );

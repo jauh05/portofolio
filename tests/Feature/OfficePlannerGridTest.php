@@ -6,6 +6,7 @@ use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentItem;
 use App\Models\OfficeContentSchedule;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -118,5 +119,84 @@ class OfficePlannerGridTest extends TestCase
         $feed = collect($rows)->firstWhere('source', 'db');
         $this->assertSame('failed', $feed['status']);
         $this->assertSame('token kedaluwarsa', $feed['error']);
+    }
+
+    private function weeklySchedule(array $overrides = []): OfficeContentSchedule
+    {
+        return OfficeContentSchedule::create(array_merge([
+            'brand_id' => $this->brand('jauki', 'Jauki')->id, 'name' => 'Feed Jauki', 'schedule_type' => 'recurring',
+            'platform' => 'instagram', 'content_type' => 'feed', 'timezone' => 'Asia/Jakarta', 'is_active' => true,
+            'recurrence_rule' => ['frequency' => 'weekly', 'days' => [1], 'time' => '16:00'],
+            'starts_at' => CarbonImmutable::parse('2026-10-01', 'Asia/Jakarta')->startOfDay(),
+            'generation_mode' => 'manual', 'publishing_mode' => 'automatic',
+        ], $overrides));
+    }
+
+    public function test_reels_slot_can_wait_without_time_and_move_by_day_only(): void
+    {
+        $created = $this->actingAs($this->owner)->postJson('/office/api/reels-slots', ['label' => 'Reels Jauki', 'day' => 1])
+            ->assertCreated()->assertJsonPath('slot.time', null)->json('slot');
+
+        $this->actingAs($this->owner)->patchJson("/office/api/reels-slots/{$created['id']}", ['day' => 3])
+            ->assertOk()->assertJsonPath('slot.day', 3)->assertJsonPath('slot.time', null);
+    }
+
+    public function test_moving_a_single_day_schedule_keeps_its_time(): void
+    {
+        $schedule = $this->weeklySchedule();
+
+        $this->actingAs($this->owner)->postJson("/office/api/content-schedules/{$schedule->id}/move", [
+            'from_day' => 1, 'day' => 2,
+        ])->assertOk();
+
+        $fresh = $schedule->fresh();
+        $this->assertSame([2], $fresh->recurrence_rule['days']);
+        $this->assertSame('16:00', $fresh->recurrence_rule['time']);
+    }
+
+    public function test_moving_one_day_of_a_multi_day_schedule_splits_that_card(): void
+    {
+        $schedule = $this->weeklySchedule(['recurrence_rule' => ['frequency' => 'weekly', 'days' => [1, 3], 'time' => '16:00']]);
+
+        $this->actingAs($this->owner)->postJson("/office/api/content-schedules/{$schedule->id}/move", [
+            'from_day' => 1, 'day' => 5, 'time' => '09:30',
+        ])->assertOk();
+
+        $this->assertSame([3], $schedule->fresh()->recurrence_rule['days']);
+        $this->assertSame('16:00', $schedule->fresh()->recurrence_rule['time']);
+        $card = OfficeContentSchedule::where('id', '!=', $schedule->id)->sole();
+        $this->assertSame([5], $card->recurrence_rule['days']);
+        $this->assertSame('09:30', $card->recurrence_rule['time']);
+    }
+
+    public function test_schedule_without_time_has_no_next_run_until_time_is_set(): void
+    {
+        $schedule = $this->weeklySchedule();
+
+        $this->actingAs($this->owner)->postJson("/office/api/content-schedules/{$schedule->id}/move", [
+            'from_day' => 1, 'day' => 1, 'time' => null,
+        ])->assertOk();
+
+        $fresh = $schedule->fresh();
+        $this->assertNull($fresh->recurrence_rule['time']);
+        $this->assertNull($fresh->next_run_at);
+    }
+
+    public function test_updating_a_schedule_keeps_its_stored_dates(): void
+    {
+        $weekly = $this->weeklySchedule();
+        $startsAt = $weekly->fresh()->getRawOriginal('starts_at');
+        $this->actingAs($this->owner)->patchJson("/office/api/content-schedules/{$weekly->id}", ['name' => 'Feed Jauki baru'])->assertOk();
+        $this->assertSame($startsAt, $weekly->fresh()->getRawOriginal('starts_at'));
+
+        $once = OfficeContentSchedule::create([
+            'brand_id' => $this->brand('jauki', 'Jauki')->id, 'name' => 'Sekali uji', 'schedule_type' => 'one_time',
+            'platform' => 'instagram', 'content_type' => 'feed', 'timezone' => 'Asia/Jakarta', 'is_active' => true,
+            'scheduled_at' => CarbonImmutable::parse('2026-10-27 09:00', 'Asia/Jakarta'),
+            'generation_mode' => 'manual', 'publishing_mode' => 'automatic',
+        ]);
+        $scheduledAt = $once->fresh()->getRawOriginal('scheduled_at');
+        $this->actingAs($this->owner)->patchJson("/office/api/content-schedules/{$once->id}", ['name' => 'Sekali uji baru'])->assertOk();
+        $this->assertSame($scheduledAt, $once->fresh()->getRawOriginal('scheduled_at'));
     }
 }
