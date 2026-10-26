@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './reels-page.css';
 
 const DURATION_OPTIONS = [20, 25, 30, 35, 40];
 const SPEED_OPTIONS = [1.0, 1.1, 1.2];
@@ -80,7 +81,7 @@ export function ReelsSettingsPanel() {
     };
 
     return (
-        <form className="planner-modal" onSubmit={save}>
+        <form className="reels-settings" onSubmit={save}>
             <section className="planner-form-section">
                 <span>REELS · JADWAL</span>
                 <div className="planner-form-grid">
@@ -138,5 +139,17 @@ export function ReelsSettingsPanel() {
             {errors.length > 0 && <ul role="alert">{errors.map(item => <li key={item}>{item}</li>)}</ul>}
             <button type="submit" disabled={saving}>{saving ? 'Menyimpan…' : 'Simpan pengaturan Reels'}</button>
         </form>
+    );
+}
+
+export function ReelsPage() {
+    return (
+        <section className="reels-page">
+            <header className="reels-page-head">
+                <h2>Vidio Gen</h2>
+                <p>Pengaturan video Reels otomatis Jauki Academy. Perubahan berlaku untuk jadwal berikutnya.</p>
+            </header>
+            <ReelsSettingsPanel />
+        </section>
     );
 }

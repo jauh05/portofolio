@@ -1,0 +1,8 @@
+.reels-page { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; display: grid; gap: 16px; }
+.reels-page-head h2 { margin: 0 0 4px; color: var(--text); }
+.reels-page-head p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.reels-settings { display: grid; gap: 14px; }
+.reels-settings label { display: grid; gap: 6px; font-size: 13px; color: var(--text); }
+.reels-settings fieldset { display: flex; flex-wrap: wrap; gap: 12px; border: 0; padding: 0; margin: 0; }
+.reels-settings fieldset legend { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.reels-settings button[type="submit"] { justify-self: start; }

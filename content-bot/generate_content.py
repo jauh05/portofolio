@@ -365,9 +365,9 @@ def pick_segment(history, cfg, rng):
     return None
 
 
-def build_filter_complex(seg, grade, vignette, text_path, font, volume):
+def build_filter_complex(seg, grade, vignette, text_path, font, volume, stab=""):
     duration = seg["duration"]
-    setpts = f"setpts=PTS/{seg['speed']}," if seg["speed"] != 1.0 else ""
+    setpts = stab + (f"setpts=PTS/{seg['speed']}," if seg["speed"] != 1.0 else "")
     if seg["landscape"]:
         # Latar blur dari video yang sama, video asli di tengah agar tidak terpotong.
         head = (
@@ -400,17 +400,42 @@ def build_filter_complex(seg, grade, vignette, text_path, font, volume):
     return f"{video};{audio}"
 
 
-def render(seg, track, music_offset, music_loop, grade, vignette, overlay, volume, font, out_path):
+def has_filter(name):
+    out = subprocess.run(["ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True)
+    return f" {name} " in out.stdout
+
+
+def prepare_stabilizer(seg, cfg):
+    """Stabilizer dua langkah: baca goyangan kamera dulu, lalu dipakai saat render. None bila tidak aktif."""
+    if not cfg.get("stabilize"):
+        return None
+    if not has_filter("vidstabtransform"):
+        log.warning("ffmpeg di server tidak punya vidstab. Stabilizer dilewati.")
+        return None
+    fd, trf = tempfile.mkstemp(suffix=".trf")
+    os.close(fd)
+    cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-ss", f"{seg['start']:.2f}", "-i", str(seg["path"]),
+           "-t", f"{seg['span']:.2f}", "-vf", f"vidstabdetect=shakiness=5:accuracy=15:result={trf}", "-f", "null", "-"]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        Path(trf).unlink(missing_ok=True)
+        raise BotError(f"stabilizer gagal (langkah deteksi):\n{result.stderr[-500:]}")
+    log.info("Stabilizer aktif.")
+    return trf
+
+
+def render(seg, track, music_offset, music_loop, grade, vignette, overlay, volume, font, out_path, trf_path=None):
     fd, text_name = tempfile.mkstemp(suffix=".txt")
     os.close(fd)
     text_path = Path(text_name)
     text_path.write_text("\n".join(textwrap.wrap(overlay, WRAP_CHARS, break_long_words=False)), encoding="utf-8")
+    stab = f"vidstabtransform=input={trf_path}:smoothing=30," if trf_path else ""
     cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-ss", f"{seg['start']:.2f}", "-i", str(seg["path"])]
     if music_loop:
         cmd += ["-stream_loop", "-1"]
     cmd += ["-ss", f"{music_offset:.2f}", "-i", str(track)]
     cmd += [
-        "-filter_complex", build_filter_complex(seg, grade, vignette, text_path, font, volume),
+        "-filter_complex", build_filter_complex(seg, grade, vignette, text_path, font, volume, stab),
         "-map", "[v]", "-map", "[a]", "-t", str(seg["duration"]),
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
         "-profile:v", "high", "-level", "4.2", "-pix_fmt", "yuv420p",
@@ -547,8 +572,13 @@ def main():
     stamp = datetime.now(tz)
     entry_id = uuid.uuid4().hex[:8]
     out_path = OUT_DIR / f"reel_{stamp:%Y%m%d_%H%M%S}_{entry_id}.mp4"
-    render(seg, track, music_offset, music_loop, grade, vignette, item["overlay"],
-           cfg["music_volume"], font, out_path)
+    trf_path = prepare_stabilizer(seg, cfg)
+    try:
+        render(seg, track, music_offset, music_loop, grade, vignette, item["overlay"],
+               cfg["music_volume"], font, out_path, trf_path)
+    finally:
+        if trf_path:
+            Path(trf_path).unlink(missing_ok=True)
     actual = check_output(out_path)
 
     # Teks dianggap terpakai begitu video berhasil dirender, supaya tidak dipakai dua kali.

@@ -5,7 +5,7 @@ import {
     Check, ChevronRight, CirclePause, Clock3, Coffee, Cpu, Database, ExternalLink, FileText,
     DollarSign, Gauge, HardDrive, LayoutDashboard, ListTodo, MemoryStick, MessageCircle, MonitorCog, MoreHorizontal,
     PanelLeftClose, Play, PlugZap, Radio, Refrigerator, RotateCcw, Search, Server, Settings, Sparkles, Square,
-    Thermometer, Users, X, ZoomIn, ZoomOut, Moon, Sun,
+    Thermometer, Users, X, ZoomIn, ZoomOut, Moon, Sun, Film,
 } from 'lucide-react';
 import { agentRegistry, systems } from './agentRegistry';
 import { workerStates } from './stateMachine';
@@ -14,7 +14,7 @@ import { useLivingOffice } from './useLivingOffice';
 import { useOfficeData } from './useOfficeData';
 import { OperationsView } from './OperationsViews';
 import { ContentPlanner } from './ContentPlanner';
-import { ReelsSettingsPanel } from './ReelsSettingsPanel';
+import { ReelsPage } from './ReelsSettingsPanel';
 import { AnalystReports } from './AnalystReports';
 import { ApiStatus } from './ApiStatus';
 import OfficeRenderer from './OfficeRenderer';
@@ -66,7 +66,7 @@ function Header({ summary, notifications, unread, onRead, onReadAll, onNotificat
 }
 
 const navItems = [
-    ['overview', LayoutDashboard, 'Overview'], ['kanban', ListTodo, 'Kanban'], ['planner', CalendarDays, 'Content Planner'],
+    ['overview', LayoutDashboard, 'Overview'], ['kanban', ListTodo, 'Kanban'], ['planner', CalendarDays, 'Content Planner'], ['reels', Film, 'Vidio Gen'],
     ['reports', BarChart3, 'Analyst Report'], ['agents', Bot, 'Agents'], ['activity', Activity, 'Activity'], ['api', PlugZap, 'API Aktif'],
 ];
 
@@ -155,7 +155,7 @@ function App() {
     return <div className="app-shell office-redesign" data-theme={theme} data-ambience={ambience}>
         <Header summary={office.summary} notifications={office.notifications} unread={office.unread} onRead={office.markRead} onReadAll={office.markAllRead} onNotificationOpen={() => setActiveView('reports')} theme={theme} onThemeToggle={() => setTheme(current => current === 'light' ? 'dark' : 'light')} />
         <Sidebar activeView={activeView} setActiveView={setActiveView} />
-        <main ref={mainRef} className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeRenderer domainData={domainData} selectedId={selectedId} onSelect={selectAgent} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={displayAgents} activity={office.activity} analystReport={office.reports[0]} onOpenReports={() => setActiveView('reports')} /></> : activeView === 'planner' ? <><ReelsSettingsPanel /><ContentPlanner planner={office.planner} brands={office.brands} loading={office.loading} loadPlanner={office.loadPlanner} loadPlannerGeneration={office.loadPlannerGeneration} createSchedule={office.createSchedule} analyzePlan={office.analyzePlan} contentItems={office.content} commands={office.commands} agents={displayAgents} generateContent={office.generateContent} reviseContent={office.reviseContent} updateContent={office.updateContent} approveContent={office.approveContent} /></> : activeView === 'reports' ? <AnalystReports reports={office.reports} brands={office.brands} loading={office.loading} generateReport={office.generateReport} approveReport={office.approveReport} dismissReport={office.dismissReport} /> : activeView === 'api' ? <ApiStatus agents={displayAgents} onSelectWorker={selectAgent} /> : <OperationsView view={activeView} agents={displayAgents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} onSelectWorker={selectAgent} />}</main>
+        <main ref={mainRef} className={`main-stage ${activeView !== 'overview' ? 'view-mode' : ''}`}>{activeView === 'overview' ? <><OfficeRenderer domainData={domainData} selectedId={selectedId} onSelect={selectAgent} /><BottomDock selectedAgent={selectedAgent} onSelect={selectAgent} agents={displayAgents} activity={office.activity} analystReport={office.reports[0]} onOpenReports={() => setActiveView('reports')} /></> : activeView === 'planner' ? <ContentPlanner planner={office.planner} brands={office.brands} loading={office.loading} loadPlanner={office.loadPlanner} loadPlannerGeneration={office.loadPlannerGeneration} createSchedule={office.createSchedule} analyzePlan={office.analyzePlan} contentItems={office.content} commands={office.commands} agents={displayAgents} generateContent={office.generateContent} reviseContent={office.reviseContent} updateContent={office.updateContent} approveContent={office.approveContent} /> : activeView === 'reels' ? <ReelsPage /> : activeView === 'reports' ? <AnalystReports reports={office.reports} brands={office.brands} loading={office.loading} generateReport={office.generateReport} approveReport={office.approveReport} dismissReport={office.dismissReport} /> : activeView === 'api' ? <ApiStatus agents={displayAgents} onSelectWorker={selectAgent} /> : <OperationsView view={activeView} agents={displayAgents} tasks={office.tasks} activity={office.activity} content={office.content} error={office.error} loading={office.loading} retry={office.refresh} onSelectWorker={selectAgent} />}</main>
         {drawerOpen && <AgentDrawer agent={selectedAgent} tasks={office.tasks} commands={office.commands} enqueue={office.enqueue} onClose={() => setDrawerOpen(false)} />}
         {office.toast && <div className={`office-toast ${office.toast.severity}`}><i>{office.toast.severity === 'error' ? '×' : '✓'}</i><div><strong>{office.toast.title}</strong><span>{office.toast.message}</span></div><button onClick={office.dismissToast}><X size={14} /></button></div>}
     </div>;

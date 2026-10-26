@@ -1,18 +1,35 @@
 {
   "timezone": "Asia/Jakarta",
   "videos_per_week": 4,
-  "durations": [20, 25, 30, 35, 40],
-  "speed_choices": [1.0, 1.1, 1.2],
+  "durations": [
+    20,
+    25,
+    30,
+    35,
+    40
+  ],
+  "speed_choices": [
+    1.0,
+    1.1,
+    1.2
+  ],
   "skip_head_s": 5,
   "skip_tail_s": 5,
-  "music_moods": ["jj", "pop_indonesia", "chill"],
+  "music_moods": [
+    "jj",
+    "pop_indonesia",
+    "chill"
+  ],
   "music_volume": 0.25,
-  "brand_hashtags": ["#jaukiacademy"],
+  "brand_hashtags": [
+    "#jaukiacademy"
+  ],
   "services": [
     "keluh kesah ngerjain tugas kuliah",
     "keluh kesah hitung SPSS dan skripsi",
     "keluh kesah coding dan debugging",
     "motivasi di dunia perkuliahan",
     "curhat soal dosen dan revisi skripsi"
-  ]
+  ],
+  "stabilize": true
 }
