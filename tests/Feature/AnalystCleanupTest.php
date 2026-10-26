@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\ProcessCompletedResearchRun;
 use App\Models\OfficeAnalystReport;
 use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentItem;
@@ -145,6 +146,13 @@ class AnalystCleanupTest extends TestCase
         $this->assertSame(1, $topics['tips belajar']);
         $this->assertFalse($topics->has('Threads post'));
         $this->assertSame(1, $topics->count(), 'konten dismissed tidak dihitung');
+    }
+
+    public function test_research_job_timeout_fits_inside_queue_retry_window(): void
+    {
+        $job = new ProcessCompletedResearchRun(new OfficeResearchRun());
+
+        $this->assertGreaterThan($job->timeout, config('queue.connections.database.retry_after'));
     }
 
     public function test_calendar_shows_weekly_cards_with_and_without_time_and_reels_slots_like_the_grid(): void
