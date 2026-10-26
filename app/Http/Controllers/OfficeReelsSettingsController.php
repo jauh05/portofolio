@@ -68,11 +68,11 @@ class OfficeReelsSettingsController extends Controller
             'music_volume' => 0.25,
             'brand_hashtags' => ['#jaukiacademy'],
             'services' => [
-                'joki tugas',
-                'formatting makalah dan skripsi',
-                'desain slide presentasi estetik',
-                'bimbingan belajar',
-                'motivasi skripsi',
+                'keluh kesah ngerjain tugas kuliah',
+                'keluh kesah hitung SPSS dan skripsi',
+                'keluh kesah coding dan debugging',
+                'motivasi di dunia perkuliahan',
+                'curhat soal dosen dan revisi skripsi',
             ],
         ];
     }
