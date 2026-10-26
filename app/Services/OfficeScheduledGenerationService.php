@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 class OfficeScheduledGenerationService
 {
-    private const BLOCKING_STATUSES = ['queued_for_generation', 'generating', 'ready_for_review', 'ready', 'approved', 'scheduled_for_publish', 'publishing', 'published'];
+    // "dismissed" dipakai saat konten dihapus dari dashboard, supaya kemunculan itu tidak dibuat ulang otomatis.
+    private const BLOCKING_STATUSES = ['queued_for_generation', 'generating', 'ready_for_review', 'ready', 'approved', 'scheduled_for_publish', 'publishing', 'published', 'dismissed'];
 
     public function __construct(private OfficeContentGenerator $generator) {}
 
@@ -93,6 +94,8 @@ class OfficeScheduledGenerationService
 
     private function isDue(OfficeContentSchedule $schedule, CarbonImmutable $occurrence): bool
     {
+        // Kemunculan yang sudah lewat tidak di-generate otomatis, supaya kartu yang dipindah ke jam lampau tidak langsung jalan.
+        if ($occurrence->lessThan(CarbonImmutable::now($schedule->timezone ?: 'Asia/Jakarta'))) return false;
         if ($schedule->generation_timing === 'immediate') return true;
         $due = $occurrence->subMinutes((int) ($schedule->generation_lead_minutes ?? 0));
         return CarbonImmutable::now($schedule->timezone ?: 'Asia/Jakarta')->greaterThanOrEqualTo($due);
@@ -101,8 +104,9 @@ class OfficeScheduledGenerationService
     private function nextOccurrence(OfficeContentSchedule $schedule): ?CarbonImmutable
     {
         $tz = $schedule->timezone ?: 'Asia/Jakarta';
-        if ($schedule->schedule_type === 'one_time') return $schedule->scheduled_at ? CarbonImmutable::instance($schedule->scheduled_at)->setTimezone($tz) : null;
-        return $schedule->next_run_at ? CarbonImmutable::instance($schedule->next_run_at)->setTimezone($tz) : null;
+        // Sama seperti planner: jam dinding disimpan di zona jadwal, jadi dibaca ulang dalam zona itu.
+        if ($schedule->schedule_type === 'one_time') return $schedule->scheduled_at ? CarbonImmutable::parse($schedule->scheduled_at->format('Y-m-d H:i:s'), $tz) : null;
+        return $schedule->next_run_at ? CarbonImmutable::parse($schedule->next_run_at->format('Y-m-d H:i:s'), $tz) : null;
     }
 
     private function payloadFor(OfficeContentItem $item, OfficeContentSchedule $schedule): array

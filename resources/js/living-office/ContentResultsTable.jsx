@@ -3,12 +3,16 @@ import { chipLabel, chipKey, chipTone, resultDateParts, resultStatus } from './p
 import { PANEL_MODES } from './panelPreferences';
 
 const DENSITY_LABELS = { compact: 'Ringkas', normal: 'Normal', expanded: 'Luas' };
+const rowKey = (row) => `${row.source}:${row.id}`;
 
-// Opsi hanya untuk konten database yang punya jadwal. Reels dibuat oleh bot, jadi tidak bisa diulang dari grid.
-function opsiState(row) {
-    if (row.source !== 'db') return { disabled: true, reason: 'Reels belum bisa diulang dari grid.' };
-    if (!row.scheduleId || !row.scheduledAt) return { disabled: true, reason: 'Konten ini tidak punya jadwal untuk diulang.' };
-    return { disabled: false, reason: 'Generate ulang konten ini' };
+// Generate ulang hanya untuk konten database yang punya jadwal. Reels dibuat oleh bot, jadi tidak bisa diulang dari grid.
+const BUSY_STATUSES = ['queued_for_generation', 'generating', 'scheduled_for_publish', 'publishing'];
+
+function regenerateState(row) {
+    if (row.source !== 'db') return { allowed: false, reason: 'Reels belum bisa diulang dari grid.' };
+    if (!row.scheduleId || !row.scheduledAt) return { allowed: false, reason: 'Konten ini tidak punya jadwal untuk diulang.' };
+    if (BUSY_STATUSES.includes(row.status)) return { allowed: false, reason: 'Konten ini sedang diproses. Tunggu sampai selesai.' };
+    return { allowed: true, reason: '' };
 }
 
 function ResultDetail({ row, onClose }) {
@@ -31,16 +35,73 @@ function ResultDetail({ row, onClose }) {
     );
 }
 
+function OpsiDialog({ row, onRegenerate, onDelete, onClose }) {
+    const regen = regenerateState(row);
+
+    return (
+        <div className="planner-modal-wrap" role="dialog" aria-modal="true" aria-label="Opsi hasil">
+            <button type="button" className="planner-modal-scrim" onClick={onClose} aria-label="Tutup" />
+            <div className="planner-modal opsi-dialog">
+                <header>
+                    <div>
+                        <span>Opsi</span>
+                        <h2>{row.title || 'Hasil generate'}</h2>
+                    </div>
+                    <button type="button" onClick={onClose} aria-label="Tutup">×</button>
+                </header>
+                <button type="button" className="opsi-action" disabled={!regen.allowed} onClick={() => { onClose(); onRegenerate(row); }}>
+                    <b>Generate ulang</b>
+                    <small>{regen.allowed ? 'Membuat ulang konten untuk jadwal ini.' : regen.reason}</small>
+                </button>
+                <button type="button" className="opsi-action is-danger" onClick={() => { onClose(); onDelete([row]); }}>
+                    <b>Hapus dari tabel</b>
+                    <small>Hasil ini tidak tampil lagi. Konten yang sudah terposting tetap ada di Instagram.</small>
+                </button>
+            </div>
+        </div>
+    );
+}
+
 function Preview({ row }) {
     if (row.videoUrl) return <video className="result-thumb" src={row.videoUrl} muted preload="metadata" />;
     if (row.imageUrl) return <img className="result-thumb" src={row.imageUrl} alt="" />;
     return <span className="result-thumb is-empty">-</span>;
 }
 
-export function ContentResultsTable({ results, density, onDensity, onRegenerate }) {
+export function ContentResultsTable({ results, density, onDensity, onRegenerate, onDelete }) {
     const [detail, setDetail] = useState(null);
+    const [opsiRow, setOpsiRow] = useState(null);
+    const [selected, setSelected] = useState(() => new Set());
+    const [busy, setBusy] = useState(false);
     const showDay = density !== 'compact';
     const expanded = density === 'expanded';
+    const selectable = results.filter((row) => row.id);
+    const allSelected = selectable.length > 0 && selectable.every((row) => selected.has(rowKey(row)));
+
+    const toggle = (row) => setSelected((current) => {
+        const next = new Set(current);
+        const key = rowKey(row);
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
+        return next;
+    });
+    const toggleAll = () => setSelected(allSelected ? new Set() : new Set(selectable.map(rowKey)));
+
+    const deleteRows = async (rows) => {
+        setBusy(true);
+        try {
+            await onDelete(rows);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const deleteSelected = async () => {
+        const rows = selectable.filter((row) => selected.has(rowKey(row)));
+        if (rows.length === 0 || !window.confirm(`Hapus ${rows.length} hasil dari tabel?`)) return;
+        await deleteRows(rows);
+        setSelected(new Set());
+    };
 
     return (
         <section className={`results-panel density-${density}`}>
@@ -54,6 +115,13 @@ export function ContentResultsTable({ results, density, onDensity, onRegenerate 
                     ))}
                 </div>
             </header>
+            {selected.size > 0 && (
+                <div className="results-bulk" role="status">
+                    <span>{selected.size} dipilih</span>
+                    <button type="button" className="is-danger" disabled={busy} onClick={deleteSelected}>Hapus terpilih</button>
+                    <button type="button" onClick={() => setSelected(new Set())}>Batal pilih</button>
+                </div>
+            )}
             {results.length === 0 ? (
                 <p className="results-empty">Belum ada hasil. Hasil akan muncul setelah jadwal pertama dibuat.</p>
             ) : (
@@ -61,6 +129,7 @@ export function ContentResultsTable({ results, density, onDensity, onRegenerate 
                     <table className="results-table">
                         <thead>
                             <tr>
+                                <th className="results-check"><input type="checkbox" aria-label="Pilih semua hasil" checked={allSelected} disabled={selectable.length === 0} onChange={toggleAll} /></th>
                                 <th>Jam</th>
                                 {showDay && <><th>Hari</th><th>Tanggal</th></>}
                                 <th>Jenis</th>
@@ -74,9 +143,17 @@ export function ContentResultsTable({ results, density, onDensity, onRegenerate 
                                 const when = resultDateParts(row.scheduledAt);
                                 const status = resultStatus(row);
                                 const key = chipKey(row.brand, row.contentType);
-                                const opsi = opsiState(row);
                                 return (
                                     <tr key={`${row.source}-${row.id}`}>
+                                        <td className="results-check">
+                                            <input
+                                                type="checkbox"
+                                                aria-label={`Pilih ${row.title || 'hasil'}`}
+                                                disabled={!row.id}
+                                                checked={row.id ? selected.has(rowKey(row)) : false}
+                                                onChange={() => toggle(row)}
+                                            />
+                                        </td>
                                         <td>{when?.time ?? '-'}</td>
                                         {showDay && <><td>{when?.weekday ?? '-'}</td><td>{when?.date ?? '-'}</td></>}
                                         <td><span className={`type-pill tone-${chipTone(key)}`}>{chipLabel(key)}</span></td>
@@ -86,9 +163,8 @@ export function ContentResultsTable({ results, density, onDensity, onRegenerate 
                                         </td>
                                         {expanded && <><td className="results-error">{row.error || '-'}</td><td><Preview row={row} /></td></>}
                                         {showDay && (
-                                            <td className="results-actions">
-                                                <button type="button" disabled={opsi.disabled} title={opsi.reason} onClick={() => onRegenerate(row)}>Opsi</button>
-                                                {opsi.disabled && <small className="results-reason">{opsi.reason}</small>}
+                                            <td>
+                                                <button type="button" className="results-opsi" onClick={() => setOpsiRow(row)}>Opsi</button>
                                             </td>
                                         )}
                                     </tr>
@@ -99,6 +175,7 @@ export function ContentResultsTable({ results, density, onDensity, onRegenerate 
                 </div>
             )}
             {detail && <ResultDetail row={detail} onClose={() => setDetail(null)} />}
+            {opsiRow && <OpsiDialog row={opsiRow} onRegenerate={onRegenerate} onDelete={deleteRows} onClose={() => setOpsiRow(null)} />}
         </section>
     );
 }

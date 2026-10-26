@@ -6,8 +6,10 @@ Dokumen ini menjelaskan skema jadwal yang berlaku di branch `feature/planner-gri
 
 - Jadwal dibuat dan diubah di grid Content Planner (Living Office). Tidak ada lagi pemilihan hari acak.
 - Setiap chip di grid adalah satu jadwal mingguan. Hari: 1 = Senin sampai 7 = Minggu. Jam: `HH:MM`.
-- Generate dimulai `lead_minutes` sebelum jam tayang. Default 120 menit.
+- Generate dimulai `lead_minutes` sebelum jam tayang. Default 120 menit. Kartu yang baru dipindah atau diubah tidak langsung di-generate: tunggu sampai jendela itu tiba.
+- Kemunculan yang sudah lewat jam tayang tidak pernah di-generate otomatis.
 - Posting terjadi tepat di jam tayang, tanpa konfirmasi.
+- Hapus dari tabel Hasil Generate hanya menandai konten sebagai `dismissed` (database) atau menyembunyikan entri Reels (`REELS_HIDDEN_FILE`). Konten itu tidak dibuat ulang otomatis. Konten yang sedang diproses tidak bisa dihapus.
 - Dashboard menulis setiap jadwal ke file slot JSON. Bot Reels dan worker Kauiz membaca file itu, bukan database.
 
 ## File slot

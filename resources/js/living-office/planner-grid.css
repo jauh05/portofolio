@@ -34,14 +34,17 @@
 .office-redesign .slot-row.is-dragging { opacity: .35; }
 .office-redesign .slot-time { padding-top: 9px; color: var(--muted); font: 700 10px 'JetBrains Mono', monospace; text-align: right; }
 .office-redesign .slot-stack { display: grid; gap: 6px; min-width: 0; }
-.office-redesign .slot-chip-wrap { position: relative; display: grid; min-width: 0; padding: 8px 26px 8px 10px; border-radius: 12px; background: var(--tone, var(--accent)); color: #fff; box-shadow: var(--pill-shadow); cursor: grab; touch-action: none; user-select: none; }
+.office-redesign .slot-chip-wrap { display: grid; width: 100%; min-width: 0; padding: 8px 10px; border: 0; border-radius: 12px; background: var(--tone, var(--accent)); color: #fff; font: inherit; text-align: left; box-shadow: var(--pill-shadow); cursor: grab; touch-action: none; user-select: none; }
 .office-redesign .slot-chip-wrap:active { cursor: grabbing; }
 .office-redesign .slot-chip-wrap b { font: 800 11px Inter, sans-serif; }
-.office-redesign .slot-edit { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 20px; height: 20px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .24); color: #fff; cursor: pointer; }
-.office-redesign .slot-time-editor { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.office-redesign .slot-time-editor input { min-height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); font: 700 12px 'JetBrains Mono', monospace; }
-.office-redesign .slot-time-editor button { min-height: 30px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
-.office-redesign .slot-time-editor button:disabled { opacity: .5; cursor: wait; }
+.office-redesign .slot-menu { display: grid; gap: 8px; width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: 0 16px 30px -22px rgba(2, 12, 28, .5); }
+.office-redesign .slot-menu label { display: grid; gap: 4px; }
+.office-redesign .slot-menu label span { color: var(--muted); font: 700 10px Inter, sans-serif; }
+.office-redesign .slot-menu input { min-height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); color: var(--text); font: 700 12px 'JetBrains Mono', monospace; }
+.office-redesign .slot-menu-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.office-redesign .slot-menu button { min-height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .slot-menu button:disabled { opacity: .5; cursor: wait; }
+.office-redesign .slot-menu .slot-menu-remove { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
 .office-redesign .slot-overlay { padding: 8px 12px; border-radius: 12px; background: var(--tone, var(--accent)); color: #fff; box-shadow: 0 18px 32px -18px rgba(2, 12, 28, .6); transform: rotate(-2deg); }
 .office-redesign .slot-overlay b { font: 800 11px Inter, sans-serif; }
 
@@ -55,10 +58,27 @@
 .office-redesign .results-scroll { overflow-x: auto; }
 .office-redesign .results-table { width: 100%; border-collapse: collapse; color: var(--text); font: 600 12px Inter, sans-serif; }
 .office-redesign .results-table th { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--muted); font: 800 11px Inter, sans-serif; text-align: left; }
-.office-redesign .results-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.office-redesign .results-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
 .office-redesign .density-compact .results-table td { padding: 4px 8px; }
 .office-redesign .density-expanded .results-table td { padding: 14px 12px; }
-.office-redesign .results-error { max-width: 260px; white-space: normal; color: #a72246; }
+.office-redesign .results-table td.results-error { max-width: 220px; white-space: normal; color: #a72246; }
+.office-redesign .results-check { width: 36px; text-align: center; }
+.office-redesign .results-check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+.office-redesign .results-check input:disabled { opacity: .35; cursor: not-allowed; }
+.office-redesign .results-bulk { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 12px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-strong); font: 700 12px Inter, sans-serif; }
+.office-redesign .results-bulk button { min-height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .results-bulk button:disabled { opacity: .5; cursor: wait; }
+.office-redesign .results-bulk .is-danger { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
+.office-redesign .results-opsi { min-height: 28px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .opsi-dialog { width: min(440px, calc(100% - 32px)); display: grid; gap: 10px; padding: 22px; }
+.office-redesign .opsi-dialog header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.office-redesign .opsi-dialog header span { color: var(--accent-strong); font: 800 10px 'JetBrains Mono', monospace; }
+.office-redesign .opsi-dialog header h2 { margin: 4px 0 0; color: var(--text); font: 800 18px Sora, sans-serif; }
+.office-redesign .opsi-action { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text); text-align: left; cursor: pointer; }
+.office-redesign .opsi-action b { font: 800 13px Inter, sans-serif; }
+.office-redesign .opsi-action small { color: var(--muted); font: 600 11px/1.5 Inter, sans-serif; }
+.office-redesign .opsi-action:disabled { opacity: .5; cursor: not-allowed; }
+.office-redesign .opsi-action.is-danger b { color: #a72246; }
 .office-redesign .result-thumb { display: block; width: 64px; height: 64px; object-fit: cover; border-radius: 12px; background: var(--surface-2); }
 .office-redesign .result-thumb.is-empty { display: grid; place-items: center; color: var(--muted); }
 .office-redesign .type-pill, .office-redesign .status-pill { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font: 800 10px Inter, sans-serif; }

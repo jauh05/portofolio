@@ -28,6 +28,7 @@ class OfficePlannerGridTest extends TestCase
         config([
             'reels.slots_path' => $this->dir.'/reels-slots.json',
             'reels.history_path' => $this->dir.'/history.json',
+            'reels.hidden_path' => $this->dir.'/hidden.json',
             'reels.public_base_url' => 'https://example.test/reels',
             'kauiz.slots_path' => $this->dir.'/kauiz-slots.json',
         ]);
@@ -35,6 +36,7 @@ class OfficePlannerGridTest extends TestCase
 
     protected function tearDown(): void
     {
+        CarbonImmutable::setTestNow();
         File::deleteDirectory($this->dir);
         parent::tearDown();
     }
@@ -198,5 +200,92 @@ class OfficePlannerGridTest extends TestCase
         $scheduledAt = $once->fresh()->getRawOriginal('scheduled_at');
         $this->actingAs($this->owner)->patchJson("/office/api/content-schedules/{$once->id}", ['name' => 'Sekali uji baru'])->assertOk();
         $this->assertSame($scheduledAt, $once->fresh()->getRawOriginal('scheduled_at'));
+    }
+
+    public function test_card_moved_to_an_hour_already_passed_today_is_not_generated_automatically(): void
+    {
+        CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-10-27 15:00', 'Asia/Jakarta'));
+        $schedule = $this->weeklySchedule([
+            'generation_timing' => 'lead_time', 'generation_lead_minutes' => 120,
+            'recurrence_rule' => ['frequency' => 'weekly', 'days' => [2], 'time' => '16:00'],
+        ]);
+
+        // Selasa 09.00 sudah lewat hari ini. Kemunculan berikutnya harus minggu depan.
+        $this->actingAs($this->owner)->postJson("/office/api/content-schedules/{$schedule->id}/move", [
+            'from_day' => 2, 'day' => 2, 'time' => '09:00',
+        ])->assertOk();
+
+        $nextRunAt = CarbonImmutable::parse($schedule->fresh()->next_run_at->format('Y-m-d H:i:s'), 'Asia/Jakarta');
+        $this->assertSame('2026-11-03 09:00:00', $nextRunAt->format('Y-m-d H:i:s'));
+        app(\App\Services\OfficeScheduledGenerationService::class)->runDue();
+        $this->assertSame(0, OfficeContentItem::count());
+    }
+
+    public function test_removing_a_card_removes_only_its_day_and_the_last_day_deletes_the_schedule(): void
+    {
+        $multi = $this->weeklySchedule(['recurrence_rule' => ['frequency' => 'weekly', 'days' => [1, 3], 'time' => '16:00']]);
+        $this->actingAs($this->owner)->postJson("/office/api/content-schedules/{$multi->id}/remove-card", ['day' => 1])->assertOk();
+        $this->assertSame([3], $multi->fresh()->recurrence_rule['days']);
+
+        $single = $this->weeklySchedule();
+        $this->actingAs($this->owner)->postJson("/office/api/content-schedules/{$single->id}/remove-card", ['day' => 1])->assertOk();
+        $this->assertSoftDeleted('office_content_schedules', ['id' => $single->id]);
+    }
+
+    public function test_deleted_results_are_hidden_from_the_table_and_reels_history_is_kept(): void
+    {
+        File::put($this->dir.'/history.json', json_encode([[
+            'id' => 'abc12345', 'created_at' => '2026-10-26T16:00:00+07:00', 'overlay' => 'Teks uji', 'output' => 'reel_uji.mp4',
+            'instagram_media_id' => null, 'post_error' => null,
+        ]]));
+        $schedule = $this->weeklySchedule(['generation_timing' => 'immediate']);
+        $content = OfficeContentItem::create([
+            'deduplication_key' => 'k2', 'agent_id' => 'jauki-social', 'platform' => 'instagram', 'content_type' => 'feed',
+            'brand_id' => $schedule->brand_id, 'schedule_id' => $schedule->id, 'title' => 'Feed uji', 'status' => 'ready_for_review',
+            'metadata' => ['scheduled_at' => '2026-10-27T09:00:00+07:00'],
+        ]);
+
+        $this->actingAs($this->owner)->postJson('/office/api/content-results/delete', [
+            'items' => [['source' => 'db', 'id' => $content->id], ['source' => 'reels', 'id' => 'abc12345']],
+        ])->assertOk()->assertJsonPath('deleted', 2);
+
+        $this->assertSame('dismissed', $content->fresh()->status);
+        $this->actingAs($this->owner)->getJson('/office/api/content-results')->assertJsonCount(0, 'results');
+        $this->assertSame(1, count(json_decode(File::get($this->dir.'/history.json'), true)));
+    }
+
+    public function test_content_being_generated_cannot_be_deleted_from_the_table(): void
+    {
+        $schedule = $this->weeklySchedule();
+        $content = OfficeContentItem::create([
+            'deduplication_key' => 'k3', 'agent_id' => 'jauki-social', 'platform' => 'instagram', 'content_type' => 'feed',
+            'brand_id' => $schedule->brand_id, 'schedule_id' => $schedule->id, 'title' => 'Sedang jalan', 'status' => 'generating',
+            'metadata' => ['scheduled_at' => '2026-10-27T09:00:00+07:00'],
+        ]);
+
+        $this->actingAs($this->owner)->postJson('/office/api/content-results/delete', [
+            'items' => [['source' => 'db', 'id' => $content->id]],
+        ])->assertOk()->assertJsonPath('deleted', 0)->assertJsonCount(1, 'skipped');
+        $this->assertSame('generating', $content->fresh()->status);
+    }
+
+    public function test_lead_time_generation_waits_until_two_hours_before_the_slot(): void
+    {
+        CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-10-27 12:00', 'Asia/Jakarta'));
+        $schedule = $this->weeklySchedule([
+            'generation_timing' => 'lead_time', 'generation_lead_minutes' => 120,
+            'recurrence_rule' => ['frequency' => 'weekly', 'days' => [2], 'time' => '16:00'],
+        ]);
+        $this->actingAs($this->owner)->postJson("/office/api/content-schedules/{$schedule->id}/move", [
+            'from_day' => 2, 'day' => 2, 'time' => '16:00',
+        ])->assertOk();
+
+        $generation = app(\App\Services\OfficeScheduledGenerationService::class);
+        $generation->runDue();
+        $this->assertSame(0, OfficeContentItem::count());
+
+        CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-10-27 14:30', 'Asia/Jakarta'));
+        $generation->runDue();
+        $this->assertSame(1, OfficeContentItem::count());
     }
 }

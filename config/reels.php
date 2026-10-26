@@ -10,6 +10,9 @@ return [
     // Riwayat render bot Reels. Dibaca dashboard untuk tabel hasil generate.
     'history_path' => env('REELS_HISTORY_FILE', base_path('content-bot/history.json')),
 
+    // Daftar id riwayat yang dihapus dari dashboard. Riwayat bot sendiri tidak diubah.
+    'hidden_path' => env('REELS_HIDDEN_FILE', storage_path('app/reels/hidden.json')),
+
     // Alamat publik folder output bot, misalnya https://jauharfauzi.my.id/reels
     'public_base_url' => env('PUBLIC_VIDEO_BASE_URL', ''),
 ];

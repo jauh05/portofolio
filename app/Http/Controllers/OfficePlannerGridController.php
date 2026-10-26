@@ -55,6 +55,7 @@ class OfficePlannerGridController extends Controller
     public function contentResults(): JsonResponse
     {
         $items = OfficeContentItem::query()
+            ->where('status', '!=', 'dismissed')
             ->with('brand')
             ->latest('generated_at')
             ->limit(200)
@@ -85,6 +86,47 @@ class OfficePlannerGridController extends Controller
             ->all();
 
         return response()->json(['results' => $rows]);
+    }
+
+    /**
+     * Hapus hasil dari tabel. Konten database ditandai dismissed (tidak dihapus permanen, supaya tidak dibuat ulang otomatis).
+     * Konten yang sedang di-generate atau dipublish tidak bisa dihapus dulu.
+     */
+    public function deleteResults(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'items' => ['required', 'array', 'min:1', 'max:200'],
+            'items.*.source' => ['required', 'in:db,reels'],
+            'items.*.id' => ['required', 'string', 'max:64'],
+        ]);
+
+        $deleted = 0;
+        $skipped = [];
+        $reelsIds = [];
+
+        foreach ($data['items'] as $item) {
+            if ($item['source'] === 'reels') {
+                $reelsIds[] = $item['id'];
+                continue;
+            }
+
+            $content = OfficeContentItem::find($item['id']);
+            if (! $content) {
+                continue;
+            }
+            if (in_array($content->status, ['queued_for_generation', 'generating', 'scheduled_for_publish', 'publishing'], true)) {
+                $skipped[] = $content->title ?: $content->id;
+                continue;
+            }
+
+            $content->update(['status' => 'dismissed']);
+            $deleted++;
+        }
+
+        ReelsHistoryReader::hide($reelsIds);
+        $deleted += count(array_filter($reelsIds, 'is_string'));
+
+        return response()->json(['deleted' => $deleted, 'skipped' => $skipped]);
     }
 
     private function validatedSlot(Request $request, bool $required): array

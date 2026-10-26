@@ -86,6 +86,32 @@ export function PlannerGrid({ calendarProps }) {
         await load();
     };
 
+    // Hapus kartu dari grid. Untuk jadwal banyak hari, hanya hari ini yang dihapus.
+    const removeChip = async (chip) => {
+        if (chip.source === 'reels') {
+            await request(`/office/api/reels-slots/${chip.refId}`, { method: 'DELETE' });
+        } else {
+            await request(`/office/api/content-schedules/${chip.refId}/remove-card`, { method: 'POST', body: JSON.stringify({ day: chip.day }) });
+        }
+        setNotice('Kartu dihapus.');
+        await load();
+    };
+
+    // Hapus hasil dari tabel. Konten yang sedang diproses tidak ikut dihapus.
+    const deleteResults = async (rows) => {
+        try {
+            const result = await request('/office/api/content-results/delete', {
+                method: 'POST',
+                body: JSON.stringify({ items: rows.map((row) => ({ source: row.source, id: String(row.id) })) }),
+            });
+            const skipped = result.skipped?.length ?? 0;
+            setNotice(skipped ? `${result.deleted} hasil dihapus. ${skipped} sedang diproses dan belum bisa dihapus.` : `${result.deleted} hasil dihapus dari tabel.`);
+            await load();
+        } catch (error) {
+            setNotice(error.message);
+        }
+    };
+
     const addFromMenu = async (key) => {
         const type = CHIP_TYPES[key];
         try {
@@ -145,7 +171,7 @@ export function PlannerGrid({ calendarProps }) {
             <header className="planner-grid-toolbar">
                 <div className="planner-grid-title">
                     <h2>Content Planner</h2>
-                    <p>Seret kartu ke hari lain, jamnya tetap. Ubah jam dengan ikon pensil atau double-click kartu.</p>
+                    <p>Seret kartu ke hari lain, jamnya tetap. Klik kartu untuk ubah jam atau menghapusnya.</p>
                 </div>
                 <div className="planner-grid-actions">
                     <div className="planner-add">
@@ -164,8 +190,9 @@ export function PlannerGrid({ calendarProps }) {
                 chips={chips}
                 onMove={(chip, day) => moveChip(chip, day).catch((error) => setNotice(error.message))}
                 onSetTime={(chip, time) => setChipTime(chip, time).catch((error) => setNotice(error.message))}
+                onRemove={(chip) => removeChip(chip).catch((error) => setNotice(error.message))}
             />
-            <ContentResultsTable results={results} density={density} onDensity={changeDensity} onRegenerate={regenerate} />
+            <ContentResultsTable results={results} density={density} onDensity={changeDensity} onRegenerate={regenerate} onDelete={deleteResults} />
         </div>
     );
 }

@@ -54,6 +54,7 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::post('/content-schedules/generate-all-active', [OfficeContentPlannerController::class, 'generateAllActive']);
         Route::post('/content-schedules/{schedule}/generate', [OfficeContentPlannerController::class, 'generateSchedule']);
         Route::post('/content-schedules/{schedule}/move', [OfficeContentPlannerController::class, 'moveCard']);
+        Route::post('/content-schedules/{schedule}/remove-card', [OfficeContentPlannerController::class, 'removeCard']);
         Route::get('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'show']);
         Route::patch('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'update']);
         Route::delete('/content-schedules/{schedule}', [OfficeContentPlannerController::class, 'destroy']);
@@ -73,6 +74,7 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::patch('/reels-slots/{id}', [\App\Http\Controllers\OfficePlannerGridController::class, 'updateReelsSlot']);
         Route::delete('/reels-slots/{id}', [\App\Http\Controllers\OfficePlannerGridController::class, 'destroyReelsSlot']);
         Route::get('/content-results', [\App\Http\Controllers\OfficePlannerGridController::class, 'contentResults']);
+        Route::post('/content-results/delete', [\App\Http\Controllers\OfficePlannerGridController::class, 'deleteResults']);
         Route::put('/reels-settings', [\App\Http\Controllers\OfficeReelsSettingsController::class, 'update']);
 
         Route::get('/summary', [LivingOfficeController::class, 'summary']);

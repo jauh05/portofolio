@@ -259,6 +259,27 @@ class OfficeContentPlannerController extends Controller
         });
     }
 
+    /** Hapus satu kartu dari grid. Hari terakhir sekaligus menghapus jadwalnya. */
+    public function removeCard(Request $request, OfficeContentSchedule $schedule): JsonResponse
+    {
+        $data = $request->validate(['day' => ['required', 'integer', 'between:1,7']]);
+        $rule = $schedule->recurrence_rule ?? [];
+        abort_unless($schedule->schedule_type === 'recurring' && ($rule['frequency'] ?? null) === 'weekly', 422, 'Hanya jadwal mingguan yang bisa dihapus dari grid.');
+        $days = array_values($rule['days'] ?? []);
+        abort_unless(in_array($data['day'], $days, true), 422, 'Hari kartu tidak ada di jadwal ini.');
+        $rest = array_values(array_filter($days, fn (int $day) => $day !== $data['day']));
+
+        if ($rest === []) {
+            $schedule->delete();
+
+            return response()->json(['status' => 'deleted']);
+        }
+
+        $this->fillSchedule($schedule, array_replace($this->existingFor($schedule), ['days' => $rest]));
+
+        return response()->json($this->schedulePayload($schedule->load('brand')));
+    }
+
     private function existingFor(OfficeContentSchedule $schedule): array
     {
         return ['generation_timing' => $schedule->generation_timing ?? 'manual',
@@ -506,7 +527,8 @@ class OfficeContentPlannerController extends Controller
             return $this->immutable($schedule->scheduled_at, $timezone);
         }
 
-        $start = CarbonImmutable::now($timezone)->startOfDay();
+        // Mulai dari sekarang, bukan awal hari, supaya jam yang sudah lewat hari ini tidak dihitung sebagai kemunculan berikutnya.
+        $start = CarbonImmutable::now($timezone);
         $end = CarbonImmutable::now($timezone)->addDays(400)->endOfDay();
         $occurrence = collect($this->occurrences($schedule, $start, $end))->first();
 
@@ -574,7 +596,8 @@ class OfficeContentPlannerController extends Controller
 
     private function immutable(?CarbonInterface $value, string $timezone): ?CarbonImmutable
     {
-        return $value ? CarbonImmutable::instance($value)->setTimezone($timezone) : null;
+        // Tanggal jadwal disimpan sebagai jam dinding di zona jadwalnya, jadi dibaca ulang dalam zona itu, bukan dikonversi dari UTC.
+        return $value ? CarbonImmutable::parse($value->format('Y-m-d H:i:s'), $timezone) : null;
     }
 
     public function dispatchGeneration(\App\Models\OfficeContentItem $content)

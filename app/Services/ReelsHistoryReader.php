@@ -18,8 +18,11 @@ class ReelsHistoryReader
 
         $history = json_decode(File::get($path), true);
         $base = rtrim((string) config('reels.public_base_url'), '/');
+        $hidden = self::hiddenIds();
 
-        return collect(is_array($history) ? $history : [])->map(function (array $entry) use ($base) {
+        return collect(is_array($history) ? $history : [])
+            ->reject(fn (array $entry) => in_array($entry['id'] ?? null, $hidden, true))
+            ->map(function (array $entry) use ($base) {
             $status = match (true) {
                 ! empty($entry['instagram_media_id']) => 'published',
                 ! empty($entry['post_error']) => 'failed',
@@ -43,5 +46,33 @@ class ReelsHistoryReader
                 'mediaId' => $entry['instagram_media_id'] ?? null,
             ];
         })->values()->all();
+    }
+
+    /** Menyembunyikan entri dari tabel. Riwayat bot tetap utuh, supaya klip yang sudah dipakai tidak dipakai lagi. */
+    public static function hide(array $ids): void
+    {
+        $ids = array_values(array_filter($ids, 'is_string'));
+        if ($ids === []) {
+            return;
+        }
+
+        $path = config('reels.hidden_path');
+        $hidden = array_values(array_unique([...self::hiddenIds(), ...$ids]));
+        File::ensureDirectoryExists(dirname($path));
+        $tmp = $path.'.tmp';
+        File::put($tmp, json_encode($hidden, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
+        File::move($tmp, $path);
+    }
+
+    private static function hiddenIds(): array
+    {
+        $path = config('reels.hidden_path');
+        if (! File::exists($path)) {
+            return [];
+        }
+
+        $ids = json_decode(File::get($path), true);
+
+        return is_array($ids) ? array_values(array_filter($ids, 'is_string')) : [];
     }
 }

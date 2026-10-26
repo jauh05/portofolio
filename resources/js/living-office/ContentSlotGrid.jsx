@@ -1,80 +1,71 @@
 import React, { useState } from 'react';
 import { DndContext, DragOverlay, PointerSensor, useDraggable, useDroppable, useSensor, useSensors } from '@dnd-kit/core';
-import { Pencil } from 'lucide-react';
 import { PLANNER_DAYS, chipLabel, chipTone, sortChips } from './plannerGridModel';
 
 const dayId = (day) => `day-${day}`;
 
-function ChipFace({ chip }) {
-    return <b>{chipLabel(chip.key)}</b>;
-}
-
-function TimeEditor({ chip, onSave, onCancel }) {
+// Menu kecil di bawah kartu: ganti jam atau hapus kartu dari hari ini.
+function CardMenu({ chip, onSetTime, onRemove, onClose }) {
     const [value, setValue] = useState(chip.time || '');
     const [saving, setSaving] = useState(false);
 
-    const submit = async (event) => {
+    const save = async (event) => {
         event.preventDefault();
         setSaving(true);
-        try {
-            await onSave(value || null);
-        } finally {
-            setSaving(false);
-        }
+        await onSetTime(chip, value || null);
+        setSaving(false);
+        onClose();
+    };
+
+    const remove = async () => {
+        setSaving(true);
+        await onRemove(chip);
+        setSaving(false);
+        onClose();
     };
 
     return (
-        <form className="slot-time-editor" onSubmit={submit}>
-            <input type="time" value={value} onChange={(event) => setValue(event.target.value)} aria-label="Jam tayang" required />
-            <button type="submit" disabled={saving}>Simpan</button>
-            <button type="button" onClick={onCancel}>Batal</button>
+        <form className="slot-menu" onSubmit={save}>
+            <label>
+                <span>Jam tayang</span>
+                <input type="time" value={value} onChange={(event) => setValue(event.target.value)} />
+            </label>
+            <div className="slot-menu-actions">
+                <button type="submit" disabled={saving}>Simpan jam</button>
+                <button type="button" onClick={onClose}>Batal</button>
+            </div>
+            <button type="button" className="slot-menu-remove" disabled={saving} onClick={remove}>Hapus kartu</button>
         </form>
     );
 }
 
-function DraggableChip({ chip, onSetTime }) {
-    const [editing, setEditing] = useState(false);
-    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: chip.id, data: { chip }, disabled: editing });
+function DraggableChip({ chip, onSetTime, onRemove }) {
+    const [open, setOpen] = useState(false);
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: chip.id, data: { chip }, disabled: open });
 
     return (
-        <div className={`slot-row ${isDragging ? 'is-dragging' : ''}`}>
-            <span className="slot-time">{chip.time || '--:--'}</span>
-            <div className="slot-stack">
-                <div
+        <>
+            <div className={`slot-row ${isDragging ? 'is-dragging' : ''}`}>
+                <span className="slot-time">{chip.time || '--:--'}</span>
+                <button
+                    type="button"
                     ref={setNodeRef}
                     className={`slot-chip-wrap tone-${chipTone(chip.key)}`}
-                    title={chip.label}
-                    onDoubleClick={() => setEditing(true)}
+                    title={`${chip.label} · klik untuk ubah jam atau hapus`}
+                    aria-expanded={open}
+                    onClick={() => setOpen((value) => !value)}
                     {...attributes}
                     {...listeners}
                 >
-                    <ChipFace chip={chip} />
-                    <button
-                        type="button"
-                        className="slot-edit"
-                        aria-label="Ubah jam"
-                        onPointerDown={(event) => event.stopPropagation()}
-                        onClick={() => setEditing(true)}
-                    >
-                        <Pencil size={12} />
-                    </button>
-                </div>
-                {editing && (
-                    <TimeEditor
-                        chip={chip}
-                        onCancel={() => setEditing(false)}
-                        onSave={async (time) => {
-                            await onSetTime(chip, time);
-                            setEditing(false);
-                        }}
-                    />
-                )}
+                    <b>{chipLabel(chip.key)}</b>
+                </button>
             </div>
-        </div>
+            {open && <CardMenu chip={chip} onSetTime={onSetTime} onRemove={onRemove} onClose={() => setOpen(false)} />}
+        </>
     );
 }
 
-function DayColumn({ day, name, chips, onSetTime }) {
+function DayColumn({ day, name, chips, onSetTime, onRemove }) {
     const { setNodeRef, isOver } = useDroppable({ id: dayId(day) });
     const unscheduled = chips.filter((chip) => !chip.time);
     const timed = sortChips(chips.filter((chip) => chip.time));
@@ -88,18 +79,18 @@ function DayColumn({ day, name, chips, onSetTime }) {
             {unscheduled.length > 0 && (
                 <div className="slot-group">
                     <p className="slot-group-label">Belum ada jam</p>
-                    {unscheduled.map((chip) => <DraggableChip key={chip.id} chip={chip} onSetTime={onSetTime} />)}
+                    {unscheduled.map((chip) => <DraggableChip key={chip.id} chip={chip} onSetTime={onSetTime} onRemove={onRemove} />)}
                 </div>
             )}
-            {timed.map((chip) => <DraggableChip key={chip.id} chip={chip} onSetTime={onSetTime} />)}
+            {timed.map((chip) => <DraggableChip key={chip.id} chip={chip} onSetTime={onSetTime} onRemove={onRemove} />)}
             {chips.length === 0 && <p className="slot-empty">Seret kartu ke sini</p>}
         </section>
     );
 }
 
-export function ContentSlotGrid({ chips, onMove, onSetTime }) {
+export function ContentSlotGrid({ chips, onMove, onSetTime, onRemove }) {
     const [activeChip, setActiveChip] = useState(null);
-    // Jarak 6 px dibutuhkan supaya klik dan double-click tidak dianggap drag.
+    // Jarak 6 px dibutuhkan supaya klik biasa tidak dianggap drag.
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
     const handleDragEnd = ({ active, over }) => {
@@ -120,11 +111,20 @@ export function ContentSlotGrid({ chips, onMove, onSetTime }) {
             <div className="slot-board" aria-label="Grid jadwal mingguan">
                 {PLANNER_DAYS.map((name, index) => {
                     const day = index + 1;
-                    return <DayColumn key={day} day={day} name={name} chips={chips.filter((chip) => chip.day === day)} onSetTime={onSetTime} />;
+                    return (
+                        <DayColumn
+                            key={day}
+                            day={day}
+                            name={name}
+                            chips={chips.filter((chip) => chip.day === day)}
+                            onSetTime={onSetTime}
+                            onRemove={onRemove}
+                        />
+                    );
                 })}
             </div>
             <DragOverlay>
-                {activeChip ? <div className={`slot-overlay tone-${chipTone(activeChip.key)}`}><ChipFace chip={activeChip} /></div> : null}
+                {activeChip ? <div className={`slot-overlay tone-${chipTone(activeChip.key)}`}><b>{chipLabel(activeChip.key)}</b></div> : null}
             </DragOverlay>
         </DndContext>
     );
