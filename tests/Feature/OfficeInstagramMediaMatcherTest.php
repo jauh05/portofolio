@@ -50,8 +50,8 @@ class OfficeInstagramMediaMatcherTest extends TestCase
 
     public function test_caption_shared_by_two_posts_is_not_matched(): void
     {
-        $this->fakeInstagram([['id' => '1', 'caption' => 'Sama'], ['id' => '2', 'caption' => 'Sama']], []);
-        $item = $this->item('jauki', 'Sama', 'uuid-1');
+        $this->fakeInstagram([['id' => '1', 'caption' => 'Caption yang sama persis'], ['id' => '2', 'caption' => 'Caption yang sama persis']], []);
+        $item = $this->item('jauki', 'Caption yang sama persis', 'uuid-1');
 
         $result = app(OfficeInstagramMediaMatcher::class)->match(false);
 
@@ -59,10 +59,32 @@ class OfficeInstagramMediaMatcherTest extends TestCase
         $this->assertArrayNotHasKey('instagram_media_id', $item->fresh()->metadata);
     }
 
+    public function test_captions_that_differ_only_in_emoji_and_spacing_are_matched(): void
+    {
+        $this->fakeInstagram([['id' => '17999', 'caption' => "\u{2714} Pilih satu ide utama per slide.\n\nJangan numpuk!"]], []);
+        $item = $this->item('jauki', "\u{2714}\u{FE0F}  Pilih satu ide utama per slide.\n\nJangan numpuk!", 'uuid-emoji');
+
+        $result = app(OfficeInstagramMediaMatcher::class)->match(false);
+
+        $this->assertSame(1, $result['matched']);
+        $this->assertSame('17999', $item->fresh()->metadata['instagram_media_id']);
+    }
+
+    public function test_very_short_captions_are_not_matched(): void
+    {
+        $this->fakeInstagram([['id' => '1', 'caption' => 'Tips']], []);
+        $item = $this->item('jauki', 'Tips', 'uuid-pendek');
+
+        $result = app(OfficeInstagramMediaMatcher::class)->match(false);
+
+        $this->assertSame(['matched' => 0, 'ambiguous' => 0, 'not_found' => 1], $result);
+        $this->assertArrayNotHasKey('instagram_media_id', $item->fresh()->metadata);
+    }
+
     public function test_kauiz_item_posted_on_the_jauki_account_is_matched_and_fetched_with_the_jauki_token(): void
     {
-        $this->fakeInstagram([['id' => '17999', 'caption' => 'Silang akun']], []);
-        $item = $this->item('kauiz', 'Silang akun', 'uuid-silang');
+        $this->fakeInstagram([['id' => '17999', 'caption' => 'Silang akun dengan caption panjang']], []);
+        $item = $this->item('kauiz', 'Silang akun dengan caption panjang', 'uuid-silang');
 
         $result = app(OfficeInstagramMediaMatcher::class)->match(false);
         app(OfficeContentMetricsService::class)->refresh();

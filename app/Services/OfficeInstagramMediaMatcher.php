@@ -18,6 +18,9 @@ class OfficeInstagramMediaMatcher
 
     private const ACCOUNTS = ['jauki', 'kauiz'];
 
+    // Caption yang lebih pendek dari ini terlalu mudah cocok dengan post lain.
+    private const MIN_CAPTION_LENGTH = 15;
+
     /** @return array{matched: int, ambiguous: int, not_found: int} */
     public function match(bool $dryRun = false): array
     {
@@ -32,7 +35,7 @@ class OfficeInstagramMediaMatcher
 
         foreach ($items as $item) {
             $caption = $this->normalize($item->text);
-            $matches = $caption === ''
+            $matches = mb_strlen($caption) < self::MIN_CAPTION_LENGTH
                 ? collect()
                 : $media->where('caption', $caption)->reject(fn (array $row) => in_array($row['id'], $claimed, true))->values();
 
@@ -91,8 +94,9 @@ class OfficeInstagramMediaMatcher
         return $media;
     }
 
+    /** Hanya huruf dan angka yang dibandingkan. Emoji, tanda baca, dan spasi diabaikan. */
     private function normalize(?string $text): string
     {
-        return mb_strtolower(trim((string) preg_replace('/\s+/u', ' ', (string) $text)));
+        return trim((string) preg_replace('/[^\p{L}\p{N}]+/u', ' ', mb_strtolower((string) $text)));
     }
 }
