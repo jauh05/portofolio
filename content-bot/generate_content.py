@@ -33,7 +33,6 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-import requests
 
 from ig_publisher import GraphError, PublishError, ReelsClient, publish_reel
 
@@ -47,9 +46,6 @@ CONFIG_FILE = BASE_DIR / "config.json"
 ENV_FILE = BASE_DIR / ".env"
 LOCK_FILE = BASE_DIR / ".lock"
 
-LLM_URL = "http://127.0.0.1:4000/v1/chat/completions"
-LLM_MODEL = "google/gemini-2.5-flash"
-LLM_ATTEMPTS = 3
 DEFAULT_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 WIDTH, HEIGHT, FPS = 1080, 1920, 30
@@ -79,32 +75,6 @@ TEXT_STYLE = "borderw=3:bordercolor=black@0.9:shadowcolor=black@0.7:shadowx=3:sh
 DIM = "eq=brightness=-0.04"
 
 # (overlay, caption) dipakai jika LiteLLM gagal. Urutannya mengikuti services.
-FALLBACK_COPY = [
-    ("Tugas numpuk, deadline makin mepet, dan kepala rasanya mau meledak? Pernah ngerasa paling bisa "
-     "ngerjain semuanya sendiri, eh ternyata tetap aja kewalahan. Tenang dulu, kamu nggak harus kuat "
-     "sendirian terus.",
-     "Kalau lagi di titik capek ngerjain tugas, cerita aja ke kami. Chat Jauki Academy sekarang ya."),
-    ("Sudah baca berkali-kali, input data sudah benar, tapi nilai signifikansinya tetap nggak mau "
-     "sesuai harapan. Real banget, skripsi itu bikin kita ngobrol sama angka sampai larut malam. "
-     "Tapi kamu nggak harus paham sendirian kok.",
-     "Relate nggak sih? Kalau lagi pusing sama SPSS atau skripsi, cerita aja, kami bantu dengarkan "
-     "dan jelaskan pelan-pelan."),
-    ("Udah nulis kode dari tadi, tapi error-nya nggak habis-habis. Debugging sampai jam dua pagi, "
-     "dan rasanya dunia cuma berputar di satu baris kode. Nggak apa-apa kok ngerasa stuck, itu bagian "
-     "dari proses.",
-     "Siapa yang masih begadang debugging malam ini? Cerita aja ke kami, siapa tahu bisa bantu biar "
-     "lebih cepat paham."),
-    ("Kuliah itu kadang bukan soal pintar, tapi soal tetap bertahan pas capek dan pengen nyerah. "
-     "Ada hari tugas terasa nggak ada habisnya, ada hari dosen bikin semangat turun. Itu manusiawi "
-     "banget. Yang penting kamu tetap jalan, pelan-pelan nggak apa-apa.",
-     "Capek kuliah itu wajar. Kalau butuh teman cerita atau bantuan tugas, Jauki Academy siap bantu."),
-    ("Dosen minta revisi lagi, padahal kemarin udah dikoreksi habis-habisan. Rasanya pengen ngomel "
-     "tapi tetap harus senyum sambil nulis ulang. Real banget buat yang lagi ngerjain skripsi. "
-     "Sabar ya, setiap revisi itu bikin kamu makin dekat ke garis finish.",
-     "Relate sama dosen yang revisinya nggak habis-habis? Ceritain di kolom komentar, kami dengerin kok."),
-]
-FALLBACK_HASHTAGS = ["#keluhkesahmahasiswa", "#kuliah", "#skripsi", "#spss", "#mahasiswa"]
-COPY_STYLES = ["relatable mahasiswa", "motivasi", "lucu ringan", "promo halus", "gaya POV"]
 
 # Istilah suku, agama, ras, dan golongan. Teks yang memuatnya ditolak dan dipakai fallback.
 SARA_TERMS = [
@@ -118,24 +88,6 @@ SARA_PATTERN = re.compile(r"\b(?:" + "|".join(SARA_TERMS) + r")\b")
 
 def has_sara(text):
     return SARA_PATTERN.search(text.lower()) is not None
-
-SYSTEM_PROMPT = (
-    "Kamu menulis konten TikTok dan Reels untuk akun Jauki Academy (jaukitugas.my.id). "
-    "Isinya curhat dan keluh kesah mahasiswa: ngerjain tugas yang numpuk, dosen dan revisi, deadline, "
-    "pusing sama hitungan SPSS dan skripsi, coding yang error terus, dan suasana dunia perkuliahan. "
-    "Boleh juga motivasi ringan untuk mahasiswa yang lagi capek. "
-    "Gaya bahasanya harus seperti konten TikTok Indonesia yang real dan relatable: santai, bahasa gaul yang wajar "
-    "(misalnya banget, sih, deh, relate, real), seperti curhat anak kuliah. Jangan pakai bahasa baku atau kalimat iklan. "
-    "Jangan menyebut kata joki atau joki tugas. Sebut Jauki Academy hanya sekali dan singkat, lebih baik di caption. "
-    "Dilarang menyinggung atau menyebut suku, agama, ras, atau golongan apa pun, dilarang kasar, "
-    "dilarang kekerasan, dan dilarang topik politik. "
-    "Balas HANYA dengan JSON valid tanpa markdown, berisi kunci: "
-    '"overlay" (22 sampai 40 kata, satu sampai tiga kalimat pendek, tanpa emoji dan tanpa tanda kutip, '
-    "tampil di tengah video dengan gaya keluh kesah atau motivasi, tanpa menyebut layanan), "
-    '"caption" (satu sampai dua kalimat gaya TikTok, boleh berisi ajakan DM atau chat), '
-    '"hashtags" (array 5 sampai 10 string, diawali #, huruf kecil, tanpa spasi), '
-    '"mood" (salah satu dari: {moods}; pilih yang paling cocok dengan suasana teksnya).'
-)
 
 log = logging.getLogger("content-bot")
 
@@ -209,13 +161,6 @@ def should_run_today(history, per_week, tz, rng):
     return rng.random() < chance, f"sisa kuota {quota} dari {days_left} hari, peluang {chance:.2f}"
 
 
-def parse_json(text):
-    start, end = text.find("{"), text.rfind("}")
-    if start == -1 or end == -1:
-        raise ValueError("tidak ada objek JSON di jawaban")
-    return json.loads(text[start : end + 1])
-
-
 def validate_copy(data, moods):
     if not isinstance(data, dict):
         raise ValueError("jawaban bukan objek JSON")
@@ -243,50 +188,71 @@ def validate_copy(data, moods):
         "caption": caption,
         "hashtags": tags[:10],
         "mood": mood if mood in moods else None,
-        "copy_source": "llm",
     }
 
 
-def fetch_copy(topic, moods, rng):
-    headers = {"Content-Type": "application/json"}
-    api_key = os.environ.get("LITELLM_API_KEY", "")
-    if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
-    body = {
-        "model": LLM_MODEL,
-        "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT.format(moods=", ".join(moods))},
-            {
-                "role": "user",
-                "content": f"Topik: {topic}. Gaya: {rng.choice(COPY_STYLES)}. "
-                "Tulis variasi yang belum pernah dipakai.",
-            },
-        ],
-        "temperature": 0.9,
-        "max_tokens": 2048,  # Gemini 2.5 ikut memakai token untuk reasoning
-    }
-    for attempt in range(1, LLM_ATTEMPTS + 1):
+COPY_BANK_FILE = BASE_DIR / "copy_bank.json"
+LOW_BANK_WARNING = 10
+
+
+def load_bank():
+    if not COPY_BANK_FILE.exists():
+        return []
+    try:
+        bank = json.loads(COPY_BANK_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise BotError(f"copy_bank.json rusak ({exc}). Perbaiki manual, jangan di-reset.") from exc
+    if not isinstance(bank, list):
+        raise BotError("copy_bank.json harus berisi list.")
+    return bank
+
+
+def save_bank(bank):
+    tmp = COPY_BANK_FILE.parent / (COPY_BANK_FILE.name + ".tmp")
+    with tmp.open("w", encoding="utf-8") as fh:
+        json.dump(bank, fh, ensure_ascii=False, indent=2)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, COPY_BANK_FILE)
+
+
+def pick_copy(bank):
+    return next((item for item in bank if not item.get("used_at")), None)
+
+
+def import_bank(path, moods, bank, now):
+    """Tambah batch dari Claude ke bank. Item yang tidak valid atau kembar dilewati dan dilaporkan."""
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise BotError("File batch harus berisi list JSON.")
+    seen = {item["overlay"] for item in bank}
+    added, skipped = 0, []
+    for index, raw in enumerate(data, start=1):
         try:
-            resp = requests.post(LLM_URL, json=body, headers=headers, timeout=30)
-            resp.raise_for_status()
-            choice = resp.json()["choices"][0]
-            if choice.get("finish_reason") == "length":
-                raise ValueError("jawaban terpotong (finish_reason=length)")
-            return validate_copy(parse_json(choice["message"]["content"] or ""), moods)
-        except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) as exc:
-            log.warning("LiteLLM percobaan %d/%d gagal: %s", attempt, LLM_ATTEMPTS, exc)
-    return None
-
-
-def fallback_copy(topic_idx):
-    overlay, caption = FALLBACK_COPY[topic_idx % len(FALLBACK_COPY)]
-    return {
-        "overlay": overlay,
-        "caption": caption,
-        "hashtags": list(FALLBACK_HASHTAGS),
-        "mood": None,
-        "copy_source": "fallback",
-    }
+            copy = validate_copy(raw, moods)
+            if copy["mood"] is None:
+                raise ValueError(f"mood harus salah satu dari {', '.join(moods)}")
+            if copy["overlay"] in seen:
+                raise ValueError("overlay kembar dengan yang sudah ada")
+            if re.search(r"\bjoki\b", " ".join([copy["overlay"], copy["caption"], *copy["hashtags"]]).lower()):
+                raise ValueError("mengandung kata joki")
+        except (ValueError, KeyError, TypeError) as exc:
+            skipped.append(f"item {index}: {exc}")
+            continue
+        seen.add(copy["overlay"])
+        bank.append({
+            "id": uuid.uuid4().hex[:8],
+            "topic": str(raw.get("topic", "")).strip(),
+            "overlay": copy["overlay"],
+            "caption": copy["caption"],
+            "hashtags": copy["hashtags"],
+            "mood": copy["mood"],
+            "imported_at": now.isoformat(timespec="seconds"),
+            "used_at": None,
+            "used_by": None,
+        })
+        added += 1
+    return added, skipped
 
 
 def pick_music(preferred, moods, history, rng):
@@ -484,13 +450,18 @@ def unique(items):
     return list(dict.fromkeys(items))
 
 
+def count_available(bank):
+    return sum(1 for item in bank if not item.get("used_at"))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Bot Reels Jauki Academy")
-    parser.add_argument("--dry-run", action="store_true", help="tampilkan rencana, tanpa render dan tanpa mengubah history")
+    parser.add_argument("--dry-run", action="store_true", help="tampilkan rencana, tanpa render dan tanpa mengubah bank atau history")
     parser.add_argument("--force", action="store_true", help="lewati cek jadwal mingguan")
-    parser.add_argument("--no-llm", action="store_true", help="pakai teks fallback, tanpa memanggil LiteLLM")
     parser.add_argument("--live", action="store_true",
                         help="publish ke Instagram Reels; tanpa flag ini tidak ada panggilan API")
+    parser.add_argument("--import-bank", metavar="BATCH.json",
+                        help="tambah batch teks dari Claude ke copy_bank.json, lalu berhenti")
     args = parser.parse_args()
 
     for folder in (RAW_DIR, OUT_DIR, MUSIC_DIR, LOG_DIR):
@@ -506,25 +477,35 @@ def main():
 
     cfg = load_config()
     tz = ZoneInfo(cfg["timezone"])
-    history = load_history()
     rng = random.Random()
 
+    if args.import_bank:
+        bank = load_bank()
+        added, skipped = import_bank(args.import_bank, cfg["music_moods"], bank, datetime.now(tz))
+        save_bank(bank)
+        for line in skipped:
+            log.warning("Dilewati %s", line)
+        log.info("Batch diimpor: %d ditambahkan, %d dilewati. Sisa tersedia: %d.",
+                 added, len(skipped), count_available(bank))
+        return 0
+
+    history = load_history()
     if not args.force:
         run_today, reason = should_run_today(history, cfg["videos_per_week"], tz, rng)
         log.info("Jadwal: %s", reason)
         if not run_today:
             return 0
 
-    services = cfg["services"]
-    topic_idx = len(history) % len(services)
-    topic = services[topic_idx]
+    bank = load_bank()
+    item = pick_copy(bank)
+    if item is None:
+        raise BotError("Bank teks habis. Minta batch baru ke Claude, simpan jadi file JSON, lalu jalankan --import-bank.")
+    if count_available(bank) <= LOW_BANK_WARNING:
+        log.warning("Sisa bank teks tinggal %d. Segera siapkan batch baru.", count_available(bank))
 
-    copy = None if args.no_llm else fetch_copy(topic, cfg["music_moods"], rng)
-    if copy is None:
-        copy = fallback_copy(topic_idx)
-        log.warning("Memakai teks fallback.")
-    hashtags = unique(copy["hashtags"] + cfg["brand_hashtags"])
-    preferred_mood = copy["mood"] or rng.choice(cfg["music_moods"])
+    topic = item.get("topic") or "-"
+    hashtags = unique(item["hashtags"] + cfg["brand_hashtags"])
+    preferred_mood = item["mood"] if item["mood"] in cfg["music_moods"] else rng.choice(cfg["music_moods"])
 
     mood, music_rel, track = pick_music(preferred_mood, cfg["music_moods"], history, rng)
     seg = pick_segment(history, cfg, rng)
@@ -544,15 +525,15 @@ def main():
         music_offset, music_loop = 0.0, True
 
     font = os.environ.get("FONT_PATH", DEFAULT_FONT)
-    log.info("Topik: %s | teks: %s | mood: %s | musik: %s", topic, copy["copy_source"], mood, music_rel)
+    log.info("Topik: %s | bank: %s | mood: %s | musik: %s", topic, item["id"], mood, music_rel)
     log.info(
         "Sumber: %s, ambil dari %.2f dtk (buang %d dtk awal dan akhir), span %.2f dtk",
         seg["name"], seg["start"], cfg["skip_head_s"], seg["span"],
     )
     log.info("Output %d dtk, kecepatan %.1fx, grade %s, vignette %s",
              duration, seg["speed"], grade, vignette)
-    log.info("Overlay: %s", copy["overlay"])
-    log.info("Caption: %s", copy["caption"])
+    log.info("Overlay: %s", item["overlay"])
+    log.info("Caption: %s", item["caption"])
 
     if args.dry_run:
         log.info("Dry run selesai. Tidak ada file yang dibuat.")
@@ -563,10 +544,16 @@ def main():
     stamp = datetime.now(tz)
     entry_id = uuid.uuid4().hex[:8]
     out_path = OUT_DIR / f"reel_{stamp:%Y%m%d_%H%M%S}_{entry_id}.mp4"
-    render(seg, track, music_offset, music_loop, grade, vignette, copy["overlay"],
+    render(seg, track, music_offset, music_loop, grade, vignette, item["overlay"],
            cfg["music_volume"], font, out_path)
     actual = check_output(out_path)
-    caption_text = f"{copy['caption']}\n\n{' '.join(hashtags)}"
+
+    # Teks dianggap terpakai begitu video berhasil dirender, supaya tidak dipakai dua kali.
+    item["used_at"] = stamp.isoformat(timespec="seconds")
+    item["used_by"] = out_path.name
+    save_bank(bank)
+
+    caption_text = f"{item['caption']}\n\n{' '.join(hashtags)}"
     out_path.with_suffix(".txt").write_text(f"{caption_text}\n", encoding="utf-8")
     post_id, post_error = None, None
     if args.live:
@@ -592,10 +579,11 @@ def main():
         "output_duration": round(actual, 2),
         "output": out_path.name,
         "topic": topic,
-        "overlay": copy["overlay"],
-        "caption": copy["caption"],
+        "overlay": item["overlay"],
+        "caption": item["caption"],
         "hashtags": hashtags,
-        "copy_source": copy["copy_source"],
+        "copy_source": "bank",
+        "bank_id": item["id"],
         "mood": mood,
         "music": music_rel,
         "grade": grade,
@@ -604,7 +592,7 @@ def main():
         "post_error": post_error,
     })
     save_history(history)
-    log.info("Selesai: %s (%.2f dtk)", out_path.name, actual)
+    log.info("Selesai: %s (%.2f dtk). Sisa bank teks: %d.", out_path.name, actual, count_available(bank))
     return 1 if post_error else 0
 
 

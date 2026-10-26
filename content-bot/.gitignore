@@ -16,3 +16,4 @@ music/**/*.aac
 music/**/*.wav
 music/**/*.ogg
 music/LISENSI.txt
+copy_bank.json
