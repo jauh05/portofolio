@@ -1,0 +1,66 @@
+/* Tone warna jenis konten dipakai chip grid, pill tabel, dan item menu "+". */
+.office-redesign .tone-reels-jauki { --tone: var(--accent); }
+.office-redesign .tone-feed-jauki { --tone: #7c5cff; }
+.office-redesign .tone-story-jauki { --tone: #e5488c; }
+.office-redesign .tone-feed-kauiz { --tone: var(--success); }
+.office-redesign .tone-story-kauiz { --tone: #f08c1c; }
+.office-redesign .tone-threads { --tone: #6b7280; }
+.office-redesign .tone-article { --tone: #d9a400; }
+.office-redesign .tone-other { --tone: var(--muted); }
+
+.office-redesign .planner-grid-page { display: grid; gap: 16px; padding: 24px 20px 48px; max-width: 1280px; margin: 0 auto; }
+.office-redesign .planner-grid-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.office-redesign .planner-grid-title h2 { margin: 0; color: var(--text); font: 800 22px/1.2 Sora, sans-serif; letter-spacing: -.02em; }
+.office-redesign .planner-grid-title p { margin: 4px 0 0; color: var(--muted); font: 600 13px/1.5 Inter, sans-serif; }
+.office-redesign .planner-grid-actions { display: flex; align-items: center; gap: 10px; position: relative; }
+.office-redesign .planner-toggle { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 12px Inter, sans-serif; cursor: pointer; }
+.office-redesign .planner-add { position: relative; }
+.office-redesign .planner-add-button { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 50%; background: var(--highlight); color: #fff; box-shadow: var(--pill-shadow); cursor: pointer; }
+.office-redesign .planner-menu { position: absolute; top: 46px; left: 0; z-index: 30; display: grid; gap: 4px; min-width: 200px; padding: 8px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); box-shadow: 0 20px 40px -20px rgba(2,12,28,.4); }
+.office-redesign .planner-menu-item { display: flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: var(--text); font: 700 12px Inter, sans-serif; text-align: left; cursor: pointer; }
+.office-redesign .planner-menu-item:hover { background: var(--surface-2); }
+.office-redesign .planner-menu-item i { width: 10px; height: 10px; border-radius: 50%; background: var(--tone); }
+.office-redesign .planner-notice { margin: 0; padding: 10px 14px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-strong); font: 600 12px Inter, sans-serif; }
+
+/* Grid mingguan: kolom hari dan baris jam. */
+.office-redesign .slot-grid { display: grid; grid-template-columns: 64px repeat(7, minmax(120px, 1fr)); overflow-x: auto; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); }
+.office-redesign .slot-corner { border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.office-redesign .slot-day { padding: 12px 10px; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: 800 12px Inter, sans-serif; text-align: center; }
+.office-redesign .slot-hour { padding: 6px 8px; border-top: 1px solid var(--border); color: var(--muted); font: 700 10px 'JetBrains Mono', monospace; }
+.office-redesign .slot-cell { min-height: 44px; padding: 4px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+.office-redesign .slot-cell:hover { background: var(--accent-soft); }
+.office-redesign .slot-chip { display: grid; gap: 2px; width: 100%; padding: 6px 8px; border: 0; border-radius: 10px; background: var(--tone, var(--accent)); color: #fff; text-align: left; cursor: grab; box-shadow: var(--pill-shadow); }
+.office-redesign .slot-chip b { font: 800 11px Inter, sans-serif; }
+.office-redesign .slot-chip span { font: 600 10px 'JetBrains Mono', monospace; opacity: .9; }
+.office-redesign .slot-chip:active { cursor: grabbing; }
+
+/* Tabel hasil generate, dengan tiga kepadatan. */
+.office-redesign .results-panel { display: grid; gap: 12px; padding: 18px; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); }
+.office-redesign .results-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.office-redesign .results-head h3 { margin: 0; color: var(--text); font: 800 16px Sora, sans-serif; }
+.office-redesign .density-toggle { display: inline-flex; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); }
+.office-redesign .density-toggle button { min-height: 28px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .density-toggle button.active { background: var(--highlight); color: #fff; }
+.office-redesign .results-scroll { overflow-x: auto; }
+.office-redesign .results-table { width: 100%; border-collapse: collapse; color: var(--text); font: 600 12px Inter, sans-serif; }
+.office-redesign .results-table th { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--muted); font: 800 11px Inter, sans-serif; text-align: left; }
+.office-redesign .results-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.office-redesign .density-compact .results-table td { padding: 4px 8px; }
+.office-redesign .density-expanded .results-table td { padding: 14px 12px; }
+.office-redesign .density-expanded .results-table td:nth-child(n+6) { white-space: normal; }
+.office-redesign .type-pill, .office-redesign .status-pill { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font: 800 10px Inter, sans-serif; }
+.office-redesign .type-pill { background: var(--tone); color: #fff; }
+.office-redesign .status-pill.ok { background: #e4f6ed; color: var(--success); }
+.office-redesign .status-pill.bad { background: #fff0f2; color: #a72246; }
+.office-redesign .status-pill.ready { background: var(--accent-soft); color: var(--accent-strong); }
+.office-redesign .status-pill.wait { background: var(--surface-2); color: var(--muted); }
+.office-redesign .results-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.office-redesign .results-actions button { min-height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .results-actions button:disabled { opacity: .45; cursor: not-allowed; }
+.office-redesign .results-empty { margin: 0; color: var(--muted); font: 600 13px Inter, sans-serif; }
+.office-redesign .result-detail { width: min(560px, calc(100% - 32px)); display: grid; gap: 12px; padding: 22px; }
+.office-redesign .result-detail header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.office-redesign .result-detail header span { color: var(--accent-strong); font: 800 10px 'JetBrains Mono', monospace; }
+.office-redesign .result-detail header h2 { margin: 4px 0 0; color: var(--text); font: 800 18px Sora, sans-serif; }
+.office-redesign .result-media { width: 100%; max-height: 70vh; object-fit: contain; border-radius: 16px; background: #000; }
+.office-redesign .result-text { margin: 0; color: var(--text); font: 600 13px/1.6 Inter, sans-serif; white-space: pre-line; }

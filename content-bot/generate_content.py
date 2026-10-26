@@ -35,6 +35,7 @@ from zoneinfo import ZoneInfo
 
 
 from ig_publisher import GraphError, PublishError, ReelsClient, publish_reel
+from slot_plan import due_actions
 
 BASE_DIR = Path(__file__).resolve().parent
 RAW_DIR = BASE_DIR / "raw_videos"
@@ -482,10 +483,189 @@ def count_available(bank):
     return sum(1 for item in bank if not item.get("used_at"))
 
 
+SLOT_STATE_FILE = BASE_DIR / "slot_state.json"
+
+
+def slots_path():
+    return Path(os.environ.get("REELS_SLOTS_FILE", str(BASE_DIR / "reels_slots.json")))
+
+
+def load_slots():
+    path = slots_path()
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [slot for slot in data if isinstance(slot, dict) and slot.get("active", True)] if isinstance(data, list) else []
+
+
+def load_slot_state():
+    if not SLOT_STATE_FILE.exists():
+        return {}
+    return json.loads(SLOT_STATE_FILE.read_text(encoding="utf-8"))
+
+
+def save_slot_state(state):
+    tmp = SLOT_STATE_FILE.parent / (SLOT_STATE_FILE.name + ".tmp")
+    tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, SLOT_STATE_FILE)
+
+
+def plan_render(cfg, item, history, rng):
+    """Pilih musik, potongan, dan efek untuk satu item bank. None bila potongan sudah habis."""
+    preferred = item["mood"] if item["mood"] in cfg["music_moods"] else rng.choice(cfg["music_moods"])
+    mood, music_rel, track = pick_music(preferred, cfg["music_moods"], history, rng)
+    seg = pick_segment(history, cfg, rng)
+    if seg is None:
+        return None
+    last_grade = history[-1].get("grade") if history else None
+    grade = rng.choice([g for g in GRADES if g != last_grade])
+    vignette = rng.random() < 0.5
+    track_dur = probe_duration(track)
+    if track_dur >= seg["duration"] + 1:
+        music_offset, music_loop = rng.uniform(0, track_dur - seg["duration"]), False
+    else:
+        music_offset, music_loop = 0.0, True
+    return {"mood": mood, "music_rel": music_rel, "track": track, "seg": seg, "grade": grade,
+            "vignette": vignette, "music_offset": music_offset, "music_loop": music_loop}
+
+
+def render_plan(cfg, plan, item, bank, stamp):
+    """Render video dari rencana, cek formatnya, lalu tandai teks sebagai terpakai."""
+    entry_id = uuid.uuid4().hex[:8]
+    out_path = OUT_DIR / f"reel_{stamp:%Y%m%d_%H%M%S}_{entry_id}.mp4"
+    seg = plan["seg"]
+    trf_path = prepare_stabilizer(seg, cfg)
+    try:
+        render(seg, plan["track"], plan["music_offset"], plan["music_loop"], plan["grade"], plan["vignette"],
+               item["overlay"], cfg["music_volume"], os.environ.get("FONT_PATH", DEFAULT_FONT), out_path, trf_path)
+    finally:
+        if trf_path:
+            Path(trf_path).unlink(missing_ok=True)
+    actual = check_output(out_path)
+    # Teks dianggap terpakai begitu video berhasil dirender, supaya tidak dipakai dua kali.
+    item["used_at"] = stamp.isoformat(timespec="seconds")
+    item["used_by"] = out_path.name
+    save_bank(bank)
+    return out_path, actual, entry_id
+
+
+def caption_for(item, cfg):
+    hashtags = unique(item["hashtags"] + cfg["brand_hashtags"])
+    return f"{item['caption']}\n\n{' '.join(hashtags)}"
+
+
+def post_video(out_path, caption_text):
+    """Posting ke Instagram. Mengembalikan id media, atau melempar error bila gagal."""
+    video_url = f"{os.environ['PUBLIC_VIDEO_BASE_URL'].rstrip('/')}/{out_path.name}"
+    client = ReelsClient(os.environ["IG_ACCESS_TOKEN"], os.environ["IG_USER_ID"])
+    return publish_reel(client, video_url, caption_text)
+
+
+def history_entry(plan, item, cfg, out_path, actual, entry_id, stamp, slot_at=None):
+    seg = plan["seg"]
+    return {
+        "id": entry_id,
+        "created_at": stamp.isoformat(timespec="seconds"),
+        "slot_at": slot_at,
+        "source": seg["name"],
+        "source_size": seg["size"],
+        "source_duration": round(seg["src_dur"], 2),
+        "start_s": round(seg["start"], 2),
+        "end_s": round(seg["start"] + seg["span"], 2),
+        "speed": seg["speed"],
+        "duration": seg["duration"],
+        "output_duration": round(actual, 2),
+        "output": out_path.name,
+        "topic": item.get("topic") or "-",
+        "overlay": item["overlay"],
+        "caption": item["caption"],
+        "hashtags": unique(item["hashtags"] + cfg["brand_hashtags"]),
+        "copy_source": "bank",
+        "bank_id": item["id"],
+        "mood": plan["mood"],
+        "music": plan["music_rel"],
+        "grade": plan["grade"],
+        "vignette": plan["vignette"],
+        "instagram_media_id": None,
+        "post_error": None,
+        "posted_at": None,
+    }
+
+
+def run_auto(cfg, tz, rng, live, now):
+    """Mode slot: render dan posting mengikuti jam di grid. Tanpa --live hanya mencatat rencana."""
+    slots = load_slots()
+    if not slots:
+        log.info("Belum ada slot Reels aktif (%s). Tidak ada yang dikerjakan.", slots_path())
+        return 0
+
+    state = load_slot_state()
+    history = load_history()
+    bank = load_bank()
+    code = 0
+    for action in due_actions(slots, state, now, tz):
+        at = action.occurrence.astimezone(tz).strftime("%d %b %H:%M")
+        if action.kind == "missed":
+            state[action.key] = {"status": "missed"}
+            log.warning("Slot %s (%s) terlewat dan tidak dikerjakan.", action.slot.get("label"), at)
+            continue
+        if action.kind == "render":
+            item = pick_copy(bank)
+            if item is None:
+                log.error("Bank teks habis. Slot %s (%s) tidak bisa dirender.", action.slot.get("label"), at)
+                code = 1
+                continue
+            plan = plan_render(cfg, item, history, rng)
+            if plan is None:
+                log.info("Potongan video habis. Slot %s (%s) dilewati.", action.slot.get("label"), at)
+                continue
+            if not live:
+                log.info("Dry run: akan render slot %s (%s) dengan teks %s.", action.slot.get("label"), at, item["id"])
+                continue
+            stamp = now.astimezone(tz)
+            out_path, actual, entry_id = render_plan(cfg, plan, item, bank, stamp)
+            caption_text = caption_for(item, cfg)
+            out_path.with_suffix(".txt").write_text(f"{caption_text}\n", encoding="utf-8")
+            history.append(history_entry(plan, item, cfg, out_path, actual, entry_id, stamp, action.occurrence.isoformat()))
+            save_history(history)
+            state[action.key] = {"status": "rendered", "output": out_path.name, "caption": caption_text,
+                                 "entry_id": entry_id, "slot_at": action.occurrence.isoformat()}
+            save_slot_state(state)
+            log.info("Render siap untuk slot %s (%s): %s", action.slot.get("label"), at, out_path.name)
+        elif action.kind == "post":
+            record = state[action.key]
+            if not live:
+                log.info("Dry run: akan posting %s untuk slot %s (%s).", record["output"], action.slot.get("label"), at)
+                continue
+            out_path = OUT_DIR / record["output"]
+            now_iso = now.astimezone(tz).isoformat(timespec="seconds")
+            try:
+                media_id = post_video(out_path, record["caption"])
+                record.update(status="posted", media_id=media_id, posted_at=now_iso)
+                log.info("Terposting slot %s (%s), id media %s", action.slot.get("label"), at, media_id)
+            except (GraphError, PublishError, KeyError, OSError) as exc:
+                record.update(status="failed", error=str(exc))
+                log.error("Gagal posting slot %s (%s): %s", action.slot.get("label"), at, exc)
+                code = 1
+            for entry in history:
+                if entry.get("id") == record.get("entry_id"):
+                    entry["instagram_media_id"] = record.get("media_id")
+                    entry["post_error"] = record.get("error")
+                    entry["posted_at"] = record.get("posted_at")
+            save_history(history)
+            save_slot_state(state)
+            continue
+    if live:
+        save_slot_state(state)
+    return code
+
+
 def main():
     parser = argparse.ArgumentParser(description="Bot Reels Jauki Academy")
     parser.add_argument("--dry-run", action="store_true", help="tampilkan rencana, tanpa render dan tanpa mengubah bank atau history")
-    parser.add_argument("--force", action="store_true", help="lewati cek jadwal mingguan")
+    parser.add_argument("--force", action="store_true", help="lewati cek jadwal mingguan (mode bank, bukan --auto)")
+    parser.add_argument("--auto", action="store_true",
+                        help="ikuti jam slot di grid: render 2 jam sebelum slot, posting tepat di jam slot")
     parser.add_argument("--live", action="store_true",
                         help="publish ke Instagram Reels; tanpa flag ini tidak ada panggilan API")
     parser.add_argument("--import-bank", metavar="BATCH.json",
@@ -506,6 +686,9 @@ def main():
     cfg = load_config()
     tz = ZoneInfo(cfg["timezone"])
     rng = random.Random()
+    live = args.live and not args.dry_run
+    if live and not all(os.environ.get(k) for k in ("IG_USER_ID", "IG_ACCESS_TOKEN", "PUBLIC_VIDEO_BASE_URL")):
+        raise BotError("Untuk --live, isi IG_USER_ID, IG_ACCESS_TOKEN, dan PUBLIC_VIDEO_BASE_URL di .env.")
 
     if args.import_bank:
         bank = load_bank()
@@ -516,6 +699,9 @@ def main():
         log.info("Batch diimpor: %d ditambahkan, %d dilewati. Sisa tersedia: %d.",
                  added, len(skipped), count_available(bank))
         return 0
+
+    if args.auto:
+        return run_auto(cfg, tz, rng, live, datetime.now(tz))
 
     history = load_history()
     if not args.force:
@@ -531,99 +717,39 @@ def main():
     if count_available(bank) <= LOW_BANK_WARNING:
         log.warning("Sisa bank teks tinggal %d. Segera siapkan batch baru.", count_available(bank))
 
-    topic = item.get("topic") or "-"
-    hashtags = unique(item["hashtags"] + cfg["brand_hashtags"])
-    preferred_mood = item["mood"] if item["mood"] in cfg["music_moods"] else rng.choice(cfg["music_moods"])
-
-    mood, music_rel, track = pick_music(preferred_mood, cfg["music_moods"], history, rng)
-    seg = pick_segment(history, cfg, rng)
-    if seg is None:
+    plan = plan_render(cfg, item, history, rng)
+    if plan is None:
         log.info("Semua potongan sudah habis. Tambahkan video ke raw_videos/. Tidak ada yang dibuat.")
         return 0
-
-    duration = seg["duration"]
-    last_grade = history[-1].get("grade") if history else None
-    grade = rng.choice([g for g in GRADES if g != last_grade])
-    vignette = rng.random() < 0.5
-
-    track_dur = probe_duration(track)
-    if track_dur >= duration + 1:
-        music_offset, music_loop = rng.uniform(0, track_dur - duration), False
-    else:
-        music_offset, music_loop = 0.0, True
-
-    font = os.environ.get("FONT_PATH", DEFAULT_FONT)
-    log.info("Topik: %s | bank: %s | mood: %s | musik: %s", topic, item["id"], mood, music_rel)
-    log.info(
-        "Sumber: %s, ambil dari %.2f dtk (buang %d dtk awal dan akhir), span %.2f dtk",
-        seg["name"], seg["start"], cfg["skip_head_s"], seg["span"],
-    )
+    seg = plan["seg"]
+    log.info("Topik: %s | bank: %s | mood: %s | musik: %s", item.get("topic") or "-", item["id"], plan["mood"], plan["music_rel"])
+    log.info("Sumber: %s, ambil dari %.2f dtk (buang %d dtk awal dan akhir), span %.2f dtk",
+             seg["name"], seg["start"], cfg["skip_head_s"], seg["span"])
     log.info("Output %d dtk, kecepatan %.1fx, grade %s, vignette %s",
-             duration, seg["speed"], grade, vignette)
+             seg["duration"], seg["speed"], plan["grade"], plan["vignette"])
     log.info("Overlay: %s", item["overlay"])
     log.info("Caption: %s", item["caption"])
 
     if args.dry_run:
         log.info("Dry run selesai. Tidak ada file yang dibuat.")
         return 0
-    if args.live and not all(os.environ.get(k) for k in ("IG_USER_ID", "IG_ACCESS_TOKEN", "PUBLIC_VIDEO_BASE_URL")):
-        raise BotError("Untuk --live, isi IG_USER_ID, IG_ACCESS_TOKEN, dan PUBLIC_VIDEO_BASE_URL di .env.")
 
     stamp = datetime.now(tz)
-    entry_id = uuid.uuid4().hex[:8]
-    out_path = OUT_DIR / f"reel_{stamp:%Y%m%d_%H%M%S}_{entry_id}.mp4"
-    trf_path = prepare_stabilizer(seg, cfg)
-    try:
-        render(seg, track, music_offset, music_loop, grade, vignette, item["overlay"],
-               cfg["music_volume"], font, out_path, trf_path)
-    finally:
-        if trf_path:
-            Path(trf_path).unlink(missing_ok=True)
-    actual = check_output(out_path)
-
-    # Teks dianggap terpakai begitu video berhasil dirender, supaya tidak dipakai dua kali.
-    item["used_at"] = stamp.isoformat(timespec="seconds")
-    item["used_by"] = out_path.name
-    save_bank(bank)
-
-    caption_text = f"{item['caption']}\n\n{' '.join(hashtags)}"
+    out_path, actual, entry_id = render_plan(cfg, plan, item, bank, stamp)
+    caption_text = caption_for(item, cfg)
     out_path.with_suffix(".txt").write_text(f"{caption_text}\n", encoding="utf-8")
-    post_id, post_error = None, None
-    if args.live:
-        video_url = f"{os.environ['PUBLIC_VIDEO_BASE_URL'].rstrip('/')}/{out_path.name}"
+    entry = history_entry(plan, item, cfg, out_path, actual, entry_id, stamp)
+    post_error = None
+    if live:
         try:
-            client = ReelsClient(os.environ["IG_ACCESS_TOKEN"], os.environ["IG_USER_ID"])
-            post_id = publish_reel(client, video_url, caption_text)
-            log.info("Terposting ke Instagram Reels, id media %s", post_id)
+            entry["instagram_media_id"] = post_video(out_path, caption_text)
+            entry["posted_at"] = datetime.now(tz).isoformat(timespec="seconds")
+            log.info("Terposting ke Instagram Reels, id media %s", entry["instagram_media_id"])
         except (GraphError, PublishError) as exc:
             post_error = str(exc)
+            entry["post_error"] = post_error
             log.error("Gagal posting ke Instagram: %s", post_error)
-
-    history.append({
-        "id": entry_id,
-        "created_at": stamp.isoformat(timespec="seconds"),
-        "source": seg["name"],
-        "source_size": seg["size"],
-        "source_duration": round(seg["src_dur"], 2),
-        "start_s": round(seg["start"], 2),
-        "end_s": round(seg["start"] + seg["span"], 2),
-        "speed": seg["speed"],
-        "duration": duration,
-        "output_duration": round(actual, 2),
-        "output": out_path.name,
-        "topic": topic,
-        "overlay": item["overlay"],
-        "caption": item["caption"],
-        "hashtags": hashtags,
-        "copy_source": "bank",
-        "bank_id": item["id"],
-        "mood": mood,
-        "music": music_rel,
-        "grade": grade,
-        "vignette": vignette,
-        "instagram_media_id": post_id,
-        "post_error": post_error,
-    })
+    history.append(entry)
     save_history(history)
     log.info("Selesai: %s (%.2f dtk). Sisa bank teks: %d.", out_path.name, actual, count_available(bank))
     return 1 if post_error else 0

@@ -27,6 +27,13 @@ class OfficeContentSchedule extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        // Setiap perubahan jadwal langsung ditulis ke file slot Kauiz, supaya worker ikut grid.
+        static::saved(fn () => \App\Services\KauizSlotSync::sync());
+        static::deleted(fn () => \App\Services\KauizSlotSync::sync());
+    }
+
     public function brand(): BelongsTo
     {
         return $this->belongsTo(OfficeContentBrand::class, 'brand_id');

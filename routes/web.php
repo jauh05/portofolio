@@ -67,6 +67,11 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::post('/content/{content}/approve', [\App\Http\Controllers\OfficeContentPlannerController::class, 'approveContent']);
 
         Route::get('/reels-settings', [\App\Http\Controllers\OfficeReelsSettingsController::class, 'show']);
+        Route::get('/reels-slots', [\App\Http\Controllers\OfficePlannerGridController::class, 'reelsSlots']);
+        Route::post('/reels-slots', [\App\Http\Controllers\OfficePlannerGridController::class, 'storeReelsSlot']);
+        Route::patch('/reels-slots/{id}', [\App\Http\Controllers\OfficePlannerGridController::class, 'updateReelsSlot']);
+        Route::delete('/reels-slots/{id}', [\App\Http\Controllers\OfficePlannerGridController::class, 'destroyReelsSlot']);
+        Route::get('/content-results', [\App\Http\Controllers\OfficePlannerGridController::class, 'contentResults']);
         Route::put('/reels-settings', [\App\Http\Controllers\OfficeReelsSettingsController::class, 'update']);
 
         Route::get('/summary', [LivingOfficeController::class, 'summary']);

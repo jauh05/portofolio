@@ -17,3 +17,4 @@ music/**/*.wav
 music/**/*.ogg
 music/LISENSI.txt
 copy_bank.json
+slot_state.json
