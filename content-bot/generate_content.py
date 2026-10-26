@@ -154,6 +154,9 @@ def should_run_today(history, per_week, tz, rng):
     quota = per_week - made
     if quota <= 0:
         return False, f"kuota {per_week}/minggu sudah terpenuhi ({made} video minggu ini)"
+    if made == 0:
+        # Video pertama minggu ini langsung dimulai pada jalan harian pertama.
+        return True, f"belum ada video minggu ini, mulai hari ini (kuota {per_week}/minggu)"
     days_left = 8 - weekday  # hari ini ikut dihitung
     if quota >= days_left:
         return True, f"sisa kuota {quota}, sisa hari {days_left}: wajib buat hari ini"
