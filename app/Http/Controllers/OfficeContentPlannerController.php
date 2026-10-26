@@ -24,29 +24,33 @@ class OfficeContentPlannerController extends Controller
     // Publishing yang tidak punya hasil dari bot selama ini dianggap macet.
     private const STALLED_PUBLISHING_MINUTES = 60;
 
-    /** Konten yang terlalu lama di publishing ditandai gagal beserta command-nya. Tidak diulang otomatis, karena post mungkin sudah tayang. */
-    private function expireStalledPublishing(): void
+    /** Konten yang terlalu lama menunggu hasil dari bot ditandai gagal beserta command-nya. Tidak diulang otomatis, karena post mungkin sudah tayang. */
+    private function expireStalledContent(): void
     {
-        $stalled = OfficeContentItem::where('status', 'publishing')
+        $stalled = OfficeContentItem::whereIn('status', ['publishing', 'queued_for_generation', 'generating'])
             ->where('updated_at', '<', now()->subMinutes(self::STALLED_PUBLISHING_MINUTES))
             ->get();
-        $error = 'Tidak ada hasil dari bot setelah '.self::STALLED_PUBLISHING_MINUTES.' menit. Cek Instagram sebelum publish ulang.';
 
         foreach ($stalled as $item) {
+            $publishing = $item->status === 'publishing';
+            $error = 'Tidak ada hasil dari bot setelah '.self::STALLED_PUBLISHING_MINUTES.' menit'
+                .($publishing ? '. Cek Instagram sebelum publish ulang.' : '. Generate ulang jika perlu.');
+            $key = $publishing ? 'publish_error' : 'generation_error';
+
             OfficeCommand::whereIn('status', ['queued', 'claimed', 'running'])->get()
                 ->filter(fn (OfficeCommand $command) => ($command->payload['content_id'] ?? null) === $item->id)
                 ->each(fn (OfficeCommand $command) => $command->update(['status' => 'failed', 'error' => $error, 'completed_at' => now()]));
 
             $item->update([
                 'status' => 'failed',
-                'metadata' => array_merge($item->metadata ?? [], ['publish_error' => $error]),
+                'metadata' => array_merge($item->metadata ?? [], [$key => $error]),
             ]);
         }
     }
 
     public function dispatchScheduledPublishing()
     {
-        $this->expireStalledPublishing();
+        $this->expireStalledContent();
         $now = now('Asia/Jakarta');
         $items = \App\Models\OfficeContentItem::whereIn('status', ['approved', 'ready_for_review'])
             ->whereNull('published_at')

@@ -65,20 +65,24 @@ class OfficeBridgeController extends Controller
             'status' => $data['status'], 'error' => $data['status'] === 'failed' ? ($data['error'] ?? 'Unknown error') : null,
             'completed_at' => in_array($data['status'], ['completed', 'failed'], true) ? now() : null,
         ]);
-        if ($data['status'] === 'failed') $this->markPublishFailed($command, $data['error'] ?? 'Unknown error');
+        if ($data['status'] === 'failed') $this->markContentFailed($command, $data['error'] ?? 'Unknown error');
         return response()->json(['id' => $command->id, 'status' => $command->status]);
     }
 
-    /** Bot melaporkan gagal: konten yang menunggu command ini ditandai gagal, supaya tidak tertahan di publishing. */
-    private function markPublishFailed(OfficeCommand $command, string $error): void
+    /** Bot melaporkan gagal: konten yang menunggu command ini ditandai gagal, supaya tidak tertahan di antrean atau publishing. */
+    private function markContentFailed(OfficeCommand $command, string $error): void
     {
         $contentId = $command->payload['content_id'] ?? null;
         if (! $contentId) return;
 
-        OfficeContentItem::whereKey($contentId)->where('status', 'publishing')->get()
+        $publishing = str_starts_with($command->action, 'publish');
+        $waiting = $publishing ? ['publishing'] : ['queued_for_generation', 'generating'];
+        $key = $publishing ? 'publish_error' : 'generation_error';
+
+        OfficeContentItem::whereKey($contentId)->whereIn('status', $waiting)->get()
             ->each(fn (OfficeContentItem $item) => $item->update([
                 'status' => 'failed',
-                'metadata' => array_merge($item->metadata ?? [], ['publish_error' => $error]),
+                'metadata' => array_merge($item->metadata ?? [], [$key => $error]),
             ]));
     }
 

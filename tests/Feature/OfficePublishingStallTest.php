@@ -64,6 +64,33 @@ class OfficePublishingStallTest extends TestCase
         $this->assertSame('queued', $command->fresh()->status);
     }
 
+    public function test_bot_reporting_a_failed_generation_marks_the_content_as_failed_so_it_can_be_regenerated(): void
+    {
+        $item = $this->item('queued_for_generation');
+        $command = $this->command($item, 'running', 'generate_feed');
+
+        $this->patchJson('/api/office/commands/'.$command->id, ['status' => 'failed', 'error' => 'Batas gambar harian tercapai (10/10).'], ['X-Office-Bridge-Token' => 'secret'])
+            ->assertOk();
+
+        $this->assertSame('failed', $item->fresh()->status);
+        $this->assertSame('Batas gambar harian tercapai (10/10).', $item->fresh()->metadata['generation_error']);
+    }
+
+    public function test_generation_without_a_result_for_an_hour_is_marked_failed_together_with_its_command(): void
+    {
+        $item = $this->item('queued_for_generation');
+        $item->timestamps = false;
+        $item->updated_at = now()->subMinutes(61);
+        $item->save();
+        $command = $this->command($item, 'queued', 'generate_feed');
+
+        app(OfficeContentPlannerController::class)->dispatchScheduledPublishing();
+
+        $this->assertSame('failed', $item->fresh()->status);
+        $this->assertSame('failed', $command->fresh()->status);
+        $this->assertArrayHasKey('generation_error', $item->fresh()->metadata);
+    }
+
     private function item(string $status): OfficeContentItem
     {
         return OfficeContentItem::create([
@@ -72,10 +99,10 @@ class OfficePublishingStallTest extends TestCase
         ]);
     }
 
-    private function command(OfficeContentItem $item, string $status): OfficeCommand
+    private function command(OfficeContentItem $item, string $status, string $action = 'publish_last'): OfficeCommand
     {
         return OfficeCommand::create([
-            'agent_id' => 'jauki-social', 'action' => 'publish_last', 'payload' => ['content_id' => $item->id], 'status' => $status,
+            'agent_id' => 'jauki-social', 'action' => $action, 'payload' => ['content_id' => $item->id], 'status' => $status,
             'requested_by' => $this->owner->id,
         ]);
     }
