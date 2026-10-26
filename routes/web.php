@@ -38,6 +38,8 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::get('/analyst-reports', [OfficeAnalystReportController::class, 'index']);
         Route::get('/research-stats', [OfficeAnalystReportController::class, 'researchStats']);
         Route::post('/analyst-reports/generate', [OfficeAnalystReportController::class, 'generate']);
+        Route::get('/analyst-reports/charts', [OfficeAnalystReportController::class, 'charts']);
+        Route::post('/analyst-reports/generate-format', [OfficeAnalystReportController::class, 'generateFormat']);
         Route::get('/analyst-reports/{report}', [OfficeAnalystReportController::class, 'show']);
         Route::post('/analyst-reports/{report}/approve', [OfficeAnalystReportController::class, 'approve']);
         Route::post('/analyst-reports/{report}/dismiss', [OfficeAnalystReportController::class, 'dismiss']);

@@ -64,6 +64,8 @@ class OfficeAnalystReportService
 
         $type = $report->report_type;
         $filters = $report->metadata['filters'] ?? [];
+        // Scope baru: luar (riset web), dalam (performa kita), atau keduanya. Laporan lama tanpa scope dianggap keduanya.
+        $scope = in_array($filters['scope'] ?? null, ['luar', 'dalam', 'keduanya'], true) ? $filters['scope'] : 'keduanya';
         [$start, $end] = $this->range($type, $filters);
         $context = $this->collect($start, $end, $filters);
 
@@ -98,7 +100,9 @@ class OfficeAnalystReportService
                 'range_start' => $start->toIso8601String(),
                 'range_end' => $end->toIso8601String(),
                 'metrics' => $context['metrics'],
-                'performance_available' => false,
+                'performance_available' => OfficeContentMetricsService::topicTotals()->isNotEmpty(),
+                'scope' => $scope,
+                'topic_recommendations' => $this->topicRecommendations($scope, $run),
                 'research_run_id' => $run->id,
                 'source_count' => is_array($run->sources) ? count($run->sources) : 0,
             ]),
@@ -403,6 +407,45 @@ class OfficeAnalystReportService
         else { $attributes['starts_at'] = CarbonImmutable::parse($schedule['starts_at'], $schedule['timezone'])->startOfDay(); $attributes['recurrence_rule'] = ['frequency' => $schedule['frequency'], 'days' => $schedule['days'], 'time' => $schedule['time']]; $attributes['recurrence_label'] = $schedule['frequency'].' at '.$schedule['time']; }
         OfficeContentSchedule::create($attributes);
     }
+    /**
+     * Topik yang direkomendasikan untuk Temuan. Scope menentukan sumbernya:
+     * luar = tren dan ide konten dari riset web, dalam = performa konten kita, keduanya = gabungan (luar lebih dulu).
+     *
+     * @return array<int, array{topic: string, source: string, reason: string}>
+     */
+    public function topicRecommendations(string $scope, ?\App\Models\OfficeResearchRun $run): array
+    {
+        $rows = collect();
+
+        if (in_array($scope, ['luar', 'keduanya'], true) && $run) {
+            $rows = $rows->concat(collect(array_merge($run->trends ?? [], $run->content_ideas ?? []))
+                ->map(fn ($idea) => $this->ideaTopic($idea))
+                ->filter()
+                ->unique(fn (string $topic) => Str::lower($topic))
+                ->take(5)
+                ->map(fn (string $topic) => ['topic' => $topic, 'source' => 'luar', 'reason' => 'Dari riset web: tren atau ide konten.']));
+        }
+
+        if (in_array($scope, ['dalam', 'keduanya'], true)) {
+            $rows = $rows->concat(OfficeContentMetricsService::topicTotals()->take(5)->map(fn (array $row) => [
+                'topic' => $row['topic'],
+                'source' => 'dalam',
+                'reason' => "{$row['views']} views dan {$row['likes']} likes dari {$row['posts']} konten.",
+            ]));
+        }
+
+        return $rows->unique(fn (array $row) => Str::lower($row['topic']))->take(5)->values()->all();
+    }
+
+    private function ideaTopic(mixed $idea): ?string
+    {
+        if (is_string($idea)) {
+            return $this->text($idea, 255);
+        }
+
+        return is_array($idea) ? $this->text($idea['topic'] ?? $idea['title'] ?? $idea['name'] ?? null, 255) : null;
+    }
+
     private function range(string $type, array $filters): array { $now = CarbonImmutable::now('Asia/Jakarta'); return $type === 'weekly' || ($filters['scope'] ?? null) === 'last_7_days' ? [$now->subDays(6)->startOfDay(), $now->endOfDay()] : [$now->startOfDay(), $now->endOfDay()]; }
     private function finding(string $type, string $title, string $description, string $evidence): array { return compact('type', 'title', 'description', 'evidence'); }
     private function text(mixed $value, int $limit): ?string { if (! is_string($value)) return null; $value = trim(strip_tags($value)); return $value === '' ? null : Str::limit($value, $limit, ''); }

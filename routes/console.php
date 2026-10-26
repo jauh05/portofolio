@@ -21,3 +21,6 @@ Schedule::call(fn () => app(\App\Services\OfficeScheduledGenerationService::clas
 Schedule::call(function () {
     app(\App\Http\Controllers\OfficeContentPlannerController::class)->dispatchScheduledPublishing();
 })->everyFiveMinutes()->name('office-scheduled-publishing')->timezone('Asia/Jakarta')->withoutOverlapping();
+
+// Views dan likes dari Instagram Insights. Tanpa INSTAGRAM_ACCESS_TOKEN job ini hanya mencatat "dilewati".
+Schedule::call(fn () => app(\App\Services\OfficeContentMetricsService::class)->refresh())->everySixHours()->name('office-content-metrics')->timezone('Asia/Jakarta')->withoutOverlapping();
