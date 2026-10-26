@@ -14,7 +14,8 @@ import urllib.request
 
 LOG = logging.getLogger("content-bot.instagram")
 
-GRAPH_HOST = "https://graph.facebook.com"
+# Token IGAA (Instagram Login) hanya diterima di graph.instagram.com. Token EAA memakai graph.facebook.com.
+GRAPH_HOST = "https://graph.instagram.com"
 GRAPH_VERSION = "v23.0"
 CAPTION_LIMIT = 2200
 RATE_LIMIT_CODES = {4, 17, 32, 613, 80001}
