@@ -58,7 +58,7 @@ class OfficeContentMetricsService
         $fetched = 0;
         $failed = 0;
         foreach ($this->mediaList() as $media) {
-            $token = $this->tokenFor($media['brand_slug']);
+            $token = self::tokenFor($media['brand_slug']);
             if ($token === '') {
                 $failed++;
 
@@ -91,7 +91,7 @@ class OfficeContentMetricsService
     }
 
     /** Akun Kauiz memakai tokennya sendiri. Brand lain memakai INSTAGRAM_ACCESS_TOKEN (Jauki). */
-    private function tokenFor(?string $brandSlug): string
+    public static function tokenFor(?string $brandSlug): string
     {
         return (string) ($brandSlug === 'kauiz' ? config('services.instagram.kauiz_token') : config('services.instagram.token'));
     }
@@ -121,7 +121,7 @@ class OfficeContentMetricsService
             ->whereNotNull('external_id')->where('platform', 'instagram')->get()
             ->map(fn (OfficeContentItem $item) => [
                 'platform' => 'instagram',
-                'media_id' => (string) $item->external_id,
+                'media_id' => (string) (($item->metadata ?? [])['instagram_media_id'] ?? $item->external_id),
                 'brand_slug' => $item->brand?->slug,
                 'topic' => self::topicOf($item->schedule?->topic),
                 'published_at' => $item->published_at,
