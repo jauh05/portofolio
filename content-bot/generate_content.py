@@ -80,28 +80,30 @@ DIM = "eq=brightness=-0.04"
 
 # (overlay, caption) dipakai jika LiteLLM gagal. Urutannya mengikuti services.
 FALLBACK_COPY = [
-    ("Tugas numpuk, deadline makin mepet, dan kepala udah mau meledak? Tenang dulu, "
-     "kamu nggak harus ngerjain semuanya sendirian. Serahin ke Jauki Academy, "
-     "kami bantu rapi dan tepat waktu.",
-     "Tugas numpuk? Chat kami sekarang, dikerjakan rapi dan tepat waktu."),
-    ("Skripsi udah jadi, daftar pustaka udah rapi, tapi nomor halaman masih berantakan? "
-     "Relate banget kan. Biar nggak ada revisi berulang, format skripsi dan makalahmu "
-     "kami rapikan sesuai standar kampus. Tinggal kirim, kami kerjain, kamu tinggal cetak.",
-     "Formatting skripsi dan makalah sesuai panduan kampus. Cek jaukitugas.my.id."),
-    ("Slide presentasi kamu masih polos dan bikin ngantuk? Yuk, kita bikin desain slide "
-     "yang estetik, rapi, dan konsisten dari halaman pertama sampai terakhir. "
-     "Presentasi kamu jadi beda dan bikin kamu lebih pede tampil di depan kelas.",
-     "Desain slide estetik untuk presentasi kelas. DM kami untuk konsultasi."),
-    ("Bingung olah data, coding, atau materi kuliah yang rasanya nggak masuk-masuk? "
-     "Itu wajar banget, kok. Kamu nggak harus paham sendirian. Jauki Academy siap bimbing "
-     "kamu dari dasar, step by step, sampai kamu benar-benar ngerti dan bisa jalan sendiri.",
-     "Bimbingan belajar dari dasar sampai paham. Chat kami untuk jadwal."),
-    ("Skripsi berat itu bukan tanda kamu gagal. Ada hari kamu capek, ada hari kamu mau nyerah, "
-     "dan itu manusiawi banget. Yang penting kamu tetap jalan pelan-pelan, karena satu bab "
-     "yang selesai tetap satu langkah lebih dekat ke wisuda.",
-     "Kamu tidak sendirian menghadapi skripsi. Yuk, diskusi dulu lewat DM."),
+    ("Tugas numpuk, deadline makin mepet, dan kepala rasanya mau meledak? Pernah ngerasa paling bisa "
+     "ngerjain semuanya sendiri, eh ternyata tetap aja kewalahan. Tenang dulu, kamu nggak harus kuat "
+     "sendirian terus.",
+     "Kalau lagi di titik capek ngerjain tugas, cerita aja ke kami. Chat Jauki Academy sekarang ya."),
+    ("Sudah baca berkali-kali, input data sudah benar, tapi nilai signifikansinya tetap nggak mau "
+     "sesuai harapan. Real banget, skripsi itu bikin kita ngobrol sama angka sampai larut malam. "
+     "Tapi kamu nggak harus paham sendirian kok.",
+     "Relate nggak sih? Kalau lagi pusing sama SPSS atau skripsi, cerita aja, kami bantu dengarkan "
+     "dan jelaskan pelan-pelan."),
+    ("Udah nulis kode dari tadi, tapi error-nya nggak habis-habis. Debugging sampai jam dua pagi, "
+     "dan rasanya dunia cuma berputar di satu baris kode. Nggak apa-apa kok ngerasa stuck, itu bagian "
+     "dari proses.",
+     "Siapa yang masih begadang debugging malam ini? Cerita aja ke kami, siapa tahu bisa bantu biar "
+     "lebih cepat paham."),
+    ("Kuliah itu kadang bukan soal pintar, tapi soal tetap bertahan pas capek dan pengen nyerah. "
+     "Ada hari tugas terasa nggak ada habisnya, ada hari dosen bikin semangat turun. Itu manusiawi "
+     "banget. Yang penting kamu tetap jalan, pelan-pelan nggak apa-apa.",
+     "Capek kuliah itu wajar. Kalau butuh teman cerita atau bantuan tugas, Jauki Academy siap bantu."),
+    ("Dosen minta revisi lagi, padahal kemarin udah dikoreksi habis-habisan. Rasanya pengen ngomel "
+     "tapi tetap harus senyum sambil nulis ulang. Real banget buat yang lagi ngerjain skripsi. "
+     "Sabar ya, setiap revisi itu bikin kamu makin dekat ke garis finish.",
+     "Relate sama dosen yang revisinya nggak habis-habis? Ceritain di kolom komentar, kami dengerin kok."),
 ]
-FALLBACK_HASHTAGS = ["#jokitugas", "#skripsi", "#mahasiswa", "#desainslide", "#bimbinganbelajar"]
+FALLBACK_HASHTAGS = ["#keluhkesahmahasiswa", "#kuliah", "#skripsi", "#spss", "#mahasiswa"]
 COPY_STYLES = ["relatable mahasiswa", "motivasi", "lucu ringan", "promo halus", "gaya POV"]
 
 # Istilah suku, agama, ras, dan golongan. Teks yang memuatnya ditolak dan dipakai fallback.
@@ -119,15 +121,17 @@ def has_sara(text):
 
 SYSTEM_PROMPT = (
     "Kamu menulis konten TikTok dan Reels untuk akun Jauki Academy (jaukitugas.my.id). "
-    "Layanan: joki tugas, formatting makalah dan skripsi, desain slide presentasi estetik, "
-    "dan bimbingan belajar. Gaya bahasanya harus seperti konten TikTok Indonesia yang real dan relatable: "
-    "santai, pakai bahasa gaul yang wajar (misalnya banget, sih, deh, relate, real), "
-    "seperti curhat mahasiswa yang lagi capek skripsi. Jangan pakai bahasa baku atau kalimat iklan yang kaku. "
+    "Isinya curhat dan keluh kesah mahasiswa: ngerjain tugas yang numpuk, dosen dan revisi, deadline, "
+    "pusing sama hitungan SPSS dan skripsi, coding yang error terus, dan suasana dunia perkuliahan. "
+    "Boleh juga motivasi ringan untuk mahasiswa yang lagi capek. "
+    "Gaya bahasanya harus seperti konten TikTok Indonesia yang real dan relatable: santai, bahasa gaul yang wajar "
+    "(misalnya banget, sih, deh, relate, real), seperti curhat anak kuliah. Jangan pakai bahasa baku atau kalimat iklan. "
+    "Jangan menyebut kata joki atau joki tugas. Sebut Jauki Academy hanya sekali dan singkat, lebih baik di caption. "
     "Dilarang menyinggung atau menyebut suku, agama, ras, atau golongan apa pun, dilarang kasar, "
     "dilarang kekerasan, dan dilarang topik politik. "
     "Balas HANYA dengan JSON valid tanpa markdown, berisi kunci: "
     '"overlay" (22 sampai 40 kata, satu sampai tiga kalimat pendek, tanpa emoji dan tanpa tanda kutip, '
-    "tampil di tengah video dengan gaya kutipan atau curhat), "
+    "tampil di tengah video dengan gaya keluh kesah atau motivasi, tanpa menyebut layanan), "
     '"caption" (satu sampai dua kalimat gaya TikTok, boleh berisi ajakan DM atau chat), '
     '"hashtags" (array 5 sampai 10 string, diawali #, huruf kecil, tanpa spasi), '
     '"mood" (salah satu dari: {moods}; pilih yang paling cocok dengan suasana teksnya).'
