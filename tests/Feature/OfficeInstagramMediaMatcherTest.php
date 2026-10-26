@@ -73,6 +73,21 @@ class OfficeInstagramMediaMatcherTest extends TestCase
         $this->assertSame('jauki', $item->fresh()->metadata['instagram_account']);
     }
 
+    public function test_a_post_already_matched_by_caption_is_not_matched_again_by_publish_time(): void
+    {
+        $this->fakeInstagram([['id' => '17999', 'caption' => 'Tulis tangan rapi', 'timestamp' => '2026-10-10T08:44:20+0000']], []);
+        $this->item('jauki', 'Tulis tangan rapi', 'uuid-teks');
+        app(OfficeInstagramMediaMatcher::class)->match(false);
+
+        $withoutText = $this->item('jauki', '', 'uuid-kosong');
+        $withoutText->update(['published_at' => CarbonImmutable::parse('2026-10-10T15:44:00+07:00')->setTimezone(config('app.timezone'))]);
+
+        $result = app(OfficeInstagramMediaMatcher::class)->match(false);
+
+        $this->assertSame(0, $result['matched']);
+        $this->assertArrayNotHasKey('instagram_media_id', $withoutText->fresh()->metadata);
+    }
+
     public function test_items_without_text_are_not_matched_when_the_post_is_outside_the_time_window(): void
     {
         $this->fakeInstagram([['id' => '17999', 'caption' => 'Post tanpa teks di database', 'timestamp' => '2026-10-10T09:00:00+0000']], []);

@@ -29,7 +29,12 @@ class OfficeInstagramMediaMatcher
     public function match(bool $dryRun = false): array
     {
         $result = ['matched' => 0, 'ambiguous' => 0, 'not_found' => 0];
-        $claimed = [];
+        // Post yang sudah dipakai konten lain, termasuk dari proses sebelumnya, tidak boleh dicocokkan lagi.
+        $claimed = OfficeContentItem::whereNotNull('external_id')->where('platform', 'instagram')->get()
+            ->map(fn (OfficeContentItem $item) => ($item->metadata ?? [])['instagram_media_id'] ?? null)
+            ->filter()
+            ->values()
+            ->all();
         $media = collect(self::ACCOUNTS)->flatMap(fn (string $account) => $this->accountMedia($account));
 
         $items = OfficeContentItem::with('brand')
