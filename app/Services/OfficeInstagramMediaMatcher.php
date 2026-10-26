@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\OfficeContentItem;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
@@ -21,6 +22,9 @@ class OfficeInstagramMediaMatcher
     // Caption yang lebih pendek dari ini terlalu mudah cocok dengan post lain.
     private const MIN_CAPTION_LENGTH = 15;
 
+    // Konten tanpa teks dicocokkan dengan post yang terbit dalam selisih waktu ini.
+    private const TIME_WINDOW_SECONDS = 600;
+
     /** @return array{matched: int, ambiguous: int, not_found: int} */
     public function match(bool $dryRun = false): array
     {
@@ -35,9 +39,11 @@ class OfficeInstagramMediaMatcher
 
         foreach ($items as $item) {
             $caption = $this->normalize($item->text);
-            $matches = mb_strlen($caption) < self::MIN_CAPTION_LENGTH
-                ? collect()
-                : $media->where('caption', $caption)->reject(fn (array $row) => in_array($row['id'], $claimed, true))->values();
+            $matches = match (true) {
+                $caption === '' => $this->samePublishTime($item, $media, $claimed),
+                mb_strlen($caption) < self::MIN_CAPTION_LENGTH => collect(),
+                default => $media->where('caption', $caption)->reject(fn (array $row) => in_array($row['id'], $claimed, true))->values(),
+            };
 
             if ($matches->count() === 1) {
                 $match = $matches->first();
@@ -68,13 +74,13 @@ class OfficeInstagramMediaMatcher
         return $token === '' ? collect() : $this->recentMedia($token)->map(fn (array $row) => $row + ['account' => $account]);
     }
 
-    /** @return Collection<int, array{id: string, caption: string}> */
+    /** @return Collection<int, array{id: string, caption: string, timestamp: ?CarbonImmutable}> */
     private function recentMedia(string $token): Collection
     {
         $host = rtrim((string) config('services.instagram.host'), '/');
         $version = (string) config('services.instagram.version');
         // Halaman berikutnya diminta dengan cursor dan token yang sama. URL "next" dari Meta tidak dipakai.
-        $query = ['fields' => 'id,caption', 'limit' => 50, 'access_token' => $token];
+        $query = ['fields' => 'id,caption,timestamp', 'limit' => 50, 'access_token' => $token];
         $media = collect();
 
         for ($page = 0; $page < self::MAX_PAGES; $page++) {
@@ -82,6 +88,7 @@ class OfficeInstagramMediaMatcher
             $media = $media->concat(collect($response->json('data', []))->map(fn (array $row) => [
                 'id' => (string) $row['id'],
                 'caption' => $this->normalize($row['caption'] ?? ''),
+                'timestamp' => isset($row['timestamp']) ? CarbonImmutable::parse($row['timestamp']) : null,
             ]));
 
             $after = $response->json('paging.cursors.after');
@@ -92,6 +99,21 @@ class OfficeInstagramMediaMatcher
         }
 
         return $media;
+    }
+
+    /** Konten tanpa teks dicocokkan dengan post dari akun brand-nya yang terbit dalam selisih waktu yang dekat. */
+    private function samePublishTime(OfficeContentItem $item, Collection $media, array $claimed): Collection
+    {
+        if ($item->published_at === null) {
+            return collect();
+        }
+
+        $account = $item->brand?->slug === 'kauiz' ? 'kauiz' : 'jauki';
+
+        return $media->where('account', $account)
+            ->filter(fn (array $row) => $row['timestamp'] !== null && abs($row['timestamp']->diffInSeconds($item->published_at)) <= self::TIME_WINDOW_SECONDS)
+            ->reject(fn (array $row) => in_array($row['id'], $claimed, true))
+            ->values();
     }
 
     /** Hanya huruf dan angka yang dibandingkan. Emoji, tanda baca, dan spasi diabaikan. */

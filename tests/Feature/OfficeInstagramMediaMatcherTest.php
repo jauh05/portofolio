@@ -6,6 +6,7 @@ use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentItem;
 use App\Services\OfficeContentMetricsService;
 use App\Services\OfficeInstagramMediaMatcher;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -56,6 +57,31 @@ class OfficeInstagramMediaMatcherTest extends TestCase
         $result = app(OfficeInstagramMediaMatcher::class)->match(false);
 
         $this->assertSame(['matched' => 0, 'ambiguous' => 1, 'not_found' => 0], $result);
+        $this->assertArrayNotHasKey('instagram_media_id', $item->fresh()->metadata);
+    }
+
+    public function test_items_without_text_are_matched_by_publish_time_on_their_brand_account(): void
+    {
+        $this->fakeInstagram([['id' => '17999', 'caption' => 'Post tanpa teks di database', 'timestamp' => '2026-10-10T08:44:20+0000']], []);
+        $item = $this->item('jauki', '', 'uuid-waktu');
+        $item->update(['published_at' => CarbonImmutable::parse('2026-10-10T15:44:00+07:00')->setTimezone(config('app.timezone'))]);
+
+        $result = app(OfficeInstagramMediaMatcher::class)->match(false);
+
+        $this->assertSame(1, $result['matched']);
+        $this->assertSame('17999', $item->fresh()->metadata['instagram_media_id']);
+        $this->assertSame('jauki', $item->fresh()->metadata['instagram_account']);
+    }
+
+    public function test_items_without_text_are_not_matched_when_the_post_is_outside_the_time_window(): void
+    {
+        $this->fakeInstagram([['id' => '17999', 'caption' => 'Post tanpa teks di database', 'timestamp' => '2026-10-10T09:00:00+0000']], []);
+        $item = $this->item('jauki', '', 'uuid-jauh');
+        $item->update(['published_at' => CarbonImmutable::parse('2026-10-10T15:44:00+07:00')->setTimezone(config('app.timezone'))]);
+
+        $result = app(OfficeInstagramMediaMatcher::class)->match(false);
+
+        $this->assertSame(['matched' => 0, 'ambiguous' => 0, 'not_found' => 1], $result);
         $this->assertArrayNotHasKey('instagram_media_id', $item->fresh()->metadata);
     }
 
