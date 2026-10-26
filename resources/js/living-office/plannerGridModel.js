@@ -30,7 +30,8 @@ export function buildChips(schedules, reelsSlots) {
     const chips = [];
     schedules.forEach((schedule) => {
         const rule = schedule.recurrenceRule || {};
-        if (rule.frequency !== 'weekly') return;
+        // Sama dengan kalender: jadwal nonaktif dan yang bukan mingguan tidak tampil.
+        if (schedule.isActive === false || rule.frequency !== 'weekly') return;
         (rule.days || []).forEach((day) => chips.push({
             id: `db:${schedule.id}:${day}`,
             source: 'db',

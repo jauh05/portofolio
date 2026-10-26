@@ -9,6 +9,7 @@ use App\Services\OfficeAiGatewayException;
 use App\Services\OfficeContentPlannerAiService;
 use App\Services\OfficeScheduledGenerationService;
 use App\Services\OfficeTrentOrchestratorService;
+use App\Services\SlotFile;
 use Carbon\CarbonInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
@@ -82,7 +83,12 @@ class OfficeContentPlannerController extends Controller
         $schedules = OfficeContentSchedule::with('brand')
             ->when($brandId, fn ($query) => $query->where('brand_id', $brandId))
             ->orderBy('next_run_at')->get();
-        $occurrences = $schedules->flatMap(fn (OfficeContentSchedule $schedule) => $this->occurrences($schedule, $start, $end))
+        // Kalender mengikuti grid: hanya jadwal mingguan yang aktif dan punya jam, ditambah slot Reels dari file slot.
+        $occurrences = $schedules
+            ->filter(fn (OfficeContentSchedule $schedule) => $schedule->is_active && ($schedule->recurrence_rule['frequency'] ?? null) === 'weekly' && ! empty($schedule->recurrence_rule['time']))
+            ->flatMap(fn (OfficeContentSchedule $schedule) => $this->weeklyOccurrences($schedule->recurrence_rule['days'] ?? [], $schedule->recurrence_rule['time'], $schedule->timezone ?? $timezone, $start, $end)
+                ->map(fn (CarbonImmutable $when) => $this->occurrencePayload($schedule, $when)))
+            ->concat($this->reelsOccurrences($timezone, $start, $end))
             ->sortBy('scheduledAt')->values();
 
         return response()->json([
@@ -533,6 +539,39 @@ class OfficeContentPlannerController extends Controller
         $occurrence = collect($this->occurrences($schedule, $start, $end))->first();
 
         return $occurrence ? CarbonImmutable::parse($occurrence['scheduledAt']) : null;
+    }
+
+    /** Kemunculan mingguan dalam rentang, sama dengan grid: tanpa batas starts_at dan ends_at. */
+    private function weeklyOccurrences(array $days, string $time, string $timezone, CarbonImmutable $start, CarbonImmutable $end): \Illuminate\Support\Collection
+    {
+        [$hour, $minute] = array_map('intval', explode(':', $time));
+        $items = collect();
+        for ($day = $start->startOfDay(); $day->lessThanOrEqualTo($end); $day = $day->addDay()) {
+            if (! in_array($day->isoWeekday(), array_map('intval', $days), true)) {
+                continue;
+            }
+            $when = CarbonImmutable::parse($day->toDateString().' '.sprintf('%02d:%02d', $hour, $minute), $timezone);
+            if ($when->betweenIncluded($start, $end)) {
+                $items->push($when);
+            }
+        }
+
+        return $items;
+    }
+
+    /** Slot Reels dari file slot, ditampilkan di kalender seperti di grid. */
+    private function reelsOccurrences(string $timezone, CarbonImmutable $start, CarbonImmutable $end): \Illuminate\Support\Collection
+    {
+        return collect(SlotFile::read(config('reels.slots_path')))
+            ->filter(fn ($slot) => is_array($slot) && ($slot['active'] ?? true) && ! empty($slot['time']) && isset($slot['day']))
+            ->flatMap(fn (array $slot) => $this->weeklyOccurrences([(int) $slot['day']], (string) $slot['time'], $timezone, $start, $end)
+                ->map(fn (CarbonImmutable $when) => [
+                    'id' => 'reels:'.$slot['id'].'@'.$when->format('YmdHi'),
+                    'scheduleId' => null, 'name' => $slot['label'] ?? 'Reels Jauki', 'topic' => null,
+                    'platform' => 'instagram', 'contentType' => 'reels', 'assignedAgent' => null, 'scheduleType' => 'recurring',
+                    'brand' => ['id' => null, 'name' => 'Jauki', 'slug' => 'jauki'], 'recurrenceLabel' => 'Reels setiap minggu',
+                    'scheduledAt' => $when->toIso8601String(), 'status' => 'scheduled',
+                ]));
     }
 
     private function occurrences(OfficeContentSchedule $schedule, CarbonImmutable $start, CarbonImmutable $end): array

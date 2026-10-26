@@ -1,12 +1,29 @@
-/* Daily Report: tampilan Laporan dan Chart, riwayat yang bisa dilipat, topik rekomendasi, dan generate per format. */
+/* Daily Report: tampilan Laporan dan Chart, riwayat berbentuk kartu, topik rekomendasi, dan generate per format. */
 .office-redesign .analyst-mode { display: inline-flex; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); }
 .office-redesign .analyst-mode button { min-height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 800 12px Inter, sans-serif; cursor: pointer; }
 .office-redesign .analyst-mode button.active { background: var(--highlight); color: #fff; }
 
-.office-redesign .analyst-history-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; color: var(--muted); font: 700 12px Inter, sans-serif; }
-.office-redesign .analyst-history-bar button { min-height: 30px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
-.office-redesign .analyst-layout.history-collapsed { grid-template-columns: minmax(0, 1fr); }
-.office-redesign .analyst-layout.history-wide { grid-template-columns: minmax(360px, 460px) minmax(0, 1fr); }
+.office-redesign .analyst-stack { display: grid; gap: 16px; }
+.office-redesign .analyst-history-section { display: grid; gap: 12px; padding: 18px; border: 1px solid var(--border); border-radius: 24px; background: var(--surface); box-shadow: var(--shadow); }
+.office-redesign .history-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.office-redesign .history-head h3 { margin: 4px 0 0; color: var(--text); font: 800 16px Sora, sans-serif; }
+.office-redesign .history-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.office-redesign .history-actions button, .office-redesign .history-more { min-height: 32px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 12px Inter, sans-serif; cursor: pointer; }
+.office-redesign .history-actions button:disabled { opacity: .5; cursor: not-allowed; }
+.office-redesign .history-actions .is-danger { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
+.office-redesign .history-search { min-height: 38px; padding: 0 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); color: var(--text); font: 600 13px Inter, sans-serif; }
+.office-redesign .history-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.office-redesign .history-card { display: grid; gap: 8px; padding: 14px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface-2); min-width: 0; }
+.office-redesign .history-card.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.office-redesign .history-card-main { display: grid; gap: 6px; padding: 0; border: 0; background: transparent; color: var(--text); text-align: left; cursor: pointer; min-width: 0; }
+.office-redesign .history-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.office-redesign .history-card-top b { color: var(--text); font: 800 13px Sora, sans-serif; }
+.office-redesign .history-card-main strong { color: var(--text); font: 700 12px Inter, sans-serif; text-transform: capitalize; }
+.office-redesign .history-card-main small { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--muted); font: 600 11px/1.5 Inter, sans-serif; }
+.office-redesign .history-card-hide { justify-self: start; min-height: 26px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .history-empty { margin: 0; color: var(--muted); font: 600 13px Inter, sans-serif; }
+.office-redesign .history-more { justify-self: center; }
+.office-redesign .analysis-error-note { margin: 0; padding: 8px 12px; border-radius: 12px; background: #fff0f2; color: #a72246; font: 600 12px Inter, sans-serif; }
 
 .office-redesign .topic-reco { display: grid; gap: 8px; padding: 14px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); }
 .office-redesign .topic-reco h4 { margin: 0; color: var(--text); font: 800 13px Sora, sans-serif; }

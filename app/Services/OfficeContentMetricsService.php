@@ -17,11 +17,13 @@ class OfficeContentMetricsService
 {
     private const METRICS = 'views,likes';
 
-    /** Kunci topik: topik jadwal, lalu judul konten. Awalan "Draft: " dari generator dibuang. */
-    public static function topicOf(?string $scheduleTopic, ?string $title): ?string
+    /**
+     * Kunci topik. Hanya topik jadwal yang dipakai: judul konten tidak dipakai karena judul generator
+     * sering berupa nama format (mis. "Threads post") dan bukan topik.
+     */
+    public static function topicOf(?string $topic): ?string
     {
-        $topic = trim((string) ($scheduleTopic ?: $title));
-        $topic = trim(Str::replaceFirst('Draft: ', '', $topic));
+        $topic = trim((string) $topic);
 
         return $topic === '' ? null : Str::limit($topic, 255, '');
     }
@@ -108,7 +110,7 @@ class OfficeContentMetricsService
                 'platform' => 'instagram',
                 'media_id' => (string) $item->external_id,
                 'brand_slug' => $item->brand?->slug,
-                'topic' => self::topicOf($item->schedule?->topic, $item->title),
+                'topic' => self::topicOf($item->schedule?->topic),
                 'published_at' => $item->published_at,
             ]);
 
@@ -118,7 +120,7 @@ class OfficeContentMetricsService
                 'platform' => 'instagram',
                 'media_id' => (string) $row['mediaId'],
                 'brand_slug' => 'jauki',
-                'topic' => self::topicOf(null, $row['title'] ?? null),
+                'topic' => self::topicOf($row['title'] ?? null),
                 'published_at' => $row['publishedAt'] ?? null,
             ]);
 

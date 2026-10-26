@@ -4,6 +4,7 @@ import { ContentSlotGrid } from './ContentSlotGrid';
 import { ContentResultsTable } from './ContentResultsTable';
 import { ContentPlannerMenu } from './ContentPlannerMenu';
 import { ContentPlanner } from './ContentPlanner';
+import { ContentHistoryView } from './ContentHistoryView';
 import { buildChips, CHIP_TYPES, TZ } from './plannerGridModel';
 import { readPanelMode, writePanelMode } from './panelPreferences';
 import './planner-grid.css';
@@ -112,6 +113,18 @@ export function PlannerGrid({ calendarProps }) {
         }
     };
 
+    // "Hapus semua" di Hasil Generate: semua konten dan riwayat Reels disembunyikan. Yang sedang diproses tetap tampil.
+    const clearResults = async () => {
+        try {
+            const result = await request('/office/api/content-results/clear', { method: 'POST', body: '{}' });
+            const skipped = result.skipped ?? 0;
+            setNotice(skipped ? `${result.deleted} hasil disembunyikan. ${skipped} sedang diproses dan tetap tampil.` : `${result.deleted} hasil disembunyikan.`);
+            await load();
+        } catch (error) {
+            setNotice(error.message);
+        }
+    };
+
     const addFromMenu = async (key) => {
         const type = CHIP_TYPES[key];
         try {
@@ -153,6 +166,10 @@ export function PlannerGrid({ calendarProps }) {
 
     const changeDensity = (mode) => setDensity(writePanelMode(DENSITY_KEY, mode));
 
+    if (view === 'riwayat') {
+        return <ContentHistoryView results={results} onBack={() => setView('grid')} onDelete={deleteResults} onClear={clearResults} />;
+    }
+
     if (view === 'calendar') {
         return (
             <div className="planner-grid-page">
@@ -192,7 +209,7 @@ export function PlannerGrid({ calendarProps }) {
                 onSetTime={(chip, time) => setChipTime(chip, time).catch((error) => setNotice(error.message))}
                 onRemove={(chip) => removeChip(chip).catch((error) => setNotice(error.message))}
             />
-            <ContentResultsTable results={results} density={density} onDensity={changeDensity} onRegenerate={regenerate} onDelete={deleteResults} />
+            <ContentResultsTable results={results} density={density} onDensity={changeDensity} onRegenerate={regenerate} onDelete={deleteResults} onClear={clearResults} onOpenHistory={() => setView('riwayat')} />
         </div>
     );
 }

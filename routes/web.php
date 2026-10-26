@@ -40,6 +40,7 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::post('/analyst-reports/generate', [OfficeAnalystReportController::class, 'generate']);
         Route::get('/analyst-reports/charts', [OfficeAnalystReportController::class, 'charts']);
         Route::post('/analyst-reports/generate-format', [OfficeAnalystReportController::class, 'generateFormat']);
+        Route::post('/analyst-reports/hide', [OfficeAnalystReportController::class, 'hide']);
         Route::get('/analyst-reports/{report}', [OfficeAnalystReportController::class, 'show']);
         Route::post('/analyst-reports/{report}/approve', [OfficeAnalystReportController::class, 'approve']);
         Route::post('/analyst-reports/{report}/dismiss', [OfficeAnalystReportController::class, 'dismiss']);
@@ -77,6 +78,7 @@ Route::middleware(['auth', 'office.owner'])->prefix('office')->group(function ()
         Route::delete('/reels-slots/{id}', [\App\Http\Controllers\OfficePlannerGridController::class, 'destroyReelsSlot']);
         Route::get('/content-results', [\App\Http\Controllers\OfficePlannerGridController::class, 'contentResults']);
         Route::post('/content-results/delete', [\App\Http\Controllers\OfficePlannerGridController::class, 'deleteResults']);
+        Route::post('/content-results/clear', [\App\Http\Controllers\OfficePlannerGridController::class, 'clearResults']);
         Route::put('/reels-settings', [\App\Http\Controllers\OfficeReelsSettingsController::class, 'update']);
 
         Route::get('/summary', [LivingOfficeController::class, 'summary']);

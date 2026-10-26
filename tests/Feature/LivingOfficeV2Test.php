@@ -150,8 +150,9 @@ test('owner can create one-time content schedules and see them only inside a req
     $this->actingAs($owner)->postJson('/office/api/content-schedules', $payload)->assertCreated()
         ->assertJsonPath('scheduleType', 'one_time')->assertJsonPath('brand.slug', 'kauiz')->assertJsonPath('timezone', 'Asia/Jakarta');
 
+    // Kalender mengikuti grid: jadwal sekali jalan tidak tampil di kalender, tapi tetap tersimpan.
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta')
-        ->assertOk()->assertJsonCount(1, 'occurrences')->assertJsonPath('occurrences.0.name', 'Portfolio launch post')->assertJsonPath('occurrences.0.brand.slug', 'kauiz');
+        ->assertOk()->assertJsonCount(0, 'occurrences');
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-11-01&end=2026-11-30&timezone=Asia/Jakarta')
         ->assertOk()->assertJsonCount(0, 'occurrences');
     expect(OfficeContentSchedule::count())->toBe(1);
@@ -161,11 +162,13 @@ test('planner occurrence calculation normalizes hydrated Carbon values to Carbon
     $owner = User::factory()->create(['is_office_owner' => true]);
     $brand = OfficeContentBrand::where('slug', 'kauiz')->firstOrFail();
     OfficeContentSchedule::create([
-        'name' => 'Immutable regression', 'brand_id' => $brand->id, 'schedule_type' => 'one_time', 'platform' => 'instagram', 'content_type' => 'feed',
-        'timezone' => 'Asia/Jakarta', 'scheduled_at' => '2026-10-15 19:00:00', 'generation_mode' => 'manual', 'publishing_mode' => 'review', 'is_active' => true,
+        'name' => 'Immutable regression', 'brand_id' => $brand->id, 'schedule_type' => 'recurring', 'platform' => 'instagram', 'content_type' => 'feed',
+        'timezone' => 'Asia/Jakarta', 'recurrence_rule' => ['frequency' => 'weekly', 'days' => [3], 'time' => '19:00'], 'starts_at' => '2026-10-01 00:00:00',
+        'generation_mode' => 'manual', 'publishing_mode' => 'review', 'is_active' => true,
     ]);
+    // Rabu di Oktober 2026 jatuh pada tanggal 7, 14, 21, dan 28.
     $this->actingAs($owner)->getJson('/office/api/content-planner?start=2026-10-01&end=2026-10-31&timezone=Asia/Jakarta')
-        ->assertOk()->assertJsonCount(1, 'occurrences');
+        ->assertOk()->assertJsonCount(4, 'occurrences');
 });
 
 test('owner can create recurring schedules without generating unbounded content rows', function () {

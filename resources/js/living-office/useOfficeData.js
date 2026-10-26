@@ -126,5 +126,8 @@ export function useOfficeData() {
         const report = await request(`/office/api/analyst-reports/${id}/dismiss`, { method: 'POST', body: JSON.stringify({ plan_ids: actionIds }) });
         await refresh(); return report;
     };
-    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, loadPlannerGeneration, createSchedule, analyzePlan, updateSchedule, deactivateSchedule, generateReport, approveReport, dismissReport, generateContent, reviseContent, updateContent, approveContent };
+    // Sembunyikan laporan dari daftar: { ids } atau { all: true }. Datanya tidak dihapus.
+    const hideReports = async (payload) => { const result = await request('/office/api/analyst-reports/hide', { method: 'POST', body: JSON.stringify(payload) }); await refresh(); return result; };
+
+    return { ...data, error, loading, toast, dismissToast: () => setToast(null), refresh, markRead, markAllRead, enqueue, loadPlanner, loadPlannerGeneration, createSchedule, analyzePlan, updateSchedule, deactivateSchedule, generateReport, approveReport, dismissReport, hideReports, generateContent, reviseContent, updateContent, approveContent };
 }

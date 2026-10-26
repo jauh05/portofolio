@@ -20,7 +20,8 @@ class OfficeAnalystReportController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(['data' => OfficeAnalystReport::latest('generated_at')->limit(30)->get()->map(fn (OfficeAnalystReport $report) => $this->payload($report))]);
+        // Laporan yang disembunyikan tidak tampil. Daftar dibatasi 200 terbaru; paging dan pencarian dilakukan di frontend.
+        return response()->json(['data' => OfficeAnalystReport::whereNull('hidden_at')->latest('generated_at')->limit(200)->get()->map(fn (OfficeAnalystReport $report) => $this->payload($report))]);
     }
 
     public function researchStats(): JsonResponse
@@ -77,6 +78,26 @@ class OfficeAnalystReportController extends Controller
         ]]);
     }
 
+    /** Sembunyikan laporan dari daftar: dengan id tertentu, atau semua laporan yang masih tampil. Datanya tidak dihapus. */
+    public function hide(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'ids' => ['required_without:all', 'array', 'max:500'],
+            'ids.*' => ['uuid'],
+            'all' => ['required_without:ids', 'boolean'],
+        ]);
+
+        $query = OfficeAnalystReport::whereNull('hidden_at');
+        if (! empty($data['all'])) {
+            $count = (clone $query)->count();
+            $query->update(['hidden_at' => now('Asia/Jakarta')]);
+        } else {
+            $count = (clone $query)->whereIn('id', $data['ids'])->update(['hidden_at' => now('Asia/Jakarta')]);
+        }
+
+        return response()->json(['hidden' => $count]);
+    }
+
     public function show(OfficeAnalystReport $report): JsonResponse
     {
         return response()->json($this->payload($report));
@@ -116,9 +137,9 @@ class OfficeAnalystReportController extends Controller
         $today = now($timezone)->startOfDay();
         $days = collect(range(13, 0))->map(fn (int $ago) => $today->copy()->subDays($ago)->toDateString());
 
-        $items = OfficeContentItem::with(['brand', 'schedule'])->latest('generated_at')->limit(2000)->get();
+        $items = OfficeContentItem::with(['brand', 'schedule'])->where('status', '!=', 'dismissed')->latest('generated_at')->limit(2000)->get();
         $topics = $items
-            ->map(fn (OfficeContentItem $item) => OfficeContentMetricsService::topicOf($item->schedule?->topic, $item->title))
+            ->map(fn (OfficeContentItem $item) => OfficeContentMetricsService::topicOf($item->schedule?->topic) ?? 'Tanpa topik')
             ->filter()
             ->countBy()
             ->sortDesc()

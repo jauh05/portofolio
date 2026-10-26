@@ -31,7 +31,7 @@ class OfficeAnalystReportService
             'generated_at' => now('Asia/Jakarta'),
         ]);
 
-        $topic = $filters['topic'] ?? 'General Trends';
+        $topic = $filters['topic'] ?? $this->researchTopic();
         $run = \App\Models\OfficeResearchRun::create([
             'command_id' => null, // populated below
             'brand_id' => $filters['brand_id'] ?? null,
@@ -71,6 +71,7 @@ class OfficeAnalystReportService
 
         $body = $this->factualReport($context, $start, $end, $type);
         $analysisMode = 'fallback_internal';
+        $analysisError = null;
         try {
             $contextJson = json_encode(array_merge($this->aiContext($context, $start, $end, $type), [
                 'agent_reach_research' => [
@@ -84,7 +85,9 @@ class OfficeAnalystReportService
             $body = $this->normalizeAiReport($this->ai->completeJson($this->systemPrompt($filters), $contextJson), $context['brands']);
             $analysisMode = 'ai';
         } catch (\Throwable $e) {
-            // An unavailable/malformed provider must not create fake AI output.
+            // Provider yang tidak tersedia atau JSON rusak tidak boleh menghasilkan output AI palsu, tapi harus tercatat.
+            $analysisError = Str::limit($e->getMessage(), 300);
+            \Illuminate\Support\Facades\Log::warning('Analisis AI gagal, memakai analisis internal.', ['report_id' => $report->id, 'error' => $analysisError]);
         }
 
         $report->update([
@@ -100,6 +103,7 @@ class OfficeAnalystReportService
                 'range_start' => $start->toIso8601String(),
                 'range_end' => $end->toIso8601String(),
                 'metrics' => $context['metrics'],
+                'analysis_error' => $analysisError,
                 'performance_available' => OfficeContentMetricsService::topicTotals()->isNotEmpty(),
                 'scope' => $scope,
                 'topic_recommendations' => $this->topicRecommendations($scope, $run),
@@ -418,7 +422,7 @@ class OfficeAnalystReportService
         $rows = collect();
 
         if (in_array($scope, ['luar', 'keduanya'], true) && $run) {
-            $rows = $rows->concat(collect(array_merge($run->trends ?? [], $run->content_ideas ?? []))
+            $rows = $rows->concat(collect($run->trends ?? [])->concat(collect($run->content_ideas ?? [])->flatMap(fn ($ideas) => is_array($ideas) ? $ideas : [$ideas]))
                 ->map(fn ($idea) => $this->ideaTopic($idea))
                 ->filter()
                 ->unique(fn (string $topic) => Str::lower($topic))
@@ -443,7 +447,17 @@ class OfficeAnalystReportService
             return $this->text($idea, 255);
         }
 
-        return is_array($idea) ? $this->text($idea['topic'] ?? $idea['title'] ?? $idea['name'] ?? null, 255) : null;
+        // Worker menulis tren sebagai {signal, evidence_count}; ide konten bisa berupa {topic} atau {title}.
+        return is_array($idea) ? $this->text($idea['topic'] ?? $idea['title'] ?? $idea['name'] ?? $idea['signal'] ?? null, 255) : null;
+    }
+
+    /** Topik riset dari jadwal aktif (maksimal 5). Kalau belum ada jadwal dengan topik, pakai query umum. */
+    private function researchTopic(): string
+    {
+        $topics = OfficeContentSchedule::where('is_active', true)->whereNotNull('topic')->where('topic', '!=', '')
+            ->distinct()->limit(5)->pluck('topic')->all();
+
+        return $topics === [] ? 'General Trends' : implode(', ', $topics);
     }
 
     private function range(string $type, array $filters): array { $now = CarbonImmutable::now('Asia/Jakarta'); return $type === 'weekly' || ($filters['scope'] ?? null) === 'last_7_days' ? [$now->subDays(6)->startOfDay(), $now->endOfDay()] : [$now->startOfDay(), $now->endOfDay()]; }

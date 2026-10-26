@@ -81,8 +81,8 @@ class LivingOfficePlannerBulkActionTest extends TestCase
 
         $response->assertOk();
         
-		$this->assertCount(1, $response->json('upcoming'));
-        $this->assertSame('October', $response->json('upcoming.0.name'));
+		// Kalender mengikuti grid: jadwal sekali jalan tidak masuk daftar akan datang.
+		$this->assertCount(0, $response->json('upcoming'));
     }
 
     private function schedule(string $name, array $metadata = [], string $scheduledAt = '2026-10-02 10:00:00'): OfficeContentSchedule

@@ -129,6 +129,22 @@ class OfficePlannerGridController extends Controller
         return response()->json(['deleted' => $deleted, 'skipped' => $skipped]);
     }
 
+    /**
+     * "Hapus semua" di Hasil Generate: semua konten database dan riwayat Reels disembunyikan.
+     * Konten yang sedang diproses tidak ikut, dan jumlahnya dilaporkan.
+     */
+    public function clearResults(): JsonResponse
+    {
+        $inFlight = ['queued_for_generation', 'generating', 'scheduled_for_publish', 'publishing'];
+        $skipped = OfficeContentItem::whereIn('status', $inFlight)->count();
+        $deleted = OfficeContentItem::where('status', '!=', 'dismissed')->whereNotIn('status', $inFlight)->update(['status' => 'dismissed']);
+
+        $reelsIds = collect(ReelsHistoryReader::all())->pluck('id')->filter()->values()->all();
+        ReelsHistoryReader::hide($reelsIds);
+
+        return response()->json(['deleted' => $deleted + count($reelsIds), 'skipped' => $skipped]);
+    }
+
     private function validatedSlot(Request $request, bool $required): array
     {
         $rule = $required ? 'required' : 'sometimes';

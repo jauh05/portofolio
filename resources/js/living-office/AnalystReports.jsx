@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { BarChart3, Check, ChevronRight, ClipboardCheck, Clock3, FileClock, Lightbulb, Play, Sparkles, X } from 'lucide-react';
+import { BarChart3, Check, ClipboardCheck, Clock3, FileClock, Lightbulb, Play, Sparkles, X } from 'lucide-react';
 import { ResearchCharts } from './ResearchCharts';
 import { AnalystCharts } from './AnalystCharts';
 import './analyst-daily-report.css';
 
+const HISTORY_PAGE = 11;
 const scopeLabels = {
     keduanya: 'Keduanya: luar + dalam',
     luar: 'Hasil luar: riset web',
@@ -20,7 +21,7 @@ function formatTime(value) {
 }
 
 function statusLabel(value) {
-    return { ready: 'Perlu ditinjau', reviewed: 'Reviewed', draft: 'Draft' }[value] || value;
+    return { ready: 'Perlu ditinjau', reviewed: 'Reviewed', draft: 'Draft', generating: 'Sedang dibuat' }[value] || value;
 }
 
 function formatMessage(result) {
@@ -36,7 +37,13 @@ function topicHint(scope) {
     return 'Belum ada topik dari riset web maupun performa kita.';
 }
 
-export function AnalystReports({ reports, brands, loading, generateReport, approveReport, dismissReport }) {
+function matchesQuery(report, query) {
+    const text = [report.reportDate, report.reportType, statusLabel(report.status), report.summary, report.conclusion,
+        ...(report.metadata?.topic_recommendations || []).map(item => item.topic)].filter(Boolean).join(' ').toLowerCase();
+    return text.includes(query);
+}
+
+export function AnalystReports({ reports, brands, loading, generateReport, approveReport, dismissReport, hideReports }) {
     const [mode, setMode] = useState('laporan');
     const [selectedId, setSelectedId] = useState(null);
     const [scope, setScope] = useState('keduanya');
@@ -45,12 +52,18 @@ export function AnalystReports({ reports, brands, loading, generateReport, appro
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
     const [historyOpen, setHistoryOpen] = useState(true);
-    const [historyWide, setHistoryWide] = useState(false);
+    const [historyQuery, setHistoryQuery] = useState('');
+    const [historyLimit, setHistoryLimit] = useState(HISTORY_PAGE);
     const [topic, setTopic] = useState('');
     const [formatBusy, setFormatBusy] = useState('');
     const [formatNotice, setFormatNotice] = useState('');
     const selected = useMemo(() => reports.find(report => report.id === selectedId) || reports[0] || null, [reports, selectedId]);
     const recommendations = selected?.metadata?.topic_recommendations || [];
+    const matchingReports = useMemo(() => {
+        const query = historyQuery.trim().toLowerCase();
+        return query ? reports.filter(report => matchesQuery(report, query)) : reports;
+    }, [reports, historyQuery]);
+    const visibleReports = matchingReports.slice(0, historyLimit);
 
     useEffect(() => { if (!selectedId && reports[0]) setSelectedId(reports[0].id); }, [reports, selectedId]);
     useEffect(() => { setSelectedActions(new Set()); }, [selected?.id]);
@@ -74,6 +87,24 @@ export function AnalystReports({ reports, brands, loading, generateReport, appro
     const toggleAction = (id) => setSelectedActions(current => {
         const next = new Set(current); next.has(id) ? next.delete(id) : next.add(id); return next;
     });
+
+    // Sembunyikan satu laporan atau semuanya. Datanya tetap ada di database.
+    const hideOne = async (id) => {
+        setError(null);
+        try {
+            await hideReports({ ids: [id] });
+            if (selectedId === id) setSelectedId(null);
+        } catch (caught) { setError(caught.message || 'Gagal menyembunyikan laporan.'); }
+    };
+    const hideAll = async () => {
+        if (!reports.length || !window.confirm(`Sembunyikan ${reports.length} laporan dari daftar? Datanya tetap tersimpan.`)) return;
+        setError(null);
+        try {
+            await hideReports({ all: true });
+            setSelectedId(null);
+            setHistoryLimit(HISTORY_PAGE);
+        } catch (caught) { setError(caught.message || 'Gagal menyembunyikan laporan.'); }
+    };
 
     // Tombol generate per format. Feed, Story, dan Artikel lewat generator; Reels dan TikTok jadi rencana.
     const generateFormat = async (brandSlug, format) => {
@@ -122,23 +153,35 @@ export function AnalystReports({ reports, brands, loading, generateReport, appro
         {mode === 'chart' ? <>
             <AnalystCharts />
             <ResearchCharts refreshKey={reports.length} />
-        </> : <>
-            <div className="analyst-history-bar">
-                <span>Riwayat {reports.length} laporan</span>
-                <span>
-                    {historyOpen && <button type="button" onClick={() => setHistoryWide(value => !value)}>{historyWide ? 'Perkecil riwayat' : 'Perbesar riwayat'}</button>}
-                    <button type="button" onClick={() => setHistoryOpen(value => !value)}>{historyOpen ? 'Lipat riwayat' : 'Buka riwayat'}</button>
-                </span>
-            </div>
-            <div className={`analyst-layout ${historyOpen ? '' : 'history-collapsed'} ${historyWide ? 'history-wide' : ''}`}>
-                {historyOpen && <aside className="analyst-history"><div className="panel-label">REPORT HISTORY <b>{reports.length}</b></div>{reports.length ? reports.map(report => <button className={selected?.id === report.id ? 'active' : ''} key={report.id} onClick={() => setSelectedId(report.id)}><i className="ah-chip"><FileClock size={17} /></i><span><strong>{report.reportType} brief</strong><small>{report.reportDate}</small></span><em className={`report-status ${report.status}`}>{statusLabel(report.status)}</em><ChevronRight size={14} /></button>) : <div className="analyst-history-empty"><FileClock size={21} /><strong>Belum ada laporan</strong><p>Analisis pertama akan muncul di sini.</p></div>}</aside>}
-                <section className="analyst-report">{loading && !selected ? <p>Loading analyst reports…</p> : selected ? <><header><div><span className="eyebrow"><ClipboardCheck size={13} /> {selected.reportType} ANALYSIS</span><h2>{selected.reportDate} · {statusLabel(selected.status)}</h2><time><Clock3 size={13} /> Dibuat {formatTime(selected.generatedAt)}</time></div><span className={`report-source ${selected.metadata?.analysis_mode === 'fallback_internal' ? 'fallback' : ''}`}>{selected.metadata?.analysis_mode === 'ai' && selected.metadata?.source === 'agent_reach' ? `Agent-Reach Research + AI Analysis` : 'Analisis internal — riset eksternal tidak tersedia'} · {selected.metadata?.performance_available ? 'Performance available' : 'Data performa belum tersedia'} · Scope: {scopeLabels[selected.metadata?.scope] || 'Keduanya: luar + dalam'}</span></header>
-                    <article className="analyst-summary"><h3>Ringkasan Eksekutif</h3><p>{selected.summary}</p></article>
-                    <div className="analyst-sections"><article><h3>Temuan</h3><div className="topic-reco"><h4>Topik yang direkomendasikan</h4>{recommendations.length ? <ol>{recommendations.map(item => <li key={`${item.source}-${item.topic}`}><span className={`source-tag ${item.source}`}>{SOURCE_LABELS[item.source] || item.source}</span><strong>{item.topic}</strong><small>{item.reason}</small></li>)}</ol> : <p className="topic-reco-empty">{topicHint(selected.metadata?.scope)}</p>}</div><div className="finding-list">{selected.findings?.map((finding, index) => <div className={`finding finding-${finding.type}`} key={`${finding.title}-${index}`}><strong>{finding.title}</strong><p>{finding.description}</p><small>Evidence: {finding.evidence}</small></div>)}</div></article><article><h3>Kesimpulan</h3><p className="analyst-conclusion">{selected.conclusion}</p><h3>Rekomendasi</h3><ol className="recommendation-list">{selected.recommendations?.map((recommendation, index) => <li key={`${recommendation.action}-${index}`}><span className={recommendation.priority}>{{high: 'Tinggi', medium: 'Sedang', low: 'Rendah'}[recommendation.priority] || recommendation.priority}</span><strong>{recommendation.action}</strong><p>{recommendation.reason}</p></li>)}</ol></article></div>
-                    <article className="forward-plan"><header><div><span className="eyebrow"><Lightbulb size={13} /> MEMERLUKAN PERSETUJUAN OWNER</span><h3>Rencana Konten · {selected.metadata?.planning_horizon === '30_days' ? 'Bulanan' : (selected.metadata?.planning_horizon || '7 Hari').replace('_days', ' Hari')}</h3><p>{selected.metadata?.source === 'agent_reach' ? `Berdasarkan Agent-Reach · ${(selected.metadata?.source_count || selected.metadata?.sources_count || 0)} sumber` : 'Analisis AI · Data Internal'}</p></div>{proposed.length > 0 && <span>{selectedActions.size}/{proposed.length} dipilih</span>}</header>{contentPlans.length ? <div className="action-list">{contentPlans.map(plan => <label className={`plan-action ${plan.status}`} key={plan.id}><input type="checkbox" disabled={plan.status !== 'proposed'} checked={selectedActions.has(plan.id)} onChange={() => toggleAction(plan.id)} /><span><strong>{formatTime(plan.scheduledAt)} · {plan.brand?.name} · {plan.platform} {plan.contentType}</strong><b>{plan.topic}</b><small>Objective: {plan.metadata?.objective || '-'} · Angle: {plan.metadata?.angle || '-'} · Evidence: {(plan.metadata?.source_evidence || []).length} sumber</small><small>Alasan: {plan.reason}</small><em className={`report-status ${plan.status}`}>{plan.status.toUpperCase()}</em></span></label>)}</div> : selected.nextActions?.length ? <div className="action-list">{selected.nextActions.map(action => <label className={`plan-action ${action.status}`} key={action.id}><input type="checkbox" disabled={action.status !== 'proposed'} checked={selectedActions.has(action.id)} onChange={() => toggleAction(action.id)} /><span><strong>{action.description}</strong><small>{action.action_type.replace('_', ' ')} · {{proposed: 'Diusulkan', approved: 'Disetujui', dismissed: 'Ditolak'}[action.status] || action.status}</small></span></label>)}</div> : <p className="empty-plan">Tidak ada proposal eksekusi yang valid dari data tersedia.</p>}{proposed.length > 0 && <footer><button onClick={() => setSelectedActions(new Set(proposed.map(item => item.id)))} disabled={pending}>Pilih Semua</button><button onClick={() => decide(dismissReport)} disabled={pending || !selectedActions.size}><X size={14} /> Dismiss Semua/Terpilih</button><button className="primary-button" onClick={() => decide(approveReport)} disabled={pending || !selectedActions.size}><Check size={14} /> Setujui Semua/Terpilih</button></footer>}</article>
-                    <article className="format-generate"><header><span className="eyebrow"><Sparkles size={13} /> GENERATE</span><h3>Buat konten dari topik</h3><p>Pilih topik, lalu klik format untuk brand yang dituju.</p></header><label className="format-topic">Topik<input list="analyst-topic-options" value={topic} onChange={event => setTopic(event.target.value)} placeholder="Tulis topik atau pilih rekomendasi" /></label><datalist id="analyst-topic-options">{recommendations.map(item => <option value={item.topic} key={`${item.source}-${item.topic}`} />)}</datalist><div className="format-grid">{BRANDS.map(([slug, name]) => <div className="format-row" key={slug}><b>{name}</b>{FORMATS.map(([format, label]) => { const key = `${slug}:${format}`; return <button type="button" key={key} disabled={Boolean(formatBusy) || !topic.trim()} onClick={() => generateFormat(slug, format)}>{formatBusy === key ? '…' : label}</button>; })}</div>)}</div>{formatNotice && <p className="format-notice" role="status">{formatNotice}</p>}</article>
+        </> : <div className="analyst-stack">
+            <section className="analyst-history-section" aria-label="Riwayat laporan">
+                <header className="history-head">
+                    <div><span className="eyebrow"><FileClock size={13} /> RIWAYAT LAPORAN</span><h3>{reports.length} laporan</h3></div>
+                    <div className="history-actions">
+                        <button type="button" onClick={() => setHistoryOpen(value => !value)}>{historyOpen ? 'Lipat' : 'Buka'}</button>
+                        <button type="button" className="is-danger" onClick={hideAll} disabled={!reports.length}>Sembunyikan semua</button>
+                    </div>
+                </header>
+                {historyOpen && <>
+                    <input className="history-search" type="search" placeholder="Cari tanggal, topik, atau isi laporan" value={historyQuery} onChange={event => { setHistoryQuery(event.target.value); setHistoryLimit(HISTORY_PAGE); }} />
+                    {visibleReports.length ? <div className="history-card-grid">{visibleReports.map(report => <article key={report.id} className={`history-card ${selected?.id === report.id ? 'active' : ''}`}>
+                        <button type="button" className="history-card-main" onClick={() => setSelectedId(report.id)}>
+                            <span className="history-card-top"><b>{report.reportDate}</b><em className={`report-status ${report.status}`}>{statusLabel(report.status)}</em></span>
+                            <strong>{report.reportType} brief</strong>
+                            <small>{report.summary}</small>
+                        </button>
+                        <button type="button" className="history-card-hide" onClick={() => hideOne(report.id)}>Sembunyikan</button>
+                    </article>)}</div> : <p className="history-empty">{reports.length ? 'Tidak ada laporan yang cocok.' : 'Belum ada laporan. Analisis pertama akan muncul di sini.'}</p>}
+                    {matchingReports.length > visibleReports.length && <button type="button" className="history-more" onClick={() => setHistoryLimit(value => value + HISTORY_PAGE)}>Selengkapnya ({matchingReports.length - visibleReports.length} lagi)</button>}
+                </>}
+            </section>
+
+            <section className="analyst-report">{loading && !selected ? <p>Loading analyst reports…</p> : selected ? <><header><div><span className="eyebrow"><ClipboardCheck size={13} /> {selected.reportType} ANALYSIS</span><h2>{selected.reportDate} · {statusLabel(selected.status)}</h2><time><Clock3 size={13} /> Dibuat {formatTime(selected.generatedAt)}</time></div><span className={`report-source ${selected.metadata?.analysis_mode === 'fallback_internal' ? 'fallback' : ''}`}>{selected.metadata?.analysis_mode === 'ai' && selected.metadata?.source === 'agent_reach' ? `Agent-Reach Research + AI Analysis` : 'Analisis internal — riset eksternal tidak tersedia'} · {selected.metadata?.performance_available ? 'Performance available' : 'Data performa belum tersedia'} · Scope: {scopeLabels[selected.metadata?.scope] || 'Keduanya: luar + dalam'}</span>{selected.metadata?.analysis_error && <p className="analysis-error-note">AI gagal: {selected.metadata.analysis_error}</p>}</header>
+                <article className="analyst-summary"><h3>Ringkasan Eksekutif</h3><p>{selected.summary}</p></article>
+                <div className="analyst-sections"><article><h3>Temuan</h3><div className="topic-reco"><h4>Topik yang direkomendasikan</h4>{recommendations.length ? <ol>{recommendations.map(item => <li key={`${item.source}-${item.topic}`}><span className={`source-tag ${item.source}`}>{SOURCE_LABELS[item.source] || item.source}</span><strong>{item.topic}</strong><small>{item.reason}</small></li>)}</ol> : <p className="topic-reco-empty">{topicHint(selected.metadata?.scope)}</p>}</div><div className="finding-list">{selected.findings?.map((finding, index) => <div className={`finding finding-${finding.type}`} key={`${finding.title}-${index}`}><strong>{finding.title}</strong><p>{finding.description}</p><small>Evidence: {finding.evidence}</small></div>)}</div></article><article><h3>Kesimpulan</h3><p className="analyst-conclusion">{selected.conclusion}</p><h3>Rekomendasi</h3><ol className="recommendation-list">{selected.recommendations?.map((recommendation, index) => <li key={`${recommendation.action}-${index}`}><span className={recommendation.priority}>{{high: 'Tinggi', medium: 'Sedang', low: 'Rendah'}[recommendation.priority] || recommendation.priority}</span><strong>{recommendation.action}</strong><p>{recommendation.reason}</p></li>)}</ol></article></div>
+                <article className="forward-plan"><header><div><span className="eyebrow"><Lightbulb size={13} /> MEMERLUKAN PERSETUJUAN OWNER</span><h3>Rencana Konten · {selected.metadata?.planning_horizon === '30_days' ? 'Bulanan' : (selected.metadata?.planning_horizon || '7 Hari').replace('_days', ' Hari')}</h3><p>{selected.metadata?.source === 'agent_reach' ? `Berdasarkan Agent-Reach · ${(selected.metadata?.source_count || selected.metadata?.sources_count || 0)} sumber` : 'Analisis AI · Data Internal'}</p></div>{proposed.length > 0 && <span>{selectedActions.size}/{proposed.length} dipilih</span>}</header>{contentPlans.length ? <div className="action-list">{contentPlans.map(plan => <label className={`plan-action ${plan.status}`} key={plan.id}><input type="checkbox" disabled={plan.status !== 'proposed'} checked={selectedActions.has(plan.id)} onChange={() => toggleAction(plan.id)} /><span><strong>{formatTime(plan.scheduledAt)} · {plan.brand?.name} · {plan.platform} {plan.contentType}</strong><b>{plan.topic}</b><small>Objective: {plan.metadata?.objective || '-'} · Angle: {plan.metadata?.angle || '-'} · Evidence: {(plan.metadata?.source_evidence || []).length} sumber</small><small>Alasan: {plan.reason}</small><em className={`report-status ${plan.status}`}>{plan.status.toUpperCase()}</em></span></label>)}</div> : selected.nextActions?.length ? <div className="action-list">{selected.nextActions.map(action => <label className={`plan-action ${action.status}`} key={action.id}><input type="checkbox" disabled={action.status !== 'proposed'} checked={selectedActions.has(action.id)} onChange={() => toggleAction(action.id)} /><span><strong>{action.description}</strong><small>{action.action_type.replace('_', ' ')} · {{proposed: 'Diusulkan', approved: 'Disetujui', dismissed: 'Ditolak'}[action.status] || action.status}</small></span></label>)}</div> : <p className="empty-plan">Tidak ada proposal eksekusi yang valid dari data tersedia.</p>}{proposed.length > 0 && <footer><button onClick={() => setSelectedActions(new Set(proposed.map(item => item.id)))} disabled={pending}>Pilih Semua</button><button onClick={() => decide(dismissReport)} disabled={pending || !selectedActions.size}><X size={14} /> Dismiss Semua/Terpilih</button><button className="primary-button" onClick={() => decide(approveReport)} disabled={pending || !selectedActions.size}><Check size={14} /> Setujui Semua/Terpilih</button></footer>}</article>
+                <article className="format-generate"><header><span className="eyebrow"><Sparkles size={13} /> GENERATE</span><h3>Buat konten dari topik</h3><p>Pilih topik, lalu klik format untuk brand yang dituju.</p></header><label className="format-topic">Topik<input list="analyst-topic-options" value={topic} onChange={event => setTopic(event.target.value)} placeholder="Tulis topik atau pilih rekomendasi" /></label><datalist id="analyst-topic-options">{recommendations.map(item => <option value={item.topic} key={`${item.source}-${item.topic}`} />)}</datalist><div className="format-grid">{BRANDS.map(([slug, name]) => <div className="format-row" key={slug}><b>{name}</b>{FORMATS.map(([format, label]) => { const key = `${slug}:${format}`; return <button type="button" key={key} disabled={Boolean(formatBusy) || !topic.trim()} onClick={() => generateFormat(slug, format)}>{formatBusy === key ? '…' : label}</button>; })}</div>)}</div>{formatNotice && <p className="format-notice" role="status">{formatNotice}</p>}</article>
                 </> : <div className="analyst-report-empty"><span><BarChart3 size={31} /></span><small>SIAP DIANALISIS</small><h2>Laporan pertama dimulai dari data Office.</h2><p>Pilih scope di atas, lalu jalankan analisis untuk melihat temuan dan rencana yang bisa kamu tinjau.</p><button type="button" onClick={generate} disabled={pending}><Play size={15} />{pending ? 'Generating…' : 'Generate'}</button></div>}</section>
-            </div>
-        </>}
+        </div>}
     </div>;
 }
