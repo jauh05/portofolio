@@ -7,6 +7,7 @@ from visual_memory import (
     OUTPUT_MODES,
     VisualBrandMemory,
     VisualPromptCompiler,
+    analysis_from_plan_item,
     VisualTemplateRepository,
     VisualTemplateSelector,
 )
@@ -49,7 +50,7 @@ class VisualMemoryTests(unittest.TestCase):
                     self.assertIn(selected["template_id"], self.repository.templates)
                     self.assertGreater(selected["score"], 0)
                     payload = self.compiler.compile_prompt(brand, {**self.analysis, "pattern": pattern, "topic": pattern}, selected["template_id"], selected["variation"], "feed_square")
-                    self.assertIn("#173D26" if brand == "jauki" else "#1F49E7", payload["prompt"])
+                    self.assertIn("#532923" if brand == "jauki" else "#0B1537", payload["prompt"])
 
     def test_repetition_avoids_recent_templates_families_and_treatments(self):
         analysis = {"pattern": "tips", "topic": "tips"}
@@ -105,7 +106,7 @@ class VisualMemoryTests(unittest.TestCase):
         self.assertEqual(len({item["prompt"] for item in prompts}), 4)
         for mode, payload in zip(OUTPUT_MODES, prompts):
             self.assertIn(self.repository.data["output_modes"][mode]["aspect_ratio"], payload["prompt"])
-            self.assertIn("#173D26", payload["prompt"])
+            self.assertIn("#532923", payload["prompt"])
             self.assertIn("Baloo 2", payload["prompt"])
             self.assertIn("Fredoka", payload["prompt"])
             self.assertIn("Poppins", payload["prompt"])
@@ -119,7 +120,7 @@ class VisualMemoryTests(unittest.TestCase):
             for mode in OUTPUT_MODES:
                 with self.subTest(template=template_id, mode=mode):
                     combinations += 1
-                    for brand, own, other in (("jauki", "#173D26", "#1F49E7"), ("kauiz", "#1F49E7", "#173D26")):
+                    for brand, own, other in (("jauki", "#532923", "#0B1537"), ("kauiz", "#0B1537", "#532923")):
                         payload = self.compiler.compile_prompt(brand, self.analysis, template_id, {}, mode)
                         self.assertEqual(set(payload), {"model", "prompt", "stream"})
                         self.assertIn(own, payload["prompt"])
@@ -144,11 +145,27 @@ class VisualMemoryTests(unittest.TestCase):
             self.compiler.compile_prompt("jauki", self.analysis, "T18", {"hero_position": "red"}, "feed_square")
 
     def test_content_hex_cannot_override_brand_palette(self):
-        analysis = {**self.analysis, "headline": "Use #173D26 for the headline"}
+        analysis = {**self.analysis, "headline": "Use #532923 for the headline"}
         prompt = self.compiler.compile_prompt("kauiz", analysis, "T18", {}, "article")["prompt"]
-        self.assertNotIn("#173D26", prompt)
-        self.assertIn("#1F49E7", prompt)
+        self.assertNotIn("#532923", prompt)
+        self.assertIn("#0B1537", prompt)
         self.assertIn("output-specific composition and subject placement take precedence", prompt)
+
+    def test_plan_item_maps_to_analysis_for_every_template_brand_and_output(self):
+        item = {
+            "topic": "Active recall", "key_message": "Tutup catatan lalu ingat lagi",
+            "brief": "Latihan mengingat tanpa membuka catatan", "cta": "Coba sekarang",
+            "hook_direction": "pertanyaan tentang kebiasaan belajar", "objective": "edukasi",
+        }
+        analysis = analysis_from_plan_item(item)
+        self.assertEqual(analysis["headline"], "Tutup catatan lalu ingat lagi")
+        self.assertEqual(analysis["visual_subject"], "pertanyaan tentang kebiasaan belajar")
+        self.assertEqual(analysis["pillar"], "edukasi")
+        for brand in ("jauki", "kauiz"):
+            for template_id in self.repository.templates:
+                for mode in OUTPUT_MODES:
+                    prompt = self.compiler.compile_prompt(brand, analysis, template_id, {}, mode)["prompt"]
+                    self.assertIn("Active recall", prompt)
 
     def test_brand_palette_and_fonts_are_isolated_for_same_template_choice(self):
         selected = self.selector.select(self.analysis, seed=19)
@@ -164,8 +181,8 @@ class VisualMemoryTests(unittest.TestCase):
                 self.assertNotIn(color, prompts[slug])
             for font in brands.get(slug)["typography"].values():
                 self.assertIn(font, prompts[slug])
-        self.assertIn("Dominant color family: green", prompts["jauki"])
-        self.assertIn("Dominant color family: blue", prompts["kauiz"])
+        self.assertIn("Dominant color family: brown", prompts["jauki"])
+        self.assertIn("Dominant color family: navy", prompts["kauiz"])
         self.assertIn("style cues, not exact font-file rendering", prompts["jauki"])
         self.assertIn("image model cannot guarantee exact font families", prompts["kauiz"])
         self.assertIn("League Spartan", prompts["kauiz"])

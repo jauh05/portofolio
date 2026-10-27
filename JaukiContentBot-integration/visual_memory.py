@@ -48,7 +48,7 @@ class VisualBrandMemory:
             isinstance(font, str) and font.strip() for font in typography.values()
         ) or not {"headline", "body"}.issubset(typography):
             raise ValueError(f"Named headline and body fonts required for {slug}")
-        if brand.get("dominant_color_family") not in {"green", "blue"}:
+        if brand.get("dominant_color_family") not in {"brown", "navy"}:
             raise ValueError(f"Dominant color family required for {slug}")
         if not isinstance(brand.get("typography_prompt"), str) or not brand["typography_prompt"].strip():
             raise ValueError(f"Typography prompt style required for {slug}")
@@ -170,6 +170,25 @@ class VisualTemplateSelector:
             "decorative_density": rng.choice(("minimal", "restrained")),
         }
         return {"template_id": chosen_id, "template": template, "variation": variation, "score": candidates[chosen_id]}
+
+
+def analysis_from_plan_item(item: Mapping[str, Any]) -> dict[str, Any]:
+    """Mengubah item rencana (payload jadwal atau content_plan) menjadi analysis untuk VisualPromptCompiler."""
+    key_points = item.get("key_points") or []
+    return {
+        "pattern": item.get("pattern") or "",
+        "pillar": item.get("pillar") or item.get("objective") or "",
+        "topic": item.get("topic") or "",
+        "headline": item.get("key_message") or item.get("topic") or "",
+        "subheadline": item.get("brief") or "",
+        "cta": item.get("cta") or "",
+        "visual_subject": item.get("visual_prompt") or item.get("angle") or item.get("hook_direction") or "",
+        "visual_intent": item.get("hook_direction") or item.get("objective") or "",
+        "key_points": key_points if isinstance(key_points, list) else [],
+        "stat_value": item.get("stat_value") or "",
+        "stat_label": item.get("stat_label") or "",
+        "text_density": "low",
+    }
 
 
 class VisualPromptCompiler:

@@ -39,8 +39,8 @@ OFFICE_BRIDGE_URL=http://127.0.0.1:9 OFFICE_BRIDGE_TOKEN=offline-check PYTHONDON
 import office_social_worker, visual_preview_bridge, visual_worker_preview, visual_memory
 from visual_memory import VisualBrandMemory, VisualTemplateRepository, VisualTemplateSelector
 assert visual_memory.MEMORY_DIR.as_posix() == '/home/jauhar/resources/office-ai/visual-memory'
-assert VisualBrandMemory().get('jauki')['palette']['primary'] == '#173D26'
-assert VisualBrandMemory().get('kauiz')['palette']['primary'] == '#1F49E7'
+assert VisualBrandMemory().get('jauki')['palette']['primary'] == '#532923'
+assert VisualBrandMemory().get('kauiz')['palette']['primary'] == '#0B1537'
 assert len(VisualTemplateRepository().templates) == 27
 assert VisualTemplateSelector().rules
 print('Imports and all three JSON resources: OK')
@@ -58,7 +58,7 @@ After a future service restart, submit `preview_visual` commands to the normal S
 {"brand":"kauiz","topic":"Fokus Satu Tugas dalam Satu Waktu","output_mode":"story","dry_run":true}
 ```
 
-The first must return `primary_palette: "#173D26"`, the second `"#1F49E7"`; both must report `ok: true`, `dry_run: true`, and `provider_called: false`. Skipping the provider is successful preview behavior, not a failed preview. A payload with `dry_run: false` must return `ok: false`. No generation fallback, real image, or content publication is part of this check.
+The first must return `primary_palette: "#532923"`, the second `"#0B1537"`; both must report `ok: true`, `dry_run: true`, and `provider_called: false`. Skipping the provider is successful preview behavior, not a failed preview. A payload with `dry_run: false` must return `ok: false`. No generation fallback, real image, or content publication is part of this check.
 
 If a live report labels Kauiz's `font` as `Inter`, inspect the structured `headline_font` field and the active runtime resources before changing source. This repository has no Kauiz UI font or `Inter` fallback in the preview path: `visual_worker_preview.py` returns the active brand's typography object and `visual_preview_bridge.py` reads its `headline` key directly. A read-only check from the runtime directory, with the service's Python interpreter and dummy bridge values, can print the loaded module/resource paths and the relevant result without calling a provider:
 

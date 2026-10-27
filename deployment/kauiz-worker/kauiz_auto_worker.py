@@ -54,10 +54,9 @@ EDGE = {"feed": 80, "story": 250}
 
 # Sama dengan blok "kauiz" di resources/office-ai/visual-memory/brands.json (dicek di test).
 PALETTE = {
-    "primary": "#1F49E7",
-    "dark": "#101828",
-    "background": "#F8FAFC",
-    "sticky_note": "#F6DD63",
+    "primary": "#0B1537",
+    "accent": "#FFCB3D",
+    "paper": "#FBF6EA",
     "white": "#FFFFFF",
 }
 
@@ -336,7 +335,7 @@ def render_image(topic, fmt, out_path, font_bold=None, font_regular=None):
     url_font = load_font(font_regular, 40)
     text_width = width - 2 * MARGIN
 
-    image = Image.new("RGB", (width, height), PALETTE["background"])
+    image = Image.new("RGB", (width, height), PALETTE["paper"])
     draw = ImageDraw.Draw(image)
 
     draw.rounded_rectangle((MARGIN, edge, MARGIN + 300, edge + 96), radius=48, fill=PALETTE["primary"])
@@ -345,7 +344,7 @@ def render_image(topic, fmt, out_path, font_bold=None, font_regular=None):
     y = edge + 176
     headline_step = line_height(draw, headline_font, 1.1)
     for line in wrap_text(draw, topic["headline"].upper(), headline_font, text_width):
-        draw.text((MARGIN, y), line, font=headline_font, fill=PALETTE["dark"])
+        draw.text((MARGIN, y), line, font=headline_font, fill=PALETTE["primary"])
         y += headline_step
 
     note_pad = 60
@@ -359,10 +358,10 @@ def render_image(topic, fmt, out_path, font_bold=None, font_regular=None):
         raise ValueError(f"teks '{topic['tag']}' tidak muat di kanvas {fmt}")
 
     draw.rounded_rectangle((MARGIN, note_top, width - MARGIN, note_bottom), radius=24,
-                           fill=PALETTE["sticky_note"])
+                           fill=PALETTE["accent"])
     text_y = note_top + note_pad
     for line in note_lines:
-        draw.text((MARGIN + note_pad, text_y), line, font=body_font, fill=PALETTE["dark"])
+        draw.text((MARGIN + note_pad, text_y), line, font=body_font, fill=PALETTE["primary"])
         text_y += body_step
 
     cta_label = "KLIK LINK DI BIO" if fmt == "feed" else "LINK DI BIO KAUIZ"
