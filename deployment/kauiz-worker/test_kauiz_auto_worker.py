@@ -157,20 +157,21 @@ class MuseTests(unittest.TestCase):
             return {"data": [{"b64_json": base64.b64encode(png_bytes()).decode()}]}
 
         worker.generate_background("prompt teks", api_key="test-key", base_url="https://openrouter.ai/api/v1/",
-                                   model="meta/muse-image", transport=transport)
+                                   model="meta/muse-image", fmt="feed", transport=transport)
         self.assertEqual(captured["url"], "https://openrouter.ai/api/v1/images")
         self.assertEqual(captured["headers"], {"Authorization": "Bearer test-key"})
-        self.assertEqual(captured["body"], {"model": "meta/muse-image", "prompt": "prompt teks"})
+        self.assertEqual(captured["body"], {"model": "meta/muse-image", "prompt": "prompt teks",
+                                            "aspect_ratio": "4:5", "output_format": "jpeg"})
 
     def test_b64_and_url_responses_return_image_bytes(self):
         raw = png_bytes()
         from_b64 = worker.generate_background(
-            "p", api_key="k", base_url="https://x", model="m",
+            "p", api_key="k", base_url="https://x", model="m", fmt="feed",
             transport=lambda url, headers, body: {"data": [{"b64_json": base64.b64encode(raw).decode()}]},
         )
         self.assertEqual(from_b64, raw)
         from_url = worker.generate_background(
-            "p", api_key="k", base_url="https://x", model="m",
+            "p", api_key="k", base_url="https://x", model="m", fmt="feed",
             transport=lambda url, headers, body: {"data": [{"url": "https://img.example/a.png"}]},
             fetch=lambda url: raw,
         )
@@ -178,10 +179,10 @@ class MuseTests(unittest.TestCase):
 
     def test_empty_response_and_missing_key_raise(self):
         with self.assertRaises(worker.MuseError):
-            worker.generate_background("p", api_key="k", base_url="https://x", model="m",
+            worker.generate_background("p", api_key="k", base_url="https://x", model="m", fmt="feed",
                                        transport=lambda url, headers, body: {"data": []})
         with self.assertRaises(worker.MuseError):
-            worker.generate_background("p", api_key="", base_url="https://x", model="m",
+            worker.generate_background("p", api_key="", base_url="https://x", model="m", fmt="feed",
                                        transport=lambda url, headers, body: {})
 
     def test_fit_to_canvas_matches_each_format(self):

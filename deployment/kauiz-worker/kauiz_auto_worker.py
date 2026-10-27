@@ -69,6 +69,8 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MUSE_MODEL = "meta/muse-image"
 # Format worker -> output mode di visual-template-memory.json.
 OUTPUT_MODE = {"feed": "feed_portrait", "story": "story"}
+# Rasio yang dikirim ke OpenRouter, sama dengan generate_muse_image di bot Jauki.
+ASPECT_RATIO = {"feed": "4:5", "story": "9:16"}
 
 # Kode error Graph API. Periksa ulang dengan dokumentasi Meta saat versi API dinaikkan.
 RATE_LIMIT_CODES = {4, 17, 32, 613, 80001}
@@ -394,7 +396,7 @@ class MuseError(RuntimeError):
     pass
 
 
-def http_post_json(url, headers, body, timeout=120.0):
+def http_post_json(url, headers, body, timeout=360.0):
     request = urllib.request.Request(
         url, data=json.dumps(body).encode("utf-8"), method="POST",
         headers={**headers, "Content-Type": "application/json"},
@@ -411,7 +413,7 @@ def http_post_json(url, headers, body, timeout=120.0):
         raise MuseError("respons OpenRouter bukan JSON") from err
 
 
-def http_get_bytes(url, timeout=60.0):
+def http_get_bytes(url, timeout=300.0):
     try:
         with urllib.request.urlopen(url, timeout=timeout) as response:
             return response.read()
@@ -419,8 +421,8 @@ def http_get_bytes(url, timeout=60.0):
         raise MuseError(f"unduh gambar Muse gagal: {err}") from err
 
 
-def generate_background(prompt, *, api_key, base_url, model, transport=None, fetch=None):
-    """Latar dari OpenRouter Images. Respons berisi data[0].b64_json atau data[0].url, sama dengan bot Jauki."""
+def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None, fetch=None):
+    """Latar dari OpenRouter Images. Body dan respons sama dengan generate_muse_image di bot Jauki."""
     if not api_key:
         raise MuseError("OPENROUTER_API_KEY belum diisi")
     transport = transport or http_post_json
@@ -428,7 +430,7 @@ def generate_background(prompt, *, api_key, base_url, model, transport=None, fet
     payload = transport(
         f"{base_url.rstrip('/')}/images",
         {"Authorization": f"Bearer {api_key}"},
-        {"model": model, "prompt": prompt},
+        {"model": model, "prompt": prompt, "aspect_ratio": ASPECT_RATIO[fmt], "output_format": "jpeg"},
     )
     items = payload.get("data") or []
     item = items[0] if items else {}
@@ -482,7 +484,7 @@ def write_prompt_preview(config, plan, fmt, slot_key):
 def render_muse_image(config, plan, topic, fmt, slot_key, out_path):
     prompt = muse_prompt(plan, fmt, slot_key, config.visual_memory_dir)
     raw = generate_background(
-        prompt, api_key=config.openrouter_api_key, base_url=config.openrouter_base_url, model=config.muse_model,
+        prompt, api_key=config.openrouter_api_key, base_url=config.openrouter_base_url, model=config.muse_model, fmt=fmt,
     )
     image = fit_to_canvas(raw, fmt)
     draw_layout(image, topic, fmt, config.font_bold, config.font_regular)
