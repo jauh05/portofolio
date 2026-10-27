@@ -48,9 +48,15 @@ class StyleCardTests(unittest.TestCase):
         copy = writer.derive_copy({**SOURCE, "headline": "Satu bab, satu peta konsep yang rapi sekali dan lengkap"}, style)
         self.assertEqual(copy["headline"], "SATU BAB")
 
+    def test_every_prompt_states_the_edge_margins(self):
+        for template_id in writer.load_styles():
+            self.assertIn("left and right 10 percent", write(template_id)["muse_prompt"])
+            self.assertIn("bottom 18 percent", write(template_id, "story")["muse_prompt"])
+
     def test_story_prompt_keeps_safe_area_and_story_has_no_caption(self):
         result = write("T01", "story")
-        self.assertIn("top 14 percent", result["muse_prompt"])
+        self.assertIn("top 15 percent", result["muse_prompt"])
+        self.assertIn("left and right 10 percent", result["muse_prompt"])
         self.assertEqual((result["caption"], result["hashtags"]), ("", []))
 
 

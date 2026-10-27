@@ -22,10 +22,16 @@ from visual_memory import MEMORY_DIR
 
 ASPECT_TEXT = {
     "feed": "portrait 4:5 composition",
-    "story": ("tall 9:16 story composition, with all text and key subjects kept in the central area and the top 14 percent "
-              "and bottom 12 percent left free of important content"),
+    "story": ("tall 9:16 story composition, with all text and key subjects kept in the central area and the top 15 percent "
+              "and bottom 18 percent left free of any text or important content"),
 }
 ASPECT_MARK = {"feed": "4:5", "story": "9:16"}
+MARGIN_RULE = {
+    "feed": ("Leave the left and right 10 percent of the width and the top and bottom 6 percent of the height free of any text or "
+             "important object, and never let anything touch or get cut off by an edge."),
+    "story": ("Leave the left and right 10 percent of the width free of any text or important object, keep everything below the top "
+              "15 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
+}
 FOOTER_WHERE = {"feed": "At the very bottom", "story": "Near the bottom, inside the safe area"}
 CAPTION_LIMIT = 2200
 HASHTAG_RANGE = (3, 12)
@@ -132,7 +138,7 @@ def deterministic_prompt(brand_data: Mapping[str, Any], style: Mapping[str, Any]
     count = len(required_texts(copy, cta_label if use_cta else None, footer))
     parts.append(
         f"These {count} texts are the only text in the image, spelled exactly as written, sharp and fully legible, with generous "
-        f"margins and no overlap with the main subject. The palette is limited to {visual['palette_prompt']}, plus black and white "
+        f"margins and no overlap with the main subject. {MARGIN_RULE[fmt]} The palette is limited to {visual['palette_prompt']}, plus black and white "
         "photography where mentioned. Clean editorial graphic design, crisp details, premium marketing look."
     )
     return " ".join(parts)
@@ -182,6 +188,8 @@ def validate_content(content: Mapping[str, Any], brand_data: Mapping[str, Any], 
         errors.append("panjang muse_prompt harus 400-3200 karakter")
     if ASPECT_MARK[fmt] not in prompt:
         errors.append(f"muse_prompt harus menyebut rasio {ASPECT_MARK[fmt]}")
+    if "left and right 10 percent" not in prompt:
+        errors.append("muse_prompt harus memuat aturan margin (kiri dan kanan 10 percent dibiarkan kosong)")
     use_cta = cta_label if slots.get("cta") else None
     for text in required_texts({k: v for k, v in copy.items() if v}, use_cta, footer):
         if f'"{text}"' not in prompt:
@@ -228,7 +236,7 @@ def build_messages(brand_data: Mapping[str, Any], style: Mapping[str, Any], post
         f"- headline maksimal {slots['headline']['max_words']} kata dan {slots['headline']['max_chars']} karakter, huruf kapital.\n"
         "- muse_prompt berbahasa Inggris, satu paragraf, mengikuti struktur dan gaya contoh prompt, tetapi adegan, subjek, dan diksinya "
         "kamu sesuaikan dengan topik. Setiap teks gambar ditulis persis dalam tanda kutip ganda dengan kata 'reads exactly'. "
-        "Sebut rasio gambar. Pakai hanya kode warna dari contoh prompt. Tegaskan bahwa teks itu satu-satunya teks di gambar.\n"
+        "Sebut rasio gambar dan pertahankan kalimat aturan margin dari contoh prompt apa adanya. Pakai hanya kode warna dari contoh prompt. Tegaskan bahwa teks itu satu-satunya teks di gambar.\n"
         "- caption berbahasa Indonesia, nada sesuai data tone, maksimal 1500 karakter: pembuka yang menarik, satu manfaat konkret dari data, "
         "ajakan 'Klik link di bio', lalu semua hashtag di baris terakhir. Untuk story, caption dikosongkan.\n"
         "- hashtags: 5 sampai 10 tag berformat #kata, ikuti hashtag brand dan topik di data, boleh menambah yang relevan.\n"

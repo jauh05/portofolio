@@ -442,8 +442,11 @@ def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None
 
 
 def fit_to_canvas(image_bytes, fmt):
-    """Memotong latar ke ukuran kanvas format tanpa mengubah proporsi."""
+    """Memotong latar ke ukuran kanvas format tanpa mengubah proporsi. Rasio yang meleset dicatat karena tepinya ikut terpotong."""
     with Image.open(io.BytesIO(image_bytes)) as source:
+        target = CANVAS[fmt][0] / CANVAS[fmt][1]
+        if abs(source.width / source.height - target) / target > 0.015:
+            LOG.warning("gambar Muse %dx%d tidak sesuai rasio %s, tepi kiri-kanan atau atas-bawah terpotong", source.width, source.height, ASPECT_RATIO[fmt])
         return ImageOps.fit(source.convert("RGB"), CANVAS[fmt], method=Image.LANCZOS)
 
 
