@@ -124,7 +124,7 @@ def deterministic_prompt(brand_data: Mapping[str, Any], style: Mapping[str, Any]
     if copy.get("subline") and slots.get("subline"):
         parts.append(f'{slots["subline"]["where"]}, a small regular sans-serif line in {style["text_color"]} reads exactly "{copy["subline"]}".')
     if copy.get("chips") and slots.get("chips"):
-        parts.append(f'{slots["chips"]["where"].format(**args)} read exactly {_quoted(copy["chips"])}.')
+        parts.append(f'{slots["chips"]["where"].format(**args)}; the texts read exactly {_quoted(copy["chips"])}.')
     use_cta = bool(slots.get("cta"))
     if use_cta:
         parts.append(f'{slots["cta"]["where"]}, a rounded {visual["accent"]} pill button with deep navy bold text reads exactly "{cta_label}".')

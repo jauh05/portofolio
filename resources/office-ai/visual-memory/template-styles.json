@@ -349,14 +349,14 @@
     "chips": {
      "min": 3,
      "max": 4,
-     "where": "Below the headline, a vertical stack of equal rounded step cards numbered with small circles, each card",
+     "where": "Below the headline, a vertical stack of equal rounded step cards numbered with small circles",
      "max_chars": 18
     },
     "cta": {
      "where": "At the bottom"
     }
    },
-   "prompt_template": "Clean checklist social poster in {aspect}. The background is light cream with a {ink} header area. A headline in {headline_style}, cream on the navy header, reads exactly \"{headline}\". Small icon: {subject}."
+   "prompt_template": "Clean checklist social poster in {aspect}. The background is light cream with a {ink} header area. A headline in {headline_style}, cream on the navy header, reads exactly \"{headline}\". A small illustration of {subject} sits at the right end of the header."
   },
   "T19": {
    "concept": "Oversized type with object in front",
@@ -529,7 +529,7 @@
      "where": "At the bottom"
     }
    },
-   "prompt_template": "Benefit-focused social poster in {aspect}. The background is light cream with a {ink} block at the top. A headline in {headline_style}, cream on the navy block, reads exactly \"{headline}\". An oversized {subject} sits near the lower edge."
+   "prompt_template": "Benefit-focused social poster in {aspect}. The background is light cream with a {ink} block at the top. A headline in {headline_style}, cream on the navy block, reads exactly \"{headline}\". A large cutout of {subject} sits near the lower edge."
   }
  }
 }
