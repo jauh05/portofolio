@@ -97,7 +97,7 @@ class PreviewBridgeBrandTests(PreviewSafetyMixin, unittest.TestCase):
         self.assertEqual(result["headline_font"], "Baloo 2")
         self.assertIn("Cara Memilih Jurnal", result["compiled_prompt"])
         self.assertIn("4:5", result["compiled_prompt"])
-        self.assertEqual(result["provider_payload_preview"], {"model": "meta/muse-image", "stream": True})
+        self.assertEqual(result["provider_payload_preview"], {"model": "meta/muse-image"})
         self.assertIsInstance(result["variation"], dict)
         self.assert_no_live_dispatch()
 

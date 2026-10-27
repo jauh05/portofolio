@@ -18,9 +18,11 @@ Panduan crontab dan error log ada di README.md.
 from __future__ import annotations
 
 import argparse
+import base64
 import contextlib
 import fcntl
 import hashlib
+import io
 import json
 import logging
 import logging.handlers
@@ -32,13 +34,13 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 from zoneinfo import ZoneInfo
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 WORKER_DIR = Path(__file__).resolve().parent
 # Token Instagram Login hanya diterima di graph.instagram.com. Token Facebook Login memakai graph.facebook.com.
@@ -59,6 +61,14 @@ PALETTE = {
     "paper": "#FBF6EA",
     "white": "#FFFFFF",
 }
+
+# Mode gambar: "pillow" (default, daftar topik bawaan) atau "muse" (latar dari Muse, teks dari Pillow).
+IMAGE_MODES = ("pillow", "muse")
+# Muse dipanggil lewat OpenRouter Images, sama dengan bot Jauki: model meta/muse-image, respons JSON.
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+MUSE_MODEL = "meta/muse-image"
+# Format worker -> output mode di visual-template-memory.json.
+OUTPUT_MODE = {"feed": "feed_portrait", "story": "story"}
 
 # Kode error Graph API. Periksa ulang dengan dokumentasi Meta saat versi API dinaikkan.
 RATE_LIMIT_CODES = {4, 17, 32, 613, 80001}
@@ -325,7 +335,8 @@ def line_height(draw, font, factor=1.25):
     return int((bottom - top) * factor)
 
 
-def render_image(topic, fmt, out_path, font_bold=None, font_regular=None):
+def draw_layout(image, topic, fmt, font_bold=None, font_regular=None):
+    """Menulis label, headline, isi, dan CTA di atas gambar yang sudah ada (latar Pillow atau Muse)."""
     width, height = CANVAS[fmt]
     edge = EDGE[fmt]
     headline_font = load_font(font_bold, 104)
@@ -335,7 +346,6 @@ def render_image(topic, fmt, out_path, font_bold=None, font_regular=None):
     url_font = load_font(font_regular, 40)
     text_width = width - 2 * MARGIN
 
-    image = Image.new("RGB", (width, height), PALETTE["paper"])
     draw = ImageDraw.Draw(image)
 
     draw.rounded_rectangle((MARGIN, edge, MARGIN + 300, edge + 96), radius=48, fill=PALETTE["primary"])
@@ -370,6 +380,112 @@ def render_image(topic, fmt, out_path, font_bold=None, font_regular=None):
     draw.text((width // 2, cta_top + 58), cta_label, font=cta_font, fill=PALETTE["white"], anchor="mm")
     draw.text((width // 2, cta_top + 110), "kauiz.web.id", font=url_font, fill=PALETTE["white"], anchor="mm")
 
+
+
+def render_image(topic, fmt, out_path, font_bold=None, font_regular=None):
+    image = Image.new("RGB", CANVAS[fmt], PALETTE["paper"])
+    draw_layout(image, topic, fmt, font_bold, font_regular)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    image.save(out_path, "JPEG", quality=92)
+    return out_path
+
+
+class MuseError(RuntimeError):
+    pass
+
+
+def http_post_json(url, headers, body, timeout=120.0):
+    request = urllib.request.Request(
+        url, data=json.dumps(body).encode("utf-8"), method="POST",
+        headers={**headers, "Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as err:
+        detail = err.read().decode("utf-8", errors="replace")[:300]
+        raise MuseError(f"OpenRouter HTTP {err.code}: {detail}") from err
+    except (urllib.error.URLError, TimeoutError) as err:
+        raise MuseError(f"koneksi ke OpenRouter gagal: {err}") from err
+    except json.JSONDecodeError as err:
+        raise MuseError("respons OpenRouter bukan JSON") from err
+
+
+def http_get_bytes(url, timeout=60.0):
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as response:
+            return response.read()
+    except (urllib.error.URLError, TimeoutError) as err:
+        raise MuseError(f"unduh gambar Muse gagal: {err}") from err
+
+
+def generate_background(prompt, *, api_key, base_url, model, transport=None, fetch=None):
+    """Latar dari OpenRouter Images. Respons berisi data[0].b64_json atau data[0].url, sama dengan bot Jauki."""
+    if not api_key:
+        raise MuseError("OPENROUTER_API_KEY belum diisi")
+    transport = transport or http_post_json
+    fetch = fetch or http_get_bytes
+    payload = transport(
+        f"{base_url.rstrip('/')}/images",
+        {"Authorization": f"Bearer {api_key}"},
+        {"model": model, "prompt": prompt},
+    )
+    items = payload.get("data") or []
+    item = items[0] if items else {}
+    if item.get("b64_json"):
+        return base64.b64decode(item["b64_json"])
+    if item.get("url"):
+        return fetch(item["url"])
+    raise MuseError("respons Muse tidak berisi gambar")
+
+
+def fit_to_canvas(image_bytes, fmt):
+    """Memotong latar ke ukuran kanvas format tanpa mengubah proporsi."""
+    with Image.open(io.BytesIO(image_bytes)) as source:
+        return ImageOps.fit(source.convert("RGB"), CANVAS[fmt], method=Image.LANCZOS)
+
+
+def muse_prompt(plan, fmt, slot_key, visual_memory_dir):
+    """Prompt dari compiler visual memory: template, palet Kauiz, dan isi jadwal, ditambah larangan teks."""
+    if visual_memory_dir is None:
+        raise MuseError("KAUIZ_VISUAL_MEMORY_DIR belum diisi")
+    os.environ.setdefault("VISUAL_MEMORY_DIR", str(visual_memory_dir))
+    if str(visual_memory_dir) not in sys.path:
+        sys.path.insert(0, str(visual_memory_dir))
+    import visual_memory
+
+    analysis = visual_memory.analysis_from_plan_item(plan)
+    seed = int(hashlib.sha256(slot_key.encode("utf-8")).hexdigest(), 16) % 2**32
+    selected = visual_memory.VisualTemplateSelector().select(analysis, seed=seed)
+    compiled = visual_memory.VisualPromptCompiler().compile_prompt(
+        "kauiz", analysis, selected["template_id"], selected["variation"], OUTPUT_MODE[fmt],
+    )
+    return compiled["prompt"]
+
+
+def topic_from_plan(plan):
+    """Teks dari slot dashboard, dipakai untuk overlay dan caption."""
+    headline = (plan.get("key_message") or plan.get("topic") or "").strip()
+    tag = re.sub(r"[^a-z0-9]", "", (plan.get("topic") or headline).lower())[:30] or "kauiz"
+    return {"tag": tag, "headline": headline, "body": (plan.get("brief") or "").strip()}
+
+
+def write_prompt_preview(config, plan, fmt, slot_key):
+    """Dry run: prompt ditulis ke file untuk diperiksa, tanpa memanggil OpenRouter."""
+    prompt = muse_prompt(plan, fmt, slot_key, config.visual_memory_dir)
+    path = config.output_dir / f"{slot_key}-{fmt}.prompt.txt"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(prompt + "\n", encoding="utf-8")
+    return path
+
+
+def render_muse_image(config, plan, topic, fmt, slot_key, out_path):
+    prompt = muse_prompt(plan, fmt, slot_key, config.visual_memory_dir)
+    raw = generate_background(
+        prompt, api_key=config.openrouter_api_key, base_url=config.openrouter_base_url, model=config.muse_model,
+    )
+    image = fit_to_canvas(raw, fmt)
+    draw_layout(image, topic, fmt, config.font_bold, config.font_regular)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     image.save(out_path, "JPEG", quality=92)
     return out_path
@@ -402,6 +518,11 @@ class Config:
     timezone: str = DEFAULT_TIMEZONE
     max_retries: int = 3
     max_wait: int = 300
+    image_mode: str = "pillow"
+    openrouter_api_key: str = ""
+    openrouter_base_url: str = OPENROUTER_BASE_URL
+    muse_model: str = MUSE_MODEL
+    visual_memory_dir: Optional[Path] = None
 
     def missing_for_live(self):
         required = {
@@ -433,6 +554,11 @@ def load_config(env):
         timezone=get("KAUIZ_TIMEZONE", DEFAULT_TIMEZONE),
         max_retries=int(get("KAUIZ_MAX_RETRIES", "3")),
         max_wait=int(get("KAUIZ_MAX_WAIT_SECONDS", "300")),
+        image_mode=get("KAUIZ_IMAGE_MODE", "pillow"),
+        openrouter_api_key=get("OPENROUTER_API_KEY"),
+        openrouter_base_url=get("KAUIZ_OPENROUTER_BASE_URL", OPENROUTER_BASE_URL),
+        muse_model=get("KAUIZ_MUSE_MODEL", MUSE_MODEL),
+        visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
     )
 
 
@@ -500,6 +626,7 @@ class Job:
     topic: dict
     at: datetime
     publish: bool
+    plan: dict = field(default_factory=dict)
 
 
 def due_jobs(slots, now, default_timezone):
@@ -537,14 +664,18 @@ def due_jobs(slots, now, default_timezone):
                 topic=pick_topic(at, "am" if at.hour < 12 else "pm"),
                 at=at,
                 publish=now >= at,
+                plan=slot if isinstance(slot, dict) else {},
             ))
     return sorted(jobs, key=lambda job: job.at)
 
 
-def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=None, topic=None, publish=True):
+def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=None, topic=None, publish=True, plan=None):
     slot = slot or ("am" if now.hour < 12 else "pm")
     slot_key = slot_key or f"{now.date().isoformat()}-{slot}"
     topic = topic or pick_topic(now, slot)
+    if config.image_mode not in IMAGE_MODES:
+        LOG.error("KAUIZ_IMAGE_MODE tidak dikenali: %s", config.image_mode)
+        return EXIT_CONFIG
     # publish=False hanya membuat gambar; posting menunggu jam tayang.
     live = live and publish
 
@@ -572,9 +703,17 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
             image_path = config.output_dir / f"{slot_key}-{fmt}.jpg"
             try:
                 caption = build_feed_caption(topic) if fmt == "feed" else None
-                if not image_path.exists():
+                if config.image_mode == "muse":
+                    # Muse hanya dipanggil saat live. Dry run cukup menulis prompt untuk diperiksa.
+                    if not live and not image_path.exists():
+                        preview = write_prompt_preview(config, plan or {}, fmt, slot_key)
+                        LOG.info("%s: prompt Muse ditulis ke %s, belum memanggil OpenRouter", key, preview)
+                        continue
+                    if not image_path.exists():
+                        render_muse_image(config, plan or {}, topic, fmt, slot_key, image_path)
+                elif not image_path.exists():
                     render_image(topic, fmt, image_path, config.font_bold, config.font_regular)
-            except (OSError, ValueError) as err:
+            except (OSError, ValueError, MuseError) as err:
                 failures += 1
                 LOG.error("generate/render %s gagal: %s", key, err)
                 continue
@@ -620,8 +759,15 @@ def run_due(config, *, live, now, client=None):
             continue
         if not job.publish and (config.output_dir / f"{job.slot_key}-{job.fmt}.jpg").exists():
             continue
+        topic = job.topic
+        if config.image_mode == "muse":
+            # Mode Muse memakai isi jadwal dashboard, bukan daftar topik bawaan.
+            topic = topic_from_plan(job.plan)
+            if not topic["headline"]:
+                LOG.warning("slot %s dilewati, jadwal tidak punya topik atau key message", job.slot_key)
+                continue
         code = run_auto(config, live=live, formats=(job.fmt,), now=now, client=client,
-                        slot_key=job.slot_key, topic=job.topic, publish=job.publish)
+                        slot_key=job.slot_key, topic=topic, publish=job.publish, plan=job.plan)
         if code == EXIT_CONFIG:
             return EXIT_CONFIG
         if code != EXIT_OK:

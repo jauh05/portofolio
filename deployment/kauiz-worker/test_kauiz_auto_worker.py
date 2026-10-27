@@ -1,12 +1,15 @@
 """Tes offline untuk kauiz_auto_worker. Tidak ada panggilan jaringan."""
 
+import base64
 import fcntl
+import io
 import json
 import logging
 import os
 import tempfile
 import unittest
 from datetime import datetime, timedelta
+from unittest import mock
 from pathlib import Path
 from urllib.error import URLError
 from zoneinfo import ZoneInfo
@@ -103,6 +106,128 @@ class RenderTests(unittest.TestCase):
                     with Image.open(path) as image:
                         self.assertEqual(image.format, "JPEG")
                         self.assertEqual(image.size, worker.CANVAS[fmt])
+
+
+PLAN = {
+    "topic": "Active recall",
+    "key_message": "Tutup catatan, lalu ingat lagi",
+    "brief": "Latihan mengingat tanpa membuka catatan.",
+    "cta": "Coba sekarang",
+    "hook_direction": "pertanyaan tentang kebiasaan belajar",
+    "objective": "edukasi",
+}
+
+
+def png_bytes(size=(640, 480), color=(20, 40, 90)):
+    buffer = io.BytesIO()
+    Image.new("RGB", size, color).save(buffer, "PNG")
+    return buffer.getvalue()
+
+
+class MuseConfigTests(unittest.TestCase):
+    def test_defaults_keep_pillow_mode(self):
+        config = worker.load_config({})
+        self.assertEqual(config.image_mode, "pillow")
+        self.assertIsNone(config.visual_memory_dir)
+
+    def test_muse_mode_reads_key_and_memory_dir(self):
+        config = worker.load_config({"KAUIZ_IMAGE_MODE": "muse", "OPENROUTER_API_KEY": "k", "KAUIZ_VISUAL_MEMORY_DIR": "/opt/vm"})
+        self.assertEqual(config.image_mode, "muse")
+        self.assertEqual(config.openrouter_api_key, "k")
+        self.assertEqual(config.visual_memory_dir, Path("/opt/vm"))
+
+
+class MuseTests(unittest.TestCase):
+    def setUp(self):
+        self._saved_env = os.environ.get("VISUAL_MEMORY_DIR")
+        os.environ["VISUAL_MEMORY_DIR"] = str(BRANDS.parent)
+        self.visual_dir = worker.WORKER_DIR.parents[1] / "JaukiContentBot-integration"
+
+    def tearDown(self):
+        if self._saved_env is None:
+            os.environ.pop("VISUAL_MEMORY_DIR", None)
+        else:
+            os.environ["VISUAL_MEMORY_DIR"] = self._saved_env
+
+    def test_request_is_model_and_prompt_with_bearer_key(self):
+        captured = {}
+
+        def transport(url, headers, body):
+            captured.update(url=url, headers=headers, body=body)
+            return {"data": [{"b64_json": base64.b64encode(png_bytes()).decode()}]}
+
+        worker.generate_background("prompt teks", api_key="test-key", base_url="https://openrouter.ai/api/v1/",
+                                   model="meta/muse-image", transport=transport)
+        self.assertEqual(captured["url"], "https://openrouter.ai/api/v1/images")
+        self.assertEqual(captured["headers"], {"Authorization": "Bearer test-key"})
+        self.assertEqual(captured["body"], {"model": "meta/muse-image", "prompt": "prompt teks"})
+
+    def test_b64_and_url_responses_return_image_bytes(self):
+        raw = png_bytes()
+        from_b64 = worker.generate_background(
+            "p", api_key="k", base_url="https://x", model="m",
+            transport=lambda url, headers, body: {"data": [{"b64_json": base64.b64encode(raw).decode()}]},
+        )
+        self.assertEqual(from_b64, raw)
+        from_url = worker.generate_background(
+            "p", api_key="k", base_url="https://x", model="m",
+            transport=lambda url, headers, body: {"data": [{"url": "https://img.example/a.png"}]},
+            fetch=lambda url: raw,
+        )
+        self.assertEqual(from_url, raw)
+
+    def test_empty_response_and_missing_key_raise(self):
+        with self.assertRaises(worker.MuseError):
+            worker.generate_background("p", api_key="k", base_url="https://x", model="m",
+                                       transport=lambda url, headers, body: {"data": []})
+        with self.assertRaises(worker.MuseError):
+            worker.generate_background("p", api_key="", base_url="https://x", model="m",
+                                       transport=lambda url, headers, body: {})
+
+    def test_fit_to_canvas_matches_each_format(self):
+        for fmt in worker.FORMATS:
+            with self.subTest(fmt=fmt):
+                self.assertEqual(worker.fit_to_canvas(png_bytes((800, 600)), fmt).size, worker.CANVAS[fmt])
+
+    def test_muse_prompt_uses_kauiz_palette_and_forbids_text(self):
+        prompt = worker.muse_prompt(PLAN, "story", "2026-10-27-2030", self.visual_dir)
+        self.assertIn("#0B1537", prompt)
+        self.assertIn("Do not render any text", prompt)
+
+    def test_muse_render_overlays_text_on_background_at_canvas_size(self):
+        topic = worker.topic_from_plan(PLAN)
+        for fmt in worker.FORMATS:
+            with self.subTest(fmt=fmt), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                config = make_config(root, image_mode="muse", openrouter_api_key="k", visual_memory_dir=self.visual_dir)
+                out = root / f"slot-{fmt}.jpg"
+                with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))) as generate:
+                    worker.render_muse_image(config, PLAN, topic, fmt, "slot", out)
+                self.assertEqual(generate.call_count, 1)
+                with Image.open(out) as image:
+                    self.assertEqual(image.format, "JPEG")
+                    self.assertEqual(image.size, worker.CANVAS[fmt])
+
+    def test_dry_run_writes_prompt_and_never_calls_muse(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = make_config(Path(tmp), image_mode="muse", openrouter_api_key="k", visual_memory_dir=self.visual_dir)
+            topic = worker.topic_from_plan(PLAN)
+            with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
+                code = worker.run_auto(config, live=False, formats=("feed",), now=NOW, slot_key="2026-10-27-2030",
+                                       topic=topic, publish=True, plan=PLAN)
+            self.assertEqual(code, worker.EXIT_OK)
+            self.assertTrue((config.output_dir / "2026-10-27-2030-feed.prompt.txt").exists())
+
+    def test_topic_from_plan_and_due_jobs_carry_the_plan(self):
+        topic = worker.topic_from_plan(PLAN)
+        self.assertEqual(topic["headline"], "Tutup catatan, lalu ingat lagi")
+        self.assertEqual(topic["body"], "Latihan mengingat tanpa membuka catatan.")
+        self.assertEqual(topic["tag"], "activerecall")
+        slot = {"format": "feed", "day": 2, "time": "13:40", "timezone": "Asia/Jakarta", "lead_minutes": 120, **PLAN}
+        now = datetime(2026, 10, 27, 13, 45, tzinfo=ZoneInfo("Asia/Jakarta"))
+        jobs = worker.due_jobs([slot], now, "Asia/Jakarta")
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(jobs[0].plan["topic"], "Active recall")
 
 
 class ErrorClassificationTests(unittest.TestCase):

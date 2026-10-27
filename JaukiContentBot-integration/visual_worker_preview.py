@@ -96,6 +96,6 @@ def preview_visual_memory(
         "palette": brand["palette"],
         "typography": brand["typography"],
         "compiled_prompt": compiled["prompt"],
-        "provider_payload_preview": {"model": compiled["model"], "stream": compiled["stream"]},
+        "provider_payload_preview": {"model": compiled["model"]},
         "dry_run": True,
     }

@@ -25,7 +25,7 @@ class VisualWorkerPreviewTests(unittest.TestCase):
         self.assertIn("Cara Memilih Jurnal", result["compiled_prompt"])
         self.assertIn("4:5", result["compiled_prompt"])
         self.assertTrue(result["dry_run"])
-        self.assertEqual(result["provider_payload_preview"], {"model": "meta/muse-image", "stream": True})
+        self.assertEqual(result["provider_payload_preview"], {"model": "meta/muse-image"})
 
     def test_kauiz_story_uses_locked_blue_memory(self):
         result = preview_visual_command({

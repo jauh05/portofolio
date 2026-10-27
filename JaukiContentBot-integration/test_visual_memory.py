@@ -102,7 +102,7 @@ class VisualMemoryTests(unittest.TestCase):
         result = self.selector.select(self.analysis, seed=1)
         prompts = [self.compiler.compile_prompt("jauki", self.analysis, result["template_id"], result["variation"], mode) for mode in OUTPUT_MODES]
         self.assertEqual([item["model"] for item in prompts], ["meta/muse-image"] * 4)
-        self.assertTrue(all(item["stream"] is True for item in prompts))
+        self.assertTrue(all("stream" not in item for item in prompts))
         self.assertEqual(len({item["prompt"] for item in prompts}), 4)
         for mode, payload in zip(OUTPUT_MODES, prompts):
             self.assertIn(self.repository.data["output_modes"][mode]["aspect_ratio"], payload["prompt"])
@@ -111,7 +111,8 @@ class VisualMemoryTests(unittest.TestCase):
             self.assertIn("Fredoka", payload["prompt"])
             self.assertIn("Poppins", payload["prompt"])
             self.assertIn("Inter", payload["prompt"])
-            self.assertIn("Five AI study tips", payload["prompt"])
+            self.assertNotIn("Five AI study tips", payload["prompt"])
+            self.assertIn("Do not render any text", payload["prompt"])
             self.assertNotIn("{{", payload["prompt"])
 
     def test_all_108_template_output_combinations_compile_for_both_brands(self):
@@ -122,7 +123,7 @@ class VisualMemoryTests(unittest.TestCase):
                     combinations += 1
                     for brand, own, other in (("jauki", "#532923", "#0B1537"), ("kauiz", "#0B1537", "#532923")):
                         payload = self.compiler.compile_prompt(brand, self.analysis, template_id, {}, mode)
-                        self.assertEqual(set(payload), {"model", "prompt", "stream"})
+                        self.assertEqual(set(payload), {"model", "prompt"})
                         self.assertIn(own, payload["prompt"])
                         self.assertNotIn(other, payload["prompt"])
                         memory = VisualBrandMemory().get(brand)

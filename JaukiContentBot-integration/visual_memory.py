@@ -7,13 +7,14 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import random
 import re
 from pathlib import Path
 from typing import Any, Mapping
 
 
-MEMORY_DIR = Path(__file__).resolve().parents[1] / "resources" / "office-ai" / "visual-memory"
+MEMORY_DIR = Path(os.environ.get("VISUAL_MEMORY_DIR") or Path(__file__).resolve().parents[1] / "resources" / "office-ai" / "visual-memory")
 OUTPUT_MODES = ("feed_square", "feed_portrait", "story", "article")
 TOKEN = re.compile(r"{{\s*([a-z_]+(?:\.[a-z_]+)?)\s*}}")
 
@@ -66,7 +67,7 @@ class VisualTemplateRepository:
         if len(self.data["templates"]) != 27 or set(self.templates) != expected:
             raise ValueError("Visual memory must contain exactly T01–T27")
         for template in self.templates.values():
-            if template.get("model") != "meta/muse-image" or template.get("stream") is not True:
+            if template.get("model") != "meta/muse-image":
                 raise ValueError(f"Invalid Muse payload in {template['id']}")
             if template.get("palette_source") != "brand_memory":
                 raise ValueError(f"Template palette must come from brand memory in {template['id']}")
@@ -253,6 +254,6 @@ class VisualPromptCompiler:
         prompt += f" Use only these palette colors: {palette}. Never use reference palette, branding, or copy."
         prompt += " The image model cannot guarantee exact font families; preserve exact font assignment for a future deterministic text overlay. "
         prompt += "The output-specific composition and subject placement take precedence over controlled variation; apply variation only within that layout. "
-        prompt += "Keep text to a short headline, short subheadline, short badge, one statistic, or short CTA; leave detailed copy for a precise downstream overlay. "
+        prompt += "Do not render any text, letters, numbers, or logos in the image; leave clear space for a text overlay added later. "
         prompt += f"Canvas {fields['output.aspect_ratio']}; compose directly for this canvas, with safe margins."
-        return {"model": template["model"], "prompt": prompt, "stream": template["stream"]}
+        return {"model": template["model"], "prompt": prompt}
