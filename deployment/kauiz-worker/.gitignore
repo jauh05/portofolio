@@ -1,0 +1,9 @@
+worker.env
+state.json
+slots.json
+state.tmp
+worker.lock
+output/
+public/
+logs/
+__pycache__/
