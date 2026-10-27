@@ -6,6 +6,7 @@ import io
 import json
 import logging
 import os
+import re
 import tempfile
 import unittest
 from datetime import datetime, timedelta
@@ -299,6 +300,35 @@ class MuseTests(unittest.TestCase):
             with Image.open(config.output_dir / "2026-10-27-2030-feed.jpg") as image:
                 self.assertEqual(image.size, worker.CANVAS["feed"])
             self.assertTrue((config.output_dir / "2026-10-27-2030-feed.writer.json").exists())
+
+    def test_llm_output_from_dry_run_is_reused_by_the_live_run(self):
+        worker.load_visual_modules(self.visual_dir)
+        import visual_prompt_writer
+
+        def fake_chat(**kwargs):
+            user = json.loads(kwargs["messages"][1]["content"])
+            example = user["contoh_prompt"]
+            return {
+                "headline": re.search(r'reads exactly "([^"]+)"', example).group(1), "subline": None, "chips": [],
+                "muse_prompt": example + " Extra scene detail.",
+                "caption": "Hook dari model teks.\n\nKlik link di bio ya.\n\n#kauiz #belajarefektif #tipsbelajar",
+                "hashtags": ["#kauiz", "#belajarefektif", "#tipsbelajar"],
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, text_mode="muse", llm_model="m", writer_in_dryrun=True)
+            topic = worker.topic_from_plan(PLAN)
+            with mock.patch.object(visual_prompt_writer, "chat_json", side_effect=fake_chat) as chat:
+                worker.run_auto(config, live=False, formats=("feed",), now=NOW, slot_key="2026-10-27-2030", topic=topic, publish=True, plan=PLAN)
+                self.assertEqual(chat.call_count, 1)
+                client = FakeClient()
+                with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))) as generate:
+                    worker.run_auto(config, live=True, formats=("feed",), now=NOW, slot_key="2026-10-27-2030", topic=topic,
+                                    publish=True, plan=PLAN, client=client)
+                self.assertEqual(chat.call_count, 1)  # live memakai hasil dry run, model tidak dipanggil lagi
+            self.assertIn("Extra scene detail", generate.call_args.args[0])
+            self.assertTrue(client.calls[0][2].startswith("Hook dari model teks."))
 
     def test_story_in_text_mode_muse_has_no_caption(self):
         with tempfile.TemporaryDirectory() as tmp:

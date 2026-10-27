@@ -51,12 +51,14 @@ class StyleCardTests(unittest.TestCase):
     def test_every_prompt_states_the_edge_margins(self):
         for template_id in writer.load_styles():
             self.assertIn("left and right 10 percent", write(template_id)["muse_prompt"])
+            self.assertIn("left and right 20 percent", write(template_id, "story")["muse_prompt"])
             self.assertIn("bottom 18 percent", write(template_id, "story")["muse_prompt"])
 
     def test_story_prompt_keeps_safe_area_and_story_has_no_caption(self):
         result = write("T01", "story")
         self.assertIn("top 15 percent", result["muse_prompt"])
-        self.assertIn("left and right 10 percent", result["muse_prompt"])
+        self.assertIn("left and right 20 percent", result["muse_prompt"])
+        self.assertIn("left and right 10 percent", write("T01")["muse_prompt"])
         self.assertEqual((result["caption"], result["hashtags"]), ("", []))
 
 
@@ -128,6 +130,13 @@ class LlmTests(unittest.TestCase):
         self.assertEqual(calls[0][0], "https://llm.example/v1/chat/completions")
         self.assertEqual(calls[0][2]["model"], "m")
         self.assertEqual(calls[0][1], {"Authorization": "Bearer k"})
+        self.assertEqual(calls[0][2]["max_tokens"], 4096)
+
+    def test_request_without_api_key_sends_no_authorization_header(self):
+        llm, calls = self.llm([self.valid_reply()])
+        llm["api_key"] = ""
+        write("T01", llm=llm)
+        self.assertEqual(calls[0][1], {})
 
     def test_invalid_reply_gets_one_retry_with_feedback_then_falls_back(self):
         bad = json.loads(self.valid_reply())

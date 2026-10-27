@@ -597,7 +597,7 @@ def write_content(config, plan, topic, fmt, slot_key, job, use_llm):
     post = {key: plan.get(key) for key in ("topic", "brief", "key_message", "key_points", "cta", "hook_direction", "objective", "angle") if plan.get(key)}
     post["pattern"] = job["pattern"]
     llm = None
-    if use_llm and config.llm_model and config.llm_api_key:
+    if use_llm and config.llm_model:
         llm = {"base_url": config.llm_base_url, "api_key": config.llm_api_key, "model": config.llm_model}
     try:
         return visual_prompt_writer.write_content(
@@ -621,6 +621,9 @@ def write_prompt_preview(config, plan, topic, fmt, slot_key, state):
         info.update({"writer": content["source"], "copy": content["copy"], "hashtags": content["hashtags"], "writer_errors": content["errors"]})
         if content["caption"]:
             base.with_name(base.name + ".caption.txt").write_text(content["caption"] + "\n", encoding="utf-8")
+        if content["source"] == "llm":
+            # Hasil model teks disimpan: run live memakai teks yang sama yang sudah kamu periksa, tanpa memanggil model lagi.
+            base.with_name(base.name + ".writer.json").write_text(json.dumps(content, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     else:
         prompt = job["prompt"]
         info["copy"] = overlay_copy(plan, topic)
@@ -763,7 +766,7 @@ def load_config(env):
         text_mode=get("KAUIZ_TEXT_MODE", "muse"),
         llm_model=get("KAUIZ_LLM_MODEL"),
         llm_base_url=get("KAUIZ_LLM_BASE_URL", OPENROUTER_BASE_URL),
-        llm_api_key=get("KAUIZ_LLM_API_KEY") or get("OPENROUTER_API_KEY"),
+        llm_api_key=get("KAUIZ_LLM_API_KEY") or get("LITELLM_API_KEY"),
         writer_in_dryrun=get("KAUIZ_WRITER_IN_DRYRUN", "0") == "1",
     )
 

@@ -29,8 +29,8 @@ ASPECT_MARK = {"feed": "4:5", "story": "9:16"}
 MARGIN_RULE = {
     "feed": ("Leave the left and right 10 percent of the width and the top and bottom 6 percent of the height free of any text or "
              "important object, and never let anything touch or get cut off by an edge."),
-    "story": ("Leave the left and right 10 percent of the width free of any text or important object, keep everything below the top "
-              "15 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
+    "story": ("Leave the left and right 20 percent of the width free of any text or important object because the sides will be trimmed, "
+              "keep everything below the top 15 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
 }
 FOOTER_WHERE = {"feed": "At the very bottom", "story": "Near the bottom, inside the safe area"}
 CAPTION_LIMIT = 2200
@@ -188,8 +188,8 @@ def validate_content(content: Mapping[str, Any], brand_data: Mapping[str, Any], 
         errors.append("panjang muse_prompt harus 400-3200 karakter")
     if ASPECT_MARK[fmt] not in prompt:
         errors.append(f"muse_prompt harus menyebut rasio {ASPECT_MARK[fmt]}")
-    if "left and right 10 percent" not in prompt:
-        errors.append("muse_prompt harus memuat aturan margin (kiri dan kanan 10 percent dibiarkan kosong)")
+    if not re.search(r"left and right (10|20) percent", prompt):
+        errors.append("muse_prompt harus memuat aturan margin (sisi kiri dan kanan dibiarkan kosong (10 percent feed, 20 percent story))")
     use_cta = cta_label if slots.get("cta") else None
     for text in required_texts({k: v for k, v in copy.items() if v}, use_cta, footer):
         if f'"{text}"' not in prompt:
@@ -270,8 +270,8 @@ def _post_json(url: str, headers: Mapping[str, str], body: Mapping[str, Any], ti
 def chat_json(*, base_url: str, api_key: str, model: str, messages: list[dict[str, str]],
               transport: Optional[Callable[..., Any]] = None) -> dict[str, Any]:
     payload = (transport or _post_json)(
-        f"{base_url.rstrip('/')}/chat/completions", {"Authorization": f"Bearer {api_key}"},
-        {"model": model, "messages": messages, "temperature": 0.8},
+        f"{base_url.rstrip('/')}/chat/completions", {"Authorization": f"Bearer {api_key}"} if api_key else {},
+        {"model": model, "messages": messages, "temperature": 0.8, "max_tokens": 4096},  # model dengan reasoning memakai token untuk berpikir
     )
     try:
         text = payload["choices"][0]["message"]["content"]
