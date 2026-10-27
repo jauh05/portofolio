@@ -61,6 +61,24 @@ Jalankan tes:
 python3 -m unittest test_kauiz_auto_worker -v
 ```
 
+## Mode Muse (gambar dari Muse, teks dari Pillow)
+
+`KAUIZ_IMAGE_MODE=muse` membuat latar gambar lewat OpenRouter (`meta/muse-image`, body sama dengan bot Jauki), lalu
+menulis teks dengan Pillow. Cara kerjanya:
+
+1. Template dipilih dari 27 template oleh `VisualTemplateSelector`, memakai pola konten (`infer_pattern`) dan riwayat di
+   `state.json` (tidak mengulang template dalam 3 pemilihan terakhir). Seed berasal dari `slot_key`.
+2. Prompt dibuat compiler visual memory dengan palet Kauiz. Prompt melarang teks dan menyebut area yang harus polos,
+   diturunkan dari zona teks di `template-layouts.json`.
+3. `visual_overlay.py` menulis headline, subline, poin, CTA, dan footer di zona template itu dengan font brand
+   (League Spartan, Archivo Black, Plus Jakarta Sans). Ukuran font disesuaikan, dan panel muncul hanya bila latar ramai.
+4. Isi diambil dari slot dashboard (`topic`, `key_message`, `brief`, `key_points`, `visual_prompt`). Bila slot kosong,
+   dipakai topik bawaan (`TOPICS`) sebagai data acak.
+
+Dry run di mode muse tidak memanggil OpenRouter. Worker menulis `output/<slot>-<format>.prompt.txt`, `.plan.json`, dan
+`.preview.jpg` (layout di atas latar placeholder). Latar yang sudah dibayar disimpan sebagai `.bg.jpg` dan dipakai ulang
+bila overlay gagal. Batas harian diatur `KAUIZ_MAX_IMAGES_PER_DAY`.
+
 ## Crontab
 
 Baris di bawah **belum dipasang**. Pasang hanya setelah publish live disetujui. Cron berjalan tiap 5 menit. Jam tayang tidak diatur di crontab, melainkan di file slot.

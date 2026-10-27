@@ -156,11 +156,12 @@ class VisualMemoryTests(unittest.TestCase):
         item = {
             "topic": "Active recall", "key_message": "Tutup catatan lalu ingat lagi",
             "brief": "Latihan mengingat tanpa membuka catatan", "cta": "Coba sekarang",
-            "hook_direction": "pertanyaan tentang kebiasaan belajar", "objective": "edukasi",
+            "hook_direction": "pertanyaan tentang kebiasaan belajar", "objective": "edukasi", "visual_prompt": "an open notebook with sticky notes",
         }
         analysis = analysis_from_plan_item(item)
         self.assertEqual(analysis["headline"], "Tutup catatan lalu ingat lagi")
-        self.assertEqual(analysis["visual_subject"], "pertanyaan tentang kebiasaan belajar")
+        self.assertEqual(analysis["visual_subject"], "an open notebook with sticky notes")
+        self.assertNotIn("pertanyaan", analysis["visual_intent"])
         self.assertEqual(analysis["pillar"], "edukasi")
         for brand in ("jauki", "kauiz"):
             for template_id in self.repository.templates:

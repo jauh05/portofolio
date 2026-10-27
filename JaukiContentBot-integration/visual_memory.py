@@ -24,6 +24,11 @@ def _read_json(name: str) -> dict[str, Any]:
         return json.load(source)
 
 
+def _read_optional_json(name: str) -> dict[str, Any]:
+    path = MEMORY_DIR / name
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
 def _short(value: Any, words: int) -> str:
     if value is None:
         return ""
@@ -173,6 +178,37 @@ class VisualTemplateSelector:
         return {"template_id": chosen_id, "template": template, "variation": variation, "score": candidates[chosen_id]}
 
 
+def _percent(value: float) -> int:
+    return round(value * 100)
+
+
+def clear_zone_sentence(layout: Mapping[str, Any]) -> str:
+    """Kalimat untuk prompt Muse: area yang harus polos karena teks ditulis kemudian."""
+    zones = layout["zones"]
+    boxes = [zones[name]["box"] for name in ("headline", "subline", "stat", "badge", "cta", "footer") if name in zones]
+    bands: list[list[float]] = []
+    regions: list[str] = []
+    for x, y, w, h in sorted(boxes, key=lambda box: box[1]):
+        if w >= 0.6:
+            if bands and y <= bands[-1][1] + 0.02:
+                bands[-1][1] = max(bands[-1][1], y + h)
+            else:
+                bands.append([y, y + h])
+        else:
+            regions.append(f"the region from {_percent(x)}% to {_percent(x + w)}% across and {_percent(y)}% to {_percent(y + h)}% down")
+    parts = [f"the full-width band from {_percent(top)}% to {_percent(bottom)}% down the canvas" for top, bottom in bands] + regions
+    sentence = (
+        "Reserved areas for text added later (measured from the top-left corner): keep " + "; ".join(parts)
+        + " calm, plain, and low-detail, with no objects, faces, or busy patterns inside; place every subject and object outside them."
+    )
+    covered = [decor["box"] for decor in layout.get("decor", []) if decor.get("type") == "panel"]
+    if covered:
+        sentence += " A flat card will cover " + "; ".join(
+            f"the region from {_percent(x)}% to {_percent(x + w)}% across and {_percent(y)}% to {_percent(y + h)}% down" for x, y, w, h in covered
+        ) + ", so keep that area simple."
+    return sentence
+
+
 def analysis_from_plan_item(item: Mapping[str, Any]) -> dict[str, Any]:
     """Mengubah item rencana (payload jadwal atau content_plan) menjadi analysis untuk VisualPromptCompiler."""
     key_points = item.get("key_points") or []
@@ -183,8 +219,8 @@ def analysis_from_plan_item(item: Mapping[str, Any]) -> dict[str, Any]:
         "headline": item.get("key_message") or item.get("topic") or "",
         "subheadline": item.get("brief") or "",
         "cta": item.get("cta") or "",
-        "visual_subject": item.get("visual_prompt") or item.get("angle") or item.get("hook_direction") or "",
-        "visual_intent": item.get("hook_direction") or item.get("objective") or "",
+        "visual_subject": item.get("visual_prompt") or item.get("visual_subject") or "",
+        "visual_intent": item.get("visual_intent") or "",
         "key_points": key_points if isinstance(key_points, list) else [],
         "stat_value": item.get("stat_value") or "",
         "stat_label": item.get("stat_label") or "",
@@ -193,9 +229,10 @@ def analysis_from_plan_item(item: Mapping[str, Any]) -> dict[str, Any]:
 
 
 class VisualPromptCompiler:
-    def __init__(self, brands: VisualBrandMemory | None = None, templates: VisualTemplateRepository | None = None):
+    def __init__(self, brands: VisualBrandMemory | None = None, templates: VisualTemplateRepository | None = None, layouts: Mapping[str, Any] | None = None):
         self.brands = brands or VisualBrandMemory()
         self.templates = templates or VisualTemplateRepository()
+        self.layouts = layouts if layouts is not None else _read_optional_json("template-layouts.json")
 
     def compile_prompt(self, brand_slug: str, analysis: Mapping[str, Any], template_id: str, variation: Mapping[str, Any], output_mode: str) -> dict[str, Any]:
         if output_mode not in OUTPUT_MODES:
@@ -255,5 +292,8 @@ class VisualPromptCompiler:
         prompt += " The image model cannot guarantee exact font families; preserve exact font assignment for a future deterministic text overlay. "
         prompt += "The output-specific composition and subject placement take precedence over controlled variation; apply variation only within that layout. "
         prompt += "Do not render any text, letters, numbers, or logos in the image; leave clear space for a text overlay added later. "
+        layout = self.layouts.get("templates", {}).get(template_id, {}).get(output_mode)
+        if layout:
+            prompt += clear_zone_sentence(layout) + " "
         prompt += f"Canvas {fields['output.aspect_ratio']}; compose directly for this canvas, with safe margins."
         return {"model": template["model"], "prompt": prompt}

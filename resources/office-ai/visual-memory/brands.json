@@ -27,7 +27,24 @@
         "ui": "Inter"
       },
       "typography_prompt": "Rounded, friendly academic headline with soft heavy letterforms; clear practical body copy and accessible UI labels",
-      "series_label": "Jauki Tugas"
+      "series_label": "Jauki Tugas",
+      "roles": {
+        "ink": "primary",
+        "ink_alt": "secondary",
+        "accent": "accent",
+        "cta": "cta",
+        "paper": "background",
+        "card": "card",
+        "light": "card",
+        "muted": "muted"
+      },
+      "font_files": {
+        "headline": {"file": "Baloo2-Variable.ttf", "weight": 800},
+        "headline_alt": {"file": "Fredoka-Variable.ttf", "weight": 600},
+        "body": {"file": "Poppins-Regular.ttf"},
+        "body_bold": {"file": "Poppins-Bold.ttf"}
+      },
+      "cta": {"url": "jaukitugas.my.id", "label": "CEK LAYANAN DI BIO", "label_story": "LINK LAYANAN DI BIO", "badge": "JAUKI"}
     },
     "kauiz": {
       "name": "Kauiz",
@@ -54,7 +71,24 @@
         "body": "Plus Jakarta Sans"
       },
       "typography_prompt": "Bold condensed geometric uppercase headline; structured study-board hierarchy with clean readable supporting text",
-      "series_label": "Kauiz"
+      "series_label": "Kauiz",
+      "roles": {
+        "ink": "primary",
+        "ink_alt": "secondary",
+        "accent": "accent",
+        "cta": "accent",
+        "paper": "paper",
+        "card": "white",
+        "light": "white",
+        "muted": "text_muted"
+      },
+      "font_files": {
+        "headline": {"file": "LeagueSpartan-Variable.ttf", "weight": 800},
+        "headline_alt": {"file": "ArchivoBlack-Regular.ttf"},
+        "body": {"file": "PlusJakartaSans-Variable.ttf", "weight": 500},
+        "body_bold": {"file": "PlusJakartaSans-Variable.ttf", "weight": 700}
+      },
+      "cta": {"url": "kauiz.web.id", "label": "KLIK LINK DI BIO", "label_story": "LINK DI BIO KAUIZ", "badge": "KAUIZ"}
     }
   }
 }

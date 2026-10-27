@@ -190,34 +190,90 @@ class MuseTests(unittest.TestCase):
             with self.subTest(fmt=fmt):
                 self.assertEqual(worker.fit_to_canvas(png_bytes((800, 600)), fmt).size, worker.CANVAS[fmt])
 
-    def test_muse_prompt_uses_kauiz_palette_and_forbids_text(self):
-        prompt = worker.muse_prompt(PLAN, "story", "2026-10-27-2030", self.visual_dir)
-        self.assertIn("#0B1537", prompt)
-        self.assertIn("Do not render any text", prompt)
+    def muse_config(self, root, **overrides):
+        return make_config(root, image_mode="muse", openrouter_api_key="k", visual_memory_dir=self.visual_dir, **overrides)
+
+    def test_muse_job_uses_kauiz_palette_forbids_text_and_reserves_zones(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job = worker.muse_job(self.muse_config(Path(tmp)), PLAN, "story", "2026-10-27-2030", [])
+        self.assertIn("#0B1537", job["prompt"])
+        self.assertIn("Do not render any text", job["prompt"])
+        self.assertIn("Reserved areas for text added later", job["prompt"])
+        self.assertEqual(job["mode"], "story")
 
     def test_muse_render_overlays_text_on_background_at_canvas_size(self):
         topic = worker.topic_from_plan(PLAN)
         for fmt in worker.FORMATS:
             with self.subTest(fmt=fmt), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
-                config = make_config(root, image_mode="muse", openrouter_api_key="k", visual_memory_dir=self.visual_dir)
+                config = self.muse_config(root)
+                state = {"published": {}}
                 out = root / f"slot-{fmt}.jpg"
                 with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))) as generate:
-                    worker.render_muse_image(config, PLAN, topic, fmt, "slot", out)
+                    worker.render_muse_image(config, PLAN, topic, fmt, "slot", out, state)
+                    worker.render_muse_image(config, PLAN, topic, fmt, "slot", out, state)  # latar dipakai ulang
                 self.assertEqual(generate.call_count, 1)
+                self.assertEqual(len(state["history"]), 1)
                 with Image.open(out) as image:
                     self.assertEqual(image.format, "JPEG")
                     self.assertEqual(image.size, worker.CANVAS[fmt])
 
-    def test_dry_run_writes_prompt_and_never_calls_muse(self):
+    def test_daily_image_cap_blocks_the_next_muse_call(self):
+        topic = worker.topic_from_plan(PLAN)
         with tempfile.TemporaryDirectory() as tmp:
-            config = make_config(Path(tmp), image_mode="muse", openrouter_api_key="k", visual_memory_dir=self.visual_dir)
+            root = Path(tmp)
+            config = self.muse_config(root, max_images_per_day=1)
+            state = {"published": {}}
+            with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))) as generate:
+                worker.render_muse_image(config, PLAN, topic, "feed", "slot-a", root / "a.jpg", state)
+                with self.assertRaises(worker.MuseError):
+                    worker.render_muse_image(config, PLAN, topic, "feed", "slot-b", root / "b.jpg", state)
+            self.assertEqual(generate.call_count, 1)
+
+    def test_dry_run_writes_prompt_plan_and_layout_preview_and_never_calls_muse(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = self.muse_config(Path(tmp))
             topic = worker.topic_from_plan(PLAN)
             with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
                 code = worker.run_auto(config, live=False, formats=("feed",), now=NOW, slot_key="2026-10-27-2030",
                                        topic=topic, publish=True, plan=PLAN)
             self.assertEqual(code, worker.EXIT_OK)
-            self.assertTrue((config.output_dir / "2026-10-27-2030-feed.prompt.txt").exists())
+            for suffix in ("prompt.txt", "plan.json", "preview.jpg"):
+                self.assertTrue((config.output_dir / f"2026-10-27-2030-feed.{suffix}").exists(), suffix)
+
+    def test_templates_do_not_repeat_within_the_gap_and_cover_many_templates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = self.muse_config(Path(tmp))
+            history, chosen = [], []
+            for index in range(60):
+                job = worker.muse_job(config, PLAN, "feed", f"2026-11-{index:02d}-1300", history)
+                chosen.append(job["template_id"])
+                history = (history + [{"template_id": job["template_id"], "hero_position": job["variation"]["hero_position"],
+                                       "background_treatment": job["variation"]["background_treatment"]}])[-worker.HISTORY_LIMIT:]
+        for index in range(3, len(chosen)):
+            self.assertNotIn(chosen[index], chosen[index - 3:index])
+        self.assertGreaterEqual(len(set(chosen)), 12)
+
+    def test_empty_slot_in_muse_mode_falls_back_to_builtin_topic(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            slots = root / "slots.json"
+            slots.write_text(json.dumps([{"format": "feed", "day": 2, "time": "13:40", "timezone": "Asia/Jakarta", "lead_minutes": 120}]))
+            config = self.muse_config(root, slots_file=slots)
+            now = datetime(2026, 10, 27, 13, 45, tzinfo=ZoneInfo("Asia/Jakarta"))
+            with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
+                self.assertEqual(worker.run_due(config, live=False, now=now), worker.EXIT_OK)
+            self.assertTrue(any(config.output_dir.glob("*.plan.json")))
+
+    def test_pattern_subject_and_short_line_helpers(self):
+        self.assertEqual(worker.infer_pattern({"topic": "Tips belajar efektif"}), "tips")
+        self.assertEqual(worker.infer_pattern({"topic": "Webinar gratis"}), "event")
+        self.assertIn("quiz", worker.subject_hint({"topic": "Latihan soal harian"}))
+        self.assertLessEqual(len(worker.short_line("kata " * 60, 110)), 111)
+        for topic in worker.TOPICS:
+            plan = worker.plan_from_topic(topic)
+            self.assertTrue(plan["visual_subject"].isascii())
+            self.assertEqual(len(plan["key_points"]), 3)
 
     def test_topic_from_plan_and_due_jobs_carry_the_plan(self):
         topic = worker.topic_from_plan(PLAN)

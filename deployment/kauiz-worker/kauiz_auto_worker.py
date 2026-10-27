@@ -447,22 +447,114 @@ def fit_to_canvas(image_bytes, fmt):
         return ImageOps.fit(source.convert("RGB"), CANVAS[fmt], method=Image.LANCZOS)
 
 
-def muse_prompt(plan, fmt, slot_key, visual_memory_dir):
-    """Prompt dari compiler visual memory: template, palet Kauiz, dan isi jadwal, ditambah larangan teks."""
+# Pola konten untuk pembobotan template, subjek visual (bahasa Inggris, untuk Muse), dan poin untuk topik bawaan.
+TOPIC_VISUALS = {
+    "activerecall": ("tips", "an open notebook turned face-down beside a sticky note and a pencil", "focused and confident",
+                     ["Tutup catatan", "Tulis dari ingatan", "Cek lalu perbaiki"]),
+    "spacedrepetition": ("explainer", "a wall calendar with spaced reminder stickers", "calm and organized",
+                         ["Hari ke-1", "Hari ke-3", "Hari ke-7"]),
+    "pomodoro": ("tips", "a minimalist kitchen timer on a tidy study desk", "focused and energetic",
+                 ["25 menit fokus", "5 menit istirahat", "Ulangi 4 kali"]),
+    "kuis": ("tips", "a stack of quiz cards with a checkmark and a pencil", "playful and motivating",
+             ["Pilih satu bab", "Buat 3-5 soal", "Jawab tanpa melihat"]),
+    "verifikasi": ("explainer", "a magnifying glass over an open textbook next to a laptop", "careful and trustworthy",
+                   ["Baca jawaban AI", "Cocokkan ke materi", "Catat sumbernya"]),
+    "petakonsep": ("explainer", "a concept map made of paper notes and string on a corkboard", "clear and inspiring",
+                   ["Tulis ide utama", "Hubungkan dengan panah", "Tambah kata kunci"]),
+    "jadwal": ("tips", "a planner open to a weekly schedule with a pen and a small clock", "organized and calm",
+               ["Pilih jam", "Tentukan durasi", "Anggap janji penting"]),
+    "istirahat": ("tips", "a glass of water and a small plant beside a closed laptop", "relaxed and refreshing",
+                  ["Berdiri", "Minum air", "Kembali fokus"]),
+}
+PATTERN_KEYWORDS = (
+    ("statistics", ("persen", "%", "data", "survei", "riset")),
+    ("event", ("webinar", "event", "acara", "promo", "diskon", "launching", "peluncuran")),
+    ("technology", ("ai ", "chatgpt", "aplikasi", "teknologi", "fitur")),
+    ("explainer", ("apa itu", "kenapa", "mengapa", "konsep", "metode", "teknik")),
+    ("tips", ("tips", "cara", "langkah", "trik", "coba")),
+)
+SUBJECT_HINTS = (
+    (("kuis", "soal", "quiz", "latihan"), "a stack of quiz cards with a checkmark and a pencil"),
+    (("jadwal", "waktu", "kalender", "fokus", "pomodoro", "istirahat"), "a planner and a small timer on a tidy desk"),
+    (("ai ", "chatgpt", "teknologi", "aplikasi"), "a laptop beside an open textbook with a magnifying glass"),
+    (("ujian", "tes", "nilai"), "a calm student desk with textbooks and a pencil"),
+    (("catatan", "ringkas", "rangkum", "note"), "an open notebook with sticky notes and a pencil"),
+)
+DEFAULT_SUBJECT = "a tidy student study desk with notebooks, a pencil, and sticky notes"
+DEFAULT_INTENT = "focused, friendly, and motivating"
+HISTORY_LIMIT = 20
+
+
+def infer_pattern(plan):
+    if plan.get("pattern"):
+        return plan["pattern"]
+    text = " ".join(str(plan.get(key) or "") for key in ("topic", "key_message", "brief")).lower() + " "
+    for pattern, words in PATTERN_KEYWORDS:
+        if any(word in text for word in words):
+            return pattern
+    return "tips"
+
+
+def subject_hint(plan):
+    text = " ".join(str(plan.get(key) or "") for key in ("topic", "key_message", "brief")).lower() + " "
+    for words, subject in SUBJECT_HINTS:
+        if any(word in text for word in words):
+            return subject
+    return DEFAULT_SUBJECT
+
+
+def plan_from_topic(topic):
+    """Data acak: topik bawaan dijadikan rencana lengkap dengan pola, subjek visual, dan poin."""
+    pattern, subject, intent, points = TOPIC_VISUALS.get(topic["tag"], ("tips", DEFAULT_SUBJECT, DEFAULT_INTENT, []))
+    return {
+        "topic": topic["headline"], "key_message": topic["headline"], "brief": topic["body"],
+        "pattern": pattern, "visual_subject": subject, "visual_intent": intent, "key_points": list(points),
+    }
+
+
+def short_line(text, limit=110):
+    """Satu kalimat pendek untuk subline: potong di akhir kalimat, atau di batas kata dengan elipsis."""
+    text = " ".join(str(text or "").split())
+    if len(text) <= limit:
+        return text
+    sentence = re.match(r".{20,%d}?[.!?](?:\s|$)" % limit, text)
+    if sentence:
+        return sentence.group(0).strip()
+    return text[:limit].rsplit(" ", 1)[0] + "…"
+
+
+def overlay_copy(plan, topic):
+    points = [short_line(point, 40) for point in (plan.get("key_points") or []) if point][:4]
+    return {"headline": topic["headline"], "subheadline": short_line(topic["body"]), "items": points}
+
+
+def load_visual_modules(visual_memory_dir):
     if visual_memory_dir is None:
         raise MuseError("KAUIZ_VISUAL_MEMORY_DIR belum diisi")
     os.environ.setdefault("VISUAL_MEMORY_DIR", str(visual_memory_dir))
     if str(visual_memory_dir) not in sys.path:
         sys.path.insert(0, str(visual_memory_dir))
     import visual_memory
+    import visual_overlay
 
-    analysis = visual_memory.analysis_from_plan_item(plan)
+    return visual_memory, visual_overlay
+
+
+def muse_job(config, plan, fmt, slot_key, history):
+    """Memilih template (dengan riwayat) dan menyusun prompt Muse dari compiler visual memory."""
+    visual_memory, _ = load_visual_modules(config.visual_memory_dir)
+    item = dict(plan)
+    item["pattern"] = infer_pattern(plan)
+    item["visual_subject"] = plan.get("visual_prompt") or plan.get("visual_subject") or subject_hint(plan)
+    item["visual_intent"] = plan.get("visual_intent") or DEFAULT_INTENT
+    analysis = visual_memory.analysis_from_plan_item(item)
     seed = int(hashlib.sha256(slot_key.encode("utf-8")).hexdigest(), 16) % 2**32
-    selected = visual_memory.VisualTemplateSelector().select(analysis, seed=seed)
+    selected = visual_memory.VisualTemplateSelector().select(analysis, history=history, seed=seed)
+    mode = OUTPUT_MODE[fmt]
     compiled = visual_memory.VisualPromptCompiler().compile_prompt(
-        "kauiz", analysis, selected["template_id"], selected["variation"], OUTPUT_MODE[fmt],
+        "kauiz", analysis, selected["template_id"], selected["variation"], mode,
     )
-    return compiled["prompt"]
+    return {"prompt": compiled["prompt"], "template_id": selected["template_id"], "variation": selected["variation"], "mode": mode}
 
 
 def topic_from_plan(plan):
@@ -472,22 +564,55 @@ def topic_from_plan(plan):
     return {"tag": tag, "headline": headline, "body": (plan.get("brief") or "").strip()}
 
 
-def write_prompt_preview(config, plan, fmt, slot_key):
-    """Dry run: prompt ditulis ke file untuk diperiksa, tanpa memanggil OpenRouter."""
-    prompt = muse_prompt(plan, fmt, slot_key, config.visual_memory_dir)
-    path = config.output_dir / f"{slot_key}-{fmt}.prompt.txt"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(prompt + "\n", encoding="utf-8")
-    return path
+def apply_overlay(config, job, plan, topic, image):
+    visual_memory, visual_overlay = load_visual_modules(config.visual_memory_dir)
+    brand = visual_memory.VisualBrandMemory().get("kauiz")
+    layout = visual_overlay.load_layouts()["templates"][job["template_id"]][job["mode"]]
+    try:
+        return visual_overlay.render_overlay(image, layout, brand, overlay_copy(plan, topic), mode=job["mode"], variation=job["variation"])
+    except visual_overlay.OverlayError as err:
+        raise MuseError(f"overlay {job['template_id']} gagal: {err}") from err
 
 
-def render_muse_image(config, plan, topic, fmt, slot_key, out_path):
-    prompt = muse_prompt(plan, fmt, slot_key, config.visual_memory_dir)
-    raw = generate_background(
-        prompt, api_key=config.openrouter_api_key, base_url=config.openrouter_base_url, model=config.muse_model, fmt=fmt,
-    )
-    image = fit_to_canvas(raw, fmt)
-    draw_layout(image, topic, fmt, config.font_bold, config.font_regular)
+def write_prompt_preview(config, plan, topic, fmt, slot_key, state):
+    """Dry run: prompt, pilihan template, dan pratinjau layout ditulis ke output tanpa memanggil OpenRouter."""
+    job = muse_job(config, plan, fmt, slot_key, state.get("history", []))
+    config.output_dir.mkdir(parents=True, exist_ok=True)
+    base = config.output_dir / f"{slot_key}-{fmt}"
+    path = base.with_name(base.name + ".prompt.txt")
+    path.write_text(job["prompt"] + "\n", encoding="utf-8")
+    base.with_name(base.name + ".plan.json").write_text(
+        json.dumps({"template_id": job["template_id"], "variation": job["variation"], "copy": overlay_copy(plan, topic)},
+                   indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    visual_memory, visual_overlay = load_visual_modules(config.visual_memory_dir)
+    background = visual_overlay.placeholder_background(visual_memory.VisualBrandMemory().get("kauiz"), job["mode"], 1)
+    apply_overlay(config, job, plan, topic, background).save(base.with_name(base.name + ".preview.jpg"), "JPEG", quality=88)
+    return path, job["template_id"]
+
+
+def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
+    today = datetime.now(ZoneInfo(config.timezone)).date().isoformat()
+    background_path = out_path.with_name(out_path.stem + ".bg.jpg")
+    job = muse_job(config, plan, fmt, slot_key, state.get("history", []))
+    if background_path.exists():
+        raw = background_path.read_bytes()  # latar sudah dibayar: dipakai ulang bila overlay gagal sebelumnya
+    else:
+        used = state.setdefault("images", {}).get(today, 0)
+        if used >= config.max_images_per_day:
+            raise MuseError(f"batas gambar harian tercapai ({used}/{config.max_images_per_day})")
+        raw = generate_background(
+            job["prompt"], api_key=config.openrouter_api_key, base_url=config.openrouter_base_url,
+            model=config.muse_model, fmt=fmt,
+        )
+        background_path.parent.mkdir(parents=True, exist_ok=True)
+        background_path.write_bytes(raw)
+        state["images"] = {today: used + 1}
+        state["history"] = (state.get("history", []) + [{
+            "template_id": job["template_id"], "hero_position": job["variation"]["hero_position"],
+            "background_treatment": job["variation"]["background_treatment"], "slot_key": slot_key,
+        }])[-HISTORY_LIMIT:]
+        save_state(config.state_file, state)
+    image = apply_overlay(config, job, plan, topic, fit_to_canvas(raw, fmt))
     out_path.parent.mkdir(parents=True, exist_ok=True)
     image.save(out_path, "JPEG", quality=92)
     return out_path
@@ -525,6 +650,7 @@ class Config:
     openrouter_base_url: str = OPENROUTER_BASE_URL
     muse_model: str = MUSE_MODEL
     visual_memory_dir: Optional[Path] = None
+    max_images_per_day: int = 6
 
     def missing_for_live(self):
         required = {
@@ -561,6 +687,7 @@ def load_config(env):
         openrouter_base_url=get("KAUIZ_OPENROUTER_BASE_URL", OPENROUTER_BASE_URL),
         muse_model=get("KAUIZ_MUSE_MODEL", MUSE_MODEL),
         visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
+        max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "6")),
     )
 
 
@@ -708,11 +835,11 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
                 if config.image_mode == "muse":
                     # Muse hanya dipanggil saat live. Dry run cukup menulis prompt untuk diperiksa.
                     if not live and not image_path.exists():
-                        preview = write_prompt_preview(config, plan or {}, fmt, slot_key)
-                        LOG.info("%s: prompt Muse ditulis ke %s, belum memanggil OpenRouter", key, preview)
+                        preview, template_id = write_prompt_preview(config, plan or {}, topic, fmt, slot_key, state)
+                        LOG.info("%s: template %s, prompt Muse ditulis ke %s, belum memanggil OpenRouter", key, template_id, preview)
                         continue
                     if not image_path.exists():
-                        render_muse_image(config, plan or {}, topic, fmt, slot_key, image_path)
+                        render_muse_image(config, plan or {}, topic, fmt, slot_key, image_path, state)
                 elif not image_path.exists():
                     render_image(topic, fmt, image_path, config.font_bold, config.font_regular)
             except (OSError, ValueError, MuseError) as err:
@@ -761,15 +888,15 @@ def run_due(config, *, live, now, client=None):
             continue
         if not job.publish and (config.output_dir / f"{job.slot_key}-{job.fmt}.jpg").exists():
             continue
-        topic = job.topic
+        topic, plan = job.topic, job.plan
         if config.image_mode == "muse":
-            # Mode Muse memakai isi jadwal dashboard, bukan daftar topik bawaan.
+            # Mode Muse memakai isi jadwal dashboard. Tanpa isi, dipakai topik bawaan sebagai data acak.
             topic = topic_from_plan(job.plan)
             if not topic["headline"]:
-                LOG.warning("slot %s dilewati, jadwal tidak punya topik atau key message", job.slot_key)
-                continue
+                topic, plan = job.topic, plan_from_topic(job.topic)
+                LOG.info("slot %s tanpa isi jadwal, memakai topik bawaan '%s'", job.slot_key, topic["tag"])
         code = run_auto(config, live=live, formats=(job.fmt,), now=now, client=client,
-                        slot_key=job.slot_key, topic=topic, publish=job.publish, plan=job.plan)
+                        slot_key=job.slot_key, topic=topic, publish=job.publish, plan=plan)
         if code == EXIT_CONFIG:
             return EXIT_CONFIG
         if code != EXIT_OK:
