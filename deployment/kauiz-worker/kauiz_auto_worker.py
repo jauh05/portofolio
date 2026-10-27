@@ -540,21 +540,26 @@ def load_visual_modules(visual_memory_dir):
     return visual_memory, visual_overlay
 
 
-def muse_job(config, plan, fmt, slot_key, history):
-    """Memilih template (dengan riwayat) dan menyusun prompt Muse dari compiler visual memory."""
+def muse_job(config, plan, fmt, slot_key, history, with_prompt=True):
+    """Memilih template (dengan riwayat). Untuk mode teks Pillow, sekaligus menyusun prompt dari compiler visual memory."""
     visual_memory, _ = load_visual_modules(config.visual_memory_dir)
     item = dict(plan)
     item["pattern"] = infer_pattern(plan)
     item["visual_subject"] = plan.get("visual_prompt") or plan.get("visual_subject") or subject_hint(plan)
     item["visual_intent"] = plan.get("visual_intent") or DEFAULT_INTENT
     analysis = visual_memory.analysis_from_plan_item(item)
-    seed = int(hashlib.sha256(slot_key.encode("utf-8")).hexdigest(), 16) % 2**32
+    seed = int(hashlib.sha256(f"{slot_key}:{fmt}".encode("utf-8")).hexdigest(), 16) % 2**32
     selected = visual_memory.VisualTemplateSelector().select(analysis, history=history, seed=seed)
     mode = OUTPUT_MODE[fmt]
-    compiled = visual_memory.VisualPromptCompiler().compile_prompt(
-        "kauiz", analysis, selected["template_id"], selected["variation"], mode,
-    )
-    return {"prompt": compiled["prompt"], "template_id": selected["template_id"], "variation": selected["variation"], "mode": mode}
+    prompt = None
+    if with_prompt:
+        prompt = visual_memory.VisualPromptCompiler().compile_prompt(
+            "kauiz", analysis, selected["template_id"], selected["variation"], mode,
+        )["prompt"]
+    return {
+        "prompt": prompt, "template_id": selected["template_id"], "variation": selected["variation"], "mode": mode,
+        "subject": item["visual_subject"], "pattern": item["pattern"], "seed": seed,
+    }
 
 
 def topic_from_plan(plan):
@@ -574,34 +579,81 @@ def apply_overlay(config, job, plan, topic, image):
         raise MuseError(f"overlay {job['template_id']} gagal: {err}") from err
 
 
+def text_in_muse(config):
+    return config.text_mode == "muse"
+
+
+def write_content(config, plan, topic, fmt, slot_key, job, use_llm):
+    """Prompt Muse, caption, dan hashtag dari penulis prompt (model teks bila dikonfigurasi, jika tidak dari kartu gaya)."""
+    visual_memory, _ = load_visual_modules(config.visual_memory_dir)
+    import visual_prompt_writer
+
+    brand = visual_memory.VisualBrandMemory().get("kauiz")
+    cta = brand.get("cta", {})
+    source = {"headline": topic["headline"], "subheadline": topic["body"], "items": [p for p in (plan.get("key_points") or []) if p]}
+    post = {key: plan.get(key) for key in ("topic", "brief", "key_message", "key_points", "cta", "hook_direction", "objective", "angle") if plan.get(key)}
+    post["pattern"] = job["pattern"]
+    llm = None
+    if use_llm and config.llm_model and config.llm_api_key:
+        llm = {"base_url": config.llm_base_url, "api_key": config.llm_api_key, "model": config.llm_model}
+    try:
+        return visual_prompt_writer.write_content(
+            "kauiz", source, post, job["template_id"], fmt, job["subject"],
+            cta_label=cta.get("label_story" if fmt == "story" else "label", "LINK DI BIO"), footer=cta.get("url", "kauiz.web.id"),
+            seed=job["seed"], llm=llm,
+        )
+    except visual_prompt_writer.WriterError as err:
+        raise MuseError(f"penulis prompt gagal: {err}") from err
+
+
 def write_prompt_preview(config, plan, topic, fmt, slot_key, state):
-    """Dry run: prompt, pilihan template, dan pratinjau layout ditulis ke output tanpa memanggil OpenRouter."""
-    job = muse_job(config, plan, fmt, slot_key, state.get("history", []))
+    """Dry run: prompt, pilihan template, dan caption ditulis ke output tanpa memanggil Muse."""
+    job = muse_job(config, plan, fmt, slot_key, state.get("history", []), with_prompt=not text_in_muse(config))
     config.output_dir.mkdir(parents=True, exist_ok=True)
     base = config.output_dir / f"{slot_key}-{fmt}"
+    info = {"template_id": job["template_id"], "variation": job["variation"]}
+    if text_in_muse(config):
+        content = write_content(config, plan, topic, fmt, slot_key, job, use_llm=config.writer_in_dryrun)
+        prompt = content["muse_prompt"]
+        info.update({"writer": content["source"], "copy": content["copy"], "hashtags": content["hashtags"], "writer_errors": content["errors"]})
+        if content["caption"]:
+            base.with_name(base.name + ".caption.txt").write_text(content["caption"] + "\n", encoding="utf-8")
+    else:
+        prompt = job["prompt"]
+        info["copy"] = overlay_copy(plan, topic)
+        visual_memory, visual_overlay = load_visual_modules(config.visual_memory_dir)
+        background = visual_overlay.placeholder_background(visual_memory.VisualBrandMemory().get("kauiz"), job["mode"], 1)
+        apply_overlay(config, job, plan, topic, background).save(base.with_name(base.name + ".preview.jpg"), "JPEG", quality=88)
     path = base.with_name(base.name + ".prompt.txt")
-    path.write_text(job["prompt"] + "\n", encoding="utf-8")
-    base.with_name(base.name + ".plan.json").write_text(
-        json.dumps({"template_id": job["template_id"], "variation": job["variation"], "copy": overlay_copy(plan, topic)},
-                   indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    visual_memory, visual_overlay = load_visual_modules(config.visual_memory_dir)
-    background = visual_overlay.placeholder_background(visual_memory.VisualBrandMemory().get("kauiz"), job["mode"], 1)
-    apply_overlay(config, job, plan, topic, background).save(base.with_name(base.name + ".preview.jpg"), "JPEG", quality=88)
+    path.write_text(prompt + "\n", encoding="utf-8")
+    base.with_name(base.name + ".plan.json").write_text(json.dumps(info, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path, job["template_id"]
 
 
 def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
     today = datetime.now(ZoneInfo(config.timezone)).date().isoformat()
     background_path = out_path.with_name(out_path.stem + ".bg.jpg")
-    job = muse_job(config, plan, fmt, slot_key, state.get("history", []))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    job = muse_job(config, plan, fmt, slot_key, state.get("history", []), with_prompt=not text_in_muse(config))
+    writer_path = out_path.with_name(out_path.stem + ".writer.json")
+    prompt = job["prompt"]
+    if text_in_muse(config):
+        if writer_path.exists():
+            content = json.loads(writer_path.read_text(encoding="utf-8"))
+        else:
+            content = write_content(config, plan, topic, fmt, slot_key, job, use_llm=True)
+            writer_path.write_text(json.dumps(content, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        prompt = content["muse_prompt"]
+        if content["caption"]:
+            out_path.with_name(out_path.stem + ".caption.txt").write_text(content["caption"] + "\n", encoding="utf-8")
     if background_path.exists():
-        raw = background_path.read_bytes()  # latar sudah dibayar: dipakai ulang bila overlay gagal sebelumnya
+        raw = background_path.read_bytes()  # latar sudah dibayar: dipakai ulang bila langkah sesudahnya gagal
     else:
         used = state.setdefault("images", {}).get(today, 0)
         if used >= config.max_images_per_day:
             raise MuseError(f"batas gambar harian tercapai ({used}/{config.max_images_per_day})")
         raw = generate_background(
-            job["prompt"], api_key=config.openrouter_api_key, base_url=config.openrouter_base_url,
+            prompt, api_key=config.openrouter_api_key, base_url=config.openrouter_base_url,
             model=config.muse_model, fmt=fmt,
         )
         background_path.parent.mkdir(parents=True, exist_ok=True)
@@ -612,10 +664,22 @@ def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
             "background_treatment": job["variation"]["background_treatment"], "slot_key": slot_key,
         }])[-HISTORY_LIMIT:]
         save_state(config.state_file, state)
-    image = apply_overlay(config, job, plan, topic, fit_to_canvas(raw, fmt))
+    image = fit_to_canvas(raw, fmt)
+    if not text_in_muse(config):
+        image = apply_overlay(config, job, plan, topic, image)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     image.save(out_path, "JPEG", quality=92)
     return out_path
+
+
+def feed_caption(config, image_path, topic, fmt):
+    """Caption feed: dari penulis prompt bila ada (mode teks Muse), jika tidak dari kerangka bawaan. Story tanpa caption."""
+    if fmt != "feed":
+        return None
+    saved = image_path.with_name(image_path.stem + ".caption.txt")
+    if config.image_mode == "muse" and text_in_muse(config) and saved.exists():
+        return saved.read_text(encoding="utf-8").strip()
+    return build_feed_caption(topic)
 
 
 def publish_public_copy(image_path, public_dir, public_base_url):
@@ -651,6 +715,11 @@ class Config:
     muse_model: str = MUSE_MODEL
     visual_memory_dir: Optional[Path] = None
     max_images_per_day: int = 6
+    text_mode: str = "muse"
+    llm_model: str = ""
+    llm_base_url: str = OPENROUTER_BASE_URL
+    llm_api_key: str = ""
+    writer_in_dryrun: bool = False
 
     def missing_for_live(self):
         required = {
@@ -688,6 +757,11 @@ def load_config(env):
         muse_model=get("KAUIZ_MUSE_MODEL", MUSE_MODEL),
         visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
         max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "6")),
+        text_mode=get("KAUIZ_TEXT_MODE", "muse"),
+        llm_model=get("KAUIZ_LLM_MODEL"),
+        llm_base_url=get("KAUIZ_LLM_BASE_URL", OPENROUTER_BASE_URL),
+        llm_api_key=get("KAUIZ_LLM_API_KEY") or get("OPENROUTER_API_KEY"),
+        writer_in_dryrun=get("KAUIZ_WRITER_IN_DRYRUN", "0") == "1",
     )
 
 
@@ -802,8 +876,8 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
     slot = slot or ("am" if now.hour < 12 else "pm")
     slot_key = slot_key or f"{now.date().isoformat()}-{slot}"
     topic = topic or pick_topic(now, slot)
-    if config.image_mode not in IMAGE_MODES:
-        LOG.error("KAUIZ_IMAGE_MODE tidak dikenali: %s", config.image_mode)
+    if config.image_mode not in IMAGE_MODES or config.text_mode not in ("muse", "pillow"):
+        LOG.error("KAUIZ_IMAGE_MODE atau KAUIZ_TEXT_MODE tidak dikenali: %s, %s", config.image_mode, config.text_mode)
         return EXIT_CONFIG
     # publish=False hanya membuat gambar; posting menunggu jam tayang.
     live = live and publish
@@ -831,7 +905,7 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
 
             image_path = config.output_dir / f"{slot_key}-{fmt}.jpg"
             try:
-                caption = build_feed_caption(topic) if fmt == "feed" else None
+                caption = None
                 if config.image_mode == "muse":
                     # Muse hanya dipanggil saat live. Dry run cukup menulis prompt untuk diperiksa.
                     if not live and not image_path.exists():
@@ -842,6 +916,7 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
                         render_muse_image(config, plan or {}, topic, fmt, slot_key, image_path, state)
                 elif not image_path.exists():
                     render_image(topic, fmt, image_path, config.font_bold, config.font_regular)
+                caption = feed_caption(config, image_path, topic, fmt)
             except (OSError, ValueError, MuseError) as err:
                 failures += 1
                 LOG.error("generate/render %s gagal: %s", key, err)

@@ -1,0 +1,156 @@
+"""Tes offline untuk visual_prompt_writer. Tidak ada panggilan jaringan."""
+
+import json
+import unittest
+
+import visual_prompt_writer as writer
+
+SOURCE = {
+    "headline": "Tutup catatan, lalu ingat lagi",
+    "subheadline": "Active recall membuat otak menarik ingatan, bukan sekadar membaca ulang.",
+    "items": ["Tutup catatan", "Tulis dari ingatan", "Cek lalu perbaiki", "Ulangi besok"],
+}
+CTA, FOOTER = "KLIK LINK DI BIO", "kauiz.web.id"
+
+
+def write(template_id, fmt="feed", **kwargs):
+    return writer.write_content("kauiz", SOURCE, {"topic": "Active recall"}, template_id, fmt, "an open notebook beside a sticky note",
+                                cta_label=CTA, footer=FOOTER, **kwargs)
+
+
+class StyleCardTests(unittest.TestCase):
+    def test_all_27_cards_build_prompts_with_exact_texts_for_both_formats(self):
+        brand = writer.load_brand_data("kauiz")
+        allowed = {code.upper() for code in brand["visual"]["allowed_hex"]}
+        styles = writer.load_styles()
+        self.assertEqual(sorted(styles), [f"T{i:02d}" for i in range(1, 28)])
+        for template_id in styles:
+            for fmt in ("feed", "story"):
+                with self.subTest(template=template_id, fmt=fmt):
+                    result = write(template_id, fmt)
+                    prompt = result["muse_prompt"]
+                    self.assertIn(writer.ASPECT_MARK[fmt], prompt)
+                    self.assertIn('"kauiz.web.id"', prompt)
+                    for text in writer.required_texts({k: v for k, v in result["copy"].items() if k in ("headline", "subline", "chips") and v},
+                                                      result["copy"]["cta_label"], FOOTER):
+                        self.assertIn(f'"{text}"', prompt)
+                    self.assertTrue({c.upper() for c in __import__("re").findall(r"#[0-9A-Fa-f]{6}", prompt)} <= allowed)
+                    self.assertNotIn("{", prompt)
+                    self.assertEqual(result["errors"], [])
+
+    def test_templates_with_chips_use_them_and_others_do_not(self):
+        self.assertIn("chips", write("T08")["copy"])
+        self.assertIn("chips", write("T11")["copy"])
+        self.assertNotIn("chips", write("T01")["copy"])
+
+    def test_long_headline_is_cut_at_a_clause_instead_of_mid_phrase(self):
+        style = writer.load_styles()["T08"]
+        copy = writer.derive_copy({**SOURCE, "headline": "Satu bab, satu peta konsep yang rapi sekali dan lengkap"}, style)
+        self.assertEqual(copy["headline"], "SATU BAB")
+
+    def test_story_prompt_keeps_safe_area_and_story_has_no_caption(self):
+        result = write("T01", "story")
+        self.assertIn("top 14 percent", result["muse_prompt"])
+        self.assertEqual((result["caption"], result["hashtags"]), ("", []))
+
+
+class CaptionTests(unittest.TestCase):
+    def test_deterministic_content_passes_its_own_validation(self):
+        brand, styles = writer.load_brand_data("kauiz"), writer.load_styles()
+        for template_id in styles:
+            result = write(template_id)
+            content = {"headline": result["copy"]["headline"], "subline": result["copy"].get("subline"), "chips": result["copy"].get("chips", []),
+                       "muse_prompt": result["muse_prompt"], "caption": result["caption"], "hashtags": result["hashtags"]}
+            self.assertEqual(writer.validate_content(content, brand, styles[template_id], "feed", CTA, FOOTER), [], template_id)
+
+    def test_caption_points_to_link_in_bio_and_stays_within_the_limit(self):
+        result = write("T01")
+        self.assertIn("link di bio", result["caption"].lower())
+        self.assertLessEqual(len(result["caption"]), writer.CAPTION_LIMIT)
+
+
+class ValidationTests(unittest.TestCase):
+    def setUp(self):
+        self.brand, self.style = writer.load_brand_data("kauiz"), writer.load_styles()["T01"]
+        base = write("T01")
+        self.content = {"headline": base["copy"]["headline"], "subline": base["copy"].get("subline"), "chips": [],
+                        "muse_prompt": base["muse_prompt"], "caption": base["caption"], "hashtags": base["hashtags"]}
+
+    def check(self, **changes):
+        return writer.validate_content({**self.content, **changes}, self.brand, self.style, "feed", CTA, FOOTER)
+
+    def test_baseline_is_valid(self):
+        self.assertEqual(self.check(), [])
+
+    def test_rejects_text_missing_from_prompt_foreign_colors_and_banned_claims(self):
+        self.assertTrue(any("persis" in e for e in self.check(muse_prompt=self.content["muse_prompt"].replace(self.content["headline"], "LAIN"))))
+        self.assertTrue(any("warna" in e for e in self.check(muse_prompt=self.content["muse_prompt"] + " Use #FF0000.")))
+        self.assertTrue(any("terlarang" in e for e in self.check(caption=self.content["caption"] + " Ada garansi uang kembali.")))
+
+    def test_rejects_unknown_prices_bad_hashtags_and_long_captions(self):
+        self.assertTrue(any("harga" in e for e in self.check(caption=self.content["caption"] + " Hanya Rp 5.000.")))
+        self.assertTrue(any("hashtags" in e for e in self.check(hashtags=["#ok", "bukan tag"])))
+        self.assertTrue(any("caption" in e for e in self.check(caption="x" * 2300)))
+
+    def test_allows_prices_from_the_data(self):
+        self.assertEqual(self.check(caption=self.content["caption"] + " Mulai Rp 16.000."), [])
+
+
+class LlmTests(unittest.TestCase):
+    def llm(self, replies):
+        calls = []
+
+        def transport(url, headers, body):
+            calls.append((url, headers, body))
+            return {"choices": [{"message": {"content": replies[min(len(calls) - 1, len(replies) - 1)]}}]}
+
+        return {"base_url": "https://llm.example/v1/", "api_key": "k", "model": "m", "transport": transport}, calls
+
+    def valid_reply(self):
+        base = write("T01")
+        return json.dumps({
+            "headline": base["copy"]["headline"], "subline": base["copy"].get("subline"), "chips": [],
+            "muse_prompt": base["muse_prompt"] + " Extra scene detail.", "caption": base["caption"] + "\n",
+            "hashtags": base["hashtags"],
+        })
+
+    def test_valid_llm_reply_is_used_and_request_is_chat_completions(self):
+        llm, calls = self.llm(["```json\n" + self.valid_reply() + "\n```"])
+        result = write("T01", llm=llm)
+        self.assertEqual(result["source"], "llm")
+        self.assertIn("Extra scene detail", result["muse_prompt"])
+        self.assertEqual(calls[0][0], "https://llm.example/v1/chat/completions")
+        self.assertEqual(calls[0][2]["model"], "m")
+        self.assertEqual(calls[0][1], {"Authorization": "Bearer k"})
+
+    def test_invalid_reply_gets_one_retry_with_feedback_then_falls_back(self):
+        bad = json.loads(self.valid_reply())
+        bad["muse_prompt"] += " Use #FF0000."
+        llm, calls = self.llm([json.dumps(bad)])
+        result = write("T01", llm=llm)
+        self.assertEqual(len(calls), 2)
+        self.assertIn("perbaiki", calls[1][2]["messages"][1]["content"])
+        self.assertEqual(result["source"], "template")
+        self.assertTrue(result["errors"])
+        self.assertNotIn("#FF0000", result["muse_prompt"])
+
+    def test_retry_can_succeed(self):
+        bad = json.loads(self.valid_reply())
+        bad["hashtags"] = []
+        llm, calls = self.llm([json.dumps(bad), self.valid_reply()])
+        self.assertEqual(write("T01", llm=llm)["source"], "llm")
+        self.assertEqual(len(calls), 2)
+
+    def test_non_json_reply_falls_back_without_retry(self):
+        llm, calls = self.llm(["maaf, tidak bisa"])
+        result = write("T01", llm=llm)
+        self.assertEqual((result["source"], len(calls)), ("template", 1))
+
+    def test_story_reply_never_carries_a_caption(self):
+        llm, _ = self.llm([self.valid_reply().replace("4:5", "9:16")])
+        result = write("T01", "story", llm=llm)
+        self.assertEqual(result["caption"], "")
+
+
+if __name__ == "__main__":
+    unittest.main()

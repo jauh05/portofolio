@@ -191,7 +191,8 @@ class MuseTests(unittest.TestCase):
                 self.assertEqual(worker.fit_to_canvas(png_bytes((800, 600)), fmt).size, worker.CANVAS[fmt])
 
     def muse_config(self, root, **overrides):
-        return make_config(root, image_mode="muse", openrouter_api_key="k", visual_memory_dir=self.visual_dir, **overrides)
+        values = {"image_mode": "muse", "text_mode": "pillow", "openrouter_api_key": "k", "visual_memory_dir": self.visual_dir, **overrides}
+        return make_config(root, **values)
 
     def test_muse_job_uses_kauiz_palette_forbids_text_and_reserves_zones(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -264,6 +265,51 @@ class MuseTests(unittest.TestCase):
             with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
                 self.assertEqual(worker.run_due(config, live=False, now=now), worker.EXIT_OK)
             self.assertTrue(any(config.output_dir.glob("*.plan.json")))
+
+    def test_text_in_muse_dry_run_writes_exact_prompt_and_caption_without_calling_muse(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = self.muse_config(Path(tmp), text_mode="muse")
+            topic = worker.topic_from_plan(PLAN)
+            with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
+                code = worker.run_auto(config, live=False, formats=("feed",), now=NOW, slot_key="2026-10-27-2030",
+                                       topic=topic, publish=True, plan=PLAN)
+            self.assertEqual(code, worker.EXIT_OK)
+            base = config.output_dir / "2026-10-27-2030-feed"
+            prompt = base.with_name(base.name + ".prompt.txt").read_text(encoding="utf-8")
+            self.assertIn('reads exactly "TUTUP CATATAN, LALU INGAT LAGI"', prompt)
+            self.assertIn('"kauiz.web.id"', prompt)
+            self.assertIn("#kauiz", base.with_name(base.name + ".caption.txt").read_text(encoding="utf-8"))
+            self.assertFalse(base.with_name(base.name + ".preview.jpg").exists())
+
+    def test_text_in_muse_live_run_sends_prompt_without_overlay_and_posts_writer_caption(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, text_mode="muse")
+            topic = worker.topic_from_plan(PLAN)
+            client = FakeClient()
+            with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))) as generate:
+                code = worker.run_auto(config, live=True, formats=("feed",), now=NOW, slot_key="2026-10-27-2030",
+                                       topic=topic, publish=True, plan=PLAN, client=client)
+            self.assertEqual(code, worker.EXIT_OK)
+            self.assertEqual(generate.call_count, 1)
+            self.assertIn('reads exactly "TUTUP CATATAN, LALU INGAT LAGI"', generate.call_args.args[0])
+            caption = client.calls[0][2]
+            self.assertTrue(caption.startswith("Tutup catatan, lalu ingat lagi."))
+            self.assertIn("#kauiz", caption)
+            with Image.open(config.output_dir / "2026-10-27-2030-feed.jpg") as image:
+                self.assertEqual(image.size, worker.CANVAS["feed"])
+            self.assertTrue((config.output_dir / "2026-10-27-2030-feed.writer.json").exists())
+
+    def test_story_in_text_mode_muse_has_no_caption(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, text_mode="muse")
+            topic = worker.topic_from_plan(PLAN)
+            client = FakeClient()
+            with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))):
+                worker.run_auto(config, live=True, formats=("story",), now=NOW, slot_key="2026-10-27-2030",
+                                topic=topic, publish=True, plan=PLAN, client=client)
+            self.assertIsNone(client.calls[0][2])
 
     def test_pattern_subject_and_short_line_helpers(self):
         self.assertEqual(worker.infer_pattern({"topic": "Tips belajar efektif"}), "tips")

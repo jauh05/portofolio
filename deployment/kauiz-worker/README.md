@@ -79,6 +79,21 @@ Dry run di mode muse tidak memanggil OpenRouter. Worker menulis `output/<slot>-<
 `.preview.jpg` (layout di atas latar placeholder). Latar yang sudah dibayar disimpan sebagai `.bg.jpg` dan dipakai ulang
 bila overlay gagal. Batas harian diatur `KAUIZ_MAX_IMAGES_PER_DAY`.
 
+### Penulis prompt dan caption (mode teks Muse)
+
+Dengan `KAUIZ_TEXT_MODE=muse` (default), Muse menulis headline, subline, poin, dan footer langsung di gambar. Prompt dibuat
+`visual_prompt_writer.py` dari data brand (`brand-data/kauiz.json`), isi slot atau analisis dashboard, kartu gaya template
+(`template-styles.json`, 27 template), palet, dan ukuran (feed 4:5 atau story 9:16). Caption dan hashtag dibuat bersamaan
+untuk feed. Story tidak memakai caption.
+
+- Tanpa `KAUIZ_LLM_MODEL`, prompt dan caption dirakit dari kartu gaya dan data brand.
+- Dengan `KAUIZ_LLM_MODEL`, model teks menulis versi yang lebih hidup. Hasilnya diperiksa: teks persis dalam tanda kutip,
+  warna hanya dari palet, harga hanya dari `allowed_price_texts`, tanpa `avoid_claims`, caption maksimal 2200 karakter,
+  3 sampai 12 hashtag. Bila gagal, ada satu perbaikan, lalu dipakai versi dari kartu gaya.
+- Hasil penulis disimpan di `output/<slot>-<format>.writer.json` dan dipakai ulang, jadi model tidak dipanggil dua kali.
+- Isi `brand-data/kauiz.json` yang berstatus draft (nada bahasa dan hashtag) perlu dikonfirmasi pemilik.
+- Ejaan teks di gambar ditulis Muse dan belum diperiksa otomatis. Periksa hasil pertama di Instagram.
+
 ## Crontab
 
 Baris di bawah **belum dipasang**. Pasang hanya setelah publish live disetujui. Cron berjalan tiap 5 menit. Jam tayang tidak diatur di crontab, melainkan di file slot.

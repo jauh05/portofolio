@@ -1,0 +1,535 @@
+{
+ "version": "1.0",
+ "description": "Kartu gaya 27 template untuk prompt Muse. Teks di gambar ditulis Muse persis seperti slot. Placeholder: aspect, ink, accent, palette, headline_style, subject, headline.",
+ "templates": {
+  "T01": {
+   "concept": "Hero 3D object on navy",
+   "text_color": "cream",
+   "subject_hint": "a glossy dimensional 3D object that symbolizes the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Premium tech-style social poster in {aspect}. The background is solid {ink} with a soft lighter navy glow and subtle paper grain. In the lower center sits a single glossy 3D object that represents {subject}, lit with premium studio lighting and a thin {accent} rim light, with two or three small floating shapes around it. In the upper left, a huge {headline_style} in cream reads exactly \"{headline}\", with the last word in {accent}."
+  },
+  "T02": {
+   "concept": "B/W cutout on crumpled paper",
+   "text_color": "deep navy",
+   "subject_hint": "a hand interacting with an object that represents the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Bold social media poster in {aspect}, in the style of a modern digital-agency campaign. The background is a crumpled warm cream paper texture with soft creases and subtle shadows. In the center right, a high-contrast black and white cutout photograph of {subject}, with a single {accent} detail as the only color, sharp paper-cut edge and a light drop shadow. A large {ink} geometric block sits behind it at the lower left for depth. In the upper left, a huge headline in {headline_style}, deep navy, reads exactly \"{headline}\", with the last two words highlighted by a {accent} marker-style bar behind them."
+  },
+  "T03": {
+   "concept": "Typography hero, stacked headline",
+   "text_color": "cream",
+   "subject_hint": "two or three small objects related to the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Bold typography-led social poster in {aspect}. The background is solid {ink} with a subtle crumpled paper texture. In the center, a huge stacked headline in {headline_style}, cream with one key word in {accent}, reads exactly \"{headline}\". Around it float two or three small objects related to {subject}, tilted like stickers with thin white borders."
+  },
+  "T04": {
+   "concept": "Hand-drawn diagram on paper",
+   "text_color": "deep navy",
+   "subject_hint": "a simple process or flow that explains the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": null,
+    "cta": {
+     "where": "Below the diagram"
+    }
+   },
+   "prompt_template": "Social poster in {aspect}. The background is a crumpled warm cream paper texture. In the center, a large hand-drawn black marker diagram of {subject} as a simple flow with arrows and no words, next to a high-contrast black and white cutout of a hand drawing it. At the top, a headline in {headline_style} in deep navy reads exactly \"{headline}\"."
+  },
+  "T05": {
+   "concept": "Person holding a poster card",
+   "text_color": "deep navy",
+   "subject_hint": "a person in neutral clothing holding a large blank card",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Fashion-editorial social poster in {aspect}. The background is solid {ink} with a huge cropped abstract shape in lighter navy. A person in neutral clothing sits at the center holding a large cream poster card in front of their face, with {subject} resting on a small table beside them. The card reads exactly \"{headline}\" in {headline_style}, deep navy. Behind the person, a large {accent} circle adds depth."
+  },
+  "T06": {
+   "concept": "Surreal explorer cutout",
+   "text_color": "deep navy",
+   "subject_hint": "an unexpected character with a laptop on a floating rock",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline block",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Surreal tech campaign poster in {aspect}. The background is solid {ink} with soft stars of paper grain. In the lower right, a black and white cutout of an unexpected character sitting on a floating rock with a laptop, as a metaphor for {subject}, sharp paper-cut edge. In the upper left, a cream rectangular block holds a huge headline in {headline_style}, deep navy, reading exactly \"{headline}\"."
+  },
+  "T07": {
+   "concept": "Device showcase on dark block",
+   "text_color": "cream",
+   "subject_hint": "a laptop and phone showing a clean study-app screen",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Product-focused social poster in {aspect}. The background is solid {ink}. A huge headline in {headline_style}, cream, fills the upper half and reads exactly \"{headline}\". In the lower half, a laptop and a phone stand on a dark block, their screens showing a clean study-app interface about {subject} with no readable text. Two tilted {accent} ribbon strips cross the bottom corners."
+  },
+  "T08": {
+   "concept": "Keyword capsules on paper",
+   "text_color": "deep navy",
+   "subject_hint": "the study topic as a keyword cloud",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": {
+     "min": 4,
+     "max": 5,
+     "where": "In the middle and lower area, tilted outlined pill-shaped capsules in cream with thick rounded borders cross each other like a playful word cloud, with bold condensed navy capitals, one of them filled {accent}",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Typography poster in {aspect}. The background is a crumpled warm cream paper texture. At the top, a huge headline in {headline_style}, deep navy, centered, reads exactly \"{headline}\"."
+  },
+  "T09": {
+   "concept": "Classical statue with laptop",
+   "text_color": "cream",
+   "subject_hint": "a classical marble statue figure working on a modern laptop",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Artistic campaign poster in {aspect}. The background is solid {ink} with subtle paper grain. In the center right, a black and white cutout of a classical marble statue figure working on a modern laptop, with {subject} beside it, sharp paper-cut edge. A huge headline in {headline_style}, cream, sits in the upper left and reads exactly \"{headline}\"."
+  },
+  "T10": {
+   "concept": "Mascot guide with floating tablet",
+   "text_color": "deep navy",
+   "subject_hint": "an original friendly robot-owl mascot pointing at a floating glass tablet",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Below the headline, three short benefit rows each beginning with a small round icon",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Clean educational campaign poster in {aspect}. The background is bright cream with a soft {ink} corner. A friendly original 3D robot-owl mascot in navy and cream, with round glasses and a graduation cap, points at a floating glass tablet showing {subject}. A strong headline in {headline_style}, deep navy, sits in the upper left and reads exactly \"{headline}\"."
+  },
+  "T11": {
+   "concept": "Feature list with icons",
+   "text_color": "cream",
+   "subject_hint": "a young student holding books",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": {
+     "min": 3,
+     "max": 4,
+     "where": "Along the left side, a vertical list of short feature rows each with a small outlined icon",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Structured social poster in {aspect}. The background is solid {ink}. On the right, a cutout photograph of a smiling young student holding books, with {subject} on a desk beside them, thin {accent} outline. A huge headline in {headline_style}, cream, sits in the upper left and reads exactly \"{headline}\"."
+  },
+  "T12": {
+   "concept": "Photo evidence cards",
+   "text_color": "deep navy",
+   "subject_hint": "two or three rounded photo cards of the topic from different angles",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the cards",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": {
+     "where": "At the bottom"
+    }
+   },
+   "prompt_template": "Clean evidence-style social poster in {aspect}. The background is crumpled warm cream paper. A headline in {headline_style}, deep navy, sits at the top and reads exactly \"{headline}\". Under it, two or three rounded photographic cards show {subject} from complementary angles, with soft shadows."
+  },
+  "T13": {
+   "concept": "Surreal metaphor of the problem",
+   "text_color": "deep navy",
+   "subject_hint": "a hand holding a melting clock as a metaphor for lost time",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Editorial problem-explainer poster in {aspect}. The background is a crumpled warm cream paper texture. At the center, a surreal photographic metaphor: {subject}, high contrast with a single {accent} accent. A huge headline in {headline_style}, deep navy, sits on the left and reads exactly \"{headline}\"."
+  },
+  "T14": {
+   "concept": "Info panel beside a relaxed person",
+   "text_color": "cream",
+   "subject_hint": "a relaxed person leaning back in an armchair",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": {
+     "min": 3,
+     "max": 4,
+     "where": "On the left, a vertical list of short rows each with a small outlined icon",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Educational information poster in {aspect}. The background is solid {ink}. On the right, a cutout photograph of a relaxed person leaning back in an armchair, calm and smiling, with {subject} on a small table beside them. A huge headline in {headline_style}, cream, sits at the top and reads exactly \"{headline}\"."
+  },
+  "T15": {
+   "concept": "Event launch hero",
+   "text_color": "deep navy",
+   "subject_hint": "a large polished 3D object for the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": {
+     "where": "At the bottom"
+    }
+   },
+   "prompt_template": "Launch-style social poster in {aspect}. The background is clean cream with soft 3D lighting and a large {accent} circle behind the center. A large polished 3D object representing {subject} sits at the center. A huge headline in {headline_style}, deep navy, sits at the top and reads exactly \"{headline}\"."
+  },
+  "T16": {
+   "concept": "Original character cutout",
+   "text_color": "deep navy",
+   "subject_hint": "an original mascot character presenting the idea",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Character-metaphor editorial poster in {aspect}. The background is cream with a large {ink} half-circle at the bottom. An original 3D mascot character presenting {subject} stands at the center as a clean cutout with a light shadow. A huge headline in {headline_style}, deep navy, sits at the top and reads exactly \"{headline}\"."
+  },
+  "T17": {
+   "concept": "Research bars",
+   "text_color": "deep navy",
+   "subject_hint": "a small conceptual object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "In the lower half, three bold horizontal bars of different lengths in navy and {accent}, each with a short label inside the bar",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Data-style social poster in {aspect}. The background is a crumpled warm cream paper texture. A headline in {headline_style}, deep navy, sits at the top and reads exactly \"{headline}\". A small conceptual object representing {subject} sits at the upper right."
+  },
+  "T18": {
+   "concept": "Step cards checklist",
+   "text_color": "deep navy",
+   "subject_hint": "a simple icon for the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": {
+     "min": 3,
+     "max": 4,
+     "where": "Below the headline, a vertical stack of equal rounded step cards numbered with small circles, each card",
+     "max_chars": 18
+    },
+    "cta": {
+     "where": "At the bottom"
+    }
+   },
+   "prompt_template": "Clean checklist social poster in {aspect}. The background is light cream with a {ink} header area. A headline in {headline_style}, cream on the navy header, reads exactly \"{headline}\". Small icon: {subject}."
+  },
+  "T19": {
+   "concept": "Oversized type with object in front",
+   "text_color": "cream",
+   "subject_hint": "a large realistic object that represents the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Bold graphic-design poster in {aspect}. The background is solid {ink}. Oversized headline in {headline_style}, cream, fills much of the poster and reads exactly \"{headline}\". A large realistic object representing {subject} sits in front of the lower part of the letters, creating depth, while every letter stays legible."
+  },
+  "T20": {
+   "concept": "Cinematic full-frame photo",
+   "text_color": "cream",
+   "subject_hint": "a person studying in a dramatic but tasteful environment",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": null,
+    "cta": {
+     "where": "Lower right"
+    }
+   },
+   "prompt_template": "Cinematic social poster in {aspect}. A full-frame realistic photograph of {subject}, dramatic soft lighting, graded in {palette}. A headline in {headline_style}, cream, sits in the lower third on a soft dark gradient and reads exactly \"{headline}\"."
+  },
+  "T21": {
+   "concept": "Typography with UI cards",
+   "text_color": "deep navy",
+   "subject_hint": "floating interface cards that fit the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": {
+     "where": "At the bottom"
+    }
+   },
+   "prompt_template": "Digital-product social poster in {aspect}. The background is light cream with a soft {ink} wave at the bottom. A huge stacked headline in {headline_style}, deep navy with one word in {accent}, sits at the top and reads exactly \"{headline}\". In the lower half, translucent interface cards about {subject}, without readable text."
+  },
+  "T22": {
+   "concept": "Screen emerging from the bottom",
+   "text_color": "deep navy",
+   "subject_hint": "a large angled laptop screen showing a study interface",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Clean tech explainer poster in {aspect}. The background is cream with a soft {ink} gradient near the bottom. A large angled laptop emerges from the lower edge, its screen showing {subject} with no readable text. A headline in {headline_style}, deep navy, sits at the top and reads exactly \"{headline}\"."
+  },
+  "T23": {
+   "concept": "Glass UI cluster",
+   "text_color": "cream",
+   "subject_hint": "a cluster of semi-transparent interface cards",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Polished UI-focused poster in {aspect}. The background is a {ink} to lighter navy gradient. A cluster of semi-transparent glass cards about {subject}, with soft shadows and avatars but no readable text, floats in the lower two thirds. A headline in {headline_style}, cream, sits at the top and reads exactly \"{headline}\"."
+  },
+  "T24": {
+   "concept": "App window collage",
+   "text_color": "deep navy",
+   "subject_hint": "overlapping browser windows and creative outputs",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Creative-technology collage poster in {aspect}. The background is cream with large {ink} shapes. A layered collage of overlapping browser windows and creative outputs about {subject}, with no readable text, fills the lower section. A huge headline in {headline_style}, deep navy, sits at the top left and reads exactly \"{headline}\"."
+  },
+  "T25": {
+   "concept": "Component grid",
+   "text_color": "deep navy",
+   "subject_hint": "four small concept cards",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": {
+     "min": 4,
+     "max": 4,
+     "where": "Below it, a tidy grid of four small rounded cards, each card with one short label",
+     "max_chars": 18
+    },
+    "cta": {
+     "where": "At the bottom"
+    }
+   },
+   "prompt_template": "Structured educational poster in {aspect}. The background is light cream with thin grid lines. A headline in {headline_style}, deep navy, sits near the top and reads exactly \"{headline}\"."
+  },
+  "T26": {
+   "concept": "Floating dashboard cards",
+   "text_color": "cream",
+   "subject_hint": "tilted dashboard cards with abstract charts",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": null,
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Dynamic digital-insight poster in {aspect}. The background is solid {ink}. Tilted floating dashboard cards about {subject}, with abstract chart shapes and no numbers or words, overlap in perspective with layered shadows across the middle and lower area. A headline in {headline_style}, cream, sits near the upper center and reads exactly \"{headline}\"."
+  },
+  "T27": {
+   "concept": "Benefit list with pointer",
+   "text_color": "deep navy",
+   "subject_hint": "a large cursor or pointer that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": {
+     "min": 3,
+     "max": 4,
+     "where": "Centered below, a vertical list of short benefit rows each starting with a {accent} plus mark",
+     "max_chars": 18
+    },
+    "cta": {
+     "where": "At the bottom"
+    }
+   },
+   "prompt_template": "Benefit-focused social poster in {aspect}. The background is light cream with a {ink} block at the top. A headline in {headline_style}, cream on the navy block, reads exactly \"{headline}\". An oversized {subject} sits near the lower edge."
+  }
+ }
+}
