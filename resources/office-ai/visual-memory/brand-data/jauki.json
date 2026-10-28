@@ -1,0 +1,86 @@
+{
+  "brand": "jauki",
+  "name": "Jauki",
+  "website": "jaukitugas.my.id",
+  "instagram": "@jaukitugas",
+  "one_liner": "Konten ringan tentang tugas dan kehidupan mahasiswa.",
+  "audience": [
+    "Mahasiswa"
+  ],
+  "tone": {
+    "language": "id",
+    "style": "Lucu, hangat, dan relatable. Mengolok situasi, bukan orang. Sapaan santai.",
+    "do": [
+      "Humor tentang deadline, begadang, kelompok, kos, dan kampus",
+      "Mengajak semangat di akhir",
+      "Mengolok diri sendiri"
+    ],
+    "dont": [
+      "Menyebut layanan, harga, atau ajakan memesan",
+      "Menyindir agama, suku, ras, atau golongan",
+      "Menyindir orang tertentu atau melecehkan",
+      "Mengajak curang"
+    ],
+    "status": "draft, belum dikonfirmasi pemilik"
+  },
+  "cta_required": false,
+  "allowed_price_texts": [],
+  "avoid_claims": [
+    "joki",
+    "jasa",
+    "pesan sekarang",
+    "order",
+    "tarif",
+    "harga",
+    "diskon",
+    "promo",
+    "murah",
+    "bayar",
+    "nyontek",
+    "contek",
+    "plagiat",
+    "kunci jawaban",
+    "titip absen"
+  ],
+  "hashtags": {
+    "brand": [
+      "#jaukitugas"
+    ],
+    "topic": [
+      "#mahasiswa",
+      "#anakkuliah",
+      "#tugaskuliah",
+      "#deadline",
+      "#humormahasiswa",
+      "#kehidupankampus",
+      "#mahasiswaindonesia",
+      "#relatable"
+    ],
+    "status": "draft, belum dikonfirmasi pemilik"
+  },
+  "visual": {
+    "palette_prompt": "dark brown (#532923), warm orange (#E07540), soft yellow (#F3C75F) and warm cream (#FFE8D0)",
+    "ink": "dark brown (#532923)",
+    "accent": "warm orange (#E07540)",
+    "ink_name": "dark brown",
+    "ink_short": "brown",
+    "alt_name": "lighter brown",
+    "paper_name": "warm cream",
+    "accent_name": "warm orange",
+    "headline_style": "heavy rounded friendly sans-serif capitals",
+    "footer_style": "a slim rounded dark-brown footer bar with cream text on the left",
+    "allowed_hex": [
+      "#532923",
+      "#6E3B31",
+      "#7D5F54",
+      "#E07540",
+      "#F3C75F",
+      "#FFE8D0",
+      "#FEF4EB",
+      "#46A375",
+      "#7CB1EB",
+      "#F4A6B8"
+    ]
+  },
+  "sources": "Konten humor mahasiswa. Layanan Jauki sengaja tidak dimasukkan."
+}

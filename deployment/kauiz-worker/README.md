@@ -79,19 +79,30 @@ Dry run di mode muse tidak memanggil OpenRouter. Worker menulis `output/<slot>-<
 `.preview.jpg` (layout di atas latar placeholder). Latar yang sudah dibayar disimpan sebagai `.bg.jpg` dan dipakai ulang
 bila overlay gagal. Batas harian diatur `KAUIZ_MAX_IMAGES_PER_DAY`.
 
+### Sumber materi: analisis dashboard atau bank
+
+- **Slot punya isi** (topik, key message, brief dari analisis atau jadwal): model teks (`KAUIZ_LLM_MODEL`, bawaan
+  `meta-llama/llama-3.1-8b-instruct` lewat OpenRouter, API key sama dengan Muse) menulis prompt Muse, caption, dan hashtag.
+  Hasilnya diperiksa dulu: teks persis dalam tanda kutip, warna hanya dari palet, harga hanya dari data, tanpa klaim
+  terlarang, kalimat margin dipertahankan, caption maksimal 2200 karakter, 3 sampai 12 hashtag. Bila gagal, ada satu
+  perbaikan, lalu endpoint cadangan (bila diatur), lalu dipakai versi dari kartu gaya.
+- **Slot kosong**: dipakai materi dari bank `prompt-bank/<brand>-<format>.json` (Kauiz dan Jauki masing-masing 100 feed dan
+  200 story). Materi memuat keluh kesah, tip, dan fitur nyata dari data brand, jadi tidak monoton. Tidak ada panggilan
+  model teks. Tiap materi hanya dipakai sekali (dicatat di `state.json`, kunci `bank`). Bila bank habis dan slot kosong,
+  slot dilewati dengan pesan error di log, bukan mengulang.
+- Dry run tidak menghabiskan materi bank. Materi baru dianggap terpakai saat latar Muse berhasil dibuat.
+- Jauki (humor tentang tugas dan mahasiswa) hanya berupa data: jalur live Jauki ada di bot luar dan belum tersambung ke
+  worker ini.
+
 ### Penulis prompt dan caption (mode teks Muse)
 
 Dengan `KAUIZ_TEXT_MODE=muse` (default), Muse menulis headline, subline, poin, dan footer langsung di gambar. Prompt dibuat
-`visual_prompt_writer.py` dari data brand (`brand-data/kauiz.json`), isi slot atau analisis dashboard, kartu gaya template
-(`template-styles.json`, 27 template), palet, dan ukuran (feed 4:5 atau story 9:16). Caption dan hashtag dibuat bersamaan
-untuk feed. Story tidak memakai caption.
+`visual_prompt_writer.py` dari data brand (`brand-data/<brand>.json`), kartu gaya template (`template-styles.json`),
+palet, dan ukuran (feed 4:5 atau story 9:16). Story tidak memakai caption.
 
-- Tanpa `KAUIZ_LLM_MODEL`, prompt dan caption dirakit dari kartu gaya dan data brand.
-- Dengan `KAUIZ_LLM_MODEL`, model teks menulis versi yang lebih hidup. Hasilnya diperiksa: teks persis dalam tanda kutip,
-  warna hanya dari palet, harga hanya dari `allowed_price_texts`, tanpa `avoid_claims`, caption maksimal 2200 karakter,
-  3 sampai 12 hashtag. Bila gagal, ada satu perbaikan, lalu dipakai versi dari kartu gaya.
 - Hasil penulis disimpan di `output/<slot>-<format>.writer.json` dan dipakai ulang, jadi model tidak dipanggil dua kali.
-- Isi `brand-data/kauiz.json` yang berstatus draft (nada bahasa dan hashtag) perlu dikonfirmasi pemilik.
+- Isi `brand-data` yang berstatus draft (nada bahasa dan hashtag) perlu dikonfirmasi pemilik.
+- Muse bisa mengembalikan rasio yang meleset (story 2:3), lalu tepinya dipotong. Karena itu margin kiri dan kanan story 20 persen.
 - Ejaan teks di gambar ditulis Muse dan belum diperiksa otomatis. Periksa hasil pertama di Instagram.
 
 ## Crontab

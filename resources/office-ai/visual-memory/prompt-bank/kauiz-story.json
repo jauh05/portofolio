@@ -1,0 +1,2406 @@
+{
+ "brand": "kauiz",
+ "format": "story",
+ "items": [
+  {
+   "id": "ks-001",
+   "hook": "Lupa lagi?",
+   "line": "Wajar, otak butuh diulang di waktu yang tepat.",
+   "chips": [
+    "Ulangi bertahap",
+    "Uji diri",
+    "Catat yang salah"
+   ],
+   "subject": "a faded note beside a fresh bright note",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-002",
+   "hook": "Tutup catatanmu",
+   "line": "Tulis apa yang kamu ingat dulu.",
+   "chips": [
+    "Tutup",
+    "Tulis",
+    "Cocokkan"
+   ],
+   "subject": "a closed notebook with a pencil on top",
+   "feature": null
+  },
+  {
+   "id": "ks-003",
+   "hook": "Satu langkah kecil",
+   "line": "Mulai dari tiga menit pertama.",
+   "chips": [
+    "Tiga menit",
+    "Satu soal",
+    "Lanjut"
+   ],
+   "subject": "a small first stone on a path",
+   "feature": null
+  },
+  {
+   "id": "ks-004",
+   "hook": "Fokus 25 menit",
+   "line": "Lalu istirahat 5 menit.",
+   "chips": [
+    "Fokus",
+    "Istirahat",
+    "Ulangi"
+   ],
+   "subject": "a minimalist kitchen timer",
+   "feature": null
+  },
+  {
+   "id": "ks-005",
+   "hook": "Hari ini belajar apa?",
+   "line": "Buka Hari Ini dan mulai dari rencananya.",
+   "chips": [
+    "Lihat rencana",
+    "Mulai",
+    "Centang"
+   ],
+   "subject": "a planner open to today",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-006",
+   "hook": "Bingung mulai?",
+   "line": "Pecah targetmu jadi langkah harian.",
+   "chips": [
+    "Tulis target",
+    "Pecah",
+    "Jalankan"
+   ],
+   "subject": "a path of paper steps",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-007",
+   "hook": "Catatan jadi kuis",
+   "line": "Unggah teks atau PDF, soal dibuat otomatis.",
+   "chips": [
+    "Unggah",
+    "Atur soal",
+    "Latihan"
+   ],
+   "subject": "a PDF page next to a quiz card",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-008",
+   "hook": "Cek yang masih lemah",
+   "line": "Peta topik menunjukkan bagian yang perlu diulang.",
+   "chips": [
+    "Peta topik",
+    "Skor",
+    "Ulang"
+   ],
+   "subject": "a paper map with highlighted regions",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-009",
+   "hook": "Ganti mentor, progres aman",
+   "line": "Ada 10 mentor dengan gaya berbeda.",
+   "chips": [
+    "10 mentor",
+    "Gaya beda",
+    "Progres aman"
+   ],
+   "subject": "ten small desk lamps in a row",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-010",
+   "hook": "Tanya sampai paham",
+   "line": "Chat AI siap menjawab pertanyaanmu.",
+   "chips": [
+    "Tanya",
+    "Minta contoh",
+    "Ulangi"
+   ],
+   "subject": "a speech bubble made of paper",
+   "feature": "Chat AI"
+  },
+  {
+   "id": "ks-011",
+   "hook": "Malas baca ulang?",
+   "line": "Ganti dengan kuis dari materimu sendiri.",
+   "chips": [
+    "Kuis singkat",
+    "Lebih seru",
+    "Lebih ingat"
+   ],
+   "subject": "a stack of books and one quiz card",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-012",
+   "hook": "Jangan begadang terus",
+   "line": "Tidur cukup membantu ingatan menetap.",
+   "chips": [
+    "Tidur cukup",
+    "Materi mengendap",
+    "Fokus pagi"
+   ],
+   "subject": "a bed with soft pillows",
+   "feature": null
+  },
+  {
+   "id": "ks-013",
+   "hook": "Sesi kecil tiap hari",
+   "line": "Sedikit tapi rutin mengalahkan ngebut sekali.",
+   "chips": [
+    "Kecil",
+    "Rutin",
+    "Konsisten"
+   ],
+   "subject": "seven small circles with four filled",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-014",
+   "hook": "Streak-mu aman?",
+   "line": "Jaga kebiasaan kecil supaya streak terus naik.",
+   "chips": [
+    "Streak",
+    "Level",
+    "Target aktif"
+   ],
+   "subject": "a small flame icon on a calendar",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-015",
+   "hook": "Ringkas dulu",
+   "line": "Tangkap intinya sebelum latihan.",
+   "chips": [
+    "Ringkas",
+    "Tangkap inti",
+    "Latihan"
+   ],
+   "subject": "a long paper folded into a card",
+   "feature": "Ringkasan Cepat"
+  },
+  {
+   "id": "ks-016",
+   "hook": "Uji dulu, baru yakin",
+   "line": "Merasa paham belum tentu paham.",
+   "chips": [
+    "Kuis",
+    "Pembahasan",
+    "Perbaiki"
+   ],
+   "subject": "a stopwatch beside a blank sheet",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-017",
+   "hook": "Hint saat buntu",
+   "line": "Mode latihan punya hint dan pembahasan.",
+   "chips": [
+    "Hint",
+    "Pembahasan",
+    "Lanjut"
+   ],
+   "subject": "a small lightbulb sticker on a card",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-018",
+   "hook": "Latihan UTBK dicicil",
+   "line": "Tidak harus sekaligus, yang penting rutin.",
+   "chips": [
+    "Halaman UTBK",
+    "Bank Soal",
+    "Cek progres"
+   ],
+   "subject": "a calendar with circled dates",
+   "feature": "Bank Soal dan UTBK"
+  },
+  {
+   "id": "ks-019",
+   "hook": "Bank Soal siap pakai",
+   "line": "Latihan soal tersedia di satu halaman.",
+   "chips": [
+    "Pilih soal",
+    "Kerjakan",
+    "Lihat hasil"
+   ],
+   "subject": "a shelf of question booklets",
+   "feature": "Bank Soal dan UTBK"
+  },
+  {
+   "id": "ks-020",
+   "hook": "Live Study bareng mentor",
+   "line": "Kamera dan rekaman butuh izinmu.",
+   "chips": [
+    "Izin dulu",
+    "Ditemani",
+    "Tanpa rekam"
+   ],
+   "subject": "a desk lamp and two cups",
+   "feature": "Live Study"
+  },
+  {
+   "id": "ks-021",
+   "hook": "Datamu, kendalimu",
+   "line": "Learning Memory bisa dimatikan atau dihapus.",
+   "chips": [
+    "Bisa dimatikan",
+    "Bisa dihapus",
+    "Kamu atur"
+   ],
+   "subject": "a padlock on a notebook",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-022",
+   "hook": "Ingat progresmu",
+   "line": "Setiap sesi melanjutkan sesi sebelumnya.",
+   "chips": [
+    "Topik",
+    "Kesalahan",
+    "Progres"
+   ],
+   "subject": "a bookmark in the middle of a book",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-023",
+   "hook": "Belajar bukan lomba",
+   "line": "Fokus pada kemajuanmu sendiri.",
+   "chips": [
+    "Bandingkan diri",
+    "Minggu lalu",
+    "Naik sedikit"
+   ],
+   "subject": "a paper boat on calm water",
+   "feature": null
+  },
+  {
+   "id": "ks-024",
+   "hook": "Salah itu data",
+   "line": "Catat alasannya, coba soal serupa.",
+   "chips": [
+    "Catat",
+    "Alasan",
+    "Coba lagi"
+   ],
+   "subject": "a crumpled paper being smoothed",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-025",
+   "hook": "Rapikan mejamu",
+   "line": "Meja bersih bantu pikiran tenang.",
+   "chips": [
+    "Meja rapi",
+    "Alat seperlunya",
+    "Tenang"
+   ],
+   "subject": "a tidy desk with one book",
+   "feature": null
+  },
+  {
+   "id": "ks-026",
+   "hook": "Ponsel di luar jangkauan",
+   "line": "Satu sesi tanpa notifikasi.",
+   "chips": [
+    "Ponsel jauh",
+    "Satu sesi",
+    "Cek setelah"
+   ],
+   "subject": "a phone face down in a box",
+   "feature": null
+  },
+  {
+   "id": "ks-027",
+   "hook": "Jelaskan ke teman",
+   "line": "Kalau bisa menjelaskan, berarti paham.",
+   "chips": [
+    "Jelaskan",
+    "Cari celah",
+    "Perbaiki"
+   ],
+   "subject": "two paper cups with a string",
+   "feature": null
+  },
+  {
+   "id": "ks-028",
+   "hook": "Peta konsep satu bab",
+   "line": "Hubungkan ide dengan panah.",
+   "chips": [
+    "Ide utama",
+    "Panah",
+    "Kata kunci"
+   ],
+   "subject": "a concept map on a corkboard",
+   "feature": null
+  },
+  {
+   "id": "ks-029",
+   "hook": "Targetkan satu hal",
+   "line": "Satu target kecil per hari cukup.",
+   "chips": [
+    "Satu target",
+    "Tiap hari",
+    "Centang"
+   ],
+   "subject": "a checklist with one tick",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-030",
+   "hook": "Mulai dari yang mudah",
+   "line": "Momentum datang setelah langkah pertama.",
+   "chips": [
+    "Soal mudah",
+    "Tiga menit",
+    "Momentum"
+   ],
+   "subject": "a small stepping stone",
+   "feature": null
+  },
+  {
+   "id": "ks-031",
+   "hook": "Beri hadiah kecil",
+   "line": "Selesai sesi, rayakan sedikit.",
+   "chips": [
+    "Target sesi",
+    "Hadiah kecil",
+    "Lanjut"
+   ],
+   "subject": "a cookie on a saucer",
+   "feature": null
+  },
+  {
+   "id": "ks-032",
+   "hook": "Ulangi hari 1, 3, 7",
+   "line": "Jeda makin panjang, ingatan makin awet.",
+   "chips": [
+    "Hari ke-1",
+    "Hari ke-3",
+    "Hari ke-7"
+   ],
+   "subject": "a calendar with three marked days",
+   "feature": null
+  },
+  {
+   "id": "ks-033",
+   "hook": "Satu topik per sesi",
+   "line": "Selesaikan dulu sebelum pindah.",
+   "chips": [
+    "Pilih satu",
+    "Selesaikan",
+    "Pindah"
+   ],
+   "subject": "a single open book on a clean desk",
+   "feature": null
+  },
+  {
+   "id": "ks-034",
+   "hook": "Tulis poin inti saja",
+   "line": "Catatan singkat lebih mudah diulang.",
+   "chips": [
+    "Poin inti",
+    "Kata sendiri",
+    "Ulang"
+   ],
+   "subject": "an index card with three lines",
+   "feature": null
+  },
+  {
+   "id": "ks-035",
+   "hook": "Kuis dulu, baca kemudian",
+   "line": "Cari tahu apa yang belum kamu tahu.",
+   "chips": [
+    "Kuis dulu",
+    "Tandai ragu",
+    "Baca fokus"
+   ],
+   "subject": "a quiz card on a textbook",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-036",
+   "hook": "Belajar tanpa tekanan",
+   "line": "Pelan boleh, asal konsisten.",
+   "chips": [
+    "Atur tempo",
+    "Level nyaman",
+    "Konsisten"
+   ],
+   "subject": "a reading corner with a cushion",
+   "feature": null
+  },
+  {
+   "id": "ks-037",
+   "hook": "Mulai sekarang",
+   "line": "Lima menit cukup untuk memulai.",
+   "chips": [
+    "Lima menit",
+    "Satu kuis",
+    "Mulai"
+   ],
+   "subject": "a clock and an open notebook",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-038",
+   "hook": "Coba paket Free",
+   "line": "Kuis 2x sehari, maksimal 5 soal.",
+   "chips": [
+    "Paket Free",
+    "Kuis 2x",
+    "Koreksi otomatis"
+   ],
+   "subject": "a small gift box with a quiz card",
+   "feature": null
+  },
+  {
+   "id": "ks-039",
+   "hook": "Basic Rp 16.000",
+   "line": "Kuis sampai 15x per hari.",
+   "chips": [
+    "15x per hari",
+    "Pembahasan lengkap",
+    "Tanpa watermark"
+   ],
+   "subject": "a small coin stack and quiz cards",
+   "feature": null
+  },
+  {
+   "id": "ks-040",
+   "hook": "Pro Rp 24.000",
+   "line": "Semua level kesulitan dan ekspor PDF.",
+   "chips": [
+    "Kuis 75x",
+    "Semua level",
+    "Ekspor PDF"
+   ],
+   "subject": "a paper rocket on a desk",
+   "feature": null
+  },
+  {
+   "id": "ks-041",
+   "hook": "Premium Rp 47.000",
+   "line": "Kuis tanpa batas per hari.",
+   "chips": [
+    "Tanpa batas",
+    "Mode kompetisi",
+    "Fitur beta"
+   ],
+   "subject": "an open box of colorful cards",
+   "feature": null
+  },
+  {
+   "id": "ks-042",
+   "hook": "Ada mode kompetisi",
+   "line": "Fitur Premium untuk latihan lebih seru.",
+   "chips": [
+    "Online",
+    "Lebih seru",
+    "Menantang"
+   ],
+   "subject": "two small paper trophies",
+   "feature": null
+  },
+  {
+   "id": "ks-043",
+   "hook": "Mentor yang cocok",
+   "line": "Coba satu per satu sampai nyaman.",
+   "chips": [
+    "Pilih mentor",
+    "Coba",
+    "Ganti"
+   ],
+   "subject": "a lineup of desk lamps",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-044",
+   "hook": "Kenalan sama Ms. Elena",
+   "line": "Salah satu dari 10 mentor AI.",
+   "chips": [
+    "Mentor AI",
+    "Sesi belajar",
+    "Progres aman"
+   ],
+   "subject": "a friendly paper speech bubble",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-045",
+   "hook": "Kenalan sama Mr. Adrian",
+   "line": "Mentor AI yang bisa kamu pilih.",
+   "chips": [
+    "Pilih",
+    "Coba",
+    "Ganti kapan saja"
+   ],
+   "subject": "a warm desk lamp",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-046",
+   "hook": "Kenalan sama Ms. Clara",
+   "line": "Satu dari 10 mentor di Kauiz.",
+   "chips": [
+    "Mentor AI",
+    "Gaya beda",
+    "Memori sama"
+   ],
+   "subject": "two notebooks leaning together",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-047",
+   "hook": "Kenalan sama Mr. Ethan",
+   "line": "Mentor AI untuk menemani belajarmu.",
+   "chips": [
+    "Mentor AI",
+    "Ditemani",
+    "Progres aman"
+   ],
+   "subject": "a pencil beside a desk lamp",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-048",
+   "hook": "Kenalan sama Ms. Aria",
+   "line": "Salah satu dari 10 mentor AI.",
+   "chips": [
+    "Mentor AI",
+    "Pilih bebas",
+    "Ganti aman"
+   ],
+   "subject": "a small paper star on a desk",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-049",
+   "hook": "Kenalan sama Mr. Nathan",
+   "line": "Mentor AI yang siap menemani.",
+   "chips": [
+    "Mentor AI",
+    "Coba dulu",
+    "Progres aman"
+   ],
+   "subject": "an open book with a bookmark",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-050",
+   "hook": "Otak lagi penuh?",
+   "line": "Beri jeda lima menit sebelum lanjut.",
+   "chips": [
+    "Berdiri",
+    "Minum air",
+    "Lanjut"
+   ],
+   "subject": "a glass of water on a quiet desk",
+   "feature": null
+  },
+  {
+   "id": "ks-051",
+   "hook": "Ujian makin dekat",
+   "line": "Cicil materi lewat roadmap harian.",
+   "chips": [
+    "Pecah materi",
+    "Roadmap",
+    "Kuis"
+   ],
+   "subject": "a calendar with a circled day",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-052",
+   "hook": "Buku tebal, waktu tipis",
+   "line": "Rangkum dulu intinya sebelum latihan.",
+   "chips": [
+    "Rangkum",
+    "Inti",
+    "Latihan"
+   ],
+   "subject": "a thick book next to a slim card",
+   "feature": "Ringkasan Cepat"
+  },
+  {
+   "id": "ks-053",
+   "hook": "Belajar sambil rebahan?",
+   "line": "Boleh, asal tetap ada target kecil.",
+   "chips": [
+    "Target kecil",
+    "Tanpa ponsel",
+    "Selesaikan"
+   ],
+   "subject": "a cushion and an open notebook",
+   "feature": null
+  },
+  {
+   "id": "ks-054",
+   "hook": "Semalam belajar apa?",
+   "line": "Kauiz ingat, kamu tidak perlu menjelaskan ulang.",
+   "chips": [
+    "Topik",
+    "Kesalahan",
+    "Lanjut"
+   ],
+   "subject": "an open notebook with a bookmark",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-055",
+   "hook": "Soal yang itu lagi?",
+   "line": "Catat kesalahan supaya tidak terulang.",
+   "chips": [
+    "Catat",
+    "Pahami",
+    "Latih ulang"
+   ],
+   "subject": "a page with a red circled item",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-056",
+   "hook": "Tidak ada teman belajar",
+   "line": "Mentor AI siap menemani kapan saja.",
+   "chips": [
+    "Pilih mentor",
+    "Mulai",
+    "Ditemani"
+   ],
+   "subject": "two empty chairs and a lamp",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-057",
+   "hook": "Penjelasan tidak nyambung",
+   "line": "Ganti mentor, gaya menjelaskannya beda.",
+   "chips": [
+    "Ganti mentor",
+    "Gaya beda",
+    "Progres aman"
+   ],
+   "subject": "a row of colored lamps",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-058",
+   "hook": "Takut salah jawab",
+   "line": "Mode latihan beri hint dan pembahasan.",
+   "chips": [
+    "Hint",
+    "Pembahasan",
+    "Coba lagi"
+   ],
+   "subject": "a quiz card with a lightbulb",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-059",
+   "hook": "Skor berapa, salah di mana?",
+   "line": "Hasil kuis menandai topik yang perlu diulang.",
+   "chips": [
+    "Lihat skor",
+    "Topik lemah",
+    "Ulang"
+   ],
+   "subject": "a short paper bar chart",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-060",
+   "hook": "Target besar, takut mulai",
+   "line": "Roadmap membaginya jadi langkah harian.",
+   "chips": [
+    "Target",
+    "Langkah harian",
+    "Jalankan"
+   ],
+   "subject": "a long road with flags",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-061",
+   "hook": "Rencana hari ini siap",
+   "line": "Buka Hari Ini dan mulai satu per satu.",
+   "chips": [
+    "Rencana",
+    "Mulai",
+    "Lanjut"
+   ],
+   "subject": "a morning planner",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-062",
+   "hook": "Cek Beranda dulu",
+   "line": "Target aktif, streak, dan level ada di sana.",
+   "chips": [
+    "Target",
+    "Streak",
+    "Level"
+   ],
+   "subject": "a small dashboard card",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-063",
+   "hook": "Peta topikmu",
+   "line": "Lihat penguasaan tiap topik dengan jelas.",
+   "chips": [
+    "Peta topik",
+    "Skor",
+    "Fokus"
+   ],
+   "subject": "a paper map with colored regions",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-064",
+   "hook": "Riwayat belajarmu",
+   "line": "Lihat lagi aktivitas yang sudah dilakukan.",
+   "chips": [
+    "Aktivitas",
+    "Buka lagi",
+    "Lanjut"
+   ],
+   "subject": "a drawer of index cards",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-065",
+   "hook": "Mau latihan UTBK?",
+   "line": "Mulai dari halaman UTBK dan Bank Soal.",
+   "chips": [
+    "Halaman UTBK",
+    "Bank Soal",
+    "Cek progres"
+   ],
+   "subject": "a stack of practice booklets",
+   "feature": "Bank Soal dan UTBK"
+  },
+  {
+   "id": "ks-066",
+   "hook": "Soal latihan banyak",
+   "line": "Bank Soal siap dipakai kapan saja.",
+   "chips": [
+    "Pilih",
+    "Kerjakan",
+    "Lihat hasil"
+   ],
+   "subject": "a shelf of binders",
+   "feature": "Bank Soal dan UTBK"
+  },
+  {
+   "id": "ks-067",
+   "hook": "Pengaturan sesuai gayamu",
+   "line": "Atur mentor, level, notifikasi, dan tampilan.",
+   "chips": [
+    "Mentor",
+    "Level",
+    "Tampilan"
+   ],
+   "subject": "a row of paper toggles",
+   "feature": null
+  },
+  {
+   "id": "ks-068",
+   "hook": "Kuis dari PDF",
+   "line": "Unggah, atur jumlah soal, mulai latihan.",
+   "chips": [
+    "Unggah PDF",
+    "Atur",
+    "Latihan"
+   ],
+   "subject": "a PDF page and a quiz card",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-069",
+   "hook": "Catatan teks juga bisa",
+   "line": "Tempel catatanmu, jadikan soal latihan.",
+   "chips": [
+    "Tempel",
+    "Soal otomatis",
+    "Latihan"
+   ],
+   "subject": "a notepad and a quiz card",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-070",
+   "hook": "Atur tingkat kesulitan",
+   "line": "Mulai dari mudah, naik pelan-pelan.",
+   "chips": [
+    "Mudah",
+    "Sedang",
+    "Sulit"
+   ],
+   "subject": "three steps of a paper staircase",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-071",
+   "hook": "Live Study tanpa rekam",
+   "line": "Semuanya atas izinmu.",
+   "chips": [
+    "Izin dulu",
+    "Tanpa rekam",
+    "Kamu kendali"
+   ],
+   "subject": "a webcam cover slid shut",
+   "feature": "Live Study"
+  },
+  {
+   "id": "ks-072",
+   "hook": "Mau hapus riwayat?",
+   "line": "Datamu bisa dihapus kapan saja.",
+   "chips": [
+    "Matikan memori",
+    "Hapus data",
+    "Kamu atur"
+   ],
+   "subject": "a padlock on a notebook",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-073",
+   "hook": "Mengulang tanpa bosan",
+   "line": "Selingi dengan kuis supaya tidak monoton.",
+   "chips": [
+    "Baca",
+    "Kuis",
+    "Ulang"
+   ],
+   "subject": "a book and a quiz card",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-074",
+   "hook": "Belajar sebelum lupa",
+   "line": "Ulangi sebelum ingatan memudar.",
+   "chips": [
+    "Ulang cepat",
+    "Ulang berjarak",
+    "Ulang akhir"
+   ],
+   "subject": "a calendar with spaced stickers",
+   "feature": null
+  },
+  {
+   "id": "ks-075",
+   "hook": "Fokus satu mata pelajaran",
+   "line": "Satu sesi, satu topik.",
+   "chips": [
+    "Pilih topik",
+    "Selesaikan",
+    "Istirahat"
+   ],
+   "subject": "a single book on a desk",
+   "feature": null
+  },
+  {
+   "id": "ks-076",
+   "hook": "Waktu belajar terbatas",
+   "line": "Sesi singkat tiap hari tetap berarti.",
+   "chips": [
+    "Sepuluh menit",
+    "Satu topik",
+    "Tiap hari"
+   ],
+   "subject": "a small hourglass",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-077",
+   "hook": "Mulai dari soal termudah",
+   "line": "Biar semangat dulu naik.",
+   "chips": [
+    "Mudah dulu",
+    "Lalu sulit",
+    "Selesai"
+   ],
+   "subject": "a small stepping stone",
+   "feature": null
+  },
+  {
+   "id": "ks-078",
+   "hook": "Rayakan kemajuan kecil",
+   "line": "Kamu sudah naik satu langkah.",
+   "chips": [
+    "Lihat progres",
+    "Catat",
+    "Lanjut"
+   ],
+   "subject": "a tick mark on a card",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-079",
+   "hook": "Belajar di perjalanan",
+   "line": "Ringkasan dan kuis singkat cukup.",
+   "chips": [
+    "Ringkas",
+    "Kuis singkat",
+    "Cek hasil"
+   ],
+   "subject": "a small book bag on a bench",
+   "feature": "Ringkasan Cepat"
+  },
+  {
+   "id": "ks-080",
+   "hook": "Jangan tunggu mood",
+   "line": "Mulai dulu, mood menyusul.",
+   "chips": [
+    "Mulai",
+    "Lima menit",
+    "Lanjut"
+   ],
+   "subject": "an alarm clock and a notebook",
+   "feature": null
+  },
+  {
+   "id": "ks-081",
+   "hook": "Sebelum tidur, satu kuis",
+   "line": "Cara sederhana menjaga ritme.",
+   "chips": [
+    "Satu kuis",
+    "Tutup hari",
+    "Tidur cukup"
+   ],
+   "subject": "a bedside lamp and a card",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-082",
+   "hook": "Pagi ini mulai ringan",
+   "line": "Cek rencana Hari Ini dengan kepala segar.",
+   "chips": [
+    "Rencana",
+    "Satu target",
+    "Mulai"
+   ],
+   "subject": "a sunlit desk with a cup",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-083",
+   "hook": "Catat pertanyaanmu",
+   "line": "Simpan yang belum paham, tanyakan ke Chat AI.",
+   "chips": [
+    "Catat",
+    "Tanya",
+    "Ulangi"
+   ],
+   "subject": "a notepad with three question marks",
+   "feature": "Chat AI"
+  },
+  {
+   "id": "ks-084",
+   "hook": "Kejar target mingguan",
+   "line": "Tiga target kecil, satu minggu.",
+   "chips": [
+    "Tiga target",
+    "Satu minggu",
+    "Centang"
+   ],
+   "subject": "a weekly planner",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-085",
+   "hook": "Belajar lebih terarah",
+   "line": "Roadmap bantu kamu tahu langkah berikutnya.",
+   "chips": [
+    "Target",
+    "Langkah",
+    "Berikutnya"
+   ],
+   "subject": "a signpost made of paper",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-086",
+   "hook": "Jangan ngebut semalam",
+   "line": "Cicil hari ini, tenang besok.",
+   "chips": [
+    "Cicil",
+    "Ulang",
+    "Tenang"
+   ],
+   "subject": "a calm tidy stack of papers",
+   "feature": null
+  },
+  {
+   "id": "ks-087",
+   "hook": "Bedanya latihan dan membaca",
+   "line": "Latihan menarik ingatan keluar.",
+   "chips": [
+    "Baca sekali",
+    "Latihan",
+    "Ingat"
+   ],
+   "subject": "a hand reaching into a card drawer",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-088",
+   "hook": "Paham, belum tentu bisa",
+   "line": "Uji dengan soal yang berbeda.",
+   "chips": [
+    "Paham",
+    "Coba soal",
+    "Terapkan"
+   ],
+   "subject": "a smooth wall with a small crack",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-089",
+   "hook": "Pakai kata sendiri",
+   "line": "Catatan dengan kata sendiri lebih nempel.",
+   "chips": [
+    "Kata sendiri",
+    "Singkat",
+    "Ulang"
+   ],
+   "subject": "an index card with short lines",
+   "feature": null
+  },
+  {
+   "id": "ks-090",
+   "hook": "Satu menit refleksi",
+   "line": "Apa yang sudah kamu pelajari hari ini?",
+   "chips": [
+    "Sebutkan",
+    "Tulis",
+    "Ulang besok"
+   ],
+   "subject": "a small notebook with one line",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-091",
+   "hook": "Gaya belajarmu apa?",
+   "line": "Pilih mentor yang paling nyaman.",
+   "chips": [
+    "Coba",
+    "Bandingkan",
+    "Pilih"
+   ],
+   "subject": "a lineup of lamps",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-092",
+   "hook": "Target jangan terlalu banyak",
+   "line": "Pilih yang utama, selesaikan dulu.",
+   "chips": [
+    "Pilih utama",
+    "Selesaikan",
+    "Tambah lagi"
+   ],
+   "subject": "a single bright flag",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-093",
+   "hook": "Latihan itu kebiasaan",
+   "line": "Sedikit tiap hari, lama-lama kuat.",
+   "chips": [
+    "Sedikit",
+    "Tiap hari",
+    "Kuat"
+   ],
+   "subject": "a seedling growing",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-094",
+   "hook": "Tidak perlu sempurna",
+   "line": "Cukup lebih baik dari kemarin.",
+   "chips": [
+    "Kemarin",
+    "Hari ini",
+    "Naik sedikit"
+   ],
+   "subject": "two small steps of a staircase",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-095",
+   "hook": "Lanjut dari tempat terakhir",
+   "line": "Kauiz ingat di mana kamu berhenti.",
+   "chips": [
+    "Buka",
+    "Lanjut",
+    "Selesai"
+   ],
+   "subject": "a bookmark in a book",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-096",
+   "hook": "Ayo naik level",
+   "line": "Selesaikan target kecil untuk naik level.",
+   "chips": [
+    "Target",
+    "Selesai",
+    "Naik level"
+   ],
+   "subject": "a small badge on a card",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-097",
+   "hook": "Cek peta topik hari ini",
+   "line": "Temukan topik yang mulai menguat.",
+   "chips": [
+    "Peta topik",
+    "Naik",
+    "Lanjut"
+   ],
+   "subject": "a paper map with yellow areas",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-098",
+   "hook": "Teman belajar 24 jam",
+   "line": "Chat AI siap kapan pun kamu butuh.",
+   "chips": [
+    "Tanya",
+    "Jawab",
+    "Ulang"
+   ],
+   "subject": "a window glowing at night",
+   "feature": "Chat AI"
+  },
+  {
+   "id": "ks-099",
+   "hook": "Mulai dari satu halaman",
+   "line": "Satu halaman sehari, lama-lama tuntas.",
+   "chips": [
+    "Satu halaman",
+    "Tiap hari",
+    "Tuntas"
+   ],
+   "subject": "a book with one page turned",
+   "feature": null
+  },
+  {
+   "id": "ks-100",
+   "hook": "Tenang, masih ada waktu",
+   "line": "Susun langkah kecil dan mulai sekarang.",
+   "chips": [
+    "Susun",
+    "Mulai",
+    "Selesaikan"
+   ],
+   "subject": "a calm clock on a desk",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-101",
+   "hook": "Tantangan lima menit",
+   "line": "Kerjakan satu kuis kecil sekarang juga.",
+   "chips": [
+    "Lima menit",
+    "Satu kuis",
+    "Selesai"
+   ],
+   "subject": "a small timer beside a quiz card",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-102",
+   "hook": "Tantangan tanpa ponsel",
+   "line": "Satu sesi penuh tanpa melihat layar lain.",
+   "chips": [
+    "Ponsel jauh",
+    "Satu sesi",
+    "Cek setelah"
+   ],
+   "subject": "a phone face down on a shelf",
+   "feature": null
+  },
+  {
+   "id": "ks-103",
+   "hook": "Tantangan tiga hari",
+   "line": "Belajar sepuluh menit tiga hari berturut-turut.",
+   "chips": [
+    "Hari ke-1",
+    "Hari ke-2",
+    "Hari ke-3"
+   ],
+   "subject": "three marked days on a calendar",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-104",
+   "hook": "Tantangan jelaskan",
+   "line": "Jelaskan satu konsep dalam satu menit.",
+   "chips": [
+    "Pilih konsep",
+    "Jelaskan",
+    "Cek"
+   ],
+   "subject": "a small whiteboard and a marker",
+   "feature": null
+  },
+  {
+   "id": "ks-105",
+   "hook": "Tantangan satu bab",
+   "line": "Satu bab, satu peta konsep hari ini.",
+   "chips": [
+    "Baca",
+    "Petakan",
+    "Ulangi"
+   ],
+   "subject": "a concept map on a corkboard",
+   "feature": null
+  },
+  {
+   "id": "ks-106",
+   "hook": "Kuis kilat",
+   "line": "Tiga soal, tiga menit.",
+   "chips": [
+    "Tiga soal",
+    "Tiga menit",
+    "Cek hasil"
+   ],
+   "subject": "a stack of three cards",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-107",
+   "hook": "Apa kabar ingatanmu?",
+   "line": "Cek dengan satu kuis kecil.",
+   "chips": [
+    "Kuis kecil",
+    "Lihat hasil",
+    "Ulang"
+   ],
+   "subject": "a drawer of index cards",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-108",
+   "hook": "Benar atau mitos?",
+   "line": "Belajar semalam cukup untuk ujian.",
+   "chips": [
+    "Mitos",
+    "Cicil",
+    "Ulangi"
+   ],
+   "subject": "a pile of papers beside a calm stack",
+   "feature": null
+  },
+  {
+   "id": "ks-109",
+   "hook": "Mitos: baca ulang saja",
+   "line": "Membaca ulang lebih ampuh dari latihan.",
+   "chips": [
+    "Mitos",
+    "Uji diri",
+    "Ingat"
+   ],
+   "subject": "a stack of identical pages and a card",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-110",
+   "hook": "Mitos: belajar tanpa jeda",
+   "line": "Belajar harus berjam-jam tanpa henti.",
+   "chips": [
+    "Mitos",
+    "Sesi pendek",
+    "Ada jeda"
+   ],
+   "subject": "a short candle and a tall candle",
+   "feature": null
+  },
+  {
+   "id": "ks-111",
+   "hook": "Mitos: catatan harus lengkap",
+   "line": "Catatan harus ditulis selengkap mungkin.",
+   "chips": [
+    "Mitos",
+    "Poin inti",
+    "Ringkas"
+   ],
+   "subject": "a full notebook and one index card",
+   "feature": null
+  },
+  {
+   "id": "ks-112",
+   "hook": "Fakta belajar",
+   "line": "Menjawab soal melatih otak menarik ingatan.",
+   "chips": [
+    "Menjawab",
+    "Menarik",
+    "Menguatkan"
+   ],
+   "subject": "a hand reaching into a drawer",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-113",
+   "hook": "Fakta: jeda bantu ingat",
+   "line": "Jeda yang tepat membantu ingatan awet.",
+   "chips": [
+    "Jeda",
+    "Ulang",
+    "Awet"
+   ],
+   "subject": "an hourglass on a desk",
+   "feature": null
+  },
+  {
+   "id": "ks-114",
+   "hook": "Fakta: mengajar menguji paham",
+   "line": "Menjelaskan ke orang lain menguji pemahaman.",
+   "chips": [
+    "Jelaskan",
+    "Cari celah",
+    "Perbaiki"
+   ],
+   "subject": "two paper cups and a string",
+   "feature": null
+  },
+  {
+   "id": "ks-115",
+   "hook": "Fakta: tidur bantu ingat",
+   "line": "Tidur cukup membantu materi menetap.",
+   "chips": [
+    "Tidur",
+    "Menetap",
+    "Fokus"
+   ],
+   "subject": "a pillow and a closed book",
+   "feature": null
+  },
+  {
+   "id": "ks-116",
+   "hook": "Pernah begini?",
+   "line": "Bahan sudah dibaca, tetap blank saat soal.",
+   "chips": [
+    "Baca",
+    "Latih",
+    "Ingat"
+   ],
+   "subject": "a blank answer sheet and a pencil",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-117",
+   "hook": "Niat belajar, malah menunda?",
+   "line": "Niat belajar, ujung-ujungnya menunda.",
+   "chips": [
+    "Niat",
+    "Mulai kecil",
+    "Selesai"
+   ],
+   "subject": "an unopened notebook and a clock",
+   "feature": null
+  },
+  {
+   "id": "ks-118",
+   "hook": "Catatan banyak, bingung?",
+   "line": "Catatan banyak, tidak tahu mana yang penting.",
+   "chips": [
+    "Pilah",
+    "Ringkas",
+    "Latih"
+   ],
+   "subject": "a messy pile of notes",
+   "feature": "Ringkasan Cepat"
+  },
+  {
+   "id": "ks-119",
+   "hook": "Rajin tapi tak berubah?",
+   "line": "Belajar rajin, hasil terasa tidak berubah.",
+   "chips": [
+    "Cek peta topik",
+    "Fokus lemah",
+    "Naik"
+   ],
+   "subject": "a chart with a flat line and one rising bar",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-120",
+   "hook": "Salah soal yang sama?",
+   "line": "Salah di soal yang sama berkali-kali.",
+   "chips": [
+    "Catat",
+    "Pahami",
+    "Ulang"
+   ],
+   "subject": "three identical red marks",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-121",
+   "hook": "Bingung mulai dari bab?",
+   "line": "Mau mulai, bingung dari bab mana.",
+   "chips": [
+    "Pecah",
+    "Urutkan",
+    "Mulai"
+   ],
+   "subject": "a book with many tabs",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-122",
+   "hook": "Belajar kelompok ngobrol?",
+   "line": "Belajar kelompok malah ngobrol.",
+   "chips": [
+    "Topik jelas",
+    "Kuis bareng",
+    "Fokus"
+   ],
+   "subject": "a round table with notebooks",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-123",
+   "hook": "Ngantuk di tengah belajar?",
+   "line": "Ngantuk di tengah sesi belajar.",
+   "chips": [
+    "Berdiri",
+    "Minum air",
+    "Lanjut"
+   ],
+   "subject": "a glass of water and a small plant",
+   "feature": null
+  },
+  {
+   "id": "ks-124",
+   "hook": "Lupa terakhir belajar apa?",
+   "line": "Lupa apa yang terakhir dipelajari.",
+   "chips": [
+    "Buka riwayat",
+    "Lihat",
+    "Lanjut"
+   ],
+   "subject": "a drawer of file cards",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-125",
+   "hook": "Malam-malam butuh bantuan?",
+   "line": "Tidak ada yang bisa ditanyai malam hari.",
+   "chips": [
+    "Tulis",
+    "Tanya Chat AI",
+    "Ulang"
+   ],
+   "subject": "a night window with a laptop",
+   "feature": "Chat AI"
+  },
+  {
+   "id": "ks-126",
+   "hook": "Hari ini fokus apa?",
+   "line": "Pilih satu topik dan selesaikan.",
+   "chips": [
+    "Satu topik",
+    "Satu sesi",
+    "Selesai"
+   ],
+   "subject": "a single open book",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-127",
+   "hook": "Pilih satu hal",
+   "line": "Satu hal yang kamu selesaikan hari ini.",
+   "chips": [
+    "Pilih",
+    "Kerjakan",
+    "Centang"
+   ],
+   "subject": "a checklist with one tick",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-128",
+   "hook": "Mulai dari sepuluh menit",
+   "line": "Sepuluh menit cukup untuk menyalakan momentum.",
+   "chips": [
+    "Sepuluh menit",
+    "Satu topik",
+    "Lanjut"
+   ],
+   "subject": "a small hourglass",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-129",
+   "hook": "Kecil tapi rutin",
+   "line": "Kebiasaan kecil mengalahkan semangat sesaat.",
+   "chips": [
+    "Kecil",
+    "Rutin",
+    "Tumbuh"
+   ],
+   "subject": "a seedling in a pot",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-130",
+   "hook": "Catat kemenangan kecil",
+   "line": "Selesai satu soal itu sudah maju.",
+   "chips": [
+    "Soal selesai",
+    "Tulis",
+    "Lanjut"
+   ],
+   "subject": "a small tick on a card",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-131",
+   "hook": "Kamu sudah sejauh ini",
+   "line": "Lihat penguasaan topikmu hari ini.",
+   "chips": [
+    "Buka Progres",
+    "Lihat peta",
+    "Syukuri"
+   ],
+   "subject": "a paper map with colored regions",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-132",
+   "hook": "Belajar tidak harus sepi",
+   "line": "Mentor AI siap menemani sesimu.",
+   "chips": [
+    "Pilih mentor",
+    "Mulai",
+    "Ditemani"
+   ],
+   "subject": "a warm lamp and two cups",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-133",
+   "hook": "Pilih teman belajarmu",
+   "line": "Ada 10 mentor dengan kepribadian berbeda.",
+   "chips": [
+    "10 mentor",
+    "Pilih",
+    "Ganti"
+   ],
+   "subject": "ten lamps with different shades",
+   "feature": "10 Mentor AI"
+  },
+  {
+   "id": "ks-134",
+   "hook": "Mentor sama, memori sama",
+   "line": "Ganti mentor tanpa kehilangan progres.",
+   "chips": [
+    "Ganti",
+    "Memori sama",
+    "Aman"
+   ],
+   "subject": "ten keys on one ring",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-135",
+   "hook": "Datamu bisa dihapus",
+   "line": "Learning Memory ada di bawah kendalimu.",
+   "chips": [
+    "Matikan",
+    "Hapus",
+    "Kamu atur"
+   ],
+   "subject": "a padlock on a notebook",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-136",
+   "hook": "Sesi bareng mentor",
+   "line": "Live Study menemani pengerjaan soal sulit.",
+   "chips": [
+    "Live Study",
+    "Izin",
+    "Ditemani"
+   ],
+   "subject": "a lamp lit desk with tea",
+   "feature": "Live Study"
+  },
+  {
+   "id": "ks-137",
+   "hook": "Rekaman butuh izin",
+   "line": "Live Study tidak merekam otomatis.",
+   "chips": [
+    "Izin eksplisit",
+    "Tanpa otomatis",
+    "Aman"
+   ],
+   "subject": "a camera cover slid shut",
+   "feature": "Live Study"
+  },
+  {
+   "id": "ks-138",
+   "hook": "Latih soal UTBK",
+   "line": "Cicil hari ini supaya tenang nanti.",
+   "chips": [
+    "Latihan",
+    "Cek hasil",
+    "Ulang"
+   ],
+   "subject": "a countdown calendar",
+   "feature": "Bank Soal dan UTBK"
+  },
+  {
+   "id": "ks-139",
+   "hook": "Bank Soal terbuka",
+   "line": "Kerjakan soal yang sudah tersedia.",
+   "chips": [
+    "Pilih",
+    "Kerjakan",
+    "Lihat hasil"
+   ],
+   "subject": "a shelf of binders",
+   "feature": "Bank Soal dan UTBK"
+  },
+  {
+   "id": "ks-140",
+   "hook": "Ringkasan dalam sekejap",
+   "line": "Rangkum materi tanpa membaca ulang semuanya.",
+   "chips": [
+    "Ringkas",
+    "Cek",
+    "Latihan"
+   ],
+   "subject": "a folded paper summary card",
+   "feature": "Ringkasan Cepat"
+  },
+  {
+   "id": "ks-141",
+   "hook": "Chat AI siap ditanya",
+   "line": "Tanyakan apa pun yang belum kamu pahami.",
+   "chips": [
+    "Tanya",
+    "Contoh",
+    "Ulangi"
+   ],
+   "subject": "a paper speech bubble",
+   "feature": "Chat AI"
+  },
+  {
+   "id": "ks-142",
+   "hook": "Soal dari catatanmu",
+   "line": "Materi sendiri jadi bahan latihan.",
+   "chips": [
+    "Unggah",
+    "Atur",
+    "Latihan"
+   ],
+   "subject": "a binder with tabs",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-143",
+   "hook": "Sesuaikan tingkat sulit",
+   "line": "Mulai nyaman, naik perlahan.",
+   "chips": [
+    "Mudah",
+    "Sedang",
+    "Sulit"
+   ],
+   "subject": "a paper staircase",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-144",
+   "hook": "Roadmap tiga langkah",
+   "line": "Mulai sederhana, tambah detail kemudian.",
+   "chips": [
+    "Tiga langkah",
+    "Sederhana",
+    "Detail"
+   ],
+   "subject": "three stepping stones",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-145",
+   "hook": "Satu target dulu",
+   "line": "Selesaikan satu sebelum menambah target.",
+   "chips": [
+    "Pilih",
+    "Selesaikan",
+    "Tambah"
+   ],
+   "subject": "a single flag",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-146",
+   "hook": "Free: coba dulu",
+   "line": "Kuis 2x sehari dengan koreksi otomatis.",
+   "chips": [
+    "Kuis 2x",
+    "Maks 5 soal",
+    "Koreksi otomatis"
+   ],
+   "subject": "a small gift box",
+   "feature": null
+  },
+  {
+   "id": "ks-147",
+   "hook": "Mau latihan lebih banyak?",
+   "line": "Basic Rp 16.000 per bulan.",
+   "chips": [
+    "15x per hari",
+    "Pembahasan lengkap",
+    "Tanpa watermark"
+   ],
+   "subject": "a coin stack",
+   "feature": null
+  },
+  {
+   "id": "ks-148",
+   "hook": "Butuh semua level?",
+   "line": "Pro Rp 24.000 per bulan.",
+   "chips": [
+    "Kuis 75x",
+    "Semua level",
+    "Ekspor PDF"
+   ],
+   "subject": "a paper rocket",
+   "feature": null
+  },
+  {
+   "id": "ks-149",
+   "hook": "Belajar tanpa batas harian",
+   "line": "Premium Rp 47.000 per bulan.",
+   "chips": [
+    "Tanpa batas",
+    "Kompetisi",
+    "Fitur beta"
+   ],
+   "subject": "a treasure box of cards",
+   "feature": null
+  },
+  {
+   "id": "ks-150",
+   "hook": "Senin semangat",
+   "line": "Awali minggu dengan satu target kecil.",
+   "chips": [
+    "Satu target",
+    "Mulai pagi",
+    "Centang"
+   ],
+   "subject": "a sunny desk with a planner",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-151",
+   "hook": "Selasa fokus",
+   "line": "Pilih satu topik dan tuntaskan.",
+   "chips": [
+    "Satu topik",
+    "Satu sesi",
+    "Tuntas"
+   ],
+   "subject": "a single book and a pencil",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-152",
+   "hook": "Rabu cek progres",
+   "line": "Lihat peta topik di tengah minggu.",
+   "chips": [
+    "Peta topik",
+    "Skor",
+    "Fokus"
+   ],
+   "subject": "a paper map with colored regions",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-153",
+   "hook": "Kamis ulang materi",
+   "line": "Ulangi bagian yang baru dipelajari.",
+   "chips": [
+    "Ulang",
+    "Kuis",
+    "Catat"
+   ],
+   "subject": "a calendar with marked days",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-154",
+   "hook": "Jumat rapikan catatan",
+   "line": "Ringkas yang berantakan jadi inti.",
+   "chips": [
+    "Pilah",
+    "Ringkas",
+    "Simpan"
+   ],
+   "subject": "a messy then tidy stack of notes",
+   "feature": "Ringkasan Cepat"
+  },
+  {
+   "id": "ks-155",
+   "hook": "Sabtu santai tapi konsisten",
+   "line": "Sesi singkat cukup untuk menjaga ritme.",
+   "chips": [
+    "Sesi singkat",
+    "Satu kuis",
+    "Istirahat"
+   ],
+   "subject": "a cozy chair and a lamp",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-156",
+   "hook": "Minggu susun rencana",
+   "line": "Siapkan tiga target untuk minggu depan.",
+   "chips": [
+    "Tiga target",
+    "Satu minggu",
+    "Siap"
+   ],
+   "subject": "a weekly planner",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-157",
+   "hook": "Habis ujian, lalu apa?",
+   "line": "Tinjau yang salah supaya lebih siap berikutnya.",
+   "chips": [
+    "Tinjau",
+    "Catat",
+    "Perbaiki"
+   ],
+   "subject": "a graded paper beside a pencil",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-158",
+   "hook": "Awal semester",
+   "line": "Mulai dari ritme kecil yang realistis.",
+   "chips": [
+    "Jam tetap",
+    "Sesi singkat",
+    "Konsisten"
+   ],
+   "subject": "a fresh notebook and a pen",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-159",
+   "hook": "Tengah semester",
+   "line": "Cek lagi topik yang mulai tertinggal.",
+   "chips": [
+    "Cek peta",
+    "Fokus",
+    "Kejar"
+   ],
+   "subject": "a paper map with pale areas",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-160",
+   "hook": "Menjelang ujian",
+   "line": "Latihan bertahap lebih menenangkan.",
+   "chips": [
+    "Latihan",
+    "Cek hasil",
+    "Ulang"
+   ],
+   "subject": "a calendar with a circled day",
+   "feature": "Bank Soal dan UTBK"
+  },
+  {
+   "id": "ks-161",
+   "hook": "Liburan, tetap menjaga ritme",
+   "line": "Cukup sepuluh menit tiap hari.",
+   "chips": [
+    "Sepuluh menit",
+    "Satu topik",
+    "Santai"
+   ],
+   "subject": "a beach towel and a small notebook",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-162",
+   "hook": "Belajar pagi atau malam?",
+   "line": "Pilih jam saat kamu paling fokus.",
+   "chips": [
+    "Coba pagi",
+    "Coba malam",
+    "Pilih"
+   ],
+   "subject": "a sun and a moon on index cards",
+   "feature": null
+  },
+  {
+   "id": "ks-163",
+   "hook": "Musik atau hening?",
+   "line": "Pilih yang membuatmu paling fokus.",
+   "chips": [
+    "Coba",
+    "Bandingkan",
+    "Pilih"
+   ],
+   "subject": "a pair of headphones on a desk",
+   "feature": null
+  },
+  {
+   "id": "ks-164",
+   "hook": "Meja atau kasur?",
+   "line": "Meja belajar bantu otak bersiap fokus.",
+   "chips": [
+    "Meja rapi",
+    "Lampu cukup",
+    "Fokus"
+   ],
+   "subject": "a tidy desk and a lamp",
+   "feature": null
+  },
+  {
+   "id": "ks-165",
+   "hook": "Belajar sambil ngemil?",
+   "line": "Siapkan camilan ringan, jangan sampai teralih.",
+   "chips": [
+    "Camilan ringan",
+    "Air putih",
+    "Fokus"
+   ],
+   "subject": "a bowl of fruit beside a notebook",
+   "feature": null
+  },
+  {
+   "id": "ks-166",
+   "hook": "Kopi tidak menggantikan tidur",
+   "line": "Istirahat cukup tetap yang utama.",
+   "chips": [
+    "Tidur",
+    "Air putih",
+    "Fokus"
+   ],
+   "subject": "a cup beside a pillow",
+   "feature": null
+  },
+  {
+   "id": "ks-167",
+   "hook": "Warna stabilo secukupnya",
+   "line": "Tandai yang penting saja.",
+   "chips": [
+    "Tandai inti",
+    "Sedikit",
+    "Ulang"
+   ],
+   "subject": "three highlighters beside a page",
+   "feature": null
+  },
+  {
+   "id": "ks-168",
+   "hook": "Kartu hafalan sederhana",
+   "line": "Satu kartu, satu pertanyaan.",
+   "chips": [
+    "Tulis tanya",
+    "Tulis jawab",
+    "Uji"
+   ],
+   "subject": "a small stack of flashcards",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-169",
+   "hook": "Ringkas dalam tiga kalimat",
+   "line": "Kalau tidak bisa, berarti belum paham.",
+   "chips": [
+    "Tiga kalimat",
+    "Kata sendiri",
+    "Cek"
+   ],
+   "subject": "a small card with three lines",
+   "feature": "Ringkasan Cepat"
+  },
+  {
+   "id": "ks-170",
+   "hook": "Tanya kenapa",
+   "line": "Pahami alasannya, bukan hanya jawabannya.",
+   "chips": [
+    "Kenapa",
+    "Contoh",
+    "Terapkan"
+   ],
+   "subject": "a paper question mark",
+   "feature": "Chat AI"
+  },
+  {
+   "id": "ks-171",
+   "hook": "Beri contoh sendiri",
+   "line": "Contoh buatanmu membuat konsep menempel.",
+   "chips": [
+    "Buat contoh",
+    "Cek",
+    "Ulang"
+   ],
+   "subject": "a small hand drawn example",
+   "feature": "Chat AI"
+  },
+  {
+   "id": "ks-172",
+   "hook": "Bandingkan dua konsep",
+   "line": "Cari beda dan miripnya.",
+   "chips": [
+    "Mirip",
+    "Beda",
+    "Contoh"
+   ],
+   "subject": "two cards side by side",
+   "feature": null
+  },
+  {
+   "id": "ks-173",
+   "hook": "Kaitkan dengan hal sehari-hari",
+   "line": "Konsep abstrak jadi lebih mudah diingat.",
+   "chips": [
+    "Cari contoh",
+    "Kaitkan",
+    "Ingat"
+   ],
+   "subject": "an everyday object next to a notebook",
+   "feature": null
+  },
+  {
+   "id": "ks-174",
+   "hook": "Gambar ide utama",
+   "line": "Sketsa sederhana membantu mengingat.",
+   "chips": [
+    "Sketsa",
+    "Label",
+    "Ulang"
+   ],
+   "subject": "a simple sketch on a card",
+   "feature": null
+  },
+  {
+   "id": "ks-175",
+   "hook": "Bacakan lantang",
+   "line": "Mendengar suara sendiri membantu mengingat.",
+   "chips": [
+    "Baca lantang",
+    "Jeda",
+    "Ulang"
+   ],
+   "subject": "a small microphone shape",
+   "feature": null
+  },
+  {
+   "id": "ks-176",
+   "hook": "Uji diri pakai timer",
+   "line": "Latih mengerjakan soal dalam waktu terbatas.",
+   "chips": [
+    "Atur timer",
+    "Kerjakan",
+    "Cek"
+   ],
+   "subject": "a stopwatch beside a quiz card",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-177",
+   "hook": "Latihan campur topik",
+   "line": "Selingi jenis soal supaya terbiasa.",
+   "chips": [
+    "Campur",
+    "Latih",
+    "Cek"
+   ],
+   "subject": "three notebooks fanned out",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-178",
+   "hook": "Latih titik lemahmu",
+   "line": "Mulai dari titik lemahmu.",
+   "chips": [
+    "Cari lemah",
+    "Latih",
+    "Naik"
+   ],
+   "subject": "a red circled problem on a page",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-179",
+   "hook": "Jeda sebelum jawab",
+   "line": "Tarik napas, baca soal pelan-pelan.",
+   "chips": [
+    "Napas",
+    "Baca pelan",
+    "Jawab"
+   ],
+   "subject": "a calm cup of tea and a pencil",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-180",
+   "hook": "Periksa jawabanmu",
+   "line": "Pembahasan membantu memahami alurnya.",
+   "chips": [
+    "Baca pembahasan",
+    "Catat",
+    "Ulang"
+   ],
+   "subject": "an open page with short notes",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-181",
+   "hook": "Susun ulang jadwal",
+   "line": "Geser sesi, jangan batalkan semuanya.",
+   "chips": [
+    "Geser",
+    "Pendek",
+    "Tetap jalan"
+   ],
+   "subject": "a planner with moved blocks",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-182",
+   "hook": "Lewat sehari, tidak apa-apa",
+   "line": "Lanjutkan dari rencana berikutnya.",
+   "chips": [
+    "Lanjut",
+    "Kecil",
+    "Konsisten"
+   ],
+   "subject": "a bookmark in a book",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-183",
+   "hook": "Kuis di sela waktu",
+   "line": "Antrean dan perjalanan bisa jadi sesi singkat.",
+   "chips": [
+    "Antre",
+    "Kuis kecil",
+    "Selesai"
+   ],
+   "subject": "a small bus ticket and a card",
+   "feature": "Kuis otomatis dari materimu"
+  },
+  {
+   "id": "ks-184",
+   "hook": "Target harian realistis",
+   "line": "Lebih baik kecil tapi tercapai.",
+   "chips": [
+    "Kecil",
+    "Tercapai",
+    "Naik"
+   ],
+   "subject": "a small trophy on a card",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-185",
+   "hook": "Bangun kebiasaan dua minggu",
+   "line": "Satu kebiasaan kecil, dijaga dua minggu.",
+   "chips": [
+    "Pilih satu",
+    "Dua minggu",
+    "Jaga"
+   ],
+   "subject": "a row of seedlings",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-186",
+   "hook": "Evaluasi mingguan",
+   "line": "Lihat apa yang berjalan dan yang belum.",
+   "chips": [
+    "Lihat progres",
+    "Catat",
+    "Atur"
+   ],
+   "subject": "a weekly review card",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-187",
+   "hook": "Baca peta topik",
+   "line": "Warna terang berarti sudah kuat.",
+   "chips": [
+    "Terang",
+    "Pucat",
+    "Fokus"
+   ],
+   "subject": "a paper map with two shades",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-188",
+   "hook": "Sesi tanpa gangguan",
+   "line": "Beri tahu orang rumah kamu sedang belajar.",
+   "chips": [
+    "Bilang",
+    "Pintu tertutup",
+    "Fokus"
+   ],
+   "subject": "a do not disturb sign on a door",
+   "feature": null
+  },
+  {
+   "id": "ks-189",
+   "hook": "Siapkan alat dulu",
+   "line": "Buku, pena, air minum, lalu mulai.",
+   "chips": [
+    "Buku",
+    "Pena",
+    "Air"
+   ],
+   "subject": "a small tray with a pen and a cup",
+   "feature": null
+  },
+  {
+   "id": "ks-190",
+   "hook": "Satu soal, satu pembahasan",
+   "line": "Jangan lewati pembahasannya.",
+   "chips": [
+    "Jawab",
+    "Baca",
+    "Catat"
+   ],
+   "subject": "a quiz card and a note",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-191",
+   "hook": "Rayakan selesai sesi",
+   "line": "Beri diri sendiri apresiasi kecil.",
+   "chips": [
+    "Selesai",
+    "Apresiasi",
+    "Lanjut"
+   ],
+   "subject": "a tick mark and a cookie",
+   "feature": null
+  },
+  {
+   "id": "ks-192",
+   "hook": "Belajar dengan tujuan",
+   "line": "Tahu untuk apa, lebih mudah bertahan.",
+   "chips": [
+    "Tulis tujuan",
+    "Tempel",
+    "Baca"
+   ],
+   "subject": "a small flag on a desk",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-193",
+   "hook": "Lingkungan belajar sesuai kamu",
+   "line": "Atur cahaya, kursi, dan tampilan aplikasi.",
+   "chips": [
+    "Cahaya",
+    "Kursi",
+    "Tampilan"
+   ],
+   "subject": "a reading lamp and an armchair",
+   "feature": null
+  },
+  {
+   "id": "ks-194",
+   "hook": "Mulai lagi tidak memalukan",
+   "line": "Lanjutkan dari tempat terakhir.",
+   "chips": [
+    "Buka Kauiz",
+    "Lihat rencana",
+    "Lanjut"
+   ],
+   "subject": "a bookmark in a book",
+   "feature": "Learning Memory"
+  },
+  {
+   "id": "ks-195",
+   "hook": "Belajar itu perjalanan",
+   "line": "Nikmati tiap langkahnya.",
+   "chips": [
+    "Langkah",
+    "Jeda",
+    "Lanjut"
+   ],
+   "subject": "a winding paper path",
+   "feature": "Roadmap belajar"
+  },
+  {
+   "id": "ks-196",
+   "hook": "Terima kasih, sampai besok",
+   "line": "Sampai ketemu di sesi berikutnya.",
+   "chips": [
+    "Selesai",
+    "Istirahat",
+    "Besok lagi"
+   ],
+   "subject": "a closed notebook and a lamp turned off",
+   "feature": "Hari Ini"
+  },
+  {
+   "id": "ks-197",
+   "hook": "Hari ini cukup satu soal",
+   "line": "Satu soal yang dipahami lebih baik dari sepuluh yang terlewat.",
+   "chips": [
+    "Satu soal",
+    "Pahami",
+    "Catat"
+   ],
+   "subject": "a single quiz card on a clean desk",
+   "feature": "Mode latihan"
+  },
+  {
+   "id": "ks-198",
+   "hook": "Cek dulu, baru lanjut",
+   "line": "Pastikan satu topik kuat sebelum pindah.",
+   "chips": [
+    "Cek peta",
+    "Kuatkan",
+    "Pindah"
+   ],
+   "subject": "a paper map with one bright region",
+   "feature": "Progres dan peta topik"
+  },
+  {
+   "id": "ks-199",
+   "hook": "Belajar ditemani lampu",
+   "line": "Cahaya cukup membuat mata tidak cepat lelah.",
+   "chips": [
+    "Lampu cukup",
+    "Mata santai",
+    "Fokus"
+   ],
+   "subject": "a warm lamp over an open book",
+   "feature": null
+  },
+  {
+   "id": "ks-200",
+   "hook": "Sudah minum air?",
+   "line": "Segelas air bantu kepala tetap segar.",
+   "chips": [
+    "Minum air",
+    "Regangkan",
+    "Lanjut"
+   ],
+   "subject": "a glass of water by a notebook",
+   "feature": null
+  }
+ ]
+}

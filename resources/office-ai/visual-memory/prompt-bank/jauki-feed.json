@@ -1,0 +1,1306 @@
+{
+ "brand": "jauki",
+ "format": "feed",
+ "items": [
+  {
+   "id": "jf-001",
+   "hook": "Deadline jam 23.59",
+   "line": "Dan kamu baru buka laptop jam 23.40.",
+   "caption": "Katanya tugas dikumpul tengah malam, tapi semangat mengerjakannya baru datang menjelang tengah malam. Ada yang sama?",
+   "chips": [
+    "Jam 23.40",
+    "Laptop dibuka",
+    "Doa dimulai"
+   ],
+   "subject": "a laptop glowing on a dark desk with a clock showing near midnight",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-002",
+   "hook": "Folder final_revisi_baru",
+   "line": "Ada yang namanya final, final2, dan final banget.",
+   "caption": "Folder tugasmu isinya final, final2, final_revisi, dan final_beneran. Mana yang sebenarnya dikirim?",
+   "chips": [
+    "Final",
+    "Final2",
+    "Final banget"
+   ],
+   "subject": "a computer folder icon with a long stack of similar named papers",
+   "pillar": "file"
+  },
+  {
+   "id": "jf-003",
+   "hook": "Baterai tinggal 1 persen",
+   "line": "Charger malah tertinggal di kos.",
+   "caption": "Pas lagi seru ngetik, baterai tinggal satu persen dan charger ada di kos. Plot twist paling jujur semester ini.",
+   "chips": [
+    "Satu persen",
+    "Charger lupa",
+    "Pasrah"
+   ],
+   "subject": "a laptop with a tiny red battery icon and an unplugged cable",
+   "pillar": "laptop"
+  },
+  {
+   "id": "jf-004",
+   "hook": "Ctrl+S itu doa",
+   "line": "Simpan dulu sebelum listrik padam.",
+   "caption": "Ctrl plus S adalah doa yang paling sering kita ucapkan saat mengetik tugas. Kamu sudah simpan hari ini?",
+   "chips": [
+    "Ctrl S",
+    "Simpan lagi",
+    "Simpan terus"
+   ],
+   "subject": "a keyboard with one highlighted key and a tiny halo",
+   "pillar": "file"
+  },
+  {
+   "id": "jf-005",
+   "hook": "Tugas kelompok, satu orang",
+   "line": "Empat nama di sampul, satu yang mengetik.",
+   "caption": "Namanya tugas kelompok, tapi kadang rasanya tugas pribadi dengan nama tambahan. Tos untuk semua yang pernah jadi tulang punggung.",
+   "chips": [
+    "Empat nama",
+    "Satu pengetik",
+    "Tos dulu"
+   ],
+   "subject": "four name tags beside a single hard working laptop",
+   "pillar": "kelompok"
+  },
+  {
+   "id": "jf-006",
+   "hook": "Dosen: kumpul besok ya",
+   "line": "Padahal pertemuan terakhir cuma tiga puluh menit.",
+   "caption": "Kalimat ajaib yang bikin semua orang mendadak sibuk: kumpul besok ya. Siapa yang spontan buka laptop?",
+   "chips": [
+    "Kumpul besok",
+    "Mendadak sibuk",
+    "Buka laptop"
+   ],
+   "subject": "a calendar with tomorrow circled and a sweating sticky note",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-007",
+   "hook": "Begadang itu bukan strategi",
+   "line": "Tapi kenapa selalu terulang tiap semester?",
+   "caption": "Setiap semester janji tidak begadang. Setiap semester juga ada malam yang lampu kosnya masih nyala. Kopi ke berapa malam ini?",
+   "chips": [
+    "Kopi ke-3",
+    "Mata panda",
+    "Janji palsu"
+   ],
+   "subject": "three empty coffee cups beside a glowing lamp at night",
+   "pillar": "begadang"
+  },
+  {
+   "id": "jf-008",
+   "hook": "Printer ngadat saat dibutuhkan",
+   "line": "Kertas ada, tinta ada, printer pura-pura tidak kenal.",
+   "caption": "Printer paling jujur kalau soal timing. Persis saat deadline, dia mendadak butuh istirahat. Siapa yang pernah mengalami?",
+   "chips": [
+    "Printer ngadat",
+    "Kertas nyangkut",
+    "Deadline dekat"
+   ],
+   "subject": "a printer with a crumpled paper jam and a tiny worried desk lamp",
+   "pillar": "printer"
+  },
+  {
+   "id": "jf-009",
+   "hook": "WiFi kampus lagi liburan",
+   "line": "Sinyalnya penuh kalau kita tidak butuh.",
+   "caption": "WiFi kampus selalu kuat saat kamu tidak butuh dan menghilang saat harus upload. Tim yang sering pindah kursi demi sinyal, angkat tangan.",
+   "chips": [
+    "Pindah kursi",
+    "Sinyal hilang",
+    "Upload tertunda"
+   ],
+   "subject": "a wifi icon drawn with dotted lines fading off a desk",
+   "pillar": "wifi"
+  },
+  {
+   "id": "jf-010",
+   "hook": "Akhir bulan, dompet tipis",
+   "line": "Mie instan jadi menu bintang lima.",
+   "caption": "Akhir bulan datang, dompet berbisik pelan. Menu hari ini mie instan dengan telur, dan itu sudah mewah. Ada tips hemat andalanmu?",
+   "chips": [
+    "Mie instan",
+    "Telur dadar",
+    "Hemat dulu"
+   ],
+   "subject": "a pot of instant noodles and a nearly empty wallet",
+   "pillar": "uang"
+  },
+  {
+   "id": "jf-011",
+   "hook": "Kuliah jam 7 pagi",
+   "line": "Badan hadir, nyawa masih menyusul.",
+   "caption": "Kuliah jam tujuh pagi membuktikan bahwa badan dan nyawa bisa berangkat di waktu berbeda. Kamu tim hadir fisik atau hadir total?",
+   "chips": [
+    "Badan hadir",
+    "Nyawa nyusul",
+    "Alarm kelima"
+   ],
+   "subject": "a sleepy alarm clock and a backpack slumped on a chair",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-012",
+   "hook": "Membaca jurnal 40 halaman",
+   "line": "Baru halaman dua, mata sudah minta cuti.",
+   "caption": "Membaca jurnal empat puluh halaman bikin kita jadi ahli dalam menggulir layar tanpa benar-benar membaca. Ada trik fokusmu?",
+   "chips": [
+    "Halaman dua",
+    "Mata cuti",
+    "Scroll saja"
+   ],
+   "subject": "a long scroll of paper unrolling off a desk with a tiny magnifying glass",
+   "pillar": "jurnal"
+  },
+  {
+   "id": "jf-013",
+   "hook": "Presentasi tanpa slide",
+   "line": "Slide-nya di kepala, kepalanya lagi kosong.",
+   "caption": "Mendadak dosen minta presentasi tanpa persiapan. Slide ada di kepala, kepalanya blank. Tarik napas, buka dengan senyum.",
+   "chips": [
+    "Slide kosong",
+    "Tarik napas",
+    "Senyum dulu"
+   ],
+   "subject": "a podium with a blank screen and a calm potted plant",
+   "pillar": "presentasi"
+  },
+  {
+   "id": "jf-014",
+   "hook": "Revisi dari dosen",
+   "line": "Coret merah di mana-mana, semangat tetap ada.",
+   "caption": "Menerima revisi dengan coretan merah di semua halaman memang menguji kesabaran. Tarik napas, revisi satu per satu.",
+   "chips": [
+    "Coret merah",
+    "Revisi lagi",
+    "Tetap semangat"
+   ],
+   "subject": "a stack of pages with red pencil marks and a small cup of tea",
+   "pillar": "revisi"
+  },
+  {
+   "id": "jf-015",
+   "hook": "Kopi sebelum doa",
+   "line": "Prioritas mahasiswa saat tugas belum selesai.",
+   "caption": "Kalau tugas belum selesai, kopi dulu baru panik. Atau panik dulu baru kopi. Kamu tim yang mana?",
+   "chips": [
+    "Kopi dulu",
+    "Panik kemudian",
+    "Lanjut ngetik"
+   ],
+   "subject": "a steaming coffee cup beside an unfinished page",
+   "pillar": "begadang"
+  },
+  {
+   "id": "jf-016",
+   "hook": "Catatan kuliah yang misterius",
+   "line": "Tulisan sendiri tapi bacanya butuh ahli sandi.",
+   "caption": "Seminggu kemudian, catatan sendiri terbaca seperti kode rahasia. Siapa di sini yang pernah menyerah membaca tulisannya sendiri?",
+   "chips": [
+    "Tulisan kode",
+    "Susah dibaca",
+    "Tebak saja"
+   ],
+   "subject": "a notebook with scribbles that look like a secret code",
+   "pillar": "catatan"
+  },
+  {
+   "id": "jf-017",
+   "hook": "Kuis dadakan",
+   "line": "Katanya cuma kuis, tapi jantung berlari maraton.",
+   "caption": "Dosen bilang kuis dadakan, seisi kelas mendadak jadi pemeran film thriller. Seberapa deg-degan kamu waktu itu?",
+   "chips": [
+    "Jantung maraton",
+    "Pensil patah",
+    "Pasrah"
+   ],
+   "subject": "a pencil and a quiz paper with a tiny stopwatch",
+   "pillar": "kuis"
+  },
+  {
+   "id": "jf-018",
+   "hook": "Absen online",
+   "line": "Link-nya muncul tepat saat kamu ke kamar mandi.",
+   "caption": "Link absen muncul di saat paling tidak terduga. Untung grup kelas selalu siaga. Terima kasih teman penyelamat.",
+   "chips": [
+    "Link absen",
+    "Grup siaga",
+    "Teman penolong"
+   ],
+   "subject": "a phone showing a tiny checkmark and a flying paper plane",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-019",
+   "hook": "Menunggu dosen pembimbing",
+   "line": "Jadwal bimbingan: kapan-kapan pasti jadi.",
+   "caption": "Menunggu balasan pembimbing menumbuhkan kesabaran yang tidak diajarkan di mata kuliah mana pun. Yang sabar pasti menang.",
+   "chips": [
+    "Menunggu",
+    "Menunggu lagi",
+    "Tetap sabar"
+   ],
+   "subject": "an empty chair outside a door with a tiny waiting clock",
+   "pillar": "bimbingan"
+  },
+  {
+   "id": "jf-020",
+   "hook": "Ketemu typo setelah dikumpul",
+   "line": "Kenapa matamu baru tajam setelah tombol kirim?",
+   "caption": "Typo paling jelas selalu ditemukan satu menit setelah tugas dikirim. Matamu memang terlambat tapi jujur.",
+   "chips": [
+    "Typo muncul",
+    "Sudah terkirim",
+    "Menghela napas"
+   ],
+   "subject": "a sent envelope with a tiny red x on one letter",
+   "pillar": "file"
+  },
+  {
+   "id": "jf-021",
+   "hook": "Kamu dan IPK",
+   "line": "Hubungan yang rumit tapi tidak mau putus.",
+   "caption": "IPK dan kamu punya hubungan jarak jauh yang penuh perjuangan. Tetap semangat memperbaikinya sedikit demi sedikit.",
+   "chips": [
+    "Naik pelan",
+    "Tetap semangat",
+    "Satu semester"
+   ],
+   "subject": "a small graph line rising slowly like a staircase",
+   "pillar": "ipk"
+  },
+  {
+   "id": "jf-022",
+   "hook": "Perpustakaan jam 3 sore",
+   "line": "Tempat ternyaman untuk memejamkan mata sebentar.",
+   "caption": "Perpustakaan itu sunyi, adem, dan sangat mendukung tidur siang yang tidak direncanakan. Siapa yang pernah terlelap di atas buku?",
+   "chips": [
+    "Adem sunyi",
+    "Buku bantal",
+    "Tidur singkat"
+   ],
+   "subject": "a library table with a closed book used as a pillow",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-023",
+   "hook": "Tugas minggu depan",
+   "line": "Itu istilah lain dari malam sebelum deadline.",
+   "caption": "Tugas minggu depan terdengar jauh sampai tiba-tiba tinggal besok. Waktu memang berjalan lebih cepat saat kita santai.",
+   "chips": [
+    "Minggu depan",
+    "Tinggal besok",
+    "Waktu cepat"
+   ],
+   "subject": "a calendar page flipping in the wind toward a circled day",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-024",
+   "hook": "Grup kelas jam 2 pagi",
+   "line": "Satu pertanyaan, dua puluh balasan emoji.",
+   "caption": "Jam dua pagi grup kelas mendadak ramai demi satu pertanyaan tugas. Solidaritas begadang memang paling kuat.",
+   "chips": [
+    "Jam 2 pagi",
+    "Banyak emoji",
+    "Solidaritas"
+   ],
+   "subject": "a phone screen with many tiny chat bubbles and a night sky behind it",
+   "pillar": "kelompok"
+  },
+  {
+   "id": "jf-025",
+   "hook": "Slide dengan 300 kata",
+   "line": "Biar dosen tahu kamu sudah baca semuanya.",
+   "caption": "Dulu kita mengira makin banyak teks di slide makin terlihat pintar. Sekarang kita tahu sedikit teks lebih enak dibaca.",
+   "chips": [
+    "Teks penuh",
+    "Mata pegal",
+    "Belajar lagi"
+   ],
+   "subject": "a slide shaped paper crowded with tiny scribbles beside a clean one",
+   "pillar": "presentasi"
+  },
+  {
+   "id": "jf-026",
+   "hook": "Belajar di kafe",
+   "line": "Niatnya fokus, kenyataannya pilih lagu dulu satu jam.",
+   "caption": "Berangkat ke kafe untuk belajar, sampai sana sibuk memilih tempat duduk dan playlist. Ada yang ujung-ujungnya malah ngobrol?",
+   "chips": [
+    "Pilih kursi",
+    "Pilih lagu",
+    "Mulai nanti"
+   ],
+   "subject": "a cafe table with a laptop, a latte, and untouched notes",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-027",
+   "hook": "Bawa laptop, lupa charger",
+   "line": "Dua kata yang sering menyatukan nasib mahasiswa.",
+   "caption": "Laptop sudah masuk tas, charger entah tertinggal di mana. Cari colokan jadi misi harian. Ada yang punya colokan cadangan?",
+   "chips": [
+    "Cari colokan",
+    "Tas penuh",
+    "Misi harian"
+   ],
+   "subject": "a backpack with a laptop and a coiled cable left on the floor",
+   "pillar": "laptop"
+  },
+  {
+   "id": "jf-028",
+   "hook": "Jam kosong, rencana banyak",
+   "line": "Hasilnya tidur siang di bangku taman.",
+   "caption": "Jam kosong selalu berjanji produktif, tapi sering berakhir di bangku taman. Kamu pilih tidur atau mengerjakan tugas?",
+   "chips": [
+    "Jam kosong",
+    "Bangku taman",
+    "Rencana batal"
+   ],
+   "subject": "a park bench with a tote bag and a half open notebook",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-029",
+   "hook": "Tugas selesai, laptop restart",
+   "line": "Update paling cinta timing yang salah.",
+   "caption": "Tepat saat tugas selesai, laptop minta restart karena update. Kita semua pernah menghela napas panjang di momen itu.",
+   "chips": [
+    "Tugas selesai",
+    "Update datang",
+    "Restart dulu"
+   ],
+   "subject": "a laptop screen with a progress bar and a tiny sweat drop",
+   "pillar": "laptop"
+  },
+  {
+   "id": "jf-030",
+   "hook": "Kepanitiaan dan kuliah",
+   "line": "Dua dunia yang sama-sama minta hadir.",
+   "caption": "Rapat panitia dan jadwal kuliah sering berebut waktu. Kalender kita sudah seperti teka-teki. Kamu atur jadwal pakai apa?",
+   "chips": [
+    "Rapat panitia",
+    "Jadwal kuliah",
+    "Kalender penuh"
+   ],
+   "subject": "a calendar crowded with colorful sticky notes",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-031",
+   "hook": "Kos-kosan jam 12 malam",
+   "line": "Perut lapar, dompet bilang tunggu besok.",
+   "caption": "Lapar tengah malam di kos itu klasik. Pilihannya biskuit atau tidur lebih cepat. Pilihan mana yang selalu menang?",
+   "chips": [
+    "Perut lapar",
+    "Biskuit sisa",
+    "Tidur saja"
+   ],
+   "subject": "a small desk lamp and a pack of biscuits beside a notebook",
+   "pillar": "uang"
+  },
+  {
+   "id": "jf-032",
+   "hook": "Merasa paham padahal belum",
+   "line": "Sampai dosen bilang: silakan jelaskan.",
+   "caption": "Waktu membaca terasa paham, tapi saat diminta menjelaskan mendadak lupa semua. Kita semua pernah di sana.",
+   "chips": [
+    "Terasa paham",
+    "Disuruh jelaskan",
+    "Hening"
+   ],
+   "subject": "a thought bubble with a question mark above a student at a desk",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-033",
+   "hook": "Revisi ke-sekian",
+   "line": "Hitungan sudah lupa, semangat masih ada.",
+   "caption": "Revisi ke berapa ini? Hitungannya sudah hilang tapi semangatnya ada. Mari semangat bareng-bareng.",
+   "chips": [
+    "Revisi lagi",
+    "Lupa hitungan",
+    "Masih semangat"
+   ],
+   "subject": "a stack of drafts with tiny numbers fading away",
+   "pillar": "revisi"
+  },
+  {
+   "id": "jf-034",
+   "hook": "Dari semangat jadi pasrah",
+   "line": "Perjalanan emosional satu semester penuh.",
+   "caption": "Awal semester semangat membara, tengah semester mulai pasrah, akhir semester doa terbaik. Kamu sekarang di fase mana?",
+   "chips": [
+    "Awal semangat",
+    "Tengah pasrah",
+    "Akhir doa"
+   ],
+   "subject": "three notebooks of decreasing height with a tiny flag on top",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-035",
+   "hook": "Tidur siang yang menyelamatkan",
+   "line": "Dua puluh menit untuk bangkit lagi.",
+   "caption": "Kadang solusi terbaik bukan kopi, melainkan tidur siang dua puluh menit. Ada yang setuju?",
+   "chips": [
+    "Dua puluh menit",
+    "Alarm pasang",
+    "Segar lagi"
+   ],
+   "subject": "a pillow and an alarm clock on a study desk",
+   "pillar": "begadang"
+  },
+  {
+   "id": "jf-036",
+   "hook": "Cetak tugas di menit terakhir",
+   "line": "Tempat fotokopi mendadak jadi penyelamat.",
+   "caption": "Antrean fotokopi sebelum kuliah selalu panjang. Untung abang fotokopi paham betul rasa panik kita.",
+   "chips": [
+    "Antre fotokopi",
+    "Kertas hangat",
+    "Selamat"
+   ],
+   "subject": "a stack of warm paper beside a copier with a tiny queue of backpacks",
+   "pillar": "printer"
+  },
+  {
+   "id": "jf-037",
+   "hook": "Pulpen yang selalu hilang",
+   "line": "Dibeli banyak, ditemukan sedikit.",
+   "caption": "Pulpen itu aneh. Dibeli satu lusin, entah ke mana semuanya. Mungkin mereka kabur bareng kaos kaki.",
+   "chips": [
+    "Pulpen hilang",
+    "Beli lagi",
+    "Misteri"
+   ],
+   "subject": "a single pen lying alone next to an empty pen holder",
+   "pillar": "catatan"
+  },
+  {
+   "id": "jf-038",
+   "hook": "Satu halaman pembuka",
+   "line": "Paling susah dari seluruh tugas.",
+   "caption": "Halaman pertama selalu paling berat. Setelah itu mengalir. Atau paling tidak mengalir pelan-pelan.",
+   "chips": [
+    "Halaman satu",
+    "Kursor kedip",
+    "Mulai ngetik"
+   ],
+   "subject": "a blank page with a blinking cursor shaped from paper",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-039",
+   "hook": "Menunda adalah seni",
+   "line": "Seni yang tidak ada nilainya di transkrip.",
+   "caption": "Menunda itu seni yang tidak diajarkan tapi dikuasai semua orang. Sayangnya tidak ada mata kuliah resminya.",
+   "chips": [
+    "Tunda dulu",
+    "Nanti saja",
+    "Besok pasti"
+   ],
+   "subject": "a tiny paint brush on a blank canvas next to a notebook",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-040",
+   "hook": "Teman kelompok menghilang",
+   "line": "Muncul lagi pas presentasi.",
+   "caption": "Ada teman kelompok yang menghilang seperti sinyal. Tapi hadir dengan gagah saat presentasi. Terima kasih sudah muncul.",
+   "chips": [
+    "Menghilang",
+    "Muncul lagi",
+    "Tetap terima"
+   ],
+   "subject": "four chairs at a table with one chair slightly apart",
+   "pillar": "kelompok"
+  },
+  {
+   "id": "jf-041",
+   "hook": "Jaket kampus kebanggaan",
+   "line": "Hangat di badan, juga penuh kenangan.",
+   "caption": "Jaket kampus menemani dari tugas ke tugas. Kalau bisa bicara dia pasti punya banyak cerita begadang.",
+   "chips": [
+    "Jaket kampus",
+    "Kenangan",
+    "Begadang"
+   ],
+   "subject": "a hoodie draped over a chair beside a study lamp",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-042",
+   "hook": "Flashdisk yang tidak terbaca",
+   "line": "Detik terakhir sebelum presentasi mulai.",
+   "caption": "Flashdisk yang tadi baik-baik saja mendadak tidak terbaca di depan kelas. Selalu ada cadangan di email, ya.",
+   "chips": [
+    "Flashdisk error",
+    "Email cadangan",
+    "Aman"
+   ],
+   "subject": "a small usb stick with a tiny surprised face",
+   "pillar": "file"
+  },
+  {
+   "id": "jf-043",
+   "hook": "Antre bimbingan",
+   "line": "Nomor antrean lebih panjang dari semangat.",
+   "caption": "Antre bimbingan itu latihan sabar tingkat lanjut. Bawa camilan, bawa buku, bawa hati yang lapang.",
+   "chips": [
+    "Antre panjang",
+    "Camilan siap",
+    "Hati lapang"
+   ],
+   "subject": "a row of chairs with backpacks waiting outside an office",
+   "pillar": "bimbingan"
+  },
+  {
+   "id": "jf-044",
+   "hook": "Rapat kelompok di kantin",
+   "line": "Rencana besar, makan dulu.",
+   "caption": "Rapat kelompok di kantin selalu diawali dengan makan dulu. Rencana besar menunggu kenyang.",
+   "chips": [
+    "Kantin ramai",
+    "Makan dulu",
+    "Rencana nanti"
+   ],
+   "subject": "a canteen table with plates and a notebook pushed aside",
+   "pillar": "kelompok"
+  },
+  {
+   "id": "jf-045",
+   "hook": "Alarm sudah lima kali",
+   "line": "Ke-enam akhirnya berhasil.",
+   "caption": "Alarm pertama diabaikan, kedua dimatikan, ketiga ditunda, keempat dibalas, kelima dilempar. Keenam baru bangun.",
+   "chips": [
+    "Alarm satu",
+    "Alarm lima",
+    "Baru bangun"
+   ],
+   "subject": "a row of alarm clocks lined up with one tiny sleeping face",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-046",
+   "hook": "Skripsi dalam angan",
+   "line": "Judulnya sudah bagus, isinya menyusul.",
+   "caption": "Judul skripsi sudah paling keren di folder. Tinggal isinya yang menyusul pelan-pelan. Semangat para pejuang.",
+   "chips": [
+    "Judul keren",
+    "Isi menyusul",
+    "Semangat pejuang"
+   ],
+   "subject": "a folder with a long title and a very thin stack inside",
+   "pillar": "bimbingan"
+  },
+  {
+   "id": "jf-047",
+   "hook": "Tidak ada hari libur",
+   "line": "Tugas selalu punya cara menemukan kita.",
+   "caption": "Akhir pekan pun tugas tetap setia menunggu di tab browser. Setia sekali memang.",
+   "chips": [
+    "Akhir pekan",
+    "Tab terbuka",
+    "Setia banget"
+   ],
+   "subject": "a weekend calendar with a tiny laptop peeking from behind",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-048",
+   "hook": "Lupa membawa kartu mahasiswa",
+   "line": "Perjalanan pulang untuk mengambilnya.",
+   "caption": "Kartu mahasiswa tertinggal itu kejadian klasik. Biasanya diingat saat sudah sampai kampus.",
+   "chips": [
+    "Kartu ketinggalan",
+    "Putar balik",
+    "Sampai kampus"
+   ],
+   "subject": "a student card left on a table beside keys",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-049",
+   "hook": "Bangun kesiangan",
+   "line": "Mandi kilat, sarapan roti, berangkat.",
+   "caption": "Kalau bangun kesiangan, mandi kilat dan sarapan roti sambil jalan adalah rutinitas yang sudah dilatih.",
+   "chips": [
+    "Mandi kilat",
+    "Roti jalan",
+    "Berangkat"
+   ],
+   "subject": "a slice of bread on a table beside a rushing backpack",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-050",
+   "hook": "Tugas selesai, semangat naik",
+   "line": "Perasaan paling indah satu semester.",
+   "caption": "Ada kebahagiaan tak terlukiskan saat menekan tombol kirim dan tahu semuanya sudah selesai. Rayakan dengan makanan enak.",
+   "chips": [
+    "Terkirim",
+    "Hati ringan",
+    "Makan enak"
+   ],
+   "subject": "a tiny trophy beside a closed laptop and a plate of snacks",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-051",
+   "hook": "Niat rajin, kasur menang",
+   "line": "Pertarungan abadi setiap pagi.",
+   "caption": "Setiap malam niatnya bangun pagi untuk belajar. Setiap pagi kasur selalu menang telak. Ada yang pernah menang?",
+   "chips": [
+    "Niat malam",
+    "Kasur menang",
+    "Besok lagi"
+   ],
+   "subject": "a made bed with a notebook left untouched on the pillow",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-052",
+   "hook": "KRS-an dan harap-harap cemas",
+   "line": "Semoga kelas pilihan tidak penuh.",
+   "caption": "Musim KRS itu mendebarkan. Refresh terus sambil berdoa kuota kelasnya masih ada. Semoga lancar semua.",
+   "chips": [
+    "Refresh terus",
+    "Kuota penuh",
+    "Doa lancar"
+   ],
+   "subject": "a browser tab with a tiny hopeful face and a clock",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-053",
+   "hook": "Tugas tulis tangan",
+   "line": "Tangan pegal, semangat tetap menulis.",
+   "caption": "Tugas tulis tangan memang menguji ketahanan jari. Rasanya seperti latihan angkat beban miniatur.",
+   "chips": [
+    "Tangan pegal",
+    "Pulpen habis",
+    "Tetap nulis"
+   ],
+   "subject": "a hand shaped paper cutout holding a tiny pen beside stacked pages",
+   "pillar": "catatan"
+  },
+  {
+   "id": "jf-054",
+   "hook": "Slide pertama paling sulit",
+   "line": "Judul sudah, isi menyusul.",
+   "caption": "Slide pertama biasanya hanya judul dan nama. Setelah itu mengalir. Katanya.",
+   "chips": [
+    "Judul saja",
+    "Sisanya nanti",
+    "Mengalir"
+   ],
+   "subject": "a presentation slide with only a title and empty space",
+   "pillar": "presentasi"
+  },
+  {
+   "id": "jf-055",
+   "hook": "Charger pinjaman",
+   "line": "Dikembalikan kapan-kapan yang tidak pasti.",
+   "caption": "Charger pinjaman sering berpindah tangan dari satu teman ke teman lain. Siapa yang terakhir memegangnya?",
+   "chips": [
+    "Charger pinjam",
+    "Entah di mana",
+    "Tanya grup"
+   ],
+   "subject": "a coiled charger passing between four paper hands",
+   "pillar": "laptop"
+  },
+  {
+   "id": "jf-056",
+   "hook": "Tempat duduk favorit",
+   "line": "Dekat colokan, jauh dari AC yang beku.",
+   "caption": "Mencari kursi dekat colokan tapi jauh dari AC yang terlalu dingin itu seni tersendiri.",
+   "chips": [
+    "Dekat colokan",
+    "Jauh AC",
+    "Kursi ideal"
+   ],
+   "subject": "a chair beside a wall socket with a tiny thermometer",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-057",
+   "hook": "Nilai keluar, deg-degan",
+   "line": "Buka portal dengan mata setengah terpejam.",
+   "caption": "Saat nilai keluar kita buka portal sambil mengintip dari sela jari. Semoga hasilnya memuaskan semua.",
+   "chips": [
+    "Portal nilai",
+    "Mata terpejam",
+    "Deg-degan"
+   ],
+   "subject": "a laptop screen half covered by fingers with tiny sparkles",
+   "pillar": "ipk"
+  },
+  {
+   "id": "jf-058",
+   "hook": "Praktikum jam 8 malam",
+   "line": "Pulang jam 10, tugas laporan menunggu.",
+   "caption": "Praktikum malam hari selalu diakhiri dengan laporan yang menunggu. Semangat para praktikan.",
+   "chips": [
+    "Praktikum malam",
+    "Laporan menanti",
+    "Semangat"
+   ],
+   "subject": "a lab coat on a hook beside a notebook of measurements",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-059",
+   "hook": "Modul tebal, waktu tipis",
+   "line": "Dibawa ke mana-mana, jarang dibuka.",
+   "caption": "Modul tebal memang gagah kalau dibawa, tapi lebih gagah lagi kalau dibaca. Mari belajar sedikit demi sedikit.",
+   "chips": [
+    "Modul tebal",
+    "Jarang dibuka",
+    "Mulai halaman satu"
+   ],
+   "subject": "a very thick book with a tiny bookmark on the first page",
+   "pillar": "catatan"
+  },
+  {
+   "id": "jf-060",
+   "hook": "Wawancara dan observasi",
+   "line": "Bertemu narasumber dengan deg-degan manis.",
+   "caption": "Wawancara pertama itu seru sekaligus gugup. Catatan siap, hati setengah siap. Bismillah lancar.",
+   "chips": [
+    "Wawancara",
+    "Catatan siap",
+    "Hati setengah"
+   ],
+   "subject": "a small recorder and a notepad on a cafe table",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-061",
+   "hook": "Pinjam catatan teman",
+   "line": "Tulisannya rapi, tapi kok beda dosen?",
+   "caption": "Pinjam catatan teman itu menyenangkan sampai kita sadar catatannya dari kelas lain. Tetap terima kasih ya.",
+   "chips": [
+    "Pinjam catatan",
+    "Beda kelas",
+    "Tetap makasih"
+   ],
+   "subject": "two notebooks side by side with different covers",
+   "pillar": "catatan"
+  },
+  {
+   "id": "jf-062",
+   "hook": "Rumus yang terlupa",
+   "line": "Kemarin hafal, hari ini entah ke mana.",
+   "caption": "Rumus yang kemarin hafal tiba-tiba menghilang saat soal muncul. Mungkin sedang liburan.",
+   "chips": [
+    "Rumus hilang",
+    "Soal datang",
+    "Panik halus"
+   ],
+   "subject": "a chalkboard with an empty space where a formula should be",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-063",
+   "hook": "Tab browser dua puluh",
+   "line": "Satu untuk tugas, sisanya entah apa.",
+   "caption": "Tab browser terbuka dua puluh, yang berhubungan dengan tugas hanya satu. Sisanya urusan yang tidak kalah penting.",
+   "chips": [
+    "Dua puluh tab",
+    "Satu tugas",
+    "Sisanya?"
+   ],
+   "subject": "a browser with many tiny tabs and one highlighted",
+   "pillar": "laptop"
+  },
+  {
+   "id": "jf-064",
+   "hook": "Referensi dari mana ya",
+   "line": "Sumber ada tapi bingung cara menuliskannya.",
+   "caption": "Menulis daftar pustaka butuh kesabaran tingkat tinggi. Titik koma tidak boleh salah tempat.",
+   "chips": [
+    "Daftar pustaka",
+    "Titik koma",
+    "Sabar"
+   ],
+   "subject": "a stack of books with tiny sticky flags and a neat list",
+   "pillar": "jurnal"
+  },
+  {
+   "id": "jf-065",
+   "hook": "Print dua sisi",
+   "line": "Halaman terbalik adalah plot twist cetak.",
+   "caption": "Print bolak-balik selalu memberi kejutan: halaman terbalik. Kita tertawa kecil lalu print ulang.",
+   "chips": [
+    "Dua sisi",
+    "Halaman terbalik",
+    "Print ulang"
+   ],
+   "subject": "a stack of paper with one page upside down",
+   "pillar": "printer"
+  },
+  {
+   "id": "jf-066",
+   "hook": "Kuliah daring, kamera mati",
+   "line": "Hadir lewat nama, bukan wajah.",
+   "caption": "Saat kuliah daring, kamera mati adalah bentuk kehadiran dalam diam. Sambil memastikan rambut sudah rapi.",
+   "chips": [
+    "Kamera mati",
+    "Nama hadir",
+    "Rambut rapi"
+   ],
+   "subject": "a laptop with a profile placeholder and a tiny coffee",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-067",
+   "hook": "Mikrofon masih menyala",
+   "line": "Semua orang mendengar kamu bersenandung.",
+   "caption": "Mikrofon yang lupa dimatikan adalah petualangan tak terduga. Suara kita jadi bahan kenangan kelas.",
+   "chips": [
+    "Mic menyala",
+    "Senandung",
+    "Tersipu"
+   ],
+   "subject": "a microphone icon with tiny music notes floating",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-068",
+   "hook": "Wisuda dalam bayangan",
+   "line": "Toga sudah dibayangkan sejak semester satu.",
+   "caption": "Bayangan memakai toga sering muncul saat kita lelah mengerjakan tugas. Semoga semua sampai di sana.",
+   "chips": [
+    "Toga impian",
+    "Semangat naik",
+    "Tetap jalan"
+   ],
+   "subject": "a graduation cap resting on a stack of books",
+   "pillar": "ipk"
+  },
+  {
+   "id": "jf-069",
+   "hook": "Spidol yang kering",
+   "line": "Papan tulis siap, spidol tidak mendukung.",
+   "caption": "Tepat saat presentasi, spidol ternyata sudah kering. Syukurlah ada teman yang bawa cadangan.",
+   "chips": [
+    "Spidol kering",
+    "Papan tulis",
+    "Teman siaga"
+   ],
+   "subject": "a whiteboard with a dried marker and a tiny helper marker",
+   "pillar": "presentasi"
+  },
+  {
+   "id": "jf-070",
+   "hook": "Parkiran penuh",
+   "line": "Putar dua kali, kuliah sudah mulai.",
+   "caption": "Mencari tempat parkir bisa lebih lama dari kuliahnya. Sabar adalah bahan bakar tambahan.",
+   "chips": [
+    "Parkiran penuh",
+    "Putar lagi",
+    "Terlambat"
+   ],
+   "subject": "a tiny scooter circling a crowded paper parking lot",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-071",
+   "hook": "Kantin kehabisan",
+   "line": "Menu favorit selalu habis duluan.",
+   "caption": "Kantin selalu kehabisan menu favorit tepat saat giliran kita. Pilihan kedua juga tidak buruk.",
+   "chips": [
+    "Menu habis",
+    "Pilihan kedua",
+    "Tetap kenyang"
+   ],
+   "subject": "an empty plate and a small canteen menu board",
+   "pillar": "uang"
+  },
+  {
+   "id": "jf-072",
+   "hook": "Peer review teman",
+   "line": "Komentarnya jujur, hati sedikit terhenyak.",
+   "caption": "Menerima masukan dari teman memang menguji hati. Tapi hasil akhirnya biasanya lebih baik.",
+   "chips": [
+    "Komentar jujur",
+    "Hati kuat",
+    "Hasil naik"
+   ],
+   "subject": "two pages with small friendly red notes",
+   "pillar": "revisi"
+  },
+  {
+   "id": "jf-073",
+   "hook": "Uang saku menipis",
+   "line": "Strategi bertahan sampai tanggal muda.",
+   "caption": "Menjelang akhir bulan semua menu dihitung. Semoga tanggal muda segera datang dengan kabar baik.",
+   "chips": [
+    "Menu dihitung",
+    "Tanggal tua",
+    "Segera muda"
+   ],
+   "subject": "a tiny wallet with a few coins on a desk",
+   "pillar": "uang"
+  },
+  {
+   "id": "jf-074",
+   "hook": "Diskusi panjang tanpa hasil",
+   "line": "Topik utama tergeser topik sampingan.",
+   "caption": "Diskusi kelompok sering berawal dari tugas dan berakhir di topik lain. Tapi tetap seru.",
+   "chips": [
+    "Diskusi seru",
+    "Topik geser",
+    "Tugas menunggu"
+   ],
+   "subject": "a round table with speech bubbles drifting off",
+   "pillar": "kelompok"
+  },
+  {
+   "id": "jf-075",
+   "hook": "Download materi",
+   "line": "Progress bar bergerak sangat pelan.",
+   "caption": "Mengunduh materi saat deadline mepet membuat kita belajar sabar dari progress bar.",
+   "chips": [
+    "Progress bar",
+    "Sinyal lemah",
+    "Sabar"
+   ],
+   "subject": "a progress bar made from paper at ten percent",
+   "pillar": "wifi"
+  },
+  {
+   "id": "jf-076",
+   "hook": "Sticky note tak terhitung",
+   "line": "Menempel di mana-mana, dibaca di mana-mana.",
+   "caption": "Sticky note memenuhi meja dan layar laptop. Setidaknya meja terlihat berwarna.",
+   "chips": [
+    "Sticky note",
+    "Meja warna",
+    "Semua catatan"
+   ],
+   "subject": "a desk covered in colorful sticky notes",
+   "pillar": "catatan"
+  },
+  {
+   "id": "jf-077",
+   "hook": "Tas kuliah penuh",
+   "line": "Isinya buku, charger, dan camilan darurat.",
+   "caption": "Isi tas mahasiswa selalu penuh kejutan. Camilan darurat jangan sampai ketinggalan.",
+   "chips": [
+    "Buku",
+    "Charger",
+    "Camilan"
+   ],
+   "subject": "an open backpack with books and a snack",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-078",
+   "hook": "Laporan tengah malam",
+   "line": "Kalimat pertama ditulis jam sebelas.",
+   "caption": "Laporan yang diniatkan siang selalu mulai ditulis tengah malam. Konsistensi kita memang unik.",
+   "chips": [
+    "Niat siang",
+    "Mulai malam",
+    "Konsisten"
+   ],
+   "subject": "a report page under a desk lamp and a clock",
+   "pillar": "deadline"
+  },
+  {
+   "id": "jf-079",
+   "hook": "Ujian terbuka buku",
+   "line": "Bukunya dibawa, halamannya lupa di mana.",
+   "caption": "Ujian buka buku bukan berarti tanpa belajar. Mencari halaman juga butuh latihan.",
+   "chips": [
+    "Buka buku",
+    "Cari halaman",
+    "Tetap belajar"
+   ],
+   "subject": "an open book with colorful tabs beside a stopwatch",
+   "pillar": "kuis"
+  },
+  {
+   "id": "jf-080",
+   "hook": "Mengejar tanda tangan",
+   "line": "Dosen sibuk, mahasiswa berlari kecil.",
+   "caption": "Mengejar tanda tangan itu olahraga kecil tapi menyehatkan. Bawa pulpen cadangan.",
+   "chips": [
+    "Tanda tangan",
+    "Lari kecil",
+    "Pulpen cadangan"
+   ],
+   "subject": "a paper form with a small signature line and tiny running shoes",
+   "pillar": "bimbingan"
+  },
+  {
+   "id": "jf-081",
+   "hook": "Cuaca hujan, jas hujan lupa",
+   "line": "Sampai kampus basah separuh badan.",
+   "caption": "Hujan datang saat jas hujan tertinggal di rumah. Kita tiba dengan senyum basah.",
+   "chips": [
+    "Hujan deras",
+    "Jas hujan lupa",
+    "Basah separuh"
+   ],
+   "subject": "an umbrella leaning against a wet doorway",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-082",
+   "hook": "Mata kuliah pilihan",
+   "line": "Katanya santai, ternyata tugasnya banyak.",
+   "caption": "Mata kuliah pilihan sering mengajarkan satu hal: jangan terlalu cepat menilai kata santai.",
+   "chips": [
+    "Kata santai",
+    "Tugas banyak",
+    "Belajar lagi"
+   ],
+   "subject": "a calendar full of small sticky tasks",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-083",
+   "hook": "Surat izin dan stempel",
+   "line": "Tiga meja, tiga antrean, satu surat.",
+   "caption": "Mengurus surat di kampus itu petualangan lintas ruangan. Bawa kesabaran dan fotokopi cadangan.",
+   "chips": [
+    "Tiga meja",
+    "Antrean",
+    "Fotokopi"
+   ],
+   "subject": "a letter and a rubber stamp at the end of a paper corridor",
+   "pillar": "bimbingan"
+  },
+  {
+   "id": "jf-084",
+   "hook": "Nama file asal-asalan",
+   "line": "Dua minggu kemudian bingung sendiri.",
+   "caption": "Nama file yang asal-asalan hari ini jadi teka-teki dua minggu lagi. Teliti sedikit tidak apa-apa.",
+   "chips": [
+    "File asal",
+    "Dua minggu",
+    "Teka-teki"
+   ],
+   "subject": "a messy list of generic file names beside a magnifying glass",
+   "pillar": "file"
+  },
+  {
+   "id": "jf-085",
+   "hook": "Rencana tidur cepat",
+   "line": "Sudah jam dua, masih buka laptop.",
+   "caption": "Rencana tidur cepat sering berakhir buka satu tab lagi. Selamat malam yang tertunda.",
+   "chips": [
+    "Tidur cepat",
+    "Satu tab lagi",
+    "Jam dua"
+   ],
+   "subject": "a closed pillow beside a laptop still glowing",
+   "pillar": "begadang"
+  },
+  {
+   "id": "jf-086",
+   "hook": "Kelas penuh, kursi kurang",
+   "line": "Duduk di lantai demi ilmu.",
+   "caption": "Kelas penuh membuat sebagian duduk di lantai demi ilmu. Semangat yang luar biasa.",
+   "chips": [
+    "Kelas penuh",
+    "Duduk lantai",
+    "Semangat"
+   ],
+   "subject": "a classroom with a few cushions on the floor",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-087",
+   "hook": "Tinta printer tinggal sedikit",
+   "line": "Tulisan jadi pudar, tapi tetap terbaca.",
+   "caption": "Tinta printer yang menipis menghasilkan cetakan pucat. Setidaknya masih terbaca dengan sabar.",
+   "chips": [
+    "Tinta tipis",
+    "Cetakan pucat",
+    "Masih terbaca"
+   ],
+   "subject": "a faded printed page with a nearly empty ink cartridge",
+   "pillar": "printer"
+  },
+  {
+   "id": "jf-088",
+   "hook": "Tugas dikumpul via email",
+   "line": "Subjek email salah satu huruf.",
+   "caption": "Mengirim tugas via email penuh deg-degan: lampiran lupa, subjek salah. Cek dua kali ya.",
+   "chips": [
+    "Cek lampiran",
+    "Cek subjek",
+    "Kirim"
+   ],
+   "subject": "an envelope with a tiny paperclip and a worried face",
+   "pillar": "file"
+  },
+  {
+   "id": "jf-089",
+   "hook": "Laptop kepanasan",
+   "line": "Kipasnya bernyanyi seperti pesawat.",
+   "caption": "Laptop yang kepanasan berbunyi seperti mau lepas landas. Kasih jeda ya, biar tetap sehat.",
+   "chips": [
+    "Kipas ribut",
+    "Hangat banget",
+    "Kasih jeda"
+   ],
+   "subject": "a laptop with tiny steam lines and a small fan",
+   "pillar": "laptop"
+  },
+  {
+   "id": "jf-090",
+   "hook": "Kerja kelompok online",
+   "line": "Satu video aktif, sisanya foto profil.",
+   "caption": "Kerja kelompok online itu seru. Wajah-wajah ceria hadir sebagai foto profil.",
+   "chips": [
+    "Foto profil",
+    "Satu video",
+    "Tetap kompak"
+   ],
+   "subject": "four circles on a screen with one showing a face",
+   "pillar": "kelompok"
+  },
+  {
+   "id": "jf-091",
+   "hook": "Menulis abstrak",
+   "line": "Seluruh isi dalam seratus kata.",
+   "caption": "Menulis abstrak itu seni meringkas semua perjuangan dalam seratus kata.",
+   "chips": [
+    "Seratus kata",
+    "Ringkas",
+    "Padat"
+   ],
+   "subject": "a small card containing a short tidy paragraph",
+   "pillar": "jurnal"
+  },
+  {
+   "id": "jf-092",
+   "hook": "Hari pertama kuliah",
+   "line": "Salah ruangan sudah tradisi.",
+   "caption": "Hari pertama kuliah identik dengan salah ruangan dan senyum canggung. Semua orang pernah.",
+   "chips": [
+    "Salah ruangan",
+    "Senyum canggung",
+    "Tradisi"
+   ],
+   "subject": "a campus map with a tiny confused arrow",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-093",
+   "hook": "Semester pendek",
+   "line": "Libur dipotong, semangat tetap ada.",
+   "caption": "Semester pendek memotong libur tetapi menambah pengalaman. Semoga lancar semuanya.",
+   "chips": [
+    "Libur dipotong",
+    "Semangat",
+    "Lancar"
+   ],
+   "subject": "a short calendar strip with a small sun",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-094",
+   "hook": "Presentasi selesai, lega",
+   "line": "Napas panjang, senyum lebar.",
+   "caption": "Selesai presentasi itu lega banget. Rasanya ingin makan besar sebagai hadiah.",
+   "chips": [
+    "Selesai",
+    "Napas panjang",
+    "Makan besar"
+   ],
+   "subject": "a small stage with a bow and a plate of food",
+   "pillar": "presentasi"
+  },
+  {
+   "id": "jf-095",
+   "hook": "Libur semester",
+   "line": "Rencana banyak, rebahan juga banyak.",
+   "caption": "Libur semester penuh rencana, dan sebagian besar dilaksanakan di kasur. Tidak apa-apa, istirahat itu perlu.",
+   "chips": [
+    "Rencana banyak",
+    "Rebahan",
+    "Istirahat"
+   ],
+   "subject": "a hammock between two stacks of books",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-096",
+   "hook": "Terima kasih, teman kuliah",
+   "line": "Karena kalian, semester terasa lebih ringan.",
+   "caption": "Teman kuliah yang saling bantu membuat semester terasa lebih ringan. Terima kasih sudah ada.",
+   "chips": [
+    "Saling bantu",
+    "Tertawa",
+    "Terima kasih"
+   ],
+   "subject": "four mugs clinking above a table of notebooks",
+   "pillar": "kelompok"
+  },
+  {
+   "id": "jf-097",
+   "hook": "Tetap semangat, ya",
+   "line": "Tugas boleh banyak, kamu tetap hebat.",
+   "caption": "Kalau hari ini terasa berat, istirahat sebentar tidak apa-apa. Pelan-pelan, tugasnya selesai satu per satu.",
+   "chips": [
+    "Istirahat",
+    "Pelan saja",
+    "Pasti selesai"
+   ],
+   "subject": "a small cup of tea beside a to do list with one tick",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-098",
+   "hook": "Tugas pertama semester",
+   "line": "Semangat besar, tenaga masih penuh.",
+   "caption": "Tugas pertama biasanya dikerjakan dengan semangat tinggi. Mari kita lihat berapa lama semangat itu bertahan.",
+   "chips": [
+    "Semangat penuh",
+    "Tenaga ada",
+    "Lanjut"
+   ],
+   "subject": "a brand new notebook with a freshly sharpened pencil",
+   "pillar": "kuliah"
+  },
+  {
+   "id": "jf-099",
+   "hook": "Kuliah tamu",
+   "line": "Pembicara seru, catatan tetap kosong.",
+   "caption": "Kuliah tamu sering terlalu menarik sampai lupa mencatat. Untung masih ada foto slide.",
+   "chips": [
+    "Kuliah tamu",
+    "Lupa catat",
+    "Foto slide"
+   ],
+   "subject": "a guest speaker podium with an empty notebook",
+   "pillar": "catatan"
+  },
+  {
+   "id": "jf-100",
+   "hook": "Satu pertanyaan seru",
+   "line": "Satu pertanyaan memicu diskusi sejam.",
+   "caption": "Kadang satu pertanyaan sederhana memicu diskusi panjang yang justru paling seru di semester ini.",
+   "chips": [
+    "Satu tanya",
+    "Diskusi seru",
+    "Sejam lebih"
+   ],
+   "subject": "a single question mark drawn above a round table",
+   "pillar": "kelompok"
+  }
+ ]
+}

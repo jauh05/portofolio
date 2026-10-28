@@ -1,0 +1,1506 @@
+{
+ "brand": "kauiz",
+ "format": "feed",
+ "items": [
+  {
+   "id": "kf-001",
+   "hook": "Capek mulai dari nol?",
+   "line": "Kauiz ingat apa yang sudah kamu pelajari kemarin.",
+   "pain": "Setiap kembali belajar, rasanya seperti mulai dari awal lagi.",
+   "tip": "Learning Memory menyimpan topik dan kesalahanmu, jadi sesi berikutnya langsung lanjut.",
+   "chips": [
+    "Topik tersimpan",
+    "Kesalahan dicatat",
+    "Lanjut cepat"
+   ],
+   "subject": "an open notebook with a bookmark placed halfway through",
+   "feature": "Learning Memory",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-002",
+   "hook": "Belajar lama, cepat lupa",
+   "line": "Lupa itu wajar, tinggal diulang di waktu yang tepat.",
+   "pain": "Sudah belajar berjam-jam, besoknya banyak yang menguap.",
+   "tip": "Ulangi materi bertahap dan uji diri dengan kuis kecil supaya ingatan menguat.",
+   "chips": [
+    "Ulangi bertahap",
+    "Kuis kecil",
+    "Cek hasil"
+   ],
+   "subject": "a faded sticky note beside a fresh bright one",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-003",
+   "hook": "Bingung mulai dari mana?",
+   "line": "Pecah target besar jadi langkah harian.",
+   "pain": "Materi menumpuk dan kamu bingung harus mulai dari bab berapa.",
+   "tip": "Buat roadmap belajar dari targetmu, lalu kerjakan satu langkah per hari.",
+   "chips": [
+    "Tentukan target",
+    "Pecah per hari",
+    "Kerjakan satu"
+   ],
+   "subject": "a winding path of paper steps leading up a small hill",
+   "feature": "Roadmap belajar",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-004",
+   "hook": "Catatan numpuk, tak terbaca",
+   "line": "Ubah catatanmu jadi kuis, bukan sekadar tumpukan.",
+   "pain": "Catatan sudah banyak, tapi malas membaca ulang semuanya.",
+   "tip": "Unggah catatan atau PDF ke Kauiz dan biarkan ia membuat soal dari isinya.",
+   "chips": [
+    "Unggah catatan",
+    "Soal otomatis",
+    "Latihan"
+   ],
+   "subject": "a tall stack of notebooks with colorful tabs",
+   "feature": "Kuis otomatis dari materimu",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-005",
+   "hook": "Tidak tahu yang salah",
+   "line": "Hasil kuis menunjukkan topik yang perlu diulang.",
+   "pain": "Nilai latihan keluar, tapi kamu tidak tahu bagian mana yang lemah.",
+   "tip": "Cek hasil kuis, lihat topik yang sering salah, lalu ulang bagian itu dulu.",
+   "chips": [
+    "Lihat hasil",
+    "Cari topik lemah",
+    "Ulang dulu"
+   ],
+   "subject": "a magnifying glass over a page with one circled mistake",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-006",
+   "hook": "Males baca ulang materi",
+   "line": "Latihan soal lebih seru daripada baca ulang.",
+   "pain": "Membaca ulang berlembar-lembar materi terasa membosankan.",
+   "tip": "Ganti baca ulang dengan kuis dari materimu sendiri, singkat tapi mengena.",
+   "chips": [
+    "Kuis singkat",
+    "Dari materimu",
+    "Lebih seru"
+   ],
+   "subject": "a pile of textbooks next to a quiz card with a checkmark",
+   "feature": "Kuis otomatis dari materimu",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-007",
+   "hook": "Belajar sendirian itu sepi",
+   "line": "Ada mentor AI yang menemani sesi belajarmu.",
+   "pain": "Belajar sendiri sering bikin cepat bosan dan sulit bertahan.",
+   "tip": "Pilih satu dari 10 mentor AI dan belajar ditemani sesuai gayamu.",
+   "chips": [
+    "Pilih mentor",
+    "Ditemani belajar",
+    "Ganti kapan saja"
+   ],
+   "subject": "two empty chairs at a study table with one warm lamp",
+   "feature": "10 Mentor AI",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-008",
+   "hook": "Jenuh sama satu gaya belajar",
+   "line": "Ganti mentor kapan saja, progres tetap aman.",
+   "pain": "Penjelasan yang itu-itu saja kadang tidak nyambung di kepala.",
+   "tip": "Coba mentor lain yang gaya menjelaskannya berbeda, tanpa kehilangan progres.",
+   "chips": [
+    "10 mentor",
+    "Gaya berbeda",
+    "Progres aman"
+   ],
+   "subject": "a row of different colored study lamps on a shelf",
+   "feature": "10 Mentor AI",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-009",
+   "hook": "Tugas numpuk, pusing duluan",
+   "line": "Mulai dari rencana harian yang kecil dan jelas.",
+   "pain": "Semua tugas terasa mendesak dan kamu tidak tahu yang utama.",
+   "tip": "Buka halaman Hari Ini, lihat rencana belajar harianmu, lalu mulai satu per satu.",
+   "chips": [
+    "Lihat rencana",
+    "Mulai satu",
+    "Lanjutkan"
+   ],
+   "subject": "a planner page with three small checkboxes and a pencil",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-010",
+   "hook": "Semangat naik turun",
+   "line": "Streak kecil tiap hari lebih kuat dari ngebut sekali.",
+   "pain": "Semangat belajar cepat naik, tapi juga cepat turun.",
+   "tip": "Jaga kebiasaan kecil harian dan pantau streak serta level di halaman Beranda.",
+   "chips": [
+    "Kebiasaan kecil",
+    "Pantau streak",
+    "Naik level"
+   ],
+   "subject": "a small plant growing steadily on a desk calendar",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-011",
+   "hook": "Stres menjelang UTBK",
+   "line": "Latihan soal UTBK bisa dicicil, tidak harus sekaligus.",
+   "pain": "Waktu terasa mepet dan soal latihan yang tersedia terasa kurang.",
+   "tip": "Pakai halaman UTBK dan Bank Soal untuk latihan bertahap sambil melihat progresmu.",
+   "chips": [
+    "Latihan UTBK",
+    "Bank Soal",
+    "Cek progres"
+   ],
+   "subject": "a calendar with circled exam dates and a stack of practice booklets",
+   "feature": "Bank Soal dan UTBK",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-012",
+   "hook": "Soal latihan kurang banyak",
+   "line": "Bank Soal siap dipakai kapan saja.",
+   "pain": "Mau latihan, tapi sumber soalnya terbatas dan susah dicari.",
+   "tip": "Buka Bank Soal untuk latihan soal yang sudah tersedia, lalu lanjutkan ke kuis dari materimu.",
+   "chips": [
+    "Bank Soal",
+    "Latihan cepat",
+    "Kuis sendiri"
+   ],
+   "subject": "a neat bookshelf full of labeled practice question binders",
+   "feature": "Bank Soal dan UTBK",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-013",
+   "hook": "Materi panjang, waktu mepet",
+   "line": "Ringkasan Cepat bantu kamu menangkap intinya dulu.",
+   "pain": "Bab terlalu panjang sementara waktu belajarmu tinggal sedikit.",
+   "tip": "Buat rangkuman materi dengan Ringkasan Cepat, lalu uji pemahamanmu lewat kuis.",
+   "chips": [
+    "Ringkas dulu",
+    "Tangkap inti",
+    "Uji diri"
+   ],
+   "subject": "a long scroll of paper being folded into a small neat card",
+   "feature": "Ringkasan Cepat",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-014",
+   "hook": "Tidak tahu sudah sejauh mana",
+   "line": "Lihat peta topik dan skor penguasaanmu.",
+   "pain": "Sudah banyak belajar, tapi kamu tidak yakin sudah paham atau belum.",
+   "tip": "Cek peta topik dan skor penguasaan di halaman Progres, lalu fokus ke yang masih rendah.",
+   "chips": [
+    "Peta topik",
+    "Skor penguasaan",
+    "Fokus yang rendah"
+   ],
+   "subject": "a hand drawn mind map with some nodes filled in with yellow",
+   "feature": "Progres dan peta topik",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-015",
+   "hook": "Malu tanya? Tanya AI",
+   "line": "Tanya sebanyak apa pun ke Chat AI.",
+   "pain": "Ada konsep yang belum dipahami, tapi kamu sungkan bertanya.",
+   "tip": "Tanyakan langsung lewat Chat AI sampai kamu benar-benar paham.",
+   "chips": [
+    "Tanya bebas",
+    "Jawaban cepat",
+    "Ulangi lagi"
+   ],
+   "subject": "a speech bubble made of folded paper above a textbook",
+   "feature": "Chat AI",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-016",
+   "hook": "Datamu tetap milikmu",
+   "line": "Learning Memory bisa kamu matikan atau hapus.",
+   "pain": "Kamu khawatir riwayat belajarmu tersimpan tanpa bisa dikendalikan.",
+   "tip": "Matikan Learning Memory atau hapus datanya kapan saja lewat Pengaturan.",
+   "chips": [
+    "Bisa dimatikan",
+    "Bisa dihapus",
+    "Kamu yang atur"
+   ],
+   "subject": "a small padlock resting on top of a closed notebook",
+   "feature": "Learning Memory",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-017",
+   "hook": "Mau belajar bareng mentor",
+   "line": "Live Study menemani sesi belajarmu secara langsung.",
+   "pain": "Kadang butuh ditemani saat mengerjakan soal yang sulit.",
+   "tip": "Mulai Live Study bersama mentor. Kamera dan rekaman tidak aktif otomatis dan butuh izinmu.",
+   "chips": [
+    "Sesi bersama",
+    "Izin dulu",
+    "Tanpa rekaman"
+   ],
+   "subject": "a lamp lit desk with two cups of tea",
+   "feature": "Live Study",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-018",
+   "hook": "Cuma baca, tidak pernah dites",
+   "line": "Tes dirimu sebelum ujian yang sebenarnya.",
+   "pain": "Selama ini hanya membaca, jadi tidak tahu seberapa paham sebenarnya.",
+   "tip": "Uji pemahaman dengan kuis dan pembahasan sebelum hari ujian tiba.",
+   "chips": [
+    "Uji diri",
+    "Lihat pembahasan",
+    "Perbaiki"
+   ],
+   "subject": "a stopwatch beside a blank answer sheet",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-019",
+   "hook": "Kesalahan yang sama berulang",
+   "line": "Kauiz mencatat kesalahan agar tidak terulang.",
+   "pain": "Kamu sering salah di jenis soal yang sama tanpa sadar.",
+   "tip": "Learning Memory mencatat kesalahanmu dan mengingatkan bagian yang perlu dilatih lagi.",
+   "chips": [
+    "Catat kesalahan",
+    "Latihan ulang",
+    "Berkembang"
+   ],
+   "subject": "a page with the same small error marked three times in red pencil",
+   "feature": "Learning Memory",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-020",
+   "hook": "Waktu belajar tidak konsisten",
+   "line": "Mulai kecil, yang penting konsisten.",
+   "pain": "Hari ini rajin, besok hilang, lusa mulai lagi dari awal.",
+   "tip": "Tetapkan sesi singkat yang sama tiap hari dan biarkan Hari Ini mengingatkanmu.",
+   "chips": [
+    "Sesi singkat",
+    "Jam tetap",
+    "Hari Ini"
+   ],
+   "subject": "a row of seven small circles with the first four filled",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-021",
+   "hook": "Jelaskan pakai kata sendiri",
+   "line": "Kalau bisa menjelaskannya ke teman, berarti sudah paham.",
+   "pain": "Terasa paham saat membaca, tapi bingung saat harus menjelaskan.",
+   "tip": "Coba jelaskan satu konsep dengan kata-katamu sendiri, lalu cek bagian yang tersendat.",
+   "chips": [
+    "Jelaskan sendiri",
+    "Cari tersendat",
+    "Pelajari lagi"
+   ],
+   "subject": "two paper cups connected by a string across a desk",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-022",
+   "hook": "Teknik Pomodoro, sudah coba?",
+   "line": "Fokus 25 menit, istirahat 5 menit.",
+   "pain": "Duduk berjam-jam tapi pikiran melayang ke mana-mana.",
+   "tip": "Bagi belajar jadi sesi 25 menit dan beri jeda 5 menit, satu sesi satu topik.",
+   "chips": [
+    "Fokus 25 menit",
+    "Rehat 5 menit",
+    "Satu topik"
+   ],
+   "subject": "a minimalist kitchen timer beside a closed laptop",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-023",
+   "hook": "Tutup catatan, lalu ingat",
+   "line": "Tarik ingatanmu dulu sebelum mengintip catatan.",
+   "pain": "Membaca ulang terasa produktif, padahal belum tentu menempel.",
+   "tip": "Tutup catatan, tulis apa yang kamu ingat, lalu cocokkan dengan materi.",
+   "chips": [
+    "Tutup catatan",
+    "Tulis ingatan",
+    "Cocokkan"
+   ],
+   "subject": "a closed notebook with a pencil resting on the cover",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-024",
+   "hook": "Ulangi hari 1, 3, 7",
+   "line": "Jeda yang makin panjang membuat materi lebih awet.",
+   "pain": "Materi yang dipelajari sekali cepat hilang dari kepala.",
+   "tip": "Ulangi di hari pertama, ketiga, dan ketujuh setelah belajar.",
+   "chips": [
+    "Hari ke-1",
+    "Hari ke-3",
+    "Hari ke-7"
+   ],
+   "subject": "a wall calendar with three highlighted days",
+   "feature": null,
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-025",
+   "hook": "Bikin peta konsep, yuk",
+   "line": "Satu bab, satu peta konsep.",
+   "pain": "Materi terasa terpisah-pisah dan sulit dihubungkan.",
+   "tip": "Hubungkan ide utama dengan panah dan kata kunci supaya gambaran besarnya terlihat.",
+   "chips": [
+    "Ide utama",
+    "Panah penghubung",
+    "Kata kunci"
+   ],
+   "subject": "a concept map of paper notes and string on a corkboard",
+   "feature": null,
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-026",
+   "hook": "Jadwalkan seperti janji",
+   "line": "Sesi belajar di kalender lebih sering benar terjadi.",
+   "pain": "Niat belajar ada, tapi selalu tergeser hal lain.",
+   "tip": "Tentukan jam dan durasi, lalu anggap sesi itu janji yang tidak boleh batal.",
+   "chips": [
+    "Pilih jam",
+    "Atur durasi",
+    "Jangan batal"
+   ],
+   "subject": "a planner with one highlighted time block and a pen",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-027",
+   "hook": "Istirahat itu bagian belajar",
+   "line": "Otak butuh jeda untuk menyimpan yang baru dipelajari.",
+   "pain": "Memaksa belajar tanpa henti malah bikin cepat lelah.",
+   "tip": "Berdiri, minum air, lalu kembali ke topik yang sama dengan kepala lebih segar.",
+   "chips": [
+    "Berdiri sebentar",
+    "Minum air",
+    "Lanjut fokus"
+   ],
+   "subject": "a glass of water and a small plant beside a closed laptop",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-028",
+   "hook": "Satu topik dalam satu sesi",
+   "line": "Fokus ke satu hal dulu, baru pindah.",
+   "pain": "Pindah-pindah topik membuat tidak ada yang benar-benar selesai.",
+   "tip": "Pilih satu topik per sesi dan selesaikan targetnya sebelum pindah.",
+   "chips": [
+    "Pilih satu",
+    "Selesaikan",
+    "Baru pindah"
+   ],
+   "subject": "a single book open on a clean desk with a pen",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-029",
+   "hook": "Jauhkan ponsel sebentar",
+   "line": "Notifikasi bisa menunggu 25 menit.",
+   "pain": "Baru mulai belajar, ponsel sudah menarik perhatian lagi.",
+   "tip": "Taruh ponsel di luar jangkauan selama satu sesi, lalu cek setelah selesai.",
+   "chips": [
+    "Ponsel jauh",
+    "Satu sesi",
+    "Cek setelah"
+   ],
+   "subject": "a phone placed face down inside a small box on a shelf",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-030",
+   "hook": "Mulai dari yang paling mudah",
+   "line": "Satu langkah kecil dulu supaya terasa ringan.",
+   "pain": "Kerjaan terasa berat sehingga kamu menunda terus.",
+   "tip": "Mulai dari soal termudah atau tiga menit pertama, momentum akan menyusul.",
+   "chips": [
+    "Soal mudah",
+    "Tiga menit",
+    "Momentum"
+   ],
+   "subject": "a small first stone of a stepping path on a desk",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-031",
+   "hook": "Catat kesalahan juga",
+   "line": "Buku kesalahan itu tabungan nilaimu.",
+   "pain": "Soal yang salah dikoreksi sekali lalu dilupakan.",
+   "tip": "Catat soal yang salah beserta alasannya, lalu baca ulang sebelum ujian.",
+   "chips": [
+    "Catat salah",
+    "Tulis alasannya",
+    "Baca ulang"
+   ],
+   "subject": "a notebook page titled with a red pencil and a short list",
+   "feature": "Learning Memory",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-032",
+   "hook": "Tidur cukup juga strategi",
+   "line": "Ingatan dirapikan saat kamu beristirahat.",
+   "pain": "Begadang demi materi, besoknya malah susah fokus.",
+   "tip": "Sisakan waktu tidur cukup setelah belajar supaya materi lebih mudah diingat.",
+   "chips": [
+    "Tidur cukup",
+    "Materi mengendap",
+    "Fokus pagi"
+   ],
+   "subject": "a bed with soft pillows beside a closed notebook",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-033",
+   "hook": "Mulai dari tujuan akhir",
+   "line": "Tahu tujuannya, langkahnya jadi jelas.",
+   "pain": "Belajar tanpa target jelas terasa tidak ada habisnya.",
+   "tip": "Tulis target belajarmu, lalu pecah jadi langkah harian yang bisa dicek.",
+   "chips": [
+    "Tulis target",
+    "Pecah langkah",
+    "Cek harian"
+   ],
+   "subject": "a flag planted at the top of a paper staircase",
+   "feature": "Roadmap belajar",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-034",
+   "hook": "Selang-seling topik",
+   "line": "Campur topik yang berbeda dalam satu sesi.",
+   "pain": "Terlalu lama di satu jenis soal membuat terasa mudah padahal belum.",
+   "tip": "Selingi dua atau tiga jenis soal supaya otak terbiasa berpindah.",
+   "chips": [
+    "Campur topik",
+    "Latih pindah",
+    "Uji ulang"
+   ],
+   "subject": "three differently colored notebooks fanned out on a desk",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-035",
+   "hook": "Ajarkan ke orang lain",
+   "line": "Mengajar adalah cara belajar tercepat.",
+   "pain": "Paham sendiri belum tentu bisa disampaikan.",
+   "tip": "Jelaskan materi ke teman atau cermin, lalu perbaiki bagian yang membingungkan.",
+   "chips": [
+    "Ajarkan teman",
+    "Cari celah",
+    "Perbaiki"
+   ],
+   "subject": "a small whiteboard with a hand drawn diagram and a marker",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-036",
+   "hook": "Tulis tangan poin inti",
+   "line": "Catatan singkat lebih mudah diulang.",
+   "pain": "Mencatat semuanya, ujung-ujungnya malas membaca lagi.",
+   "tip": "Tulis hanya poin inti dengan kata sendiri supaya mudah ditinjau ulang.",
+   "chips": [
+    "Poin inti",
+    "Kata sendiri",
+    "Mudah diulang"
+   ],
+   "subject": "an index card with three short lines of handwriting",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-037",
+   "hook": "Tempat belajar yang rapi",
+   "line": "Meja bersih bantu pikiran lebih tenang.",
+   "pain": "Meja berantakan membuatmu cepat teralih.",
+   "tip": "Sisakan hanya buku dan alat yang dipakai di meja belajarmu.",
+   "chips": [
+    "Meja rapi",
+    "Alat seperlunya",
+    "Pikiran tenang"
+   ],
+   "subject": "a tidy wooden desk with one book and one pencil",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-038",
+   "hook": "Targetkan satu hal per hari",
+   "line": "Sedikit tapi rutin mengalahkan banyak tapi sekali.",
+   "pain": "Target besar dikejar dalam semalam lalu kelelahan.",
+   "tip": "Tentukan satu target kecil per hari dan centang saat selesai.",
+   "chips": [
+    "Satu target",
+    "Tiap hari",
+    "Centang"
+   ],
+   "subject": "a checklist card with a single ticked item on it",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-039",
+   "hook": "Kuis dulu, baca kemudian",
+   "line": "Mulai dari soal untuk tahu yang belum kamu tahu.",
+   "pain": "Langsung membaca semua bab padahal sebagian sudah paham.",
+   "tip": "Coba kuis lebih dulu, lalu baca bagian yang jawabannya masih ragu.",
+   "chips": [
+    "Kuis dulu",
+    "Tandai ragu",
+    "Baca fokus"
+   ],
+   "subject": "a quiz card on top of a closed textbook",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-040",
+   "hook": "Beri hadiah kecil",
+   "line": "Selesai satu sesi, rayakan sedikit.",
+   "pain": "Belajar terasa berat karena tidak ada yang ditunggu.",
+   "tip": "Siapkan hadiah kecil setelah target sesi selesai, seperti camilan atau jalan sebentar.",
+   "chips": [
+    "Target sesi",
+    "Hadiah kecil",
+    "Lanjut lagi"
+   ],
+   "subject": "a small cookie on a saucer beside a finished checklist",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-041",
+   "hook": "Kenalan sama mentor AI",
+   "line": "Ada 10 mentor AI dengan kepribadian berbeda.",
+   "pain": "Cocok-cocokan dengan cara menjelaskan itu penting.",
+   "tip": "Pilih mentor yang gayanya paling nyaman, lalu ganti kapan saja tanpa kehilangan progres.",
+   "chips": [
+    "10 mentor",
+    "Beda kepribadian",
+    "Ganti bebas"
+   ],
+   "subject": "a lineup of ten small desk lamps each with a different shade",
+   "feature": "10 Mentor AI",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-042",
+   "hook": "Ms. Elena menunggumu",
+   "line": "Salah satu dari 10 mentor AI Kauiz.",
+   "pain": "Belajar terasa lebih ringan kalau ada yang menemani.",
+   "tip": "Mulai sesi bersama Ms. Elena, atau coba mentor lain sampai merasa cocok.",
+   "chips": [
+    "Mentor AI",
+    "Sesi belajar",
+    "Progres aman"
+   ],
+   "subject": "a friendly paper speech bubble on a study desk",
+   "feature": "10 Mentor AI",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-043",
+   "hook": "Mr. Adrian siap bantu",
+   "line": "Mentor yang bisa kamu pilih kapan saja.",
+   "pain": "Penjelasan yang tidak nyambung bikin cepat menyerah.",
+   "tip": "Coba Mr. Adrian, dan kalau kurang cocok, ganti mentor tanpa mulai dari awal.",
+   "chips": [
+    "Pilih mentor",
+    "Ganti kapan saja",
+    "Lanjut belajar"
+   ],
+   "subject": "a single warm desk lamp beside an open notebook",
+   "feature": "10 Mentor AI",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-044",
+   "hook": "Ms. Clara dan Mr. Ethan",
+   "line": "Dua dari 10 mentor yang bisa menemanimu.",
+   "pain": "Bingung memilih teman belajar yang pas.",
+   "tip": "Coba satu per satu, semuanya memahami Learning Memory yang sama.",
+   "chips": [
+    "Dua mentor",
+    "Memori sama",
+    "Gaya beda"
+   ],
+   "subject": "two notebooks of different colors leaning on each other",
+   "feature": "10 Mentor AI",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-045",
+   "hook": "Semua mentor ingat progresmu",
+   "line": "Gaya mengajar beda, memorinya tetap sama.",
+   "pain": "Takut ganti mentor berarti mengulang semuanya.",
+   "tip": "Semua mentor memahami Learning Memory yang sama, jadi ganti mentor itu aman.",
+   "chips": [
+    "Memori sama",
+    "Ganti aman",
+    "Progres terjaga"
+   ],
+   "subject": "ten keys on a single ring resting on a notebook",
+   "feature": "Learning Memory",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-046",
+   "hook": "Unggah catatanmu, jadi soal",
+   "line": "Dari teks atau PDF, soal dibuat otomatis.",
+   "pain": "Menyusun soal latihan sendiri memakan waktu.",
+   "tip": "Unggah catatan teks atau PDF, atur jumlah soal dan tingkat kesulitannya.",
+   "chips": [
+    "Teks atau PDF",
+    "Atur jumlah",
+    "Atur level"
+   ],
+   "subject": "a PDF printout being fed into a small paper machine",
+   "feature": "Kuis otomatis dari materimu",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-047",
+   "hook": "Atur soal sesukamu",
+   "line": "Jumlah, tingkat kesulitan, dan jenis soal bisa diatur.",
+   "pain": "Soal latihan sering tidak sesuai kebutuhanmu.",
+   "tip": "Tentukan sendiri jumlah soal, tingkat kesulitan, dan jenisnya sebelum mulai.",
+   "chips": [
+    "Jumlah soal",
+    "Tingkat sulit",
+    "Jenis soal"
+   ],
+   "subject": "three sliders on a paper control panel",
+   "feature": "Kuis otomatis dari materimu",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-048",
+   "hook": "Hint dan pembahasan",
+   "line": "Mode latihan menemani selagi kamu mengerjakan.",
+   "pain": "Buntu di tengah soal dan tidak tahu harus apa.",
+   "tip": "Pakai hint saat buntu, lalu baca pembahasannya selagi masih segar.",
+   "chips": [
+    "Ada hint",
+    "Ada pembahasan",
+    "Selagi latihan"
+   ],
+   "subject": "a quiz card with a small lightbulb sticker",
+   "feature": "Mode latihan",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-049",
+   "hook": "Topik mana yang perlu diulang",
+   "line": "Hasil kuis langsung menunjuk bagian yang lemah.",
+   "pain": "Skor keluar tapi tidak jelas harus mengulang apa.",
+   "tip": "Lihat topik yang ditandai di hasil kuis dan ulang bagian itu dulu.",
+   "chips": [
+    "Lihat hasil",
+    "Topik ditandai",
+    "Ulang dulu"
+   ],
+   "subject": "a bar chart made of paper strips with one short bar highlighted",
+   "feature": "Mode latihan",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-050",
+   "hook": "Target jadi langkah harian",
+   "line": "Roadmap memecah target besar jadi langkah jelas.",
+   "pain": "Target besar terasa jauh dan menakutkan.",
+   "tip": "Tulis targetmu, dan Kauiz memecahnya menjadi langkah belajar per hari.",
+   "chips": [
+    "Tulis target",
+    "Langkah harian",
+    "Ikuti satu-satu"
+   ],
+   "subject": "a long winding road drawn on a map with small flags",
+   "feature": "Roadmap belajar",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-051",
+   "hook": "Beranda yang bikin semangat",
+   "line": "Target aktif, streak, dan level dalam satu halaman.",
+   "pain": "Tidak ada gambaran jelas tentang kemajuan belajarmu.",
+   "tip": "Buka Beranda untuk melihat target aktif, streak, dan level kamu.",
+   "chips": [
+    "Target aktif",
+    "Streak",
+    "Level"
+   ],
+   "subject": "a small dashboard card with a flame icon and a level badge",
+   "feature": "Hari Ini",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-052",
+   "hook": "Rencana belajar hari ini",
+   "line": "Mulai atau lanjutkan sesi yang sudah disiapkan.",
+   "pain": "Tiap hari bingung mau belajar apa dulu.",
+   "tip": "Buka halaman Hari Ini dan mulai dari rencana yang sudah tersedia untukmu.",
+   "chips": [
+    "Rencana harian",
+    "Mulai sesi",
+    "Lanjutkan"
+   ],
+   "subject": "a morning desk with a planner open to today",
+   "feature": "Hari Ini",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-053",
+   "hook": "Ringkas sebelum latihan",
+   "line": "Ringkasan Cepat membantu menangkap intinya.",
+   "pain": "Materi panjang membuat bingung mulai dari mana.",
+   "tip": "Buat ringkasan dulu, lalu latihan dengan kuis agar pemahaman teruji.",
+   "chips": [
+    "Ringkas",
+    "Tangkap inti",
+    "Latihan"
+   ],
+   "subject": "a thick book next to a slim summary card",
+   "feature": "Ringkasan Cepat",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-054",
+   "hook": "Peta topik pribadimu",
+   "line": "Lihat penguasaan tiap topik dalam satu peta.",
+   "pain": "Sulit melihat topik mana yang sudah kuat.",
+   "tip": "Buka Progres untuk melihat peta topik dan skor penguasaanmu.",
+   "chips": [
+    "Peta topik",
+    "Skor penguasaan",
+    "Pilih fokus"
+   ],
+   "subject": "a paper map with colored regions of different shades",
+   "feature": "Progres dan peta topik",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-055",
+   "hook": "Riwayat belajar tersimpan",
+   "line": "Kembali ke aktivitas sebelumnya kapan saja.",
+   "pain": "Lupa apa yang terakhir dipelajari.",
+   "tip": "Buka Riwayat untuk melihat aktivitas belajarmu sebelumnya.",
+   "chips": [
+    "Aktivitas lama",
+    "Buka kembali",
+    "Lanjutkan"
+   ],
+   "subject": "an open drawer of neatly filed index cards",
+   "feature": "Progres dan peta topik",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-056",
+   "hook": "Live Study tanpa rekam",
+   "line": "Kamera dan rekaman butuh izin eksplisit darimu.",
+   "pain": "Ragu ikut sesi live karena khawatir direkam.",
+   "tip": "Live Study tidak mengaktifkan kamera atau rekaman otomatis, semuanya atas izinmu.",
+   "chips": [
+    "Izin dulu",
+    "Tanpa rekam",
+    "Kamu kendali"
+   ],
+   "subject": "a closed laptop camera cover slid over a webcam",
+   "feature": "Live Study",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-057",
+   "hook": "Bank Soal siap latihan",
+   "line": "Latihan soal yang sudah tersedia di satu halaman.",
+   "pain": "Cari soal latihan ke mana-mana memakan waktu.",
+   "tip": "Buka Bank Soal dan langsung latihan, lalu cek hasilmu.",
+   "chips": [
+    "Soal tersedia",
+    "Latihan langsung",
+    "Cek hasil"
+   ],
+   "subject": "a shelf of tidy question booklets with colored spines",
+   "feature": "Bank Soal dan UTBK",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-058",
+   "hook": "Halaman khusus UTBK",
+   "line": "Persiapan ujian masuk punya tempatnya sendiri.",
+   "pain": "Persiapan UTBK terasa berantakan dan tidak terarah.",
+   "tip": "Gunakan halaman UTBK untuk latihan bertahap dan pantau progresmu.",
+   "chips": [
+    "Halaman UTBK",
+    "Latihan bertahap",
+    "Pantau progres"
+   ],
+   "subject": "a calendar countdown beside a neat stack of practice booklets",
+   "feature": "Bank Soal dan UTBK",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-059",
+   "hook": "Pengaturan sesuai gayamu",
+   "line": "Atur tingkat kesulitan, mentor, notifikasi, dan tampilan.",
+   "pain": "Aplikasi belajar yang kaku susah dipakai rutin.",
+   "tip": "Buka Pengaturan untuk menyesuaikan Kauiz dengan caramu belajar.",
+   "chips": [
+    "Tingkat sulit",
+    "Mentor",
+    "Tampilan"
+   ],
+   "subject": "a row of toggle switches carved from paper",
+   "feature": null,
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-060",
+   "hook": "Coba dulu paket Free",
+   "line": "Kuis 2x sehari, maksimal 5 soal tiap kuis.",
+   "pain": "Ragu apakah cocok sebelum berlangganan.",
+   "tip": "Mulai dari paket Free untuk mencoba kuis dan koreksi otomatisnya.",
+   "chips": [
+    "Paket Free",
+    "Kuis 2x sehari",
+    "Koreksi otomatis"
+   ],
+   "subject": "a small open gift box with a quiz card inside",
+   "feature": null,
+   "pattern": "event"
+  },
+  {
+   "id": "kf-061",
+   "hook": "Basic untuk pelajar rajin",
+   "line": "Rp 16.000 per bulan, kuis sampai 15x sehari.",
+   "pain": "Jatah kuis harian terasa kurang untuk belajar rutin.",
+   "tip": "Paket Basic memberi kuis 15x per hari dengan pembahasan lengkap dan tanpa watermark.",
+   "chips": [
+    "15x per hari",
+    "Pembahasan lengkap",
+    "Tanpa watermark"
+   ],
+   "subject": "a small coin stack beside a stack of quiz cards",
+   "feature": null,
+   "pattern": "event"
+  },
+  {
+   "id": "kf-062",
+   "hook": "Pro untuk target besar",
+   "line": "Rp 24.000 per bulan, semua level kesulitan.",
+   "pain": "Mau latihan soal level sulit dan jumlah banyak.",
+   "tip": "Paket Pro membuka kuis 75x per hari, semua level kesulitan, dan ekspor PDF.",
+   "chips": [
+    "Kuis 75x",
+    "Semua level",
+    "Ekspor PDF"
+   ],
+   "subject": "a lightweight rocket made of folded paper on a desk",
+   "feature": null,
+   "pattern": "event"
+  },
+  {
+   "id": "kf-063",
+   "hook": "Premium tanpa batas harian",
+   "line": "Rp 47.000 per bulan, kuis tanpa batas per hari.",
+   "pain": "Belajar intens tapi dibatasi jatah harian.",
+   "tip": "Paket Premium memberi kuis tanpa batas per hari, mode kompetisi online, dan akses fitur beta.",
+   "chips": [
+    "Tanpa batas",
+    "Mode kompetisi",
+    "Fitur beta"
+   ],
+   "subject": "an open treasure box of colorful quiz cards",
+   "feature": null,
+   "pattern": "event"
+  },
+  {
+   "id": "kf-064",
+   "hook": "Mulai gratis, naik belakangan",
+   "line": "Pilih paket yang pas dengan kebutuhanmu.",
+   "pain": "Bingung memilih paket yang sesuai.",
+   "tip": "Mulai dari Free, lalu naik ke Basic, Pro, atau Premium saat butuh lebih banyak.",
+   "chips": [
+    "Free dulu",
+    "Naik bertahap",
+    "Sesuai kebutuhan"
+   ],
+   "subject": "four steps of a small staircase in four shades",
+   "feature": null,
+   "pattern": "event"
+  },
+  {
+   "id": "kf-065",
+   "hook": "Ekspor PDF dan review",
+   "line": "Fitur Pro untuk membawa materi ke mana saja.",
+   "pain": "Ingin menyimpan hasil latihan untuk ditinjau offline.",
+   "tip": "Paket Pro menyediakan ekspor PDF dan review hasil belajarmu.",
+   "chips": [
+    "Ekspor PDF",
+    "Review",
+    "Bawa kemana saja"
+   ],
+   "subject": "a printed document with a neat paperclip on a desk",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-066",
+   "hook": "Mode kompetisi online",
+   "line": "Fitur Premium biar belajar terasa seru.",
+   "pain": "Latihan sendirian kadang kurang menantang.",
+   "tip": "Paket Premium menyediakan mode kompetisi online untuk latihan yang lebih menantang.",
+   "chips": [
+    "Mode kompetisi",
+    "Lebih seru",
+    "Lebih menantang"
+   ],
+   "subject": "two small trophy cups made of paper on a shelf",
+   "feature": null,
+   "pattern": "event"
+  },
+  {
+   "id": "kf-067",
+   "hook": "Jadwal kuliah berantakan?",
+   "line": "Mulai ritme belajar dari minggu pertama.",
+   "pain": "Jadwal kuliah padat, waktu belajar entah di mana.",
+   "tip": "Tetapkan satu sesi singkat per hari di halaman Hari Ini dan jaga konsistensinya.",
+   "chips": [
+    "Sesi singkat",
+    "Hari Ini",
+    "Konsisten"
+   ],
+   "subject": "a weekly timetable with one highlighted slot",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-068",
+   "hook": "Persiapan ujian akhir semester",
+   "line": "Cicil dari sekarang, bukan semalam sebelumnya.",
+   "pain": "Semua materi dipelajari mepet saat ujian tiba.",
+   "tip": "Pecah materi per hari lewat roadmap dan uji dengan kuis di tiap tahap.",
+   "chips": [
+    "Pecah materi",
+    "Roadmap",
+    "Kuis tiap tahap"
+   ],
+   "subject": "a calendar with small daily tasks leading to a circled day",
+   "feature": "Roadmap belajar",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-069",
+   "hook": "Belajar buat ujian lisan",
+   "line": "Latih menjelaskan, bukan hanya menghafal.",
+   "pain": "Hafal di kepala tapi gugup saat harus berbicara.",
+   "tip": "Jelaskan materi dengan suara keras, lalu uji lewat Chat AI sampai lancar.",
+   "chips": [
+    "Jelaskan lantang",
+    "Uji lewat Chat",
+    "Ulangi"
+   ],
+   "subject": "a small microphone shape beside a note card",
+   "feature": "Chat AI",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-070",
+   "hook": "Presentasi besok, belum siap?",
+   "line": "Ringkasan Cepat bantu menyusun poin utama.",
+   "pain": "Materi banyak tapi tidak tahu poin yang harus ditonjolkan.",
+   "tip": "Rangkum dengan Ringkasan Cepat, lalu latih menyampaikannya dengan kata sendiri.",
+   "chips": [
+    "Rangkum",
+    "Pilih poin utama",
+    "Latihan"
+   ],
+   "subject": "a slide shaped paper card with three bullet marks",
+   "feature": "Ringkasan Cepat",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-071",
+   "hook": "Kelompok tidak fokus?",
+   "line": "Gunakan kuis bersama supaya diskusi terarah.",
+   "pain": "Belajar kelompok malah ngobrol ke mana-mana.",
+   "tip": "Tetapkan topik tiap sesi dan uji bersama lewat kuis agar diskusi tetap terarah.",
+   "chips": [
+    "Topik jelas",
+    "Kuis bersama",
+    "Diskusi terarah"
+   ],
+   "subject": "a round table with four notebooks and one shared timer",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-072",
+   "hook": "Belajar di sela kesibukan",
+   "line": "Lima belas menit pun bisa berarti.",
+   "pain": "Jadwal padat membuat belajar terasa tidak mungkin.",
+   "tip": "Manfaatkan sesi singkat harian, satu topik kecil tiap kali.",
+   "chips": [
+    "Sesi singkat",
+    "Satu topik",
+    "Tiap hari"
+   ],
+   "subject": "a small hourglass on a busy desk",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-073",
+   "hook": "Nilai kecil bukan akhir",
+   "line": "Pahami penyebabnya, lalu perbaiki langkahnya.",
+   "pain": "Nilai di bawah harapan bikin kehilangan semangat.",
+   "tip": "Lihat topik yang lemah di Progres dan susun langkah perbaikan yang kecil.",
+   "chips": [
+    "Lihat penyebab",
+    "Topik lemah",
+    "Langkah kecil"
+   ],
+   "subject": "a page with a low score circled and a small arrow pointing upward",
+   "feature": "Progres dan peta topik",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-074",
+   "hook": "Kamu tidak sendirian",
+   "line": "Banyak pelajar merasakan hal yang sama.",
+   "pain": "Merasa tertinggal dari teman yang tampak lebih paham.",
+   "tip": "Fokus pada kemajuanmu sendiri, bandingkan dengan dirimu minggu lalu.",
+   "chips": [
+    "Fokus dirimu",
+    "Kemajuan kecil",
+    "Terus jalan"
+   ],
+   "subject": "a single paper boat on calm water with other boats far away",
+   "feature": "Progres dan peta topik",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-075",
+   "hook": "Kemajuan kecil tetap kemajuan",
+   "line": "Satu langkah hari ini lebih baik dari nol.",
+   "pain": "Merasa tidak ada perkembangan padahal sudah berusaha.",
+   "tip": "Cek peta topikmu, biasanya ada bagian yang sudah naik tanpa kamu sadari.",
+   "chips": [
+    "Cek peta topik",
+    "Lihat kenaikan",
+    "Lanjutkan"
+   ],
+   "subject": "a ruler showing small tick marks with one highlighted",
+   "feature": "Progres dan peta topik",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-076",
+   "hook": "Boleh capek, jangan menyerah",
+   "line": "Mulai lagi besok dengan langkah kecil.",
+   "pain": "Sehari tidak belajar bikin merasa semuanya berantakan.",
+   "tip": "Lanjutkan dari rencana Hari Ini, Kauiz mengingat tempat terakhir kamu berhenti.",
+   "chips": [
+    "Hari buruk wajar",
+    "Lanjut besok",
+    "Dari titik henti"
+   ],
+   "subject": "a bookmark standing out from the middle of a book",
+   "feature": "Learning Memory",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-077",
+   "hook": "Belajar tanpa tekanan",
+   "line": "Pelan tidak apa-apa, asal konsisten.",
+   "pain": "Tekanan nilai bikin belajar terasa menakutkan.",
+   "tip": "Atur tingkat kesulitan dan tempo belajarmu di Pengaturan agar terasa nyaman.",
+   "chips": [
+    "Atur tempo",
+    "Level nyaman",
+    "Konsisten"
+   ],
+   "subject": "a quiet reading corner with a cushion and a lamp",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-078",
+   "hook": "Fokus pada prosesnya",
+   "line": "Proses yang baik akan membawa hasilnya.",
+   "pain": "Terlalu sibuk memikirkan nilai akhir sampai lupa prosesnya.",
+   "tip": "Pantau kebiasaan belajarmu tiap hari, hasilnya mengikuti kebiasaan itu.",
+   "chips": [
+    "Pantau kebiasaan",
+    "Nikmati proses",
+    "Hasil menyusul"
+   ],
+   "subject": "a seedling in a pot next to a small watering can",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-079",
+   "hook": "Mulai sekarang, bukan nanti",
+   "line": "Satu soal hari ini mengalahkan seratus rencana.",
+   "pain": "Niat sudah ada tapi selalu menunggu waktu yang pas.",
+   "tip": "Buka satu kuis singkat sekarang juga, lima menit cukup untuk mulai.",
+   "chips": [
+    "Lima menit",
+    "Satu kuis",
+    "Mulai sekarang"
+   ],
+   "subject": "a clock with the hand pointing at now and an open notebook",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-080",
+   "hook": "Mitos: belajar semalam cukup",
+   "line": "Ingatan butuh dicicil, bukan ditumpuk.",
+   "pain": "Percaya belajar semalam sebelum ujian sudah cukup.",
+   "tip": "Cicil materi beberapa hari dan ulangi supaya lebih awet di ingatan.",
+   "chips": [
+    "Cicil materi",
+    "Ulangi bertahap",
+    "Hasil awet"
+   ],
+   "subject": "an overflowing pile of papers beside a calm tidy stack",
+   "feature": null,
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-081",
+   "hook": "Mitos: baca ulang paling ampuh",
+   "line": "Menguji diri sering lebih menguatkan ingatan.",
+   "pain": "Membaca ulang berkali-kali tapi tetap lupa.",
+   "tip": "Selingi dengan kuis supaya ingatan benar-benar ditarik keluar.",
+   "chips": [
+    "Baca sekali",
+    "Uji diri",
+    "Ulang yang salah"
+   ],
+   "subject": "a repeated stack of identical pages next to one quiz card",
+   "feature": "Mode latihan",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-082",
+   "hook": "Mitos: harus belajar lama",
+   "line": "Kualitas sesi lebih penting dari lamanya.",
+   "pain": "Belajar berjam-jam tapi hasilnya terasa begitu-begitu saja.",
+   "tip": "Pakai sesi pendek yang fokus dan beri jeda di antaranya.",
+   "chips": [
+    "Sesi pendek",
+    "Fokus penuh",
+    "Beri jeda"
+   ],
+   "subject": "a short candle beside a tall one both burning evenly",
+   "feature": null,
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-083",
+   "hook": "Mitos: paham tak perlu latihan",
+   "line": "Latihan menunjukkan celah yang tidak terasa.",
+   "pain": "Merasa sudah paham, tapi kaget saat mengerjakan soal.",
+   "tip": "Coba kuis walau merasa sudah paham, siapa tahu ada celah kecil.",
+   "chips": [
+    "Merasa paham",
+    "Coba kuis",
+    "Temukan celah"
+   ],
+   "subject": "a smooth looking wall with one small crack lit by a lamp",
+   "feature": "Mode latihan",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-084",
+   "hook": "Mitos: catatan harus lengkap",
+   "line": "Catatan singkat sering lebih berguna.",
+   "pain": "Menyalin semua isi materi sampai capek sendiri.",
+   "tip": "Catat poin inti dan bagian yang bikin bingung saja.",
+   "chips": [
+    "Poin inti",
+    "Bagian bingung",
+    "Ringkas"
+   ],
+   "subject": "a full notebook beside a single neat index card",
+   "feature": null,
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-085",
+   "hook": "Kenapa kuis bikin ingat?",
+   "line": "Menjawab soal melatih otak menarik ingatan.",
+   "pain": "Penasaran kenapa latihan soal terasa lebih menempel.",
+   "tip": "Saat menjawab, otak berlatih mengambil informasi, bukan sekadar mengenalinya.",
+   "chips": [
+    "Tarik ingatan",
+    "Latih jawab",
+    "Lebih menempel"
+   ],
+   "subject": "a hand reaching into a small drawer of index cards",
+   "feature": "Mode latihan",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-086",
+   "hook": "Tanda kamu butuh istirahat",
+   "line": "Mata berat dan fokus buyar itu sinyal jeda.",
+   "pain": "Memaksa lanjut padahal pikiran sudah penuh.",
+   "tip": "Berhenti sebentar, regangkan badan, lalu lanjut dengan sesi baru.",
+   "chips": [
+    "Fokus buyar",
+    "Mata berat",
+    "Jeda dulu"
+   ],
+   "subject": "an hourglass with a cup of tea on a quiet desk",
+   "feature": null,
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-087",
+   "hook": "Cara memilih topik prioritas",
+   "line": "Mulai dari yang paling lemah dan paling penting.",
+   "pain": "Semua topik terasa penting sehingga tidak ada yang diselesaikan.",
+   "tip": "Lihat skor penguasaan di Progres, lalu urutkan dari yang terendah.",
+   "chips": [
+    "Lihat skor",
+    "Urutkan",
+    "Mulai terendah"
+   ],
+   "subject": "a short list of three numbered cards sorted by size",
+   "feature": "Progres dan peta topik",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-088",
+   "hook": "Belajar dari soal yang salah",
+   "line": "Salah itu data, bukan akhir cerita.",
+   "pain": "Malu dan kecewa tiap kali soal dijawab salah.",
+   "tip": "Baca pembahasan, catat alasannya, lalu coba soal serupa.",
+   "chips": [
+    "Baca pembahasan",
+    "Catat alasan",
+    "Coba lagi"
+   ],
+   "subject": "a crumpled paper being smoothed flat by a hand",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-089",
+   "hook": "Belajar efektif bisa dilatih",
+   "line": "Kebiasaan kecil bisa dibentuk pelan-pelan.",
+   "pain": "Merasa tidak berbakat dalam belajar.",
+   "tip": "Mulai dari satu kebiasaan kecil dan jaga selama dua minggu.",
+   "chips": [
+    "Satu kebiasaan",
+    "Dua minggu",
+    "Naik bertahap"
+   ],
+   "subject": "a row of small seedlings in increasing height",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-090",
+   "hook": "Tiga tanda sudah paham",
+   "line": "Bisa menjelaskan, menjawab, dan menerapkan.",
+   "pain": "Tidak yakin kapan sebuah materi benar-benar dikuasai.",
+   "tip": "Coba jelaskan sendiri, jawab soal, lalu pakai di contoh baru.",
+   "chips": [
+    "Bisa jelaskan",
+    "Bisa jawab",
+    "Bisa terapkan"
+   ],
+   "subject": "three simple check marks drawn on a slate",
+   "feature": null,
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-091",
+   "hook": "Belajar dengan target mingguan",
+   "line": "Satu minggu, tiga target kecil.",
+   "pain": "Rencana panjang bulanan terlalu jauh untuk dibayangkan.",
+   "tip": "Tulis tiga target kecil untuk minggu ini dan centang saat selesai.",
+   "chips": [
+    "Tiga target",
+    "Satu minggu",
+    "Centang"
+   ],
+   "subject": "a weekly planner with three highlighted items",
+   "feature": "Roadmap belajar",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-092",
+   "hook": "Susun roadmap tiga langkah",
+   "line": "Mulai kecil supaya roadmap tidak membebani.",
+   "pain": "Roadmap terlalu rumit malah bikin malas.",
+   "tip": "Mulai dari tiga langkah utama, lalu tambah detail seiring jalan.",
+   "chips": [
+    "Tiga langkah",
+    "Mulai sederhana",
+    "Tambah detail"
+   ],
+   "subject": "a path with three round stepping stones",
+   "feature": "Roadmap belajar",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-093",
+   "hook": "Ngobrol dengan Chat AI",
+   "line": "Tanya apa saja yang belum kamu pahami.",
+   "pain": "Pertanyaan menumpuk tapi tidak ada yang bisa ditanyai tengah malam.",
+   "tip": "Tulis pertanyaanmu di Chat AI, minta contoh sampai terasa jelas.",
+   "chips": [
+    "Tanya bebas",
+    "Minta contoh",
+    "Ulangi"
+   ],
+   "subject": "a lit window at night with a laptop and a cup",
+   "feature": "Chat AI",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-094",
+   "hook": "Materimu jadi bahan latihan",
+   "line": "Catatan teks atau PDF bisa jadi konteks belajar.",
+   "pain": "Materi dosen tidak ada di buku latihan mana pun.",
+   "tip": "Unggah catatan atau PDF supaya soal dan penjelasan sesuai materimu.",
+   "chips": [
+    "Catatan teks",
+    "File PDF",
+    "Sesuai materimu"
+   ],
+   "subject": "a personal binder with colored dividers",
+   "feature": "Kuis otomatis dari materimu",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-095",
+   "hook": "Kauiz untuk belajar mandiri",
+   "line": "Cocok untuk yang belajar sendiri dan rutin.",
+   "pain": "Tidak punya teman belajar yang jadwalnya cocok.",
+   "tip": "Gabungkan mentor AI, kuis, dan roadmap supaya belajar mandiri tetap terarah.",
+   "chips": [
+    "Mentor AI",
+    "Kuis",
+    "Roadmap"
+   ],
+   "subject": "a solo study desk with a warm lamp and three tools",
+   "feature": "10 Mentor AI",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-096",
+   "hook": "Belajar tanpa mulai dari nol",
+   "line": "Setiap sesi melanjutkan sesi sebelumnya.",
+   "pain": "Tiap kembali belajar, harus menjelaskan ulang dari awal.",
+   "tip": "Learning Memory memakai ingatan sesi lama sehingga kamu tidak perlu menjelaskan ulang.",
+   "chips": [
+    "Lanjut sesi lama",
+    "Tak perlu ulang",
+    "Hemat waktu"
+   ],
+   "subject": "a bridge being built over a gap between two notebooks",
+   "feature": "Learning Memory",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-097",
+   "hook": "Asisten belajar yang ingat",
+   "line": "Belajar jadi nyambung dari sesi ke sesi.",
+   "pain": "Aplikasi belajar yang lupa siapa kamu setiap hari.",
+   "tip": "Kauiz menyimpan topik, kesalahan, dan progresmu, dan kamu yang mengatur datanya.",
+   "chips": [
+    "Topik tersimpan",
+    "Progres jelas",
+    "Kamu yang atur"
+   ],
+   "subject": "a brain shaped paper cutout holding a small bookmark",
+   "feature": "Learning Memory",
+   "pattern": "explainer"
+  },
+  {
+   "id": "kf-098",
+   "hook": "Belajar ringan lewat rutinitas",
+   "line": "Rutinitas kecil membuat belajar tidak terasa berat.",
+   "pain": "Selalu menunggu mood bagus baru mau belajar.",
+   "tip": "Tetapkan jam yang sama tiap hari dan mulai dari sesi singkat.",
+   "chips": [
+    "Jam sama",
+    "Sesi singkat",
+    "Mulai saja"
+   ],
+   "subject": "a small alarm clock and a cup beside an open notebook",
+   "feature": "Hari Ini",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-099",
+   "hook": "Satu soal sebelum tidur",
+   "line": "Penutup hari yang sederhana tapi berarti.",
+   "pain": "Hari berlalu tanpa sempat belajar sedikit pun.",
+   "tip": "Kerjakan satu kuis singkat sebelum tidur untuk menjaga ritme belajar.",
+   "chips": [
+    "Satu kuis",
+    "Sebelum tidur",
+    "Jaga ritme"
+   ],
+   "subject": "a bedside lamp next to a single quiz card",
+   "feature": "Mode latihan",
+   "pattern": "tips"
+  },
+  {
+   "id": "kf-100",
+   "hook": "Kuis kilat lima menit",
+   "line": "Cukup lima menit, hasilnya bisa dilihat.",
+   "pain": "Merasa tidak punya waktu untuk latihan soal.",
+   "tip": "Pilih jumlah soal kecil dan kerjakan di sela waktu luang.",
+   "chips": [
+    "Lima menit",
+    "Soal sedikit",
+    "Cek hasil"
+   ],
+   "subject": "a tiny timer beside a short stack of cards",
+   "feature": "Kuis otomatis dari materimu",
+   "pattern": "tips"
+  }
+ ]
+}

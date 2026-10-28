@@ -64,6 +64,8 @@ PALETTE = {
 
 # Mode gambar: "pillow" (default, daftar topik bawaan) atau "muse" (latar dari Muse, teks dari Pillow).
 IMAGE_MODES = ("pillow", "muse")
+# Penulis prompt untuk materi baru dari analisis dashboard. Memakai API key OpenRouter yang sama dengan Muse.
+LLM_MODEL_DEFAULT = "meta-llama/llama-3.1-8b-instruct"
 # Muse dipanggil lewat OpenRouter Images, sama dengan bot Jauki: model meta/muse-image, respons JSON.
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MUSE_MODEL = "meta/muse-image"
@@ -543,6 +545,24 @@ def load_visual_modules(visual_memory_dir):
     return visual_memory, visual_overlay
 
 
+def load_bank_module(visual_memory_dir):
+    load_visual_modules(visual_memory_dir)
+    import prompt_bank
+
+    return prompt_bank
+
+
+def llm_endpoints(config):
+    """Endpoint model teks: utama (OpenRouter, key sama dengan Muse), lalu cadangan bila diatur. None bila tidak ada yang siap."""
+    endpoints = []
+    local = ("127.0.0.1", "localhost")
+    if config.llm_model and (config.llm_api_key or any(host in config.llm_base_url for host in local)):
+        endpoints.append({"base_url": config.llm_base_url, "api_key": config.llm_api_key, "model": config.llm_model})
+    if config.llm_fallback_model and config.llm_fallback_base_url:
+        endpoints.append({"base_url": config.llm_fallback_base_url, "api_key": config.llm_fallback_api_key, "model": config.llm_fallback_model})
+    return endpoints or None
+
+
 def muse_job(config, plan, fmt, slot_key, history, with_prompt=True):
     """Memilih template (dengan riwayat). Untuk mode teks Pillow, sekaligus menyusun prompt dari compiler visual memory."""
     visual_memory, _ = load_visual_modules(config.visual_memory_dir)
@@ -594,11 +614,12 @@ def write_content(config, plan, topic, fmt, slot_key, job, use_llm):
     brand = visual_memory.VisualBrandMemory().get("kauiz")
     cta = brand.get("cta", {})
     source = {"headline": topic["headline"], "subheadline": topic["body"], "items": [p for p in (plan.get("key_points") or []) if p]}
+    for key in ("pain", "tip", "feature", "caption_text"):
+        if plan.get(key):
+            source[key] = plan[key]
     post = {key: plan.get(key) for key in ("topic", "brief", "key_message", "key_points", "cta", "hook_direction", "objective", "angle") if plan.get(key)}
     post["pattern"] = job["pattern"]
-    llm = None
-    if use_llm and config.llm_model:
-        llm = {"base_url": config.llm_base_url, "api_key": config.llm_api_key, "model": config.llm_model}
+    llm = llm_endpoints(config) if use_llm else None
     try:
         return visual_prompt_writer.write_content(
             "kauiz", source, post, job["template_id"], fmt, job["subject"],
@@ -616,7 +637,7 @@ def write_prompt_preview(config, plan, topic, fmt, slot_key, state):
     base = config.output_dir / f"{slot_key}-{fmt}"
     info = {"template_id": job["template_id"], "variation": job["variation"]}
     if text_in_muse(config):
-        content = write_content(config, plan, topic, fmt, slot_key, job, use_llm=config.writer_in_dryrun)
+        content = write_content(config, plan, topic, fmt, slot_key, job, use_llm=config.writer_in_dryrun and plan.get("source") != "bank")
         prompt = content["muse_prompt"]
         info.update({"writer": content["source"], "copy": content["copy"], "hashtags": content["hashtags"], "writer_errors": content["errors"]})
         if content["caption"]:
@@ -647,7 +668,7 @@ def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
         if writer_path.exists():
             content = json.loads(writer_path.read_text(encoding="utf-8"))
         else:
-            content = write_content(config, plan, topic, fmt, slot_key, job, use_llm=True)
+            content = write_content(config, plan, topic, fmt, slot_key, job, use_llm=plan.get("source") != "bank")
             writer_path.write_text(json.dumps(content, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         prompt = content["muse_prompt"]
         if content["caption"]:
@@ -665,6 +686,8 @@ def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
         background_path.parent.mkdir(parents=True, exist_ok=True)
         background_path.write_bytes(raw)
         state["images"] = {today: used + 1}
+        if plan.get("bank_id"):
+            load_bank_module(config.visual_memory_dir).consume(state, "kauiz", fmt, plan["bank_id"])
         state["history"] = (state.get("history", []) + [{
             "template_id": job["template_id"], "hero_position": job["variation"]["hero_position"],
             "background_treatment": job["variation"]["background_treatment"], "slot_key": slot_key,
@@ -722,10 +745,13 @@ class Config:
     visual_memory_dir: Optional[Path] = None
     max_images_per_day: int = 6
     text_mode: str = "muse"
-    llm_model: str = ""
+    llm_model: str = LLM_MODEL_DEFAULT
     llm_base_url: str = OPENROUTER_BASE_URL
     llm_api_key: str = ""
     writer_in_dryrun: bool = False
+    llm_fallback_model: str = ""
+    llm_fallback_base_url: str = ""
+    llm_fallback_api_key: str = ""
 
     def missing_for_live(self):
         required = {
@@ -764,10 +790,13 @@ def load_config(env):
         visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
         max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "6")),
         text_mode=get("KAUIZ_TEXT_MODE", "muse"),
-        llm_model=get("KAUIZ_LLM_MODEL"),
+        llm_model=get("KAUIZ_LLM_MODEL", LLM_MODEL_DEFAULT),
         llm_base_url=get("KAUIZ_LLM_BASE_URL", OPENROUTER_BASE_URL),
-        llm_api_key=get("KAUIZ_LLM_API_KEY") or get("LITELLM_API_KEY"),
+        llm_api_key=get("KAUIZ_LLM_API_KEY") or get("OPENROUTER_API_KEY"),
         writer_in_dryrun=get("KAUIZ_WRITER_IN_DRYRUN", "0") == "1",
+        llm_fallback_model=get("KAUIZ_LLM_FALLBACK_MODEL"),
+        llm_fallback_base_url=get("KAUIZ_LLM_FALLBACK_BASE_URL"),
+        llm_fallback_api_key=get("KAUIZ_LLM_FALLBACK_API_KEY") or get("LITELLM_API_KEY"),
     )
 
 
@@ -973,9 +1002,18 @@ def run_due(config, *, live, now, client=None):
         if config.image_mode == "muse":
             # Mode Muse memakai isi jadwal dashboard. Tanpa isi, dipakai topik bawaan sebagai data acak.
             topic = topic_from_plan(job.plan)
-            if not topic["headline"]:
-                topic, plan = job.topic, plan_from_topic(job.topic)
-                LOG.info("slot %s tanpa isi jadwal, memakai topik bawaan '%s'", job.slot_key, topic["tag"])
+            if topic["headline"]:
+                plan = {**job.plan, "source": "slot"}
+            else:
+                bank = load_bank_module(config.visual_memory_dir)
+                item = bank.next_item(load_state(config.state_file), "kauiz", job.fmt)
+                if item is None:
+                    LOG.error("slot %s dilewati: bank materi %s habis dan jadwal tidak punya isi", job.slot_key, job.fmt)
+                    failures += 1
+                    continue
+                plan = bank.to_plan(item, job.fmt)
+                topic = topic_from_plan(plan)
+                LOG.info("slot %s tanpa isi jadwal, memakai materi bank %s", job.slot_key, item["id"])
         code = run_auto(config, live=live, formats=(job.fmt,), now=now, client=client,
                         slot_key=job.slot_key, topic=topic, publish=job.publish, plan=plan)
         if code == EXIT_CONFIG:

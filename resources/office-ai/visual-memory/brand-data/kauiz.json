@@ -4,7 +4,12 @@
   "website": "kauiz.web.id",
   "instagram": "@kauiz.web.id",
   "one_liner": "Asisten belajar AI yang mengingat perjalanan belajar setiap pengguna.",
-  "audience": ["Pelajar", "Mahasiswa", "Pejuang UTBK", "Pembelajar mandiri"],
+  "audience": [
+    "Pelajar",
+    "Mahasiswa",
+    "Pejuang UTBK",
+    "Pembelajar mandiri"
+  ],
   "problems_solved": [
     "Belajar terasa mulai dari nol setiap kali kembali",
     "Bingung bagian mana yang masih belum dikuasai",
@@ -12,26 +17,126 @@
     "Target besar sulit dipecah menjadi langkah harian"
   ],
   "features": [
-    {"name": "Learning Memory", "what_it_does": "Menyimpan topik, kesalahan, dan progres belajar, lalu memakainya lagi di sesi berikutnya tanpa dijelaskan ulang.", "benefit": "Belajar tidak mulai dari nol"},
-    {"name": "10 Mentor AI", "what_it_does": "Mentor dengan kepribadian berbeda yang sama-sama memahami Learning Memory. Bisa diganti kapan saja tanpa kehilangan progres.", "benefit": "Pilih gaya belajar yang cocok"},
-    {"name": "Kuis otomatis dari materimu", "what_it_does": "Membuat soal dari catatan teks atau PDF yang diunggah. Jumlah soal, tingkat kesulitan, dan jenis soal bisa diatur.", "benefit": "Latihan dari materi sendiri"},
-    {"name": "Mode latihan", "what_it_does": "Kuis dengan hint dan pembahasan selama mengerjakan, lalu hasil menunjukkan topik yang perlu diulang.", "benefit": "Tahu apa yang harus diulang"},
-    {"name": "Roadmap belajar", "what_it_does": "Memecah target besar menjadi langkah harian yang jelas.", "benefit": "Target jadi terarah"},
-    {"name": "Bank Soal dan UTBK", "what_it_does": "Halaman latihan soal yang sudah tersedia dan persiapan ujian masuk.", "benefit": "Latihan siap pakai"},
-    {"name": "Ringkasan Cepat", "what_it_does": "Membuat rangkuman materi dengan cepat.", "benefit": "Hemat waktu membaca ulang"},
-    {"name": "Hari Ini", "what_it_does": "Rencana belajar harian yang bisa dimulai atau dilanjutkan, bersama target aktif, streak, dan level.", "benefit": "Selalu tahu mulai dari mana"},
-    {"name": "Progres dan peta topik", "what_it_does": "Menampilkan peta topik dan skor penguasaan.", "benefit": "Kemajuan terlihat jelas"},
-    {"name": "Live Study", "what_it_does": "Sesi belajar bersama mentor. Kamera dan rekaman tidak aktif otomatis dan butuh izin eksplisit.", "benefit": "Belajar ditemani"},
-    {"name": "Chat AI", "what_it_does": "Bertanya langsung ke AI.", "benefit": "Jawaban saat butuh"}
+    {
+      "name": "Learning Memory",
+      "what_it_does": "Menyimpan topik, kesalahan, dan progres belajar, lalu memakainya lagi di sesi berikutnya tanpa dijelaskan ulang.",
+      "benefit": "Belajar tidak mulai dari nol"
+    },
+    {
+      "name": "10 Mentor AI",
+      "what_it_does": "Mentor dengan kepribadian berbeda yang sama-sama memahami Learning Memory. Bisa diganti kapan saja tanpa kehilangan progres.",
+      "benefit": "Pilih gaya belajar yang cocok"
+    },
+    {
+      "name": "Kuis otomatis dari materimu",
+      "what_it_does": "Membuat soal dari catatan teks atau PDF yang diunggah. Jumlah soal, tingkat kesulitan, dan jenis soal bisa diatur.",
+      "benefit": "Latihan dari materi sendiri"
+    },
+    {
+      "name": "Mode latihan",
+      "what_it_does": "Kuis dengan hint dan pembahasan selama mengerjakan, lalu hasil menunjukkan topik yang perlu diulang.",
+      "benefit": "Tahu apa yang harus diulang"
+    },
+    {
+      "name": "Roadmap belajar",
+      "what_it_does": "Memecah target besar menjadi langkah harian yang jelas.",
+      "benefit": "Target jadi terarah"
+    },
+    {
+      "name": "Bank Soal dan UTBK",
+      "what_it_does": "Halaman latihan soal yang sudah tersedia dan persiapan ujian masuk.",
+      "benefit": "Latihan siap pakai"
+    },
+    {
+      "name": "Ringkasan Cepat",
+      "what_it_does": "Membuat rangkuman materi dengan cepat.",
+      "benefit": "Hemat waktu membaca ulang"
+    },
+    {
+      "name": "Hari Ini",
+      "what_it_does": "Rencana belajar harian yang bisa dimulai atau dilanjutkan, bersama target aktif, streak, dan level.",
+      "benefit": "Selalu tahu mulai dari mana"
+    },
+    {
+      "name": "Progres dan peta topik",
+      "what_it_does": "Menampilkan peta topik dan skor penguasaan.",
+      "benefit": "Kemajuan terlihat jelas"
+    },
+    {
+      "name": "Live Study",
+      "what_it_does": "Sesi belajar bersama mentor. Kamera dan rekaman tidak aktif otomatis dan butuh izin eksplisit.",
+      "benefit": "Belajar ditemani"
+    },
+    {
+      "name": "Chat AI",
+      "what_it_does": "Bertanya langsung ke AI.",
+      "benefit": "Jawaban saat butuh"
+    }
   ],
-  "mentors": ["Ms. Elena", "Mr. Adrian", "Ms. Clara", "Mr. Ethan", "Ms. Aria", "Mr. Nathan", "Ms. Maya", "Mr. Julian", "Ms. Selena", "Mr. Leo"],
+  "mentors": [
+    "Ms. Elena",
+    "Mr. Adrian",
+    "Ms. Clara",
+    "Mr. Ethan",
+    "Ms. Aria",
+    "Mr. Nathan",
+    "Ms. Maya",
+    "Mr. Julian",
+    "Ms. Selena",
+    "Mr. Leo"
+  ],
   "plans": [
-    {"name": "Free", "price_idr": 0, "price_text": "Gratis", "highlights": ["Kuis 2x per hari", "Maksimal 5 soal", "Koreksi otomatis", "Pembahasan ringkas"]},
-    {"name": "Basic", "price_idr": 16000, "price_text": "Rp 16.000 / bulan", "highlights": ["Kuis 15x per hari", "Maksimal 20 soal", "Pembahasan lengkap", "Tanpa watermark"]},
-    {"name": "Pro", "price_idr": 24000, "price_text": "Rp 24.000 / bulan", "highlights": ["Kuis 75x per hari", "Semua level kesulitan", "Ekspor PDF dan review"]},
-    {"name": "Premium", "price_idr": 47000, "price_text": "Rp 47.000 / bulan", "highlights": ["Kuis tanpa batas per hari", "Mode kompetisi online", "Akses fitur beta"]}
+    {
+      "name": "Free",
+      "price_idr": 0,
+      "price_text": "Gratis",
+      "highlights": [
+        "Kuis 2x per hari",
+        "Maksimal 5 soal",
+        "Koreksi otomatis",
+        "Pembahasan ringkas"
+      ]
+    },
+    {
+      "name": "Basic",
+      "price_idr": 16000,
+      "price_text": "Rp 16.000 / bulan",
+      "highlights": [
+        "Kuis 15x per hari",
+        "Maksimal 20 soal",
+        "Pembahasan lengkap",
+        "Tanpa watermark"
+      ]
+    },
+    {
+      "name": "Pro",
+      "price_idr": 24000,
+      "price_text": "Rp 24.000 / bulan",
+      "highlights": [
+        "Kuis 75x per hari",
+        "Semua level kesulitan",
+        "Ekspor PDF dan review"
+      ]
+    },
+    {
+      "name": "Premium",
+      "price_idr": 47000,
+      "price_text": "Rp 47.000 / bulan",
+      "highlights": [
+        "Kuis tanpa batas per hari",
+        "Mode kompetisi online",
+        "Akses fitur beta"
+      ]
+    }
   ],
-  "allowed_price_texts": ["Rp 16.000", "Rp 24.000", "Rp 47.000", "Rp 153.600", "Rp 230.400", "Rp 451.200"],
+  "allowed_price_texts": [
+    "Rp 16.000",
+    "Rp 24.000",
+    "Rp 47.000",
+    "Rp 153.600",
+    "Rp 230.400",
+    "Rp 451.200"
+  ],
   "privacy_facts": [
     "Learning Memory bisa dimatikan atau datanya dihapus kapan saja",
     "Live Study tidak mengaktifkan kamera atau rekaman otomatis"
@@ -39,20 +144,59 @@
   "tone": {
     "language": "id",
     "style": "Santai, hangat, dan memotivasi. Sapaan 'kamu'. Kalimat pendek dan konkret.",
-    "do": ["Mulai dari masalah belajar yang nyata", "Sebut satu manfaat per konten", "Ajak mencoba gratis"],
-    "dont": ["Menjanjikan nilai atau kelulusan", "Menyebut angka yang tidak ada di data ini", "Menyebut diskon, trial, atau garansi uang kembali"],
+    "do": [
+      "Mulai dari masalah belajar yang nyata",
+      "Sebut satu manfaat per konten",
+      "Ajak mencoba gratis"
+    ],
+    "dont": [
+      "Menjanjikan nilai atau kelulusan",
+      "Menyebut angka yang tidak ada di data ini",
+      "Menyebut diskon, trial, atau garansi uang kembali"
+    ],
     "status": "draft, belum dikonfirmasi pemilik"
   },
-  "cta": {"primary_text": "Coba gratis di kauiz.web.id", "link_in_bio_text": "Klik link di bio", "url": "https://kauiz.web.id"},
-  "content_pillars": ["Tips belajar efektif", "Fitur Kauiz", "Learning Memory", "Latihan soal dan UTBK", "Mentor AI"],
+  "cta": {
+    "primary_text": "Coba gratis di kauiz.web.id",
+    "link_in_bio_text": "Klik link di bio",
+    "url": "https://kauiz.web.id"
+  },
+  "content_pillars": [
+    "Tips belajar efektif",
+    "Fitur Kauiz",
+    "Learning Memory",
+    "Latihan soal dan UTBK",
+    "Mentor AI"
+  ],
   "avoid_claims": [
-    "garansi uang kembali", "refund", "trial", "diskon", "promo",
-    "nilai pasti naik", "pasti lulus", "slot roadmap", "upload file", "50 soal", "soal tanpa batas",
-    "Rp 25.000", "Rp 45.000", "Rp 89.000"
+    "garansi uang kembali",
+    "refund",
+    "trial",
+    "diskon",
+    "promo",
+    "nilai pasti naik",
+    "pasti lulus",
+    "slot roadmap",
+    "upload file",
+    "50 soal",
+    "soal tanpa batas",
+    "Rp 25.000",
+    "Rp 45.000",
+    "Rp 89.000"
   ],
   "hashtags": {
-    "brand": ["#kauiz"],
-    "topic": ["#belajarefektif", "#tipsbelajar", "#asistenbelajar", "#belajarai", "#utbk", "#mahasiswa", "#pelajar"],
+    "brand": [
+      "#kauiz"
+    ],
+    "topic": [
+      "#belajarefektif",
+      "#tipsbelajar",
+      "#asistenbelajar",
+      "#belajarai",
+      "#utbk",
+      "#mahasiswa",
+      "#pelajar"
+    ],
     "status": "draft, belum dikonfirmasi pemilik"
   },
   "visual": {
@@ -61,7 +205,23 @@
     "accent": "warm yellow (#FFCB3D)",
     "headline_style": "heavy condensed geometric sans-serif capitals",
     "footer_style": "a slim rounded deep-navy footer bar with cream text on the left",
-    "allowed_hex": ["#0B1537", "#17264F", "#FFCB3D", "#FBF6EA", "#EFE6D0", "#FFFFFF", "#F1F1F4", "#E4E4E4", "#6B6B6B"]
+    "allowed_hex": [
+      "#0B1537",
+      "#17264F",
+      "#FFCB3D",
+      "#FBF6EA",
+      "#EFE6D0",
+      "#FFFFFF",
+      "#F1F1F4",
+      "#E4E4E4",
+      "#6B6B6B"
+    ],
+    "ink_name": "deep navy",
+    "ink_short": "navy",
+    "alt_name": "lighter navy",
+    "paper_name": "cream",
+    "accent_name": "warm yellow"
   },
-  "sources": "Data harga dan fitur dari pemeriksaan kode dan situs kauiz.web.id yang dikirim pemilik. Ketidakcocokan situs dan kode (slot roadmap, batas upload, 40 vs 50 soal, harga coret) sengaja tidak dimasukkan."
+  "sources": "Data harga dan fitur dari pemeriksaan kode dan situs kauiz.web.id yang dikirim pemilik. Ketidakcocokan situs dan kode (slot roadmap, batas upload, 40 vs 50 soal, harga coret) sengaja tidak dimasukkan.",
+  "cta_required": true
 }

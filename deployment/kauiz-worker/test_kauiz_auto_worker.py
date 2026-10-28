@@ -65,6 +65,7 @@ def make_config(root, **overrides):
         "state_file": root / "state.json",
         "lock_file": root / "worker.lock",
         "log_file": root / "logs" / "worker.log",
+        "llm_model": "",
     }
     values.update(overrides)
     return worker.Config(**values)
@@ -256,16 +257,72 @@ class MuseTests(unittest.TestCase):
             self.assertNotIn(chosen[index], chosen[index - 3:index])
         self.assertGreaterEqual(len(set(chosen)), 12)
 
-    def test_empty_slot_in_muse_mode_falls_back_to_builtin_topic(self):
+    def empty_slot_config(self, root, **overrides):
+        slots = root / "slots.json"
+        slots.write_text(json.dumps([{"format": "feed", "day": 2, "time": "13:40", "timezone": "Asia/Jakarta", "lead_minutes": 120}]))
+        return self.muse_config(root, slots_file=slots, text_mode="muse", **overrides)
+
+    def test_empty_slot_uses_a_bank_item_and_a_dry_run_does_not_consume_it(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            slots = root / "slots.json"
-            slots.write_text(json.dumps([{"format": "feed", "day": 2, "time": "13:40", "timezone": "Asia/Jakarta", "lead_minutes": 120}]))
-            config = self.muse_config(root, slots_file=slots)
+            config = self.empty_slot_config(Path(tmp))
             now = datetime(2026, 10, 27, 13, 45, tzinfo=ZoneInfo("Asia/Jakarta"))
             with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
                 self.assertEqual(worker.run_due(config, live=False, now=now), worker.EXIT_OK)
             self.assertTrue(any(config.output_dir.glob("*.plan.json")))
+            self.assertNotIn("bank", worker.load_state(config.state_file))
+
+    def test_live_runs_consume_different_bank_items_and_never_repeat(self):
+        bank = worker.load_bank_module(self.visual_dir)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, text_mode="muse")
+            state = {"published": {}}
+            seen = []
+            for index in range(5):
+                item = bank.next_item(state, "kauiz", "story")
+                seen.append(item["id"])
+                plan = bank.to_plan(item, "story")
+                with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))):
+                    worker.render_muse_image(config, plan, worker.topic_from_plan(plan), "story", f"slot-{index}", root / f"s{index}.jpg", state)
+            self.assertEqual(len(set(seen)), 5)
+            self.assertEqual(sorted(state["bank"]["kauiz:story"]), sorted(seen))
+
+    def test_exhausted_bank_skips_the_slot_instead_of_repeating(self):
+        bank = worker.load_bank_module(self.visual_dir)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.empty_slot_config(root)
+            worker.save_state(config.state_file, {"published": {}, "bank": {"kauiz:feed": [item["id"] for item in bank.load_bank("kauiz", "feed")]}})
+            now = datetime(2026, 10, 27, 13, 45, tzinfo=ZoneInfo("Asia/Jakarta"))
+            with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
+                self.assertEqual(worker.run_due(config, live=True, now=now), worker.EXIT_FAILED)
+
+    def test_text_model_is_used_for_slot_content_but_not_for_bank_items(self):
+        worker.load_visual_modules(self.visual_dir)
+        import visual_prompt_writer
+
+        def fake_chat(**kwargs):
+            example = json.loads(kwargs["messages"][1]["content"])["contoh_prompt"]
+            return {"headline": re.search(r'reads exactly "([^"]+)"', example).group(1), "subline": None, "chips": [], "muse_prompt": example,
+                    "caption": "Hook.\n\nKlik link di bio.\n\n#kauiz #belajarefektif #tipsbelajar", "hashtags": ["#kauiz", "#belajarefektif", "#tipsbelajar"]}
+
+        bank = worker.load_bank_module(self.visual_dir)
+        bank_plan = bank.to_plan(bank.next_item({}, "kauiz", "feed"), "feed")
+        with tempfile.TemporaryDirectory() as tmp:
+            config = self.muse_config(Path(tmp), text_mode="muse", llm_model="m", llm_api_key="k", writer_in_dryrun=True)
+            with mock.patch.object(visual_prompt_writer, "chat_json", side_effect=fake_chat) as chat:
+                worker.write_prompt_preview(config, {**PLAN, "source": "slot"}, worker.topic_from_plan(PLAN), "feed", "slot-a", {})
+                self.assertEqual(chat.call_count, 1)
+                worker.write_prompt_preview(config, bank_plan, worker.topic_from_plan(bank_plan), "feed", "slot-b", {})
+                self.assertEqual(chat.call_count, 1)  # materi bank tidak memanggil model
+
+    def test_llm_endpoints_use_the_muse_key_and_an_optional_fallback(self):
+        config = worker.load_config({"OPENROUTER_API_KEY": "muse-key", "KAUIZ_LLM_FALLBACK_MODEL": "g", "KAUIZ_LLM_FALLBACK_BASE_URL": "http://127.0.0.1:4000/v1"})
+        endpoints = worker.llm_endpoints(config)
+        self.assertEqual(config.llm_model, "meta-llama/llama-3.1-8b-instruct")
+        self.assertEqual([e["model"] for e in endpoints], ["meta-llama/llama-3.1-8b-instruct", "g"])
+        self.assertEqual(endpoints[0]["api_key"], "muse-key")
+        self.assertIsNone(worker.llm_endpoints(worker.load_config({})))
 
     def test_text_in_muse_dry_run_writes_exact_prompt_and_caption_without_calling_muse(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -273,7 +330,7 @@ class MuseTests(unittest.TestCase):
             topic = worker.topic_from_plan(PLAN)
             with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
                 code = worker.run_auto(config, live=False, formats=("feed",), now=NOW, slot_key="2026-10-27-2030",
-                                       topic=topic, publish=True, plan=PLAN)
+                                       topic=topic, publish=True, plan={**PLAN, "source": "bank"})
             self.assertEqual(code, worker.EXIT_OK)
             base = config.output_dir / "2026-10-27-2030-feed"
             prompt = base.with_name(base.name + ".prompt.txt").read_text(encoding="utf-8")
@@ -290,7 +347,7 @@ class MuseTests(unittest.TestCase):
             client = FakeClient()
             with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))) as generate:
                 code = worker.run_auto(config, live=True, formats=("feed",), now=NOW, slot_key="2026-10-27-2030",
-                                       topic=topic, publish=True, plan=PLAN, client=client)
+                                       topic=topic, publish=True, plan={**PLAN, "source": "bank"}, client=client)
             self.assertEqual(code, worker.EXIT_OK)
             self.assertEqual(generate.call_count, 1)
             self.assertIn('reads exactly "TUTUP CATATAN, LALU INGAT LAGI"', generate.call_args.args[0])
@@ -300,6 +357,17 @@ class MuseTests(unittest.TestCase):
             with Image.open(config.output_dir / "2026-10-27-2030-feed.jpg") as image:
                 self.assertEqual(image.size, worker.CANVAS["feed"])
             self.assertTrue((config.output_dir / "2026-10-27-2030-feed.writer.json").exists())
+
+    def test_story_in_text_mode_muse_has_no_caption(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, text_mode="muse")
+            topic = worker.topic_from_plan(PLAN)
+            client = FakeClient()
+            with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))):
+                worker.run_auto(config, live=True, formats=("story",), now=NOW, slot_key="2026-10-27-2030",
+                                topic=topic, publish=True, plan={**PLAN, "source": "bank"}, client=client)
+            self.assertIsNone(client.calls[0][2])
 
     def test_llm_output_from_dry_run_is_reused_by_the_live_run(self):
         worker.load_visual_modules(self.visual_dir)
@@ -317,29 +385,19 @@ class MuseTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            config = self.muse_config(root, text_mode="muse", llm_model="m", writer_in_dryrun=True)
+            config = self.muse_config(root, text_mode="muse", llm_model="m", llm_api_key="k", writer_in_dryrun=True)
             topic = worker.topic_from_plan(PLAN)
+            slot_plan = {**PLAN, "source": "slot"}
             with mock.patch.object(visual_prompt_writer, "chat_json", side_effect=fake_chat) as chat:
-                worker.run_auto(config, live=False, formats=("feed",), now=NOW, slot_key="2026-10-27-2030", topic=topic, publish=True, plan=PLAN)
+                worker.run_auto(config, live=False, formats=("feed",), now=NOW, slot_key="2026-10-27-2030", topic=topic, publish=True, plan=slot_plan)
                 self.assertEqual(chat.call_count, 1)
                 client = FakeClient()
                 with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))) as generate:
                     worker.run_auto(config, live=True, formats=("feed",), now=NOW, slot_key="2026-10-27-2030", topic=topic,
-                                    publish=True, plan=PLAN, client=client)
+                                    publish=True, plan=slot_plan, client=client)
                 self.assertEqual(chat.call_count, 1)  # live memakai hasil dry run, model tidak dipanggil lagi
             self.assertIn("Extra scene detail", generate.call_args.args[0])
             self.assertTrue(client.calls[0][2].startswith("Hook dari model teks."))
-
-    def test_story_in_text_mode_muse_has_no_caption(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            config = self.muse_config(root, text_mode="muse")
-            topic = worker.topic_from_plan(PLAN)
-            client = FakeClient()
-            with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 900))):
-                worker.run_auto(config, live=True, formats=("story",), now=NOW, slot_key="2026-10-27-2030",
-                                topic=topic, publish=True, plan=PLAN, client=client)
-            self.assertIsNone(client.calls[0][2])
 
     def test_pattern_subject_and_short_line_helpers(self):
         self.assertEqual(worker.infer_pattern({"topic": "Tips belajar efektif"}), "tips")

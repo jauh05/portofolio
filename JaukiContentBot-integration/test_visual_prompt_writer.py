@@ -161,6 +161,31 @@ class LlmTests(unittest.TestCase):
         result = write("T01", llm=llm)
         self.assertEqual((result["source"], len(calls)), ("template", 1))
 
+    def test_failing_primary_endpoint_falls_through_to_the_fallback_model(self):
+        calls = []
+
+        def broken(url, headers, body):
+            calls.append(body["model"])
+            raise writer.WriterError("LLM HTTP 429: limit")
+
+        good, good_calls = self.llm([self.valid_reply()])
+        result = write("T01", llm=[
+            {"base_url": "https://a", "api_key": "", "model": "primary", "transport": broken},
+            {**good, "model": "fallback"},
+        ])
+        self.assertEqual((result["source"], result["model"]), ("llm", "fallback"))
+        self.assertEqual(calls, ["primary"])  # panggilan gagal tidak diulang
+        self.assertEqual(len(good_calls), 1)
+        self.assertTrue(any("primary" in e and "429" in e for e in result["errors"]))
+
+    def test_all_endpoints_failing_gives_the_template_content(self):
+        def broken(url, headers, body):
+            raise writer.WriterError("mati")
+
+        result = write("T01", llm=[{"base_url": "https://a", "api_key": "", "model": m, "transport": broken} for m in ("a", "b")])
+        self.assertEqual(result["source"], "template")
+        self.assertEqual(len(result["errors"]), 2)
+
     def test_story_reply_never_carries_a_caption(self):
         llm, _ = self.llm([self.valid_reply().replace("4:5", "9:16")])
         result = write("T01", "story", llm=llm)

@@ -1,0 +1,2206 @@
+{
+ "brand": "jauki",
+ "format": "story",
+ "items": [
+  {
+   "id": "js-001",
+   "hook": "Deadline besok?",
+   "line": "Santai, panik dulu sebentar.",
+   "chips": [
+    "Panik",
+    "Kopi",
+    "Ngetik"
+   ],
+   "subject": "a clock beside a glowing laptop"
+  },
+  {
+   "id": "js-002",
+   "hook": "Jam berapa sekarang?",
+   "line": "Cukup malam untuk menyesal.",
+   "chips": [
+    "Jam 2",
+    "Mata berat",
+    "Lanjut"
+   ],
+   "subject": "a clock showing two in the night"
+  },
+  {
+   "id": "js-003",
+   "hook": "Kopi ke berapa?",
+   "line": "Hitungannya sudah kabur.",
+   "chips": [
+    "Kopi satu",
+    "Kopi dua",
+    "Kopi tiga"
+   ],
+   "subject": "three empty coffee cups"
+  },
+  {
+   "id": "js-004",
+   "hook": "Ctrl+S dulu",
+   "line": "Selamatkan tugasmu sekarang.",
+   "chips": [
+    "Simpan",
+    "Simpan lagi",
+    "Aman"
+   ],
+   "subject": "a keyboard with one glowing key"
+  },
+  {
+   "id": "js-005",
+   "hook": "Final final banget",
+   "line": "Nama file paling jujur sedunia.",
+   "chips": [
+    "Final",
+    "Final2",
+    "Beneran"
+   ],
+   "subject": "a stack of similarly named folders"
+  },
+  {
+   "id": "js-006",
+   "hook": "Charger di mana?",
+   "line": "Pertanyaan paling filosofis hari ini.",
+   "chips": [
+    "Cari colokan",
+    "Tas penuh",
+    "Doa"
+   ],
+   "subject": "a coiled charger on a desk"
+  },
+  {
+   "id": "js-007",
+   "hook": "Satu persen lagi",
+   "line": "Baterai laptop dan semangat sama tipisnya.",
+   "chips": [
+    "Baterai tipis",
+    "Semangat tipis",
+    "Lanjut"
+   ],
+   "subject": "a red battery icon on a screen"
+  },
+  {
+   "id": "js-008",
+   "hook": "Printer lagi ngambek",
+   "line": "Dia punya suasana hati sendiri.",
+   "chips": [
+    "Kertas nyangkut",
+    "Tinta habis",
+    "Sabar"
+   ],
+   "subject": "a printer with a paper jam"
+  },
+  {
+   "id": "js-009",
+   "hook": "WiFi kampus",
+   "line": "Kuat saat tidak butuh.",
+   "chips": [
+    "Sinyal hilang",
+    "Pindah kursi",
+    "Sabar"
+   ],
+   "subject": "a dotted wifi icon fading"
+  },
+  {
+   "id": "js-010",
+   "hook": "Mie instan edisi akhir bulan",
+   "line": "Menu bintang lima versi mahasiswa.",
+   "chips": [
+    "Mie",
+    "Telur",
+    "Bersyukur"
+   ],
+   "subject": "a pot of instant noodles"
+  },
+  {
+   "id": "js-011",
+   "hook": "Alarm jam 6",
+   "line": "Dimatikan, ditunda, diabaikan.",
+   "chips": [
+    "Alarm satu",
+    "Alarm dua",
+    "Bangun"
+   ],
+   "subject": "a row of alarm clocks"
+  },
+  {
+   "id": "js-012",
+   "hook": "Kelas jam 7 pagi",
+   "line": "Badan hadir, nyawa menyusul.",
+   "chips": [
+    "Badan hadir",
+    "Nyawa nyusul",
+    "Kopi"
+   ],
+   "subject": "a sleepy backpack on a chair"
+  },
+  {
+   "id": "js-013",
+   "hook": "Jurnal 40 halaman",
+   "line": "Baru halaman dua, mata sudah minta cuti.",
+   "chips": [
+    "Halaman dua",
+    "Mata cuti",
+    "Scroll"
+   ],
+   "subject": "a long paper scroll"
+  },
+  {
+   "id": "js-014",
+   "hook": "Presentasi tanpa persiapan",
+   "line": "Tarik napas, senyum dulu.",
+   "chips": [
+    "Napas",
+    "Senyum",
+    "Mulai"
+   ],
+   "subject": "a podium with a plant"
+  },
+  {
+   "id": "js-015",
+   "hook": "Revisi lagi",
+   "line": "Coret merah itu tanda perhatian.",
+   "chips": [
+    "Revisi",
+    "Revisi lagi",
+    "Sabar"
+   ],
+   "subject": "pages with red marks"
+  },
+  {
+   "id": "js-016",
+   "hook": "Catatan misterius",
+   "line": "Tulisan sendiri butuh ahli sandi.",
+   "chips": [
+    "Tulisan kode",
+    "Tebak",
+    "Menyerah"
+   ],
+   "subject": "a notebook with scribbles"
+  },
+  {
+   "id": "js-017",
+   "hook": "Kuis dadakan",
+   "line": "Jantung berlari maraton.",
+   "chips": [
+    "Pensil patah",
+    "Jantung kencang",
+    "Pasrah"
+   ],
+   "subject": "a pencil and a quiz sheet"
+  },
+  {
+   "id": "js-018",
+   "hook": "Link absen muncul",
+   "line": "Tepat saat kamu ke kamar mandi.",
+   "chips": [
+    "Link muncul",
+    "Lari kecil",
+    "Aman"
+   ],
+   "subject": "a phone with a checkmark"
+  },
+  {
+   "id": "js-019",
+   "hook": "Menunggu pembimbing",
+   "line": "Kesabaran level lanjutan.",
+   "chips": [
+    "Menunggu",
+    "Menunggu lagi",
+    "Sabar"
+   ],
+   "subject": "an empty chair outside a door"
+  },
+  {
+   "id": "js-020",
+   "hook": "Ketemu typo",
+   "line": "Setelah tombol kirim ditekan.",
+   "chips": [
+    "Typo",
+    "Terkirim",
+    "Tarik napas"
+   ],
+   "subject": "an envelope with a red x"
+  },
+  {
+   "id": "js-021",
+   "hook": "Hubunganmu dengan IPK",
+   "line": "Rumit tapi tetap berjuang.",
+   "chips": [
+    "Naik pelan",
+    "Semangat",
+    "Satu semester"
+   ],
+   "subject": "a graph rising slowly"
+  },
+  {
+   "id": "js-022",
+   "hook": "Perpustakaan jam 3",
+   "line": "Adem, sunyi, tergoda tidur.",
+   "chips": [
+    "Adem",
+    "Sunyi",
+    "Zzz"
+   ],
+   "subject": "a book used as a pillow"
+  },
+  {
+   "id": "js-023",
+   "hook": "Tugas minggu depan",
+   "line": "Artinya malam sebelum deadline.",
+   "chips": [
+    "Minggu depan",
+    "Tinggal besok",
+    "Kaget"
+   ],
+   "subject": "a calendar flipping pages"
+  },
+  {
+   "id": "js-024",
+   "hook": "Grup kelas jam 2 pagi",
+   "line": "Satu pertanyaan, dua puluh balasan.",
+   "chips": [
+    "Jam 2",
+    "Emoji",
+    "Solidaritas"
+   ],
+   "subject": "a phone with many chat bubbles"
+  },
+  {
+   "id": "js-025",
+   "hook": "Slide penuh teks",
+   "line": "Mata penonton minta tolong.",
+   "chips": [
+    "Teks penuh",
+    "Mata pegal",
+    "Belajar lagi"
+   ],
+   "subject": "a crowded slide beside a clean one"
+  },
+  {
+   "id": "js-026",
+   "hook": "Belajar di kafe",
+   "line": "Pilih lagu dulu satu jam.",
+   "chips": [
+    "Pilih kursi",
+    "Pilih lagu",
+    "Mulai nanti"
+   ],
+   "subject": "a laptop and a latte"
+  },
+  {
+   "id": "js-027",
+   "hook": "Colokan cadangan?",
+   "line": "Siapa punya, sebut sekarang.",
+   "chips": [
+    "Colokan",
+    "Kabel",
+    "Teman baik"
+   ],
+   "subject": "a power strip on a table"
+  },
+  {
+   "id": "js-028",
+   "hook": "Jam kosong",
+   "line": "Rencana banyak, hasilnya tidur.",
+   "chips": [
+    "Jam kosong",
+    "Bangku taman",
+    "Tidur"
+   ],
+   "subject": "a park bench and a tote bag"
+  },
+  {
+   "id": "js-029",
+   "hook": "Update datang",
+   "line": "Tepat saat tugas selesai.",
+   "chips": [
+    "Selesai",
+    "Update",
+    "Restart"
+   ],
+   "subject": "a progress bar on a screen"
+  },
+  {
+   "id": "js-030",
+   "hook": "Rapat panitia",
+   "line": "Dua dunia, satu kalender.",
+   "chips": [
+    "Rapat",
+    "Kuliah",
+    "Kalender penuh"
+   ],
+   "subject": "a crowded calendar"
+  },
+  {
+   "id": "js-031",
+   "hook": "Lapar tengah malam",
+   "line": "Pilihannya biskuit atau pasrah.",
+   "chips": [
+    "Lapar",
+    "Biskuit",
+    "Tidur"
+   ],
+   "subject": "a pack of biscuits by a lamp"
+  },
+  {
+   "id": "js-032",
+   "hook": "Merasa paham",
+   "line": "Sampai disuruh menjelaskan.",
+   "chips": [
+    "Merasa paham",
+    "Disuruh jelaskan",
+    "Hening"
+   ],
+   "subject": "a thought bubble with a question"
+  },
+  {
+   "id": "js-033",
+   "hook": "Revisi ke-sekian",
+   "line": "Hitungan sudah hilang.",
+   "chips": [
+    "Revisi",
+    "Lupa hitung",
+    "Semangat"
+   ],
+   "subject": "a stack of drafts"
+  },
+  {
+   "id": "js-034",
+   "hook": "Semangat tiga fase",
+   "line": "Awal bara, tengah pasrah, akhir doa.",
+   "chips": [
+    "Awal",
+    "Tengah",
+    "Akhir"
+   ],
+   "subject": "three notebooks of different heights"
+  },
+  {
+   "id": "js-035",
+   "hook": "Tidur siang penyelamat",
+   "line": "Dua puluh menit saja.",
+   "chips": [
+    "Dua puluh menit",
+    "Alarm",
+    "Segar"
+   ],
+   "subject": "a pillow and an alarm clock"
+  },
+  {
+   "id": "js-036",
+   "hook": "Antre fotokopi",
+   "line": "Panik berjamaah.",
+   "chips": [
+    "Antre",
+    "Kertas hangat",
+    "Selamat"
+   ],
+   "subject": "a copier with a small queue"
+  },
+  {
+   "id": "js-037",
+   "hook": "Pulpen menghilang",
+   "line": "Dibeli banyak, ditemukan satu.",
+   "chips": [
+    "Pulpen hilang",
+    "Beli lagi",
+    "Misteri"
+   ],
+   "subject": "a single pen on a desk"
+  },
+  {
+   "id": "js-038",
+   "hook": "Halaman satu",
+   "line": "Kursor berkedip menunggu.",
+   "chips": [
+    "Kursor",
+    "Kosong",
+    "Mulai"
+   ],
+   "subject": "a blank page with a cursor"
+  },
+  {
+   "id": "js-039",
+   "hook": "Menunda itu seni",
+   "line": "Sayang tidak ada nilai untuknya.",
+   "chips": [
+    "Tunda",
+    "Nanti",
+    "Besok"
+   ],
+   "subject": "a brush on a blank canvas"
+  },
+  {
+   "id": "js-040",
+   "hook": "Teman kelompok hilang",
+   "line": "Muncul saat presentasi.",
+   "chips": [
+    "Hilang",
+    "Muncul",
+    "Terima"
+   ],
+   "subject": "an empty chair at a table"
+  },
+  {
+   "id": "js-041",
+   "hook": "Jaket kampus",
+   "line": "Saksi bisu begadang.",
+   "chips": [
+    "Jaket",
+    "Kenangan",
+    "Hangat"
+   ],
+   "subject": "a hoodie on a chair"
+  },
+  {
+   "id": "js-042",
+   "hook": "Flashdisk ngadat",
+   "line": "Saat presentasi hampir mulai.",
+   "chips": [
+    "Error",
+    "Email cadangan",
+    "Aman"
+   ],
+   "subject": "a small usb stick"
+  },
+  {
+   "id": "js-043",
+   "hook": "Antre bimbingan",
+   "line": "Nomor antrean panjang.",
+   "chips": [
+    "Antre",
+    "Camilan",
+    "Sabar"
+   ],
+   "subject": "a row of waiting chairs"
+  },
+  {
+   "id": "js-044",
+   "hook": "Rapat di kantin",
+   "line": "Makan dulu, rencana kemudian.",
+   "chips": [
+    "Makan",
+    "Rapat",
+    "Rencana"
+   ],
+   "subject": "a canteen table"
+  },
+  {
+   "id": "js-045",
+   "hook": "Judul skripsi keren",
+   "line": "Isinya menyusul.",
+   "chips": [
+    "Judul",
+    "Isi",
+    "Menyusul"
+   ],
+   "subject": "a folder with a long title"
+  },
+  {
+   "id": "js-046",
+   "hook": "Tugas di akhir pekan",
+   "line": "Setia menunggu di tab browser.",
+   "chips": [
+    "Akhir pekan",
+    "Tab terbuka",
+    "Setia"
+   ],
+   "subject": "a weekend calendar"
+  },
+  {
+   "id": "js-047",
+   "hook": "Kartu mahasiswa ketinggalan",
+   "line": "Putar balik, ya.",
+   "chips": [
+    "Kartu",
+    "Putar balik",
+    "Sampai"
+   ],
+   "subject": "a student card on a table"
+  },
+  {
+   "id": "js-048",
+   "hook": "Bangun kesiangan",
+   "line": "Mandi kilat, roti sambil jalan.",
+   "chips": [
+    "Mandi kilat",
+    "Roti",
+    "Berangkat"
+   ],
+   "subject": "a slice of bread"
+  },
+  {
+   "id": "js-049",
+   "hook": "Tugas terkirim",
+   "line": "Lega paling indah semester ini.",
+   "chips": [
+    "Terkirim",
+    "Lega",
+    "Makan enak"
+   ],
+   "subject": "a closed laptop and a snack"
+  },
+  {
+   "id": "js-050",
+   "hook": "Selamat pagi, kuliah",
+   "line": "Semangat dimulai dari sarapan.",
+   "chips": [
+    "Sarapan",
+    "Semangat",
+    "Berangkat"
+   ],
+   "subject": "a breakfast plate and a bag"
+  },
+  {
+   "id": "js-051",
+   "hook": "Satu bab selesai",
+   "line": "Rayakan dengan camilan.",
+   "chips": [
+    "Selesai",
+    "Camilan",
+    "Lanjut"
+   ],
+   "subject": "a snack beside a notebook"
+  },
+  {
+   "id": "js-052",
+   "hook": "Rencana tidur cepat",
+   "line": "Satu tab lagi katanya.",
+   "chips": [
+    "Rencana",
+    "Tab lagi",
+    "Jam dua"
+   ],
+   "subject": "a glowing laptop at night"
+  },
+  {
+   "id": "js-053",
+   "hook": "Semester baru",
+   "line": "Niat baru, kebiasaan lama.",
+   "chips": [
+    "Niat baru",
+    "Kebiasaan lama",
+    "Semangat"
+   ],
+   "subject": "a fresh notebook and old pens"
+  },
+  {
+   "id": "js-054",
+   "hook": "KRS-an",
+   "line": "Refresh terus sambil berdoa.",
+   "chips": [
+    "Refresh",
+    "Kuota",
+    "Doa"
+   ],
+   "subject": "a browser with a hopeful face"
+  },
+  {
+   "id": "js-055",
+   "hook": "Nilai keluar",
+   "line": "Buka portal sambil mengintip.",
+   "chips": [
+    "Portal",
+    "Mengintip",
+    "Deg-degan"
+   ],
+   "subject": "a laptop half covered by hands"
+  },
+  {
+   "id": "js-056",
+   "hook": "Praktikum malam",
+   "line": "Pulang larut, laporan menunggu.",
+   "chips": [
+    "Praktikum",
+    "Laporan",
+    "Semangat"
+   ],
+   "subject": "a lab coat on a hook"
+  },
+  {
+   "id": "js-057",
+   "hook": "Modul tebal",
+   "line": "Dibawa-bawa, jarang dibuka.",
+   "chips": [
+    "Tebal",
+    "Berat",
+    "Mulai satu halaman"
+   ],
+   "subject": "a very thick book"
+  },
+  {
+   "id": "js-058",
+   "hook": "Wawancara pertama",
+   "line": "Catatan siap, hati setengah siap.",
+   "chips": [
+    "Catatan",
+    "Gugup",
+    "Mulai"
+   ],
+   "subject": "a recorder and a notepad"
+  },
+  {
+   "id": "js-059",
+   "hook": "Pinjam catatan",
+   "line": "Eh, ternyata dari kelas lain.",
+   "chips": [
+    "Pinjam",
+    "Beda kelas",
+    "Makasih"
+   ],
+   "subject": "two notebooks"
+  },
+  {
+   "id": "js-060",
+   "hook": "Rumus hilang",
+   "line": "Kemarin hafal, hari ini entah.",
+   "chips": [
+    "Rumus",
+    "Hilang",
+    "Panik halus"
+   ],
+   "subject": "a chalkboard with a blank spot"
+  },
+  {
+   "id": "js-061",
+   "hook": "Dua puluh tab",
+   "line": "Satu untuk tugas, sisanya?",
+   "chips": [
+    "Dua puluh tab",
+    "Satu tugas",
+    "Sisanya"
+   ],
+   "subject": "a browser with many tabs"
+  },
+  {
+   "id": "js-062",
+   "hook": "Daftar pustaka",
+   "line": "Titik koma tidak boleh salah.",
+   "chips": [
+    "Referensi",
+    "Titik koma",
+    "Sabar"
+   ],
+   "subject": "a stack of books with flags"
+  },
+  {
+   "id": "js-063",
+   "hook": "Print bolak-balik",
+   "line": "Selalu ada halaman terbalik.",
+   "chips": [
+    "Dua sisi",
+    "Terbalik",
+    "Print ulang"
+   ],
+   "subject": "a stack of paper"
+  },
+  {
+   "id": "js-064",
+   "hook": "Kamera mati",
+   "line": "Hadir lewat nama saja.",
+   "chips": [
+    "Kamera mati",
+    "Nama hadir",
+    "Rapi"
+   ],
+   "subject": "a laptop with a placeholder"
+  },
+  {
+   "id": "js-065",
+   "hook": "Mic masih nyala",
+   "line": "Semua dengar senandungmu.",
+   "chips": [
+    "Mic nyala",
+    "Senandung",
+    "Malu"
+   ],
+   "subject": "a microphone with music notes"
+  },
+  {
+   "id": "js-066",
+   "hook": "Toga impian",
+   "line": "Dibayangkan sejak semester satu.",
+   "chips": [
+    "Toga",
+    "Semangat",
+    "Jalan terus"
+   ],
+   "subject": "a graduation cap"
+  },
+  {
+   "id": "js-067",
+   "hook": "Spidol kering",
+   "line": "Teman membawa cadangan.",
+   "chips": [
+    "Kering",
+    "Cadangan",
+    "Aman"
+   ],
+   "subject": "a whiteboard marker"
+  },
+  {
+   "id": "js-068",
+   "hook": "Parkiran penuh",
+   "line": "Putar dua kali, kuliah mulai.",
+   "chips": [
+    "Penuh",
+    "Putar",
+    "Terlambat"
+   ],
+   "subject": "a tiny scooter"
+  },
+  {
+   "id": "js-069",
+   "hook": "Kantin kehabisan",
+   "line": "Menu favorit habis duluan.",
+   "chips": [
+    "Habis",
+    "Pilihan kedua",
+    "Kenyang"
+   ],
+   "subject": "an empty plate"
+  },
+  {
+   "id": "js-070",
+   "hook": "Masukan teman",
+   "line": "Jujur, tapi membantu.",
+   "chips": [
+    "Jujur",
+    "Membantu",
+    "Terima kasih"
+   ],
+   "subject": "two friendly pages"
+  },
+  {
+   "id": "js-071",
+   "hook": "Uang saku tipis",
+   "line": "Bertahan sampai tanggal muda.",
+   "chips": [
+    "Hemat",
+    "Mie",
+    "Sabar"
+   ],
+   "subject": "a small wallet"
+  },
+  {
+   "id": "js-072",
+   "hook": "Diskusi melebar",
+   "line": "Topik utama bergeser.",
+   "chips": [
+    "Diskusi",
+    "Geser",
+    "Tugas menunggu"
+   ],
+   "subject": "speech bubbles drifting"
+  },
+  {
+   "id": "js-073",
+   "hook": "Unduh materi",
+   "line": "Progress bar bergerak pelan.",
+   "chips": [
+    "Unduh",
+    "Pelan",
+    "Sabar"
+   ],
+   "subject": "a slow progress bar"
+  },
+  {
+   "id": "js-074",
+   "hook": "Sticky note",
+   "line": "Meja jadi penuh warna.",
+   "chips": [
+    "Warna",
+    "Catatan",
+    "Rapi"
+   ],
+   "subject": "a desk with sticky notes"
+  },
+  {
+   "id": "js-075",
+   "hook": "Isi tas",
+   "line": "Camilan darurat jangan ketinggalan.",
+   "chips": [
+    "Buku",
+    "Charger",
+    "Camilan"
+   ],
+   "subject": "an open backpack"
+  },
+  {
+   "id": "js-076",
+   "hook": "Laporan jam 11",
+   "line": "Niat siang, mulai malam.",
+   "chips": [
+    "Niat",
+    "Malam",
+    "Mulai"
+   ],
+   "subject": "a lamp and a report"
+  },
+  {
+   "id": "js-077",
+   "hook": "Ujian buka buku",
+   "line": "Bukunya ada, halamannya?",
+   "chips": [
+    "Buka buku",
+    "Cari halaman",
+    "Tenang"
+   ],
+   "subject": "an open book with tabs"
+  },
+  {
+   "id": "js-078",
+   "hook": "Kejar tanda tangan",
+   "line": "Olahraga kecil di kampus.",
+   "chips": [
+    "Lari kecil",
+    "Tanda tangan",
+    "Pulpen"
+   ],
+   "subject": "a form with a signature line"
+  },
+  {
+   "id": "js-079",
+   "hook": "Hujan, jas hujan lupa",
+   "line": "Basah separuh badan.",
+   "chips": [
+    "Hujan",
+    "Lupa",
+    "Basah"
+   ],
+   "subject": "an umbrella by a door"
+  },
+  {
+   "id": "js-080",
+   "hook": "Kata santai",
+   "line": "Ternyata tugasnya banyak.",
+   "chips": [
+    "Santai",
+    "Banyak",
+    "Belajar"
+   ],
+   "subject": "a calendar with tasks"
+  },
+  {
+   "id": "js-081",
+   "hook": "Mengurus surat",
+   "line": "Tiga meja, tiga antrean.",
+   "chips": [
+    "Meja",
+    "Antre",
+    "Fotokopi"
+   ],
+   "subject": "a letter and a stamp"
+  },
+  {
+   "id": "js-082",
+   "hook": "Nama file asal",
+   "line": "Dua minggu lagi bingung.",
+   "chips": [
+    "Asal",
+    "Bingung",
+    "Teliti"
+   ],
+   "subject": "a messy list of files"
+  },
+  {
+   "id": "js-083",
+   "hook": "Laptop kepanasan",
+   "line": "Kipasnya seperti pesawat.",
+   "chips": [
+    "Panas",
+    "Berisik",
+    "Jeda"
+   ],
+   "subject": "a laptop with steam"
+  },
+  {
+   "id": "js-084",
+   "hook": "Kerja kelompok daring",
+   "line": "Satu video, sisanya foto.",
+   "chips": [
+    "Foto profil",
+    "Satu video",
+    "Kompak"
+   ],
+   "subject": "four circles on a screen"
+  },
+  {
+   "id": "js-085",
+   "hook": "Menulis abstrak",
+   "line": "Seratus kata, seluruh perjuangan.",
+   "chips": [
+    "Seratus",
+    "Ringkas",
+    "Padat"
+   ],
+   "subject": "a short paragraph card"
+  },
+  {
+   "id": "js-086",
+   "hook": "Hari pertama kuliah",
+   "line": "Salah ruangan sudah tradisi.",
+   "chips": [
+    "Salah ruang",
+    "Canggung",
+    "Tradisi"
+   ],
+   "subject": "a campus map"
+  },
+  {
+   "id": "js-087",
+   "hook": "Semester pendek",
+   "line": "Libur dipotong, semangat ada.",
+   "chips": [
+    "Pendek",
+    "Semangat",
+    "Lancar"
+   ],
+   "subject": "a short calendar"
+  },
+  {
+   "id": "js-088",
+   "hook": "Selesai presentasi",
+   "line": "Lega, ingin makan besar.",
+   "chips": [
+    "Selesai",
+    "Lega",
+    "Makan"
+   ],
+   "subject": "a small stage and a plate"
+  },
+  {
+   "id": "js-089",
+   "hook": "Libur semester",
+   "line": "Rencana banyak, rebahan banyak.",
+   "chips": [
+    "Rencana",
+    "Rebahan",
+    "Istirahat"
+   ],
+   "subject": "a hammock between two small trees"
+  },
+  {
+   "id": "js-090",
+   "hook": "Teman kuliah",
+   "line": "Terima kasih sudah saling bantu.",
+   "chips": [
+    "Bantu",
+    "Tertawa",
+    "Terima kasih"
+   ],
+   "subject": "mugs clinking"
+  },
+  {
+   "id": "js-091",
+   "hook": "Hari berat?",
+   "line": "Istirahat sebentar tidak apa-apa.",
+   "chips": [
+    "Teh",
+    "Napas",
+    "Lanjut"
+   ],
+   "subject": "a cup of tea"
+  },
+  {
+   "id": "js-092",
+   "hook": "Satu centang",
+   "line": "Satu tugas selesai, satu senyum.",
+   "chips": [
+    "Centang",
+    "Senyum",
+    "Lanjut"
+   ],
+   "subject": "a checklist with one tick"
+  },
+  {
+   "id": "js-093",
+   "hook": "Jangan lupa makan",
+   "line": "Otak butuh bahan bakar.",
+   "chips": [
+    "Makan",
+    "Minum",
+    "Lanjut"
+   ],
+   "subject": "a plate and a glass"
+  },
+  {
+   "id": "js-094",
+   "hook": "Jangan lupa minum",
+   "line": "Segelas air membantu fokus.",
+   "chips": [
+    "Air",
+    "Fokus",
+    "Lanjut"
+   ],
+   "subject": "a glass of water"
+  },
+  {
+   "id": "js-095",
+   "hook": "Istirahat dulu",
+   "line": "Mata juga butuh libur.",
+   "chips": [
+    "Mata",
+    "Libur",
+    "Segar"
+   ],
+   "subject": "a pair of glasses on a book"
+  },
+  {
+   "id": "js-096",
+   "hook": "Satu langkah kecil",
+   "line": "Mulai dari paragraf pertama.",
+   "chips": [
+    "Paragraf",
+    "Satu",
+    "Mulai"
+   ],
+   "subject": "a small first step"
+  },
+  {
+   "id": "js-097",
+   "hook": "Bangga pada dirimu",
+   "line": "Sudah sampai sejauh ini.",
+   "chips": [
+    "Sejauh ini",
+    "Hebat",
+    "Lanjut"
+   ],
+   "subject": "a small medal"
+  },
+  {
+   "id": "js-098",
+   "hook": "Mulai sekarang",
+   "line": "Lima menit pertama paling berat.",
+   "chips": [
+    "Lima menit",
+    "Mulai",
+    "Lanjut"
+   ],
+   "subject": "a small clock and a laptop"
+  },
+  {
+   "id": "js-099",
+   "hook": "Besok masih ada",
+   "line": "Tidur dulu, lanjut nanti.",
+   "chips": [
+    "Tidur",
+    "Besok",
+    "Lanjut"
+   ],
+   "subject": "a pillow and a lamp"
+  },
+  {
+   "id": "js-100",
+   "hook": "Tugas bukan segalanya",
+   "line": "Jaga kesehatan juga.",
+   "chips": [
+    "Tidur",
+    "Makan",
+    "Senyum"
+   ],
+   "subject": "a heart shaped cup"
+  },
+  {
+   "id": "js-101",
+   "hook": "Kamu tidak sendirian",
+   "line": "Banyak yang merasakan hal sama.",
+   "chips": [
+    "Sama",
+    "Kompak",
+    "Tertawa"
+   ],
+   "subject": "a row of mugs"
+  },
+  {
+   "id": "js-102",
+   "hook": "Satu hari satu langkah",
+   "line": "Pelan tapi pasti.",
+   "chips": [
+    "Pelan",
+    "Pasti",
+    "Selesai"
+   ],
+   "subject": "a staircase of notebooks"
+  },
+  {
+   "id": "js-103",
+   "hook": "Senin lagi",
+   "line": "Semangat baru, kasur masih rindu.",
+   "chips": [
+    "Semangat",
+    "Kasur",
+    "Berangkat"
+   ],
+   "subject": "a made bed and a backpack"
+  },
+  {
+   "id": "js-104",
+   "hook": "Selasa tugas",
+   "line": "Hari paling jujur soal deadline.",
+   "chips": [
+    "Deadline",
+    "Jujur",
+    "Kerjakan"
+   ],
+   "subject": "a calendar with a circled day"
+  },
+  {
+   "id": "js-105",
+   "hook": "Rabu tengah-tengah",
+   "line": "Setengah jalan, setengah ngantuk.",
+   "chips": [
+    "Setengah",
+    "Ngantuk",
+    "Lanjut"
+   ],
+   "subject": "a half full coffee cup"
+  },
+  {
+   "id": "js-106",
+   "hook": "Kamis hampir",
+   "line": "Sedikit lagi akhir pekan.",
+   "chips": [
+    "Sedikit lagi",
+    "Tahan",
+    "Lanjut"
+   ],
+   "subject": "a calendar with a small flag"
+  },
+  {
+   "id": "js-107",
+   "hook": "Jumat berkah santai",
+   "line": "Tugas masih ada, hati tenang.",
+   "chips": [
+    "Santai",
+    "Tugas",
+    "Tenang"
+   ],
+   "subject": "a loose tie on a chair"
+  },
+  {
+   "id": "js-108",
+   "hook": "Sabtu rebahan",
+   "line": "Rebahan juga butuh perencanaan.",
+   "chips": [
+    "Rebahan",
+    "Rencana",
+    "Santai"
+   ],
+   "subject": "a cushion and a blanket"
+  },
+  {
+   "id": "js-109",
+   "hook": "Minggu malam",
+   "line": "Perasaan tugas menunggu.",
+   "chips": [
+    "Minggu",
+    "Malam",
+    "Tugas"
+   ],
+   "subject": "a moon and a notebook"
+  },
+  {
+   "id": "js-110",
+   "hook": "Tanggal tua",
+   "line": "Dompet bernyanyi lirih.",
+   "chips": [
+    "Tanggal tua",
+    "Dompet",
+    "Sabar"
+   ],
+   "subject": "a nearly empty wallet"
+  },
+  {
+   "id": "js-111",
+   "hook": "Tanggal muda",
+   "line": "Semua terasa mungkin.",
+   "chips": [
+    "Muda",
+    "Senyum",
+    "Traktir"
+   ],
+   "subject": "a wallet with a few coins"
+  },
+  {
+   "id": "js-112",
+   "hook": "Gajian orang tua",
+   "line": "Terima kasih untuk semua kiriman.",
+   "chips": [
+    "Terima kasih",
+    "Hemat",
+    "Syukur"
+   ],
+   "subject": "a small piggy bank"
+  },
+  {
+   "id": "js-113",
+   "hook": "Hujan di kampus",
+   "line": "Payung satu untuk berdua.",
+   "chips": [
+    "Hujan",
+    "Payung",
+    "Berdua"
+   ],
+   "subject": "an umbrella on a path"
+  },
+  {
+   "id": "js-114",
+   "hook": "Panas di kampus",
+   "line": "Mencari tempat duduk teduh.",
+   "chips": [
+    "Panas",
+    "Teduh",
+    "Sabar"
+   ],
+   "subject": "a tiny sun and a bench"
+  },
+  {
+   "id": "js-115",
+   "hook": "AC kelas dingin",
+   "line": "Sweater jadi seragam kedua.",
+   "chips": [
+    "Dingin",
+    "Sweater",
+    "Tahan"
+   ],
+   "subject": "a sweater on a chair"
+  },
+  {
+   "id": "js-116",
+   "hook": "Lift kampus penuh",
+   "line": "Pilih tangga sebagai olahraga.",
+   "chips": [
+    "Lift penuh",
+    "Tangga",
+    "Sehat"
+   ],
+   "subject": "a staircase and a lift icon"
+  },
+  {
+   "id": "js-117",
+   "hook": "Papan pengumuman",
+   "line": "Dibaca hanya saat sudah telat.",
+   "chips": [
+    "Pengumuman",
+    "Telat",
+    "Baca"
+   ],
+   "subject": "a bulletin board"
+  },
+  {
+   "id": "js-118",
+   "hook": "Pesan dosen masuk",
+   "line": "Jantung berdebar sebelum membuka.",
+   "chips": [
+    "Pesan masuk",
+    "Berdebar",
+    "Buka"
+   ],
+   "subject": "a phone with a message icon"
+  },
+  {
+   "id": "js-119",
+   "hook": "Balasan akhirnya datang",
+   "line": "Sabar memang berbuah.",
+   "chips": [
+    "Menunggu",
+    "Balasan",
+    "Lega"
+   ],
+   "subject": "a phone with a small heart"
+  },
+  {
+   "id": "js-120",
+   "hook": "Jadwal bentrok",
+   "line": "Satu badan, dua kelas.",
+   "chips": [
+    "Bentrok",
+    "Pilih",
+    "Lari"
+   ],
+   "subject": "a calendar with overlapping blocks"
+  },
+  {
+   "id": "js-121",
+   "hook": "Kelas dibatalkan",
+   "line": "Hati senang, rencana berubah.",
+   "chips": [
+    "Batal",
+    "Senang",
+    "Rencana"
+   ],
+   "subject": "a cancelled sign"
+  },
+  {
+   "id": "js-122",
+   "hook": "Kelas pengganti",
+   "line": "Libur terpotong, tetap semangat.",
+   "chips": [
+    "Pengganti",
+    "Semangat",
+    "Berangkat"
+   ],
+   "subject": "a small calendar swap"
+  },
+  {
+   "id": "js-123",
+   "hook": "Absen terakhir",
+   "line": "Hadir dengan sisa tenaga.",
+   "chips": [
+    "Hadir",
+    "Tenaga",
+    "Sisa"
+   ],
+   "subject": "a tired backpack"
+  },
+  {
+   "id": "js-124",
+   "hook": "UTS sudah dekat",
+   "line": "Mulai cicil hari ini.",
+   "chips": [
+    "UTS",
+    "Cicil",
+    "Mulai"
+   ],
+   "subject": "a calendar with a circled date"
+  },
+  {
+   "id": "js-125",
+   "hook": "UAS menunggu",
+   "line": "Semangat sampai garis akhir.",
+   "chips": [
+    "UAS",
+    "Semangat",
+    "Akhir"
+   ],
+   "subject": "a finish line made of paper"
+  },
+  {
+   "id": "js-126",
+   "hook": "Sehari sebelum ujian",
+   "line": "Tidur cukup juga strategi.",
+   "chips": [
+    "Tidur",
+    "Tenang",
+    "Siap"
+   ],
+   "subject": "a calm pillow"
+  },
+  {
+   "id": "js-127",
+   "hook": "Pagi ujian",
+   "line": "Sarapan dulu, pensil siap.",
+   "chips": [
+    "Sarapan",
+    "Pensil",
+    "Siap"
+   ],
+   "subject": "a breakfast plate and a pencil"
+  },
+  {
+   "id": "js-128",
+   "hook": "Selesai ujian",
+   "line": "Napas lega, perut lapar.",
+   "chips": [
+    "Selesai",
+    "Lega",
+    "Makan"
+   ],
+   "subject": "a plate of food and a pencil"
+  },
+  {
+   "id": "js-129",
+   "hook": "Nilai bagus",
+   "line": "Syukur dan senyum.",
+   "chips": [
+    "Syukur",
+    "Senyum",
+    "Lanjut"
+   ],
+   "subject": "a small star"
+  },
+  {
+   "id": "js-130",
+   "hook": "Nilai pas-pasan",
+   "line": "Tidak apa-apa, belajar lagi.",
+   "chips": [
+    "Tenang",
+    "Belajar",
+    "Naik"
+   ],
+   "subject": "a pencil and a notebook"
+  },
+  {
+   "id": "js-131",
+   "hook": "Remedial",
+   "line": "Kesempatan kedua untuk lebih siap.",
+   "chips": [
+    "Kesempatan",
+    "Siap",
+    "Semangat"
+   ],
+   "subject": "a second chance sign"
+  },
+  {
+   "id": "js-132",
+   "hook": "Kuliah umum",
+   "line": "Dengar sambil menggambar di buku.",
+   "chips": [
+    "Dengar",
+    "Gambar",
+    "Catat"
+   ],
+   "subject": "a doodle in a notebook"
+  },
+  {
+   "id": "js-133",
+   "hook": "Seminar kampus",
+   "line": "Pulang membawa tas dan ilmu.",
+   "chips": [
+    "Seminar",
+    "Tas",
+    "Ilmu"
+   ],
+   "subject": "a canvas tote bag on a chair"
+  },
+  {
+   "id": "js-134",
+   "hook": "Lomba kampus",
+   "line": "Ikut itu pengalaman, menang bonus.",
+   "chips": [
+    "Ikut",
+    "Pengalaman",
+    "Bonus"
+   ],
+   "subject": "a paper medal"
+  },
+  {
+   "id": "js-135",
+   "hook": "Organisasi kampus",
+   "line": "Sibuk tapi senang.",
+   "chips": [
+    "Sibuk",
+    "Senang",
+    "Kompak"
+   ],
+   "subject": "a team of mugs"
+  },
+  {
+   "id": "js-136",
+   "hook": "Magang pertama",
+   "line": "Gugup tapi semangat.",
+   "chips": [
+    "Gugup",
+    "Semangat",
+    "Belajar"
+   ],
+   "subject": "a name tag and a bag"
+  },
+  {
+   "id": "js-137",
+   "hook": "Skripsi bab satu",
+   "line": "Awal dari petualangan panjang.",
+   "chips": [
+    "Bab satu",
+    "Semangat",
+    "Pelan"
+   ],
+   "subject": "a first page"
+  },
+  {
+   "id": "js-138",
+   "hook": "Bimbingan hari ini",
+   "line": "Catatan siap, hati pasrah.",
+   "chips": [
+    "Siap",
+    "Catatan",
+    "Hati"
+   ],
+   "subject": "a notebook and a pen"
+  },
+  {
+   "id": "js-139",
+   "hook": "Sidang proposal",
+   "line": "Latihan bicara di depan cermin.",
+   "chips": [
+    "Latihan",
+    "Cermin",
+    "Tenang"
+   ],
+   "subject": "a mirror and a note card"
+  },
+  {
+   "id": "js-140",
+   "hook": "Sidang akhir",
+   "line": "Napas panjang, senyum lebar.",
+   "chips": [
+    "Napas",
+    "Senyum",
+    "Yakin"
+   ],
+   "subject": "a podium with flowers"
+  },
+  {
+   "id": "js-141",
+   "hook": "Revisi sidang",
+   "line": "Perjuangan hampir selesai.",
+   "chips": [
+    "Revisi",
+    "Hampir",
+    "Semangat"
+   ],
+   "subject": "a stack of pages"
+  },
+  {
+   "id": "js-142",
+   "hook": "Wisuda",
+   "line": "Toga, foto, dan banyak terima kasih.",
+   "chips": [
+    "Toga",
+    "Foto",
+    "Syukur"
+   ],
+   "subject": "a graduation cap"
+  },
+  {
+   "id": "js-143",
+   "hook": "Kenangan kampus",
+   "line": "Tempat paling banyak cerita.",
+   "chips": [
+    "Kenangan",
+    "Cerita",
+    "Rindu"
+   ],
+   "subject": "an old bench"
+  },
+  {
+   "id": "js-144",
+   "hook": "Teman kos",
+   "line": "Berbagi mie dan cerita.",
+   "chips": [
+    "Mie",
+    "Cerita",
+    "Tertawa"
+   ],
+   "subject": "two bowls on a table"
+  },
+  {
+   "id": "js-145",
+   "hook": "Ibu kos baik hati",
+   "line": "Terima kasih untuk sapaannya.",
+   "chips": [
+    "Sapaan",
+    "Baik",
+    "Terima kasih"
+   ],
+   "subject": "a small teapot"
+  },
+  {
+   "id": "js-146",
+   "hook": "Dapur kos",
+   "line": "Sendok satu untuk berempat.",
+   "chips": [
+    "Sendok",
+    "Berbagi",
+    "Kompak"
+   ],
+   "subject": "a spoon and four cups"
+  },
+  {
+   "id": "js-147",
+   "hook": "Jemuran kos",
+   "line": "Selalu menunggu cuaca cerah.",
+   "chips": [
+    "Jemuran",
+    "Cerah",
+    "Sabar"
+   ],
+   "subject": "a clothes line"
+  },
+  {
+   "id": "js-148",
+   "hook": "Warung makan langganan",
+   "line": "Menu andalan, dompet tersenyum.",
+   "chips": [
+    "Langganan",
+    "Andalan",
+    "Hemat"
+   ],
+   "subject": "a small food stall"
+  },
+  {
+   "id": "js-149",
+   "hook": "Tukang fotokopi langganan",
+   "line": "Penyelamat deadline.",
+   "chips": [
+    "Fotokopi",
+    "Cepat",
+    "Terima kasih"
+   ],
+   "subject": "a copier machine"
+  },
+  {
+   "id": "js-150",
+   "hook": "Satpam kampus ramah",
+   "line": "Sapaan pagi yang menyemangati.",
+   "chips": [
+    "Sapaan",
+    "Pagi",
+    "Semangat"
+   ],
+   "subject": "a small guard post"
+  },
+  {
+   "id": "js-151",
+   "hook": "Kucing kampus",
+   "line": "Penghuni paling santai.",
+   "chips": [
+    "Kucing",
+    "Santai",
+    "Elus"
+   ],
+   "subject": "a cat on a bench"
+  },
+  {
+   "id": "js-152",
+   "hook": "Alarm jam 4 pagi",
+   "line": "Untuk apa, aku lupa.",
+   "chips": [
+    "Alarm",
+    "Lupa",
+    "Tidur lagi"
+   ],
+   "subject": "an alarm clock"
+  },
+  {
+   "id": "js-153",
+   "hook": "Tidur di kelas",
+   "line": "Kepala jatuh pelan-pelan.",
+   "chips": [
+    "Ngantuk",
+    "Kepala",
+    "Bangun"
+   ],
+   "subject": "a head resting on a desk"
+  },
+  {
+   "id": "js-154",
+   "hook": "Catatan kosong",
+   "line": "Penuh niat, sedikit isi.",
+   "chips": [
+    "Niat",
+    "Kosong",
+    "Isi nanti"
+   ],
+   "subject": "an empty notebook"
+  },
+  {
+   "id": "js-155",
+   "hook": "Pensil tumpul",
+   "line": "Diraut dulu baru menulis.",
+   "chips": [
+    "Tumpul",
+    "Rautan",
+    "Menulis"
+   ],
+   "subject": "a pencil and a sharpener"
+  },
+  {
+   "id": "js-156",
+   "hook": "Penghapus hilang",
+   "line": "Kesalahan jadi permanen.",
+   "chips": [
+    "Hilang",
+    "Salah",
+    "Coret"
+   ],
+   "subject": "a lone eraser"
+  },
+  {
+   "id": "js-157",
+   "hook": "Tipe-x kering",
+   "line": "Salah tulis harus ikhlas.",
+   "chips": [
+    "Kering",
+    "Ikhlas",
+    "Coret"
+   ],
+   "subject": "a dry correction pen"
+  },
+  {
+   "id": "js-158",
+   "hook": "Stabilo satu warna",
+   "line": "Semua halaman jadi kuning.",
+   "chips": [
+    "Stabilo",
+    "Kuning",
+    "Semua"
+   ],
+   "subject": "a yellow highlighter"
+  },
+  {
+   "id": "js-159",
+   "hook": "Map penuh kertas",
+   "line": "Mencari satu lembar penting.",
+   "chips": [
+    "Map",
+    "Penuh",
+    "Cari"
+   ],
+   "subject": "a folder of papers"
+  },
+  {
+   "id": "js-160",
+   "hook": "Tas berat",
+   "line": "Isinya buku dan harapan.",
+   "chips": [
+    "Berat",
+    "Buku",
+    "Harapan"
+   ],
+   "subject": "a heavy backpack"
+  },
+  {
+   "id": "js-161",
+   "hook": "Sepatu basah",
+   "line": "Lanjut kuliah tetap semangat.",
+   "chips": [
+    "Basah",
+    "Semangat",
+    "Kering nanti"
+   ],
+   "subject": "a pair of wet shoes"
+  },
+  {
+   "id": "js-162",
+   "hook": "Kunci kos hilang",
+   "line": "Rumah terasa jauh.",
+   "chips": [
+    "Hilang",
+    "Cari",
+    "Lega"
+   ],
+   "subject": "a single key"
+  },
+  {
+   "id": "js-163",
+   "hook": "Helm ketinggalan",
+   "line": "Kembali ke kos dulu.",
+   "chips": [
+    "Helm",
+    "Putar balik",
+    "Terlambat"
+   ],
+   "subject": "a helmet on a hook"
+  },
+  {
+   "id": "js-164",
+   "hook": "Bensin tinggal sedikit",
+   "line": "Doa menuju pom bensin.",
+   "chips": [
+    "Bensin",
+    "Doa",
+    "Sampai"
+   ],
+   "subject": "a small fuel gauge"
+  },
+  {
+   "id": "js-165",
+   "hook": "Ojek online lama",
+   "line": "Aplikasi berputar tanpa henti.",
+   "chips": [
+    "Menunggu",
+    "Berputar",
+    "Sabar"
+   ],
+   "subject": "a phone with a spinning circle"
+  },
+  {
+   "id": "js-166",
+   "hook": "Bus kampus penuh",
+   "line": "Berdiri sambil memeluk tas.",
+   "chips": [
+    "Penuh",
+    "Berdiri",
+    "Sampai"
+   ],
+   "subject": "a small paper bus on a road"
+  },
+  {
+   "id": "js-167",
+   "hook": "Kereta tepat waktu",
+   "line": "Hari baik dimulai.",
+   "chips": [
+    "Tepat",
+    "Baik",
+    "Berangkat"
+   ],
+   "subject": "a small train ticket"
+  },
+  {
+   "id": "js-168",
+   "hook": "Lupa bawa payung",
+   "line": "Hujan selalu paham.",
+   "chips": [
+    "Hujan",
+    "Lupa",
+    "Basah"
+   ],
+   "subject": "an empty umbrella stand"
+  },
+  {
+   "id": "js-169",
+   "hook": "Cuaca cerah",
+   "line": "Semangat ikut cerah.",
+   "chips": [
+    "Cerah",
+    "Semangat",
+    "Berangkat"
+   ],
+   "subject": "a sun and a notebook"
+  },
+  {
+   "id": "js-170",
+   "hook": "Angin kencang",
+   "line": "Kertas tugas terbang.",
+   "chips": [
+    "Angin",
+    "Kertas",
+    "Kejar"
+   ],
+   "subject": "loose papers in the wind"
+  },
+  {
+   "id": "js-171",
+   "hook": "Mati lampu",
+   "line": "Tugas berhenti, hati panik.",
+   "chips": [
+    "Mati lampu",
+    "Panik",
+    "Tenang"
+   ],
+   "subject": "a dark desk with a candle"
+  },
+  {
+   "id": "js-172",
+   "hook": "Listrik kembali",
+   "line": "Semua lega bersamaan.",
+   "chips": [
+    "Nyala",
+    "Lega",
+    "Lanjut"
+   ],
+   "subject": "a lamp turning on"
+  },
+  {
+   "id": "js-173",
+   "hook": "Internet putus",
+   "line": "Dunia terasa sepi.",
+   "chips": [
+    "Putus",
+    "Sepi",
+    "Sabar"
+   ],
+   "subject": "a broken wifi icon"
+  },
+  {
+   "id": "js-174",
+   "hook": "Internet pulih",
+   "line": "Notifikasi masuk bertubi-tubi.",
+   "chips": [
+    "Pulih",
+    "Notifikasi",
+    "Lega"
+   ],
+   "subject": "a phone with many bubbles"
+  },
+  {
+   "id": "js-175",
+   "hook": "Laptop hang",
+   "line": "Kursor berputar tanpa tujuan.",
+   "chips": [
+    "Hang",
+    "Berputar",
+    "Sabar"
+   ],
+   "subject": "a laptop with a loading circle"
+  },
+  {
+   "id": "js-176",
+   "hook": "Laptop terbuka lagi",
+   "line": "Alhamdulillah tugas aman.",
+   "chips": [
+    "Terbuka",
+    "Aman",
+    "Lega"
+   ],
+   "subject": "a laptop with a small heart"
+  },
+  {
+   "id": "js-177",
+   "hook": "File korup",
+   "line": "Dunia seakan berhenti.",
+   "chips": [
+    "Korup",
+    "Panik",
+    "Cadangan"
+   ],
+   "subject": "a broken file icon"
+  },
+  {
+   "id": "js-178",
+   "hook": "Cadangan ada",
+   "line": "Penyelamat paling manis.",
+   "chips": [
+    "Cadangan",
+    "Lega",
+    "Terima kasih"
+   ],
+   "subject": "a small cloud and a folder"
+  },
+  {
+   "id": "js-179",
+   "hook": "Salah kirim file",
+   "line": "Versi lama melambai.",
+   "chips": [
+    "Salah",
+    "Versi lama",
+    "Kirim ulang"
+   ],
+   "subject": "two similar folders"
+  },
+  {
+   "id": "js-180",
+   "hook": "Lampiran ketinggalan",
+   "line": "Email kedua pun dikirim.",
+   "chips": [
+    "Lampiran",
+    "Email kedua",
+    "Maaf"
+   ],
+   "subject": "an envelope with a paperclip"
+  },
+  {
+   "id": "js-181",
+   "hook": "Notifikasi tugas",
+   "line": "Muncul saat sedang santai.",
+   "chips": [
+    "Notifikasi",
+    "Santai",
+    "Kaget"
+   ],
+   "subject": "a phone notification"
+  },
+  {
+   "id": "js-182",
+   "hook": "Snack penyelamat",
+   "line": "Semangat naik tiga persen.",
+   "chips": [
+    "Snack",
+    "Semangat",
+    "Lanjut"
+   ],
+   "subject": "a snack on a desk"
+  },
+  {
+   "id": "js-183",
+   "hook": "Teh hangat",
+   "line": "Pelukan kecil untuk malam panjang.",
+   "chips": [
+    "Teh",
+    "Hangat",
+    "Lanjut"
+   ],
+   "subject": "a warm cup of tea"
+  },
+  {
+   "id": "js-184",
+   "hook": "Musik fokus",
+   "line": "Playlist dipilih lama sekali.",
+   "chips": [
+    "Playlist",
+    "Fokus",
+    "Mulai"
+   ],
+   "subject": "a pair of headphones"
+  },
+  {
+   "id": "js-185",
+   "hook": "Hening sebentar",
+   "line": "Telinga juga butuh istirahat.",
+   "chips": [
+    "Hening",
+    "Napas",
+    "Lanjut"
+   ],
+   "subject": "a quiet desk"
+  },
+  {
+   "id": "js-186",
+   "hook": "Tulisan jelek",
+   "line": "Yang penting terbaca sendiri.",
+   "chips": [
+    "Jelek",
+    "Terbaca",
+    "Cukup"
+   ],
+   "subject": "a messy handwriting page"
+  },
+  {
+   "id": "js-187",
+   "hook": "Tulisan rapi",
+   "line": "Kebanggaan satu halaman.",
+   "chips": [
+    "Rapi",
+    "Bangga",
+    "Lanjut"
+   ],
+   "subject": "a neat handwriting page"
+  },
+  {
+   "id": "js-188",
+   "hook": "Warna-warni catatan",
+   "line": "Estetika dulu, isi menyusul.",
+   "chips": [
+    "Warna",
+    "Estetika",
+    "Isi"
+   ],
+   "subject": "colorful notes"
+  },
+  {
+   "id": "js-189",
+   "hook": "Bookmark favorit",
+   "line": "Pembatas buku yang setia.",
+   "chips": [
+    "Bookmark",
+    "Setia",
+    "Lanjut"
+   ],
+   "subject": "a bookmark resting on a closed book"
+  },
+  {
+   "id": "js-190",
+   "hook": "Rak buku penuh",
+   "line": "Dibeli niat, dibaca nanti.",
+   "chips": [
+    "Penuh",
+    "Niat",
+    "Nanti"
+   ],
+   "subject": "a crowded wooden bookshelf"
+  },
+  {
+   "id": "js-191",
+   "hook": "Perpustakaan sepi",
+   "line": "Tempat paling tenang kampus.",
+   "chips": [
+    "Sepi",
+    "Tenang",
+    "Fokus"
+   ],
+   "subject": "a quiet library table"
+  },
+  {
+   "id": "js-192",
+   "hook": "Baca buku fisik",
+   "line": "Aroma kertas bikin tenang.",
+   "chips": [
+    "Kertas",
+    "Tenang",
+    "Baca"
+   ],
+   "subject": "an open book"
+  },
+  {
+   "id": "js-193",
+   "hook": "Baca e-book",
+   "line": "Cahaya layar menemani malam.",
+   "chips": [
+    "Layar",
+    "Malam",
+    "Baca"
+   ],
+   "subject": "a tablet reading"
+  },
+  {
+   "id": "js-194",
+   "hook": "Jurnal lancar dibaca",
+   "line": "Hari yang langka dan indah.",
+   "chips": [
+    "Lancar",
+    "Langka",
+    "Indah"
+   ],
+   "subject": "a journal and a flower"
+  },
+  {
+   "id": "js-195",
+   "hook": "Ide muncul mendadak",
+   "line": "Catat sebelum hilang.",
+   "chips": [
+    "Ide",
+    "Catat",
+    "Simpan"
+   ],
+   "subject": "a lightbulb and a note"
+  },
+  {
+   "id": "js-196",
+   "hook": "Ide hilang",
+   "line": "Padahal tadi sudah jelas.",
+   "chips": [
+    "Hilang",
+    "Padahal",
+    "Ingat lagi"
+   ],
+   "subject": "an empty thought bubble"
+  },
+  {
+   "id": "js-197",
+   "hook": "Mimpi jadi lulus",
+   "line": "Semoga terwujud dengan usaha.",
+   "chips": [
+    "Mimpi",
+    "Usaha",
+    "Lulus"
+   ],
+   "subject": "a graduation cap"
+  },
+  {
+   "id": "js-198",
+   "hook": "Terima kasih, sampai besok",
+   "line": "Istirahat yang cukup ya.",
+   "chips": [
+    "Istirahat",
+    "Besok",
+    "Semangat"
+   ],
+   "subject": "a lamp turned off"
+  },
+  {
+   "id": "js-199",
+   "hook": "Tutup laptop, tarik napas",
+   "line": "Besok dilanjut dengan kepala segar.",
+   "chips": [
+    "Tutup",
+    "Napas",
+    "Besok"
+   ],
+   "subject": "a closed laptop and a cup of tea"
+  },
+  {
+   "id": "js-200",
+   "hook": "Pekan tenang",
+   "line": "Waktunya bernapas sebentar.",
+   "chips": [
+    "Tenang",
+    "Napas",
+    "Santai"
+   ],
+   "subject": "a quiet desk with a small plant"
+  }
+ ]
+}

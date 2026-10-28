@@ -12,6 +12,7 @@ terlarang. Bila tidak lolos setelah satu perbaikan, dipakai cadangan. Modul ini 
 from __future__ import annotations
 
 import json
+import random
 import re
 import urllib.error
 import urllib.request
@@ -96,6 +97,16 @@ def derive_copy(source: Mapping[str, Any], style: Mapping[str, Any]) -> dict[str
     return copy
 
 
+def _brandify(text: str, visual: Mapping[str, Any]) -> str:
+    """Kartu gaya memakai kata warna Kauiz. Untuk merek lain kata itu diganti dengan nama warna merek tersebut."""
+    for pattern, key, default in (
+        (r"\blighter navy\b", "alt_name", "lighter navy"), (r"\bdeep navy\b", "ink_name", "deep navy"), (r"\bnavy\b", "ink_short", "navy"),
+        (r"\bcream\b", "paper_name", "cream"), (r"\bwarm yellow\b", "accent_name", "warm yellow"),
+    ):
+        text = re.sub(pattern, visual.get(key, default), text)
+    return text
+
+
 def _quoted(items: list[str]) -> str:
     quoted = [f'"{item}"' for item in items]
     return quoted[0] if len(quoted) == 1 else ", ".join(quoted[:-1]) + " and " + quoted[-1]
@@ -127,13 +138,14 @@ def deterministic_prompt(brand_data: Mapping[str, Any], style: Mapping[str, Any]
     args = _format_args(brand_data, fmt, subject, copy["headline"])
     slots = style["slots"]
     parts = [style["prompt_template"].format(**args)]
+    style = {**style, "text_color": _brandify(style["text_color"], visual)}
     if copy.get("subline") and slots.get("subline"):
         parts.append(f'{slots["subline"]["where"]}, a small regular sans-serif line in {style["text_color"]} reads exactly "{copy["subline"]}".')
     if copy.get("chips") and slots.get("chips"):
         parts.append(f'{slots["chips"]["where"].format(**args)}; the texts read exactly {_quoted(copy["chips"])}.')
-    use_cta = bool(slots.get("cta"))
+    use_cta = bool(slots.get("cta")) and bool(cta_label)
     if use_cta:
-        parts.append(f'{slots["cta"]["where"]}, a rounded {visual["accent"]} pill button with deep navy bold text reads exactly "{cta_label}".')
+        parts.append(f'{slots["cta"]["where"]}, a rounded {visual["accent"]} pill button with {visual.get("ink_name", "deep navy")} bold text reads exactly "{cta_label}".')
     parts.append(f'{FOOTER_WHERE[fmt]}, {visual["footer_style"]} reads exactly "{footer}".')
     count = len(required_texts(copy, cta_label if use_cta else None, footer))
     parts.append(
@@ -141,26 +153,37 @@ def deterministic_prompt(brand_data: Mapping[str, Any], style: Mapping[str, Any]
         f"margins and no overlap with the main subject. {MARGIN_RULE[fmt]} The palette is limited to {visual['palette_prompt']}, plus black and white "
         "photography where mentioned. Clean editorial graphic design, crisp details, premium marketing look."
     )
-    return " ".join(parts)
+    return _brandify(" ".join(parts), visual)
 
 
 def deterministic_caption(brand_data: Mapping[str, Any], source: Mapping[str, Any], seed: int = 0) -> tuple[str, list[str]]:
+    """Caption dan hashtag tanpa model teks. Dari bank (caption_text atau pain dan tip) bila ada, jika tidak dari data brand."""
     headline = " ".join(str(source.get("headline") or "").split()).rstrip(".!?")
     brief = " ".join(str(source.get("subheadline") or "").split())
-    haystack = f"{headline} {brief}".lower()
     features = brand_data.get("features", [])
-    feature = next((item for item in features if any(word in haystack for word in item["name"].lower().split() if len(word) > 4)),
-                   features[seed % len(features)] if features else None)
+    hashtag_data = brand_data["hashtags"]
+    topic_tags = random.Random(seed).sample(list(hashtag_data["topic"]), k=min(5, len(hashtag_data["topic"])))
+    hashtags = list(hashtag_data["brand"]) + topic_tags
+    if source.get("caption_text"):
+        return str(source["caption_text"]).strip() + "\n\n" + " ".join(hashtags), hashtags
+    haystack = f"{headline} {brief}".lower()
+    named = {item["name"]: item for item in features}
+    feature = named.get(source.get("feature") or "") or next(
+        (item for item in features if any(word in haystack for word in item["name"].lower().split() if len(word) > 4)),
+        features[seed % len(features)] if features else None)
     lines = [f"{headline}."]
-    if brief:
+    if source.get("pain"):
+        lines += ["", str(source["pain"]).strip()]
+    if source.get("tip"):
+        lines += ["", str(source["tip"]).strip()]
+    elif brief:
         lines += ["", brief]
-    if feature:
+    if feature and (source.get("feature") or not source.get("pain")):
         benefit = feature["benefit"][0].lower() + feature["benefit"][1:]
         lines += ["", f"Di {brand_data['name']} ada {feature['name']}: {benefit}."]
-    cta = brand_data["cta"]
-    lines += ["", f"{cta['link_in_bio_text']} dan {cta['primary_text'][0].lower() + cta['primary_text'][1:]}."]
-    tags = brand_data["hashtags"]
-    hashtags = list(tags["brand"]) + list(tags["topic"])[:6]
+    if brand_data.get("cta_required", True):
+        cta = brand_data["cta"]
+        lines += ["", f"{cta['link_in_bio_text']} dan {cta['primary_text'][0].lower() + cta['primary_text'][1:]}."]
     return "\n".join(lines) + "\n\n" + " ".join(hashtags), hashtags
 
 
@@ -190,7 +213,7 @@ def validate_content(content: Mapping[str, Any], brand_data: Mapping[str, Any], 
         errors.append(f"muse_prompt harus menyebut rasio {ASPECT_MARK[fmt]}")
     if not re.search(r"left and right (10|20) percent", prompt):
         errors.append("muse_prompt harus memuat aturan margin (sisi kiri dan kanan dibiarkan kosong (10 percent feed, 20 percent story))")
-    use_cta = cta_label if slots.get("cta") else None
+    use_cta = cta_label if slots.get("cta") and cta_label else None
     for text in required_texts({k: v for k, v in copy.items() if v}, use_cta, footer):
         if f'"{text}"' not in prompt:
             errors.append(f'muse_prompt harus memuat teks persis dalam tanda kutip: "{text}"')
@@ -198,7 +221,8 @@ def validate_content(content: Mapping[str, Any], brand_data: Mapping[str, Any], 
     extra = {code.upper() for code in re.findall(r"#[0-9A-Fa-f]{6}", prompt)} - allowed
     if extra:
         errors.append("warna di luar palet: " + ", ".join(sorted(extra)))
-    banned = [claim for claim in brand_data.get("avoid_claims", []) if claim.lower() in (prompt + " " + str(content.get("caption") or "")).lower()]
+    scanned = (prompt + " " + str(content.get("caption") or "")).lower()
+    banned = [claim for claim in brand_data.get("avoid_claims", []) if re.search(r"(?<!\w)" + re.escape(claim.lower()) + r"(?!\w)", scanned)]
     if banned:
         errors.append("klaim terlarang: " + ", ".join(banned))
     if fmt == "feed":
@@ -210,7 +234,7 @@ def validate_content(content: Mapping[str, Any], brand_data: Mapping[str, Any], 
             errors.append(f"hashtags harus {HASHTAG_RANGE[0]}-{HASHTAG_RANGE[1]} tag berformat #kata")
         if not all(tag in caption for tag in hashtags):
             errors.append("semua hashtag harus tertulis di akhir caption")
-        if "link di bio" not in caption.lower() and brand_data["website"] not in caption:
+        if brand_data.get("cta_required", True) and "link di bio" not in caption.lower() and brand_data["website"] not in caption:
             errors.append("caption harus mengarahkan ke link di bio atau situs")
         allowed_prices = {_normalize_price(text) for text in brand_data.get("allowed_price_texts", [])}
         for price in re.findall(r"Rp\s?[\d.]+", caption):
@@ -292,40 +316,43 @@ def write_content(brand_slug: str, source: Mapping[str, Any], post: Mapping[str,
     """Prompt Muse, caption, dan hashtag untuk satu postingan.
 
     `source` berisi headline, subheadline, items untuk teks gambar. `post` adalah ringkasan (topik, analisis) untuk model teks.
-    `llm` berisi base_url, api_key, model, dan opsional transport. Tanpa `llm`, dipakai cadangan dari kartu gaya.
+    `llm` berisi base_url, api_key, model, dan opsional transport, atau daftar endpoint (utama lebih dulu, lalu cadangan).
+    Tanpa `llm`, atau bila semua endpoint gagal, dipakai cadangan dari kartu gaya.
     """
     brand_data = brand_data or load_brand_data(brand_slug)
     style = (styles or load_styles())[template_id]
     copy = derive_copy(source, style)
-    use_cta = cta_label if style["slots"].get("cta") else None
+    use_cta = cta_label if style["slots"].get("cta") and cta_label else None
     prompt = deterministic_prompt(brand_data, style, copy, fmt, subject, cta_label, footer)
     caption, hashtags = deterministic_caption(brand_data, source, seed) if fmt == "feed" else ("", [])
     result = {
         "source": "template", "muse_prompt": prompt, "caption": caption, "hashtags": hashtags,
         "copy": {**copy, "cta_label": use_cta, "footer": footer}, "errors": [],
     }
-    if not llm:
-        return result
-    feedback: list[str] = []
-    for attempt in range(2):
-        try:
-            content = chat_json(
-                base_url=llm["base_url"], api_key=llm["api_key"], model=llm["model"], transport=llm.get("transport"),
-                messages=build_messages(brand_data, style, post, fmt, prompt, cta_label, footer, feedback or None),
-            )
-        except WriterError as err:
-            result["errors"].append(str(err))
-            return result
-        if fmt == "story":
-            content["caption"], content["hashtags"] = "", []
-        feedback = validate_content(content, brand_data, style, fmt, cta_label, footer)
-        if not feedback:
-            result.update({
-                "source": "llm", "muse_prompt": content["muse_prompt"], "caption": str(content.get("caption") or ""),
-                "hashtags": list(content.get("hashtags") or []),
-                "copy": {"headline": content["headline"], "subline": content.get("subline") or None,
-                         "chips": list(content.get("chips") or []), "cta_label": use_cta, "footer": footer},
-            })
-            return result
-        result["errors"] += [f"percobaan {attempt + 1}: {item}" for item in feedback]
+    endpoints = [llm] if isinstance(llm, Mapping) else list(llm or [])
+    result["model"] = None
+    for endpoint in endpoints:
+        feedback: list[str] = []
+        for attempt in range(2):
+            try:
+                content = chat_json(
+                    base_url=endpoint["base_url"], api_key=endpoint.get("api_key", ""), model=endpoint["model"],
+                    transport=endpoint.get("transport"),
+                    messages=build_messages(brand_data, style, post, fmt, prompt, cta_label, footer, feedback or None),
+                )
+            except WriterError as err:
+                result["errors"].append(f"{endpoint['model']}: {err}")  # gangguan endpoint tidak diulang, lanjut ke endpoint berikutnya
+                break
+            if fmt == "story":
+                content["caption"], content["hashtags"] = "", []
+            feedback = validate_content(content, brand_data, style, fmt, cta_label, footer)
+            if not feedback:
+                result.update({
+                    "source": "llm", "model": endpoint["model"], "muse_prompt": content["muse_prompt"],
+                    "caption": str(content.get("caption") or ""), "hashtags": list(content.get("hashtags") or []),
+                    "copy": {"headline": content["headline"], "subline": content.get("subline") or None,
+                             "chips": list(content.get("chips") or []), "cta_label": use_cta, "footer": footer},
+                })
+                return result
+            result["errors"] += [f"{endpoint['model']} percobaan {attempt + 1}: {item}" for item in feedback]
     return result
