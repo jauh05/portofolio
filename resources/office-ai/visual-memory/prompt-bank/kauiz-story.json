@@ -1301,7 +1301,7 @@
   {
    "id": "ks-109",
    "hook": "Mitos: baca ulang saja",
-   "line": "Membaca ulang lebih ampuh dari latihan.",
+   "line": "Menguji diri lebih menguatkan ingatan.",
    "chips": [
     "Mitos",
     "Uji diri",
@@ -1313,7 +1313,7 @@
   {
    "id": "ks-110",
    "hook": "Mitos: belajar tanpa jeda",
-   "line": "Belajar harus berjam-jam tanpa henti.",
+   "line": "Sesi pendek dengan jeda lebih efektif.",
    "chips": [
     "Mitos",
     "Sesi pendek",
@@ -1325,7 +1325,7 @@
   {
    "id": "ks-111",
    "hook": "Mitos: catatan harus lengkap",
-   "line": "Catatan harus ditulis selengkap mungkin.",
+   "line": "Catatan inti yang ringkas lebih berguna.",
    "chips": [
     "Mitos",
     "Poin inti",
