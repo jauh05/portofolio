@@ -61,6 +61,11 @@ def load_layout_styles(path: Optional[Path] = None) -> dict[str, Any]:
     return json.loads((path or MEMORY_DIR / "layout-styles.json").read_text(encoding="utf-8"))["templates"]
 
 
+def load_brand_layouts(brand_data: Mapping[str, Any]) -> dict[str, Any]:
+    """Kartu tata letak milik brand: `layout_file` di data brand, jika tidak ada dipakai layout-styles.json."""
+    return load_layout_styles(MEMORY_DIR / brand_data.get("layout_file", "layout-styles.json"))
+
+
 def _clip_words(text: str, max_words: int, max_chars: int) -> str:
     words = " ".join(str(text or "").replace('"', "").split()).split()[:max_words]
     while words and len(" ".join(words)) > max_chars:
@@ -150,13 +155,14 @@ def deterministic_prompt(brand_data: Mapping[str, Any], style: Mapping[str, Any]
     parts = [style["prompt_template"].format(**args)]
     style = {**style, "text_color": _brandify(style["text_color"], visual)}
     if copy.get("subline") and slots.get("subline"):
-        parts.append(f'{slots["subline"]["where"]}, a small regular sans-serif line in {style["text_color"]} reads exactly "{copy["subline"]}".')
+        parts.append(f'{slots["subline"]["where"].format(**args)}, a small regular sans-serif line in {style["text_color"]} reads exactly "{copy["subline"]}".')
     if copy.get("chips") and slots.get("chips"):
         parts.append(f'{slots["chips"]["where"].format(**args)}; the texts read exactly {_quoted(copy["chips"])}.')
     use_cta = bool(slots.get("cta")) and bool(cta_label)
     if use_cta:
         parts.append(f'{slots["cta"]["where"]}, a rounded {visual["accent"]} pill button with {visual.get("ink_name", "deep navy")} bold text reads exactly "{cta_label}".')
-    parts.append(f'{FOOTER_WHERE[fmt]}, {visual["footer_style"]} reads exactly "{footer}".')
+    footer_style = style["footer_style"].format(**args) if style.get("footer_style") else visual["footer_style"]
+    parts.append(f'{FOOTER_WHERE[fmt]}, {footer_style} reads exactly "{footer}".')
     count = len(required_texts(copy, cta_label if use_cta else None, footer))
     parts.append(
         f"These {count} texts are the only text in the image, spelled exactly as written, sharp and fully legible, with generous "

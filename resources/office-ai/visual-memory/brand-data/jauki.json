@@ -59,32 +59,29 @@
     "status": "draft, belum dikonfirmasi pemilik"
   },
   "visual": {
-    "palette_prompt": "clean white (#FFFFFF), warm orange (#E07540), soft yellow (#F3C75F), fresh green (#46A375), sky blue (#7CB1EB) and soft pink (#F4A6B8), with dark brown (#532923) only for text",
-    "ink": "dark brown (#532923)",
-    "accent": "warm orange (#E07540)",
-    "ink_name": "dark brown",
-    "ink_short": "brown",
-    "alt_name": "lighter brown",
+    "palette_prompt": "vivid orange (#F4701B), clean white (#FFFFFF), light gray (#E6E6E6), pale peach (#FBCDB5), a deeper orange (#D85810) for gradients, and near-black (#1A1A1A) for text",
+    "ink": "near-black (#1A1A1A)",
+    "accent": "vivid orange (#F4701B)",
+    "ink_name": "near-black",
+    "ink_short": "black",
+    "alt_name": "dark gray",
     "paper_name": "white",
-    "accent_name": "warm orange",
-    "headline_style": "heavy rounded friendly sans-serif capitals",
-    "footer_style": "a slim rounded warm-orange (#E07540) footer bar with white text on the left",
+    "accent_name": "vivid orange",
+    "headline_style": "heavy chunky rounded geometric sans-serif capitals",
+    "footer_style": "a slim rounded vivid-orange (#F4701B) footer bar with white text on the left",
     "allowed_hex": [
-      "#532923",
-      "#6E3B31",
-      "#7D5F54",
-      "#E07540",
-      "#F3C75F",
-      "#FFE8D0",
-      "#FEF4EB",
-      "#46A375",
-      "#7CB1EB",
-      "#F4A6B8",
-      "#FFFFFF"
+      "#F4701B",
+      "#D85810",
+      "#FFFFFF",
+      "#E6E6E6",
+      "#FBCDB5",
+      "#1A1A1A",
+      "#FFE8D8"
     ],
     "bg": "clean white (#FFFFFF)",
-    "block": "soft yellow (#F3C75F)"
+    "block": "pale peach (#FBCDB5)"
   },
   "sources": "Konten humor mahasiswa. Layanan Jauki sengaja tidak dimasukkan.",
-  "footer_text": "@jaukitugas"
+  "footer_text": "@jaukitugas",
+  "layout_file": "layout-styles-jauki.json"
 }

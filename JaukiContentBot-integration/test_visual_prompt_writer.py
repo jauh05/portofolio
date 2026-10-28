@@ -62,17 +62,30 @@ class StyleCardTests(unittest.TestCase):
         self.assertEqual((result["caption"], result["hashtags"]), ("", []))
 
 
+BRANDS = (("kauiz", "kauiz.web.id"), ("jauki", "@jaukitugas"))
+
+
+def layouts_of(brand):
+    return writer.load_brand_layouts(writer.load_brand_data(brand))
+
+
+def prompt_of(brand, layout_id, fmt="feed", footer=None):
+    footer = footer or dict(BRANDS)[brand]
+    return writer.write_content(brand, SOURCE, {}, layout_id, fmt, "an open notebook", cta_label=None, footer=footer, styles=layouts_of(brand))
+
+
 class LayoutCardTests(unittest.TestCase):
+    def test_each_brand_has_its_own_layout_set(self):
+        self.assertEqual(sorted(layouts_of("kauiz"), key=lambda k: int(k[1:])), [f"L{i}" for i in range(1, 15)])
+        self.assertEqual(sorted(layouts_of("jauki"), key=lambda k: int(k[1:])), [f"J{i}" for i in range(1, 13)])
+
     def test_layout_cards_build_valid_prompts_for_both_brands_and_formats(self):
-        layouts = writer.load_layout_styles()
-        self.assertEqual(sorted(layouts, key=lambda k: int(k[1:])), [f"L{i}" for i in range(1, 15)])
-        for brand, footer in (("kauiz", "kauiz.web.id"), ("jauki", "@jaukitugas")):
-            data = writer.load_brand_data(brand)
+        for brand, footer in BRANDS:
+            data, layouts = writer.load_brand_data(brand), layouts_of(brand)
             for layout_id in layouts:
                 for fmt in ("feed", "story"):
                     with self.subTest(brand=brand, layout=layout_id, fmt=fmt):
-                        result = writer.write_content(brand, SOURCE, {}, layout_id, fmt, "an open notebook beside a sticky note", cta_label=None,
-                                                      footer=footer, brand_data=data, styles=layouts)
+                        result = prompt_of(brand, layout_id, fmt)
                         copy = result["copy"]
                         content = {"headline": copy["headline"], "subline": copy.get("subline"), "chips": copy.get("chips", []),
                                    "muse_prompt": result["muse_prompt"], "caption": result["caption"], "hashtags": result["hashtags"]}
@@ -80,37 +93,49 @@ class LayoutCardTests(unittest.TestCase):
                         self.assertIn(f'reads exactly "{footer}"', result["muse_prompt"])
                         self.assertIn("left and right 10 percent", result["muse_prompt"])
 
-    def test_both_brands_use_a_white_background_with_their_own_colors(self):
-        layouts = writer.load_layout_styles()
-        for layout_id in layouts:
-            kauiz = writer.write_content("kauiz", SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer=FOOTER, styles=layouts)["muse_prompt"]
-            jauki = writer.write_content("jauki", SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer="@jaukitugas", styles=layouts)["muse_prompt"]
+    def test_kauiz_keeps_navy_on_white(self):
+        for layout_id in layouts_of("kauiz"):
+            kauiz = prompt_of("kauiz", layout_id)["muse_prompt"]
             self.assertIn("clean white (#FFFFFF)", kauiz, layout_id)
             self.assertNotIn("solid deep navy", kauiz, layout_id)
+            for jauki_hex in ("#F4701B", "#532923", "#1A1A1A"):
+                self.assertNotIn(jauki_hex, kauiz, layout_id)
+
+    def test_jauki_uses_the_orange_white_gray_palette_without_brown_or_navy(self):
+        for layout_id in layouts_of("jauki"):
+            jauki = prompt_of("jauki", layout_id)["muse_prompt"]
+            self.assertIn("vivid orange (#F4701B)", jauki, layout_id)
             self.assertIn("clean white (#FFFFFF)", jauki, layout_id)
-            self.assertIn("dark brown (#532923)", jauki, layout_id)
-            self.assertNotIn("#0B1537", jauki, layout_id)
-            self.assertNotIn("dark-brown", jauki, layout_id)
-            self.assertIn("warm-orange (#E07540) footer bar", jauki, layout_id)
-            self.assertIn("sky blue (#7CB1EB)", jauki, layout_id)
-            self.assertNotIn("#532923", kauiz, layout_id)
+            for gone in ("#532923", "#0B1537", "brown", "#46A375", "#7CB1EB"):
+                self.assertNotIn(gone, jauki, layout_id)
+
+    def test_jauki_mixes_orange_and_white_backgrounds_with_footer_matching_the_background(self):
+        layouts = layouts_of("jauki")
+        white_text = [lid for lid, card in layouts.items() if card["text_color"] == "white"]
+        self.assertGreaterEqual(len(white_text), 3)
+        self.assertLess(len(white_text), len(layouts))
+        for layout_id, card in layouts.items():
+            prompt = prompt_of("jauki", layout_id)["muse_prompt"]
+            if card["text_color"] == "white":
+                self.assertIn("capitals, white", prompt, layout_id)
+            if card.get("footer_style"):  # latar oranye penuh: bar footer putih agar terlihat
+                self.assertIn("white footer bar with vivid orange (#F4701B) text", prompt, layout_id)
+                self.assertNotIn("vivid-orange (#F4701B) footer bar", prompt, layout_id)
+            else:
+                self.assertIn("vivid-orange (#F4701B) footer bar with white text", prompt, layout_id)
+
+    def test_no_placeholder_is_left_unfilled_in_any_prompt(self):
+        for brand, _ in BRANDS:
+            for layout_id in layouts_of(brand):
+                for fmt in ("feed", "story"):
+                    self.assertNotRegex(prompt_of(brand, layout_id, fmt)["muse_prompt"], r"\{\w+\}", (brand, layout_id, fmt))
 
     def test_every_layout_shows_headline_subline_and_three_points(self):
-        layouts = writer.load_layout_styles()
-        for brand, footer in (("kauiz", "kauiz.web.id"), ("jauki", "@jaukitugas")):
-            for layout_id in layouts:
-                copy = writer.write_content(brand, SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer=footer, styles=layouts)["copy"]
+        for brand, _ in BRANDS:
+            for layout_id in layouts_of(brand):
+                copy = prompt_of(brand, layout_id)["copy"]
                 self.assertTrue(copy.get("subline"), (brand, layout_id))
                 self.assertEqual(len(copy.get("chips", [])), 3, (brand, layout_id))
-
-    def test_jauki_surfaces_are_colorful_not_brown(self):
-        layouts = writer.load_layout_styles()
-        for layout_id in layouts:
-            prompt = writer.write_content("jauki", SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer="@jaukitugas", styles=layouts)["muse_prompt"]
-            self.assertNotIn("brown geometric block", prompt, layout_id)
-            self.assertNotIn("brown footer", prompt, layout_id)
-        self.assertIn("soft yellow (#F3C75F) geometric block", writer.write_content(
-            "jauki", SOURCE, {}, "L2", "feed", "an open notebook", cta_label=None, footer="@jaukitugas", styles=layouts)["muse_prompt"])
 
     def test_layout_prompts_leave_scene_and_text_style_to_muse(self):
         prompt = write("T01")["muse_prompt"]

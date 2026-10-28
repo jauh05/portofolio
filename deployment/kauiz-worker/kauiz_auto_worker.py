@@ -658,7 +658,7 @@ def muse_job(config, plan, fmt, slot_key, history, with_prompt=True):
         # Mode teks Muse: hanya tata letak yang dipilih (bergilir, tidak berulang dalam 5 terakhir). Adegan dan gaya teks ditentukan Muse.
         import visual_prompt_writer
 
-        layout_ids = sorted(visual_prompt_writer.load_layout_styles())
+        layout_ids = sorted(visual_prompt_writer.load_brand_layouts(visual_prompt_writer.load_brand_data(config.brand)))
         recent = {entry.get("template_id") for entry in history[-LAYOUT_NO_REPEAT:]}
         layout_id = random.Random(seed).choice([lid for lid in layout_ids if lid not in recent] or layout_ids)
         return {
@@ -718,7 +718,7 @@ def write_content(config, plan, topic, fmt, slot_key, job, use_llm):
             config.brand, source, post, job["template_id"], fmt, job["subject"],
             cta_label=cta.get("label_story" if fmt == "story" else "label", "LINK DI BIO"),
             footer=brand_data.get("footer_text") or cta.get("url", ""), brand_data=brand_data,
-            seed=job["seed"], llm=llm, styles=visual_prompt_writer.load_layout_styles(),
+            seed=job["seed"], llm=llm, styles=visual_prompt_writer.load_brand_layouts(brand_data),
         )
     except visual_prompt_writer.WriterError as err:
         raise MuseError(f"penulis prompt gagal: {err}") from err

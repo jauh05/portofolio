@@ -1,0 +1,299 @@
+{
+ "version": "1.0",
+ "description": "Tata letak khusus Jauki, gaya poster oranye, putih, dan abu-abu terang. Hanya posisi dan bentuk; adegan dan teks ditentukan Muse.",
+ "templates": {
+  "J1": {
+   "concept": "Latar oranye penuh, cutout mahasiswa di kanan",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline on the left",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the lower left, a row of three small rounded pills with thin white outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Bold campaign poster in {aspect}. The background is a flat {accent} with a soft deeper-orange gradient and one large lighter curved swoosh. On the right, a cutout of a cheerful young university student reacting funnily to {subject}, with a thin white sticker outline and a soft shadow. On the left, a huge headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last word inside a white box with {accent} text.",
+   "footer_style": "a slim rounded white footer bar with {accent} text on the left"
+  },
+  "J2": {
+   "concept": "Putih lega, headline dalam coretan elips oranye",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Between the headline and the flat-lay",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "At the bottom, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Fresh playful poster in {aspect}. The background is clean white (#FFFFFF) with generous breathing space. At the top, a huge headline in {headline_style}, {ink}, centered inside a hand-drawn {accent} ellipse scribble outline, reads exactly \"{headline}\". Below it, a tidy flat-lay of {subject} seen from above on the white surface, with soft shadows, and a cheerful student's hand reaching in from one side."
+  },
+  "J3": {
+   "concept": "Oranye bermotif, headline putih besar, objek di blob putih",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Between the headline and the blob, a row of three small rounded pills with thin white outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Bold typographic poster in {aspect}. The background is a flat {accent} with a subtle leaf-like pattern in a slightly deeper orange. In the upper middle, a huge stacked headline in {headline_style}, white, centered, reads exactly \"{headline}\", with one word inside a white box with {accent} text. In the lower third, a realistic cutout of {subject} sits on a white organic blob shape with a soft shadow.",
+   "footer_style": "a slim rounded white footer bar with {accent} text on the left"
+  },
+  "J4": {
+   "concept": "Putih minimal, lingkaran peach di belakang objek",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the circle, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Minimal modern poster in {aspect}. The background is clean white (#FFFFFF). In the center, a large {block} circle sits behind a realistic cutout of {subject} with a soft floor shadow. Above it, a huge headline in {headline_style}, {ink}, left aligned, with one word in {accent}, reads exactly \"{headline}\"."
+  },
+  "J5": {
+   "concept": "Kartu putih di atas gradien oranye-abu, objek 3D keluar kartu",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "On the card under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Inside the card near its bottom, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Premium social poster in {aspect}. The background is a smooth gradient from {accent} to a deeper orange with soft light-gray curved shapes. A large white rounded card with a soft shadow fills the middle and holds a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\". A glossy 3D-style object resembling {subject} pops out over the card's corner.",
+   "footer_style": "a slim rounded white footer bar with {accent} text on the left"
+  },
+  "J6": {
+   "concept": "Abu-abu terang, headline oranye raksasa bertumpuk",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the lower part, a row of three small rounded pills with thin {ink} outlines on white",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Bold typographic poster in {aspect}. The background is a soft light-gray (#E6E6E6) gradient with a gentle vignette. A huge stacked headline in {headline_style}, {accent}, left aligned, reads exactly \"{headline}\". A realistic 3D-style object resembling {subject} sits beside the lowest line of the headline without covering any letter."
+  },
+  "J7": {
+   "concept": "Terbelah: atas oranye berisi headline, bawah putih dengan cutout",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline in the orange area",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "On the white lower area, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Clean split poster in {aspect}. The upper half is flat {accent} and holds a huge headline in {headline_style}, white, left aligned, reads exactly \"{headline}\". The lower half is clean white (#FFFFFF), separated by a wavy edge, with a realistic cutout of {subject} straddling the dividing line with a soft shadow."
+  },
+  "J8": {
+   "concept": "Putih dengan blob peach, mahasiswa ekspresif di kanan",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "In a rounded rectangle with a thin {accent} outline below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Below the rectangle, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Friendly humorous poster in {aspect}. The background is clean white (#FFFFFF) with a large {block} blob shape. A cutout of an expressive young university student with a hand on the head, reacting funnily to {subject}, with a thin white sticker outline, fills the right side. On the upper left, a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\", with its last word in {accent}."
+  },
+  "J9": {
+   "concept": "Kartu putih miring di atas oranye",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "On the card under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the card, a row of three small rounded pills with thin white outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Playful sticker-style poster in {aspect}. The background is a flat {accent} with a big deeper-orange circle and a few small white outlined squares as decoration. A large white rounded card tilted slightly with a soft shadow holds a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\", and a realistic cutout of {subject} is stuck on the card's corner like a sticker with a thin white border.",
+   "footer_style": "a slim rounded white footer bar with {accent} text on the left"
+  },
+  "J10": {
+   "concept": "Lingkaran putih dalam cincin oranye di latar abu-abu",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "At the bottom, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Warm graphic poster in {aspect}. The background is a light-gray (#E6E6E6) gradient. A thick {accent} ring surrounds a large white circle in the center, and inside it a realistic cutout of {subject} sits with a soft shadow, with two small glossy {accent} spheres floating near the corners. At the top, a huge headline in {headline_style}, {ink}, centered, reads exactly \"{headline}\"."
+  },
+  "J11": {
+   "concept": "Putih lega, mahasiswa bergaya memegang objek",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline in a smaller size",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the subline, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Clean lifestyle poster in {aspect}. The background is clean white (#FFFFFF) with lots of empty space and small hollow circle and square outlines in {accent} as decoration. On the right, a cutout of a stylish young university student holding {subject} with a confident smile and a thin white sticker outline. On the left, a stacked headline in {headline_style}, {ink}, with one word in {accent}, reads exactly \"{headline}\"."
+  },
+  "J12": {
+   "concept": "Oranye bermotif, kartu putih berlekuk, objek 3D melayang",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "On the card under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Inside the card at its bottom, a row of three small rounded pills filled {accent} with white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Dynamic social poster in {aspect}. The background is a flat {accent} with a faint repeated outline pattern in a slightly deeper orange. In the lower middle, a white rounded card with one large soft notch holds a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\". A glossy 3D-style object resembling {subject} floats above the card, overlapping its top edge with a soft shadow.",
+   "footer_style": "a slim rounded white footer bar with {accent} text on the left"
+  }
+ }
+}
