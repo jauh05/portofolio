@@ -59,7 +59,7 @@
     "status": "draft, belum dikonfirmasi pemilik"
   },
   "visual": {
-    "palette_prompt": "clean white (#FFFFFF), dark brown (#532923), warm orange (#E07540) and soft yellow (#F3C75F)",
+    "palette_prompt": "clean white (#FFFFFF), warm orange (#E07540), soft yellow (#F3C75F), fresh green (#46A375), sky blue (#7CB1EB) and soft pink (#F4A6B8), with dark brown (#532923) only for text",
     "ink": "dark brown (#532923)",
     "accent": "warm orange (#E07540)",
     "ink_name": "dark brown",
@@ -68,7 +68,7 @@
     "paper_name": "white",
     "accent_name": "warm orange",
     "headline_style": "heavy rounded friendly sans-serif capitals",
-    "footer_style": "a slim rounded dark-brown footer bar with white text on the left",
+    "footer_style": "a slim rounded warm-orange (#E07540) footer bar with white text on the left",
     "allowed_hex": [
       "#532923",
       "#6E3B31",
@@ -82,7 +82,8 @@
       "#F4A6B8",
       "#FFFFFF"
     ],
-    "bg": "clean white (#FFFFFF)"
+    "bg": "clean white (#FFFFFF)",
+    "block": "soft yellow (#F3C75F)"
   },
   "sources": "Konten humor mahasiswa. Layanan Jauki sengaja tidak dimasukkan.",
   "footer_text": "@jaukitugas"

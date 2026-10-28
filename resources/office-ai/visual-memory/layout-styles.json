@@ -1,6 +1,6 @@
 {
- "version": "1.1",
- "description": "Tata letak untuk mode teks Muse. Latar putih (placeholder bg dari data brand). Hanya posisi headline, subjek, poin, dan footer; adegan dan gaya teks ditentukan Muse.",
+ "version": "1.2",
+ "description": "Tata letak untuk mode teks Muse. Latar putih (placeholder bg dari data brand), permukaan berwarna lewat block dan accent. Hanya posisi headline, subline, poin, dan footer; adegan dan gaya teks ditentukan Muse.",
  "templates": {
   "L1": {
    "concept": "Foto studio, headline kiri atas",
@@ -13,10 +13,15 @@
     },
     "subline": {
      "where": "Below the headline",
-     "max_words": 14,
-     "max_chars": 80
+     "max_words": 16,
+     "max_chars": 90
     },
-    "chips": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the lower left, a row of three small rounded pill tags with thin {accent} outlines on {bg}",
+     "max_chars": 18
+    },
     "cta": null
    },
    "prompt_template": "Bold editorial social media poster in {aspect}, in the style of a modern campaign. The background is a {bg} studio backdrop with soft natural light and subtle shadows. The main visual is {subject}, shown as a realistic high-quality photograph with premium lighting and realistic materials; choose a fitting, natural scene, and keep any people natural and friendly. In the top third, a huge headline in {headline_style}, left aligned, {ink}, with the last two words highlighted by a {accent} marker-style bar behind them, reads exactly \"{headline}\". The subject sits in the lower two thirds, slightly right of center."
@@ -32,13 +37,18 @@
     },
     "subline": {
      "where": "Below the headline",
-     "max_words": 14,
-     "max_chars": 80
+     "max_words": 16,
+     "max_chars": 90
     },
-    "chips": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "At the lower right, three small tilted sticker tags on {bg} with thin {ink} outlines",
+     "max_chars": 18
+    },
     "cta": null
    },
-   "prompt_template": "Bold social media poster in {aspect}, in the style of a modern digital-agency campaign. The background is a crumpled {bg} paper texture with soft creases and subtle shadows. In the center right, a high-contrast black and white cutout photograph of {subject}, with a single {accent} detail as the only color, sharp paper-cut edge and a light drop shadow. A large {ink} geometric block sits behind it at the lower left for depth. In the upper left, a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\", with the last two words highlighted by a {accent} marker-style bar behind them."
+   "prompt_template": "Bold social media poster in {aspect}, in the style of a modern digital-agency campaign. The background is a crumpled {bg} paper texture with soft creases and subtle shadows. In the center right, a high-contrast black and white cutout photograph of {subject}, with a single {accent} detail as the only color, sharp paper-cut edge and a light drop shadow. A large {block} geometric block sits behind it at the lower left for depth. In the upper left, a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\", with the last two words highlighted by a {accent} marker-style bar behind them."
   },
   "L3": {
    "concept": "Tipografi besar di tengah",
@@ -51,10 +61,15 @@
     },
     "subline": {
      "where": "Below the headline",
-     "max_words": 14,
-     "max_chars": 80
+     "max_words": 16,
+     "max_chars": 90
     },
-    "chips": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the headline, a row of three small rounded pill tags on {bg} with thin {ink} outlines",
+     "max_chars": 18
+    },
     "cta": null
    },
    "prompt_template": "Bold typography-led social poster in {aspect}. The background is a {bg} surface with a subtle paper texture and soft shadows. In the center, a huge stacked headline in {headline_style}, {ink} with one key word in {accent}, reads exactly \"{headline}\". Around it float two or three small realistic objects related to {subject}, tilted like stickers with thin borders and soft shadows."
@@ -70,10 +85,15 @@
     },
     "subline": {
      "where": "Inside the same block",
-     "max_words": 14,
-     "max_chars": 80
+     "max_words": 16,
+     "max_chars": 90
     },
-    "chips": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the bottom edge of the photo, a row of three small white rounded pills",
+     "max_chars": 18
+    },
     "cta": null
    },
    "prompt_template": "Clean editorial social poster in {aspect}. The top third is a flat {bg} block holding a huge headline in {headline_style}, {ink} with one word in {accent}, reads exactly \"{headline}\". The lower two thirds are a full-bleed realistic photograph of {subject}, natural light, shallow depth of field, with bright airy tones that match {palette}."
@@ -89,12 +109,12 @@
     },
     "subline": {
      "where": "Below the headline",
-     "max_words": 14,
-     "max_chars": 80
+     "max_words": 16,
+     "max_chars": 90
     },
     "chips": {
      "min": 3,
-     "max": 4,
+     "max": 3,
      "where": "Under the subline, a short vertical list of three or four rows each beginning with a small round {accent} marker",
      "max_chars": 18
     },
@@ -113,10 +133,15 @@
     },
     "subline": {
      "where": "Under the headline",
-     "max_words": 14,
-     "max_chars": 80
+     "max_words": 16,
+     "max_chars": 90
     },
-    "chips": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Inside the same card under the subline, a row of three small rounded pills filled {accent}",
+     "max_chars": 18
+    },
     "cta": null
    },
    "prompt_template": "Cinematic social poster in {aspect}. A full-frame realistic photograph of {subject}, bright natural light, with bright airy tones that match {palette}. In the lower third, on a {bg} rounded card with a soft shadow, a huge headline in {headline_style}, {ink} with the last word in {accent}, reads exactly \"{headline}\"."
@@ -130,10 +155,14 @@
      "max_words": 5,
      "max_chars": 34
     },
-    "subline": null,
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
     "chips": {
      "min": 3,
-     "max": 4,
+     "max": 3,
      "where": "In the middle and lower area, tilted pill-shaped capsules with thick {ink} outlines on {bg} cross each other like a playful word cloud, with bold condensed {ink} capitals, one of them filled {accent}",
      "max_chars": 18
     },
@@ -152,13 +181,162 @@
     },
     "subline": {
      "where": "Below the headline",
-     "max_words": 14,
-     "max_chars": 80
+     "max_words": 16,
+     "max_chars": 90
     },
-    "chips": null,
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "On the white half under the subline, a row of three small rounded pills with thin {ink} outlines",
+     "max_chars": 18
+    },
     "cta": null
    },
    "prompt_template": "Bold campaign poster in {aspect}. The canvas is split diagonally into a {bg} half and a {accent} half. A realistic cutout photograph of {subject}, sharp paper-cut edge with a light shadow, sits across the split. On the white half, a huge headline in {headline_style}, {ink} with one word in {accent}, reads exactly \"{headline}\"."
+  },
+  "L9": {
+   "concept": "Jendela lengkung berisi foto, headline di atas",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "At the bottom under the arch, a row of three small rounded pills with thin {ink} outlines",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Playful editorial poster in {aspect}. The background is a {bg} surface with a subtle paper grain. In the center, a tall arch-shaped window filled with {block} holds a realistic cutout photograph of {subject} with a soft shadow, with a ring, a star and a dot as small flat shapes in {accent} scattered around it. At the top, a huge headline in {headline_style}, {ink}, centered, reads exactly \"{headline}\"."
+  },
+  "L10": {
+   "concept": "Foto polaroid miring dengan selotip",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Beside the polaroid, three small square sticky notes in {accent}, each slightly rotated",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Casual scrapbook-style poster in {aspect}. The background is a {bg} surface with a subtle paper grain. Slightly right of center, a tilted white polaroid-style frame held by a strip of {accent} washi tape shows a realistic photograph of {subject}, with a soft drop shadow. In the upper left, a huge headline in {headline_style}, left aligned, {ink}, reads exactly \"{headline}\", with a hand-drawn {accent} underline beneath it."
+  },
+  "L11": {
+   "concept": "Gelembung percakapan",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Inside the smaller bubble",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the bubbles, a row of three small rounded pills with thin {ink} outlines",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Humorous chat-style social poster in {aspect}. The background is a {bg} surface with a few pale confetti dots. A big rounded speech bubble with a thick {ink} outline on {bg} holds a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\". A smaller bubble filled {accent} sits beneath it. In the lower corner, a small realistic cutout of {subject} is stuck on like a sticker with a thin white border."
+  },
+  "L12": {
+   "concept": "Halaman buku catatan sobek",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline on the page",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "On the page under the subline, three short lines, each beginning with a small hand-drawn {accent} checkbox",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Study-desk themed social poster in {aspect}. The background is a {bg} surface with a subtle paper texture. A large notebook page with a torn edge and a thin {accent} margin line fills the center, with a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\". A realistic photograph of {subject} lies partly on the corner of the page with a soft shadow."
+  },
+  "L13": {
+   "concept": "Lingkaran besar di belakang cutout",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "At the bottom, a row of three small rounded pills filled {accent}",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Bold geometric social poster in {aspect}. The background is a {bg} surface. A huge flat {block} circle sits in the center, with a realistic cutout photograph of {subject} overlapping its edge, sharp paper-cut outline and a soft shadow. At the top, a huge headline in {headline_style}, {ink}, centered, reads exactly \"{headline}\"."
+  },
+  "L14": {
+   "concept": "Pita diagonal berisi headline",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the ribbon",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the bottom, a row of three small rounded pills with thin {ink} outlines on {bg}",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Dynamic campaign poster in {aspect}. The background is a {bg} surface with a subtle paper grain. A wide diagonal ribbon banner in {accent} crosses the upper area and carries a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\". Below it, a realistic photograph of {subject} in a rounded frame with a soft shadow."
   }
  }
 }

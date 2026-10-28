@@ -568,6 +568,7 @@ SUBJECT_HINTS = (
 DEFAULT_SUBJECT = "a tidy student study desk with notebooks, a pencil, and sticky notes"
 DEFAULT_INTENT = "focused, friendly, and motivating"
 HISTORY_LIMIT = 20
+LAYOUT_NO_REPEAT = 5
 
 
 def infer_pattern(plan):
@@ -654,11 +655,11 @@ def muse_job(config, plan, fmt, slot_key, history, with_prompt=True):
     seed = int(hashlib.sha256(f"{slot_key}:{fmt}".encode("utf-8")).hexdigest(), 16) % 2**32
     mode = OUTPUT_MODE[fmt]
     if text_in_muse(config):
-        # Mode teks Muse: hanya tata letak yang dipilih (bergilir, tidak berulang dalam 3 terakhir). Adegan dan gaya teks ditentukan Muse.
+        # Mode teks Muse: hanya tata letak yang dipilih (bergilir, tidak berulang dalam 5 terakhir). Adegan dan gaya teks ditentukan Muse.
         import visual_prompt_writer
 
         layout_ids = sorted(visual_prompt_writer.load_layout_styles())
-        recent = {entry.get("template_id") for entry in history[-3:]}
+        recent = {entry.get("template_id") for entry in history[-LAYOUT_NO_REPEAT:]}
         layout_id = random.Random(seed).choice([lid for lid in layout_ids if lid not in recent] or layout_ids)
         return {
             "prompt": None, "template_id": layout_id, "variation": {"hero_position": "free", "background_treatment": "free"},

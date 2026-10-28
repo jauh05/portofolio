@@ -65,7 +65,7 @@ class StyleCardTests(unittest.TestCase):
 class LayoutCardTests(unittest.TestCase):
     def test_layout_cards_build_valid_prompts_for_both_brands_and_formats(self):
         layouts = writer.load_layout_styles()
-        self.assertEqual(sorted(layouts), [f"L{i}" for i in range(1, 9)])
+        self.assertEqual(sorted(layouts, key=lambda k: int(k[1:])), [f"L{i}" for i in range(1, 15)])
         for brand, footer in (("kauiz", "kauiz.web.id"), ("jauki", "@jaukitugas")):
             data = writer.load_brand_data(brand)
             for layout_id in layouts:
@@ -90,7 +90,27 @@ class LayoutCardTests(unittest.TestCase):
             self.assertIn("clean white (#FFFFFF)", jauki, layout_id)
             self.assertIn("dark brown (#532923)", jauki, layout_id)
             self.assertNotIn("#0B1537", jauki, layout_id)
+            self.assertNotIn("dark-brown", jauki, layout_id)
+            self.assertIn("warm-orange (#E07540) footer bar", jauki, layout_id)
+            self.assertIn("sky blue (#7CB1EB)", jauki, layout_id)
             self.assertNotIn("#532923", kauiz, layout_id)
+
+    def test_every_layout_shows_headline_subline_and_three_points(self):
+        layouts = writer.load_layout_styles()
+        for brand, footer in (("kauiz", "kauiz.web.id"), ("jauki", "@jaukitugas")):
+            for layout_id in layouts:
+                copy = writer.write_content(brand, SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer=footer, styles=layouts)["copy"]
+                self.assertTrue(copy.get("subline"), (brand, layout_id))
+                self.assertEqual(len(copy.get("chips", [])), 3, (brand, layout_id))
+
+    def test_jauki_surfaces_are_colorful_not_brown(self):
+        layouts = writer.load_layout_styles()
+        for layout_id in layouts:
+            prompt = writer.write_content("jauki", SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer="@jaukitugas", styles=layouts)["muse_prompt"]
+            self.assertNotIn("brown geometric block", prompt, layout_id)
+            self.assertNotIn("brown footer", prompt, layout_id)
+        self.assertIn("soft yellow (#F3C75F) geometric block", writer.write_content(
+            "jauki", SOURCE, {}, "L2", "feed", "an open notebook", cta_label=None, footer="@jaukitugas", styles=layouts)["muse_prompt"])
 
     def test_layout_prompts_leave_scene_and_text_style_to_muse(self):
         prompt = write("T01")["muse_prompt"]

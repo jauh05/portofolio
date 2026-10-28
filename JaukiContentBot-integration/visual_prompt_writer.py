@@ -126,6 +126,7 @@ def _format_args(brand_data: Mapping[str, Any], fmt: str, subject: str, headline
         "aspect": ASPECT_TEXT[fmt], "ink": visual["ink"], "accent": visual["accent"], "palette": visual["palette_prompt"],
         "bg": visual.get("bg", visual["palette_prompt"].split(",")[0]),
         "headline_style": visual["headline_style"], "subject": subject, "headline": headline,
+        "block": visual.get("block", visual["ink"]),
     }
 
 
@@ -267,6 +268,8 @@ def build_messages(brand_data: Mapping[str, Any], style: Mapping[str, Any], post
         "Aturan:\n"
         "- Semua teks yang tampil di gambar (headline, subline, chips, tombol, footer) berbahasa Indonesia, pendek, dan memakai fakta dari data brand saja.\n"
         f"- headline maksimal {slots['headline']['max_words']} kata dan {slots['headline']['max_chars']} karakter, huruf kapital.\n"
+        "- Bila slot chips ada, isi tepat 3 poin pendek (maksimal 18 karakter per poin) dan tulis ketiganya persis dalam muse_prompt. "
+        "Subline satu kalimat padat yang melengkapi headline, bukan mengulanginya.\n"
         "- muse_prompt berbahasa Inggris, satu paragraf, mengikuti struktur dan gaya contoh prompt, tetapi adegan, subjek, dan diksinya "
         "kamu sesuaikan dengan topik. Setiap teks gambar ditulis persis dalam tanda kutip ganda dengan kata 'reads exactly'. "
         "Sebut rasio gambar dan pertahankan kalimat aturan margin dari contoh prompt apa adanya. Pakai hanya kode warna dari contoh prompt. Tegaskan bahwa teks itu satu-satunya teks di gambar.\n"

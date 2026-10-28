@@ -508,14 +508,14 @@ class MuseTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             config = self.muse_config(Path(tmp), text_mode="muse")
             history, chosen = [], []
-            for index in range(40):
-                job = worker.muse_job(config, PLAN, "feed", f"2026-11-{index:02d}-1300", history, with_prompt=False)
+            for index in range(90):
+                job = worker.muse_job(config, PLAN, "feed", f"2026-{index // 28 + 1:02d}-{index % 28 + 1:02d}-1300", history, with_prompt=False)
                 chosen.append(job["template_id"])
                 history = (history + [{"template_id": job["template_id"], "hero_position": "free", "background_treatment": "free"}])[-worker.HISTORY_LIMIT:]
         self.assertTrue(all(lid.startswith("L") for lid in chosen))
-        self.assertEqual(len(set(chosen)), 8)
-        for index in range(3, len(chosen)):
-            self.assertNotIn(chosen[index], chosen[index - 3:index])
+        self.assertEqual(len(set(chosen)), 14)
+        for index in range(worker.LAYOUT_NO_REPEAT, len(chosen)):
+            self.assertNotIn(chosen[index], chosen[index - worker.LAYOUT_NO_REPEAT:index])
 
     def test_jauki_brand_uses_its_own_bank_footer_palette_and_caption(self):
         with tempfile.TemporaryDirectory() as tmp:
