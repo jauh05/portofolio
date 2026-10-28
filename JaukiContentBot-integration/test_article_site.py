@@ -38,8 +38,18 @@ class RequestTests(unittest.TestCase):
             self.assertEqual((method, url), ("POST", base))
             self.assertEqual(headers["Authorization"], "Bearer T")
 
+    def test_default_urls_reach_the_documented_internal_article_paths_of_each_site(self):
+        documented = {"kauiz": "https://kauiz.web.id/v1/internal/articles", "jauki": "https://jaukitugas.my.id/api/internal/articles"}
+        for brand, expected in documented.items():
+            send = FakeSend()
+            api = site.ArticleSite(brand, "T", send=send, sleep=lambda _: None)
+            api.create_draft(ARTICLE)
+            api.publish(7)
+            api.schedule(7, "2026-10-29 10:00:00")
+            self.assertEqual([call[1] for call in send.calls], [expected, f"{expected}/7/publish", f"{expected}/7/schedule"], brand)
+
     def test_default_urls_include_the_internal_articles_path_through_the_spec(self):
-        self.assertEqual(site.SITES["kauiz"].default_base_url, "https://kauiz.web.id/v1")
+        self.assertEqual(site.SITES["kauiz"].default_base_url, "https://kauiz.web.id/v1/internal")
         self.assertEqual(site.SITES["jauki"].default_base_url, "https://jaukitugas.my.id/api/internal")
 
     def test_draft_without_image_is_json_with_status_draft_and_tags(self):
@@ -68,7 +78,7 @@ class RequestTests(unittest.TestCase):
     def test_update_uses_put_json_or_post_with_method_spoofing_for_images(self):
         api, send = client("kauiz")
         api.update_draft(7, ARTICLE)
-        self.assertEqual(send.calls[0][:2], ("PUT", "https://kauiz.web.id/v1/articles/7"))
+        self.assertEqual(send.calls[0][:2], ("PUT", "https://kauiz.web.id/v1/internal/articles/7"))
         api.update_draft(7, ARTICLE, b"img")
         self.assertEqual(send.calls[1][0], "POST")
         self.assertIn(b'name="_method"\r\n\r\nPUT', send.calls[1][3])
@@ -130,11 +140,18 @@ class ErrorTests(unittest.TestCase):
     def test_check_access_treats_404_as_success_and_blocks_otherwise(self):
         api, send = client("kauiz", (404, {"success": False, "message": "Article not found"}))
         api.check_access()
-        self.assertEqual(send.calls[0][:2], ("GET", "https://kauiz.web.id/v1/articles/0"))
+        self.assertEqual(send.calls[0][:2], ("GET", "https://kauiz.web.id/v1/internal/articles/0"))
         for status in (401, 403):
             api, _ = client("kauiz", (status, {}))
             with self.assertRaises(site.SiteError):
                 api.check_access()
+
+    def test_check_access_tells_a_missing_route_from_a_missing_article(self):
+        for body in ({"message": "The route v1/articles/0 could not be found."}, {}, {"message": "<html>Not Found</html>"}):
+            api, _ = client("kauiz", (404, body))
+            with self.assertRaises(site.SiteError) as caught:
+                api.check_access()
+            self.assertIn("alamat dasar", str(caught.exception))
 
     def test_response_without_an_id_is_an_error(self):
         api, _ = client("kauiz", (201, {"success": True, "data": {"title": "x"}}))

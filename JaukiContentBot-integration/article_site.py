@@ -22,7 +22,11 @@ class SiteError(RuntimeError):
 
 
 class NotFound(SiteError):
-    """404 dari situs: artikel tidak ada. Pada check_access ini justru tanda token dan jalur API diterima."""
+    """404 dari situs. `detail` memuat pesan dari situs: "Article not found" berarti jalurnya benar tetapi artikelnya tidak ada."""
+
+    def __init__(self, message: str, detail: str = ""):
+        super().__init__(message)
+        self.detail = detail
 
 
 @dataclass(frozen=True)
@@ -35,7 +39,7 @@ class SiteSpec:
 
 
 SITES = {
-    "kauiz": SiteSpec("kauiz", "https://kauiz.web.id/v1", "featured_image", 5120, "%Y-%m-%d %H:%M:%S"),
+    "kauiz": SiteSpec("kauiz", "https://kauiz.web.id/v1/internal", "featured_image", 5120, "%Y-%m-%d %H:%M:%S"),
     "jauki": SiteSpec("jauki", "https://jaukitugas.my.id/api/internal", "featured_image", 2048, "%Y-%m-%d %H:%M:%S"),
 }
 USER_AGENT = "JaukiArticleWorker/1.0 (+https://jaukitugas.my.id)"
@@ -133,7 +137,7 @@ class ArticleSite:
         if status == 401:
             raise SiteError(f"token API artikel {self.spec.brand} ditolak (401), periksa CONTENT_BOT_TOKEN")
         if status == 404:
-            raise NotFound("artikel tidak ditemukan di situs (404)")
+            raise NotFound("artikel atau jalur API tidak ditemukan di situs (404)", str(payload.get("message", "")))
         if status == 403:
             detail = str(payload.get("message", "")).strip()[:160]
             raise SiteError(f"akses ke situs {self.spec.brand} ditolak (403)" + (f": {detail}" if detail else " tanpa pesan")
@@ -183,11 +187,13 @@ class ArticleSite:
         return self._summary(self._request("POST", f"/articles/{article_id}/schedule", json_body={"scheduled_at": scheduled_at}))
 
     def check_access(self) -> None:
-        """Pemeriksaan murah sebelum menulis artikel atau memanggil Muse: token dan jalur API diterima situs bila artikel nomor 0 dijawab 404."""
+        """Pemeriksaan murah sebelum menulis artikel atau memanggil Muse. Artikel nomor 0 harus dijawab 404 "Article not found" dari aplikasi
+        (token dan jalur benar). 404 lain, misalnya halaman galat framework atau proxy, berarti alamat dasar API salah."""
         try:
             self._request("GET", "/articles/0")
-        except NotFound:
-            return
+        except NotFound as err:
+            if "article not found" not in err.detail.lower():
+                raise SiteError(f"jalur API artikel tidak ditemukan di {self.base_url}/articles (404). Periksa alamat dasar API situs {self.spec.brand}") from err
 
     def get(self, article_id: Any) -> dict[str, Any]:
         return self._summary(self._request("GET", f"/articles/{article_id}"))

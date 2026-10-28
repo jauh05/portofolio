@@ -70,7 +70,7 @@ class ArticleWorkerTests(unittest.TestCase):
         self.assertEqual([update[1] for update in self.client.updates], ["running", "completed"])
         self.assertEqual(self.kinds(), ["task.started", "task.progress", "task.progress", "task.progress", "content.preview_ready", "task.completed"])
         method, url, body = self.send.calls[0]
-        self.assertEqual((method, url), ("POST", "https://kauiz.web.id/v1/articles"))
+        self.assertEqual((method, url), ("POST", "https://kauiz.web.id/v1/internal/articles"))
         self.assertIn(b'name="featured_image"', body)
         self.assertIn(b'name="status"\r\n\r\ndraft', body)
         content = next(fields for event, fields in self.events if event == "content.preview_ready")["content"]
@@ -116,7 +116,7 @@ class ArticleWorkerTests(unittest.TestCase):
         self.events.clear()
         ok, _ = self.run_command(self.command("publish_article"))
         self.assertTrue(ok)
-        self.assertEqual(self.send.calls[1][:2], ("POST", "https://kauiz.web.id/v1/articles/7/publish"))
+        self.assertEqual(self.send.calls[1][:2], ("POST", "https://kauiz.web.id/v1/internal/articles/7/publish"))
         published = next(fields for event, fields in self.events if event == "content.published")["content"]
         self.assertEqual((published["content_id"], published["public_url"]), (11, PUBLISHED["data"]["url"]))
         self.client.updates.clear()
