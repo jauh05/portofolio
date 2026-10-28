@@ -30,8 +30,8 @@ ASPECT_MARK = {"feed": "4:5", "story": "9:16"}
 MARGIN_RULE = {
     "feed": ("Leave the left and right 10 percent of the width and the top and bottom 16 percent of the height free of any text or "
              "important object because the top and bottom will be trimmed, and never let anything touch or get cut off by an edge."),
-    "story": ("Leave the left and right 20 percent of the width free of any text or important object because the sides will be trimmed, "
-              "keep everything below the top 15 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
+    "story": ("Leave the left and right 10 percent of the width free of any text or important object, keep everything below the top "
+              "15 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
 }
 FOOTER_WHERE = {"feed": "At the very bottom", "story": "Near the bottom, inside the safe area"}
 CAPTION_LIMIT = 2200

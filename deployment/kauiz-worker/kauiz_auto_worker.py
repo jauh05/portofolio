@@ -40,7 +40,7 @@ from pathlib import Path
 from typing import Optional
 from zoneinfo import ZoneInfo
 
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 WORKER_DIR = Path(__file__).resolve().parent
 # Token Instagram Login hanya diterima di graph.instagram.com. Token Facebook Login memakai graph.facebook.com.
@@ -445,13 +445,34 @@ def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None
     raise MuseError("respons Muse tidak berisi gambar")
 
 
+def pad_to_canvas(source, canvas, feather=48):
+    """Memasang gambar selebar kanvas tanpa memotong sisinya. Sisa area atas dan bawah diisi versi buram gambar itu sendiri."""
+    width, height = canvas
+    background = ImageOps.fit(source, canvas, method=Image.LANCZOS).filter(ImageFilter.GaussianBlur(40))
+    scaled = source.resize((width, round(source.height * width / source.width)), Image.LANCZOS)
+    top = (height - scaled.height) // 2
+    mask = Image.new("L", scaled.size, 255)
+    for row in range(min(feather, scaled.height // 2)):
+        value = round(255 * row / feather)
+        ImageDraw.Draw(mask).line((0, row, width, row), fill=value)
+        ImageDraw.Draw(mask).line((0, scaled.height - 1 - row, width, scaled.height - 1 - row), fill=value)
+    background.paste(scaled, (0, top), mask)
+    return background
+
+
 def fit_to_canvas(image_bytes, fmt):
-    """Memotong latar ke ukuran kanvas format tanpa mengubah proporsi. Rasio yang meleset dicatat karena tepinya ikut terpotong."""
+    """Menyesuaikan gambar Muse ke kanvas. Muse selalu mengembalikan 2:3. Story dipasang selebar penuh dengan isian buram
+    di atas dan bawah (area yang tertutup tampilan Instagram), sehingga teks di sisi tidak terpotong. Feed dipotong atas dan bawah."""
     with Image.open(io.BytesIO(image_bytes)) as source:
-        target = CANVAS[fmt][0] / CANVAS[fmt][1]
-        if abs(source.width / source.height - target) / target > 0.015:
-            LOG.warning("gambar Muse %dx%d tidak sesuai rasio %s, tepi kiri-kanan atau atas-bawah terpotong", source.width, source.height, ASPECT_RATIO[fmt])
-        return ImageOps.fit(source.convert("RGB"), CANVAS[fmt], method=Image.LANCZOS)
+        rgb = source.convert("RGB")
+    target = CANVAS[fmt][0] / CANVAS[fmt][1]
+    if abs(rgb.width / rgb.height - target) / target <= 0.015:
+        return ImageOps.fit(rgb, CANVAS[fmt], method=Image.LANCZOS)
+    if fmt == "story" and rgb.width / rgb.height > target:
+        LOG.info("gambar Muse %dx%d dipasang selebar penuh dan diisi buram di atas dan bawah untuk story", rgb.width, rgb.height)
+        return pad_to_canvas(rgb, CANVAS[fmt])
+    LOG.warning("gambar Muse %dx%d tidak sesuai rasio %s, tepinya terpotong", rgb.width, rgb.height, ASPECT_RATIO[fmt])
+    return ImageOps.fit(rgb, CANVAS[fmt], method=Image.LANCZOS)
 
 
 # Pola konten untuk pembobotan template, subjek visual (bahasa Inggris, untuk Muse), dan poin untuk topik bawaan.

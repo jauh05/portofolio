@@ -187,6 +187,24 @@ class MuseTests(unittest.TestCase):
             worker.generate_background("p", api_key="", base_url="https://x", model="m", fmt="feed",
                                        transport=lambda url, headers, body: {})
 
+    def test_story_is_padded_not_cropped_so_side_content_survives(self):
+        source = Image.new("RGB", (1280, 1920), (255, 255, 255))
+        draw = __import__("PIL.ImageDraw", fromlist=["ImageDraw"]).Draw(source)
+        draw.rectangle((0, 0, 39, 1919), fill=(255, 0, 0))
+        draw.rectangle((1240, 0, 1279, 1919), fill=(0, 0, 255))
+        buffer = io.BytesIO()
+        source.save(buffer, "PNG")
+        story = worker.fit_to_canvas(buffer.getvalue(), "story")
+        self.assertEqual(story.size, worker.CANVAS["story"])
+        left, right = story.getpixel((2, 960)), story.getpixel((1077, 960))
+        self.assertGreater(left[0], 200)
+        self.assertLess(left[1], 60)
+        self.assertGreater(right[2], 200)
+        self.assertLess(right[0], 60)
+
+    def test_feed_is_cropped_to_four_by_five(self):
+        self.assertEqual(worker.fit_to_canvas(png_bytes((1280, 1920)), "feed").size, worker.CANVAS["feed"])
+
     def test_fit_to_canvas_matches_each_format(self):
         for fmt in worker.FORMATS:
             with self.subTest(fmt=fmt):
