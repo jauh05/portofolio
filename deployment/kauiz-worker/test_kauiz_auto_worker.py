@@ -422,6 +422,11 @@ class MuseTests(unittest.TestCase):
 
 
 class ErrorClassificationTests(unittest.TestCase):
+    def test_media_not_found_right_after_creation_is_transient(self):
+        error = worker.classify_error(400, {}, {"error": {"code": 24, "error_subcode": 2207006, "message": "The requested resource does not exist"}})
+        self.assertIsInstance(error, worker.TransientError)
+        self.assertTrue(error.retryable)
+
     def test_rate_limit_codes_and_429_are_rate_limit(self):
         for status, code in ((429, None), (400, 4), (400, 17), (400, 32), (400, 613), (400, 80001)):
             error = worker.classify_error(status, {}, {"error": {"code": code, "message": "limit"}})

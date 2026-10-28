@@ -52,6 +52,7 @@ class StyleCardTests(unittest.TestCase):
         for template_id in writer.load_styles():
             self.assertIn("left and right 10 percent", write(template_id)["muse_prompt"])
             self.assertIn("left and right 20 percent", write(template_id, "story")["muse_prompt"])
+            self.assertIn("top and bottom 16 percent", write(template_id)["muse_prompt"])
             self.assertIn("bottom 18 percent", write(template_id, "story")["muse_prompt"])
 
     def test_story_prompt_keeps_safe_area_and_story_has_no_caption(self):

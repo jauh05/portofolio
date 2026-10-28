@@ -78,6 +78,8 @@ ASPECT_RATIO = {"feed": "4:5", "story": "9:16"}
 RATE_LIMIT_CODES = {4, 17, 32, 613, 80001}
 AUTH_CODES = {102, 190}
 TRANSIENT_CODES = {1, 2, 9007}
+# Subkode 2207006 (media belum ditemukan) muncul sesaat setelah container dibuat; dicoba lagi seperti 9007.
+TRANSIENT_SUBCODES = {2207006}
 
 EXIT_OK, EXIT_FAILED, EXIT_CONFIG, EXIT_LOCKED = 0, 1, 2, 3
 
@@ -198,7 +200,7 @@ def classify_error(status, headers, body):
         return RateLimitError(message, **details)
     if code in AUTH_CODES:
         return AuthError(message, **details)
-    if status >= 500 or code in TRANSIENT_CODES:
+    if status >= 500 or code in TRANSIENT_CODES or details["subcode"] in TRANSIENT_SUBCODES:
         return TransientError(message, **details)
     return GraphError(message, **details)
 
