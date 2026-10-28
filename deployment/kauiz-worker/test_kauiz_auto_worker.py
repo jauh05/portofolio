@@ -221,6 +221,34 @@ class MuseTests(unittest.TestCase):
         self.assertEqual(feed.size, worker.CANVAS["feed"])
         self.assertGreater(feed.getpixel((540, 3))[1], 200)  # pita merah di atas sudah terpotong
 
+    def test_muse_body_variants_for_the_aspect_ratio(self):
+        self.assertEqual(worker.muse_body("p", "m", "feed", "param")["aspect_ratio"], "4:5")
+        self.assertEqual(worker.muse_body("p", "m", "story", "image_config")["image_config"], {"aspect_ratio": "9:16"})
+        none = worker.muse_body("p", "m", "feed", "none")
+        self.assertNotIn("aspect_ratio", none)
+        self.assertNotIn("image_config", none)
+
+    def test_aspect_mode_reaches_the_request(self):
+        captured = {}
+
+        def transport(url, headers, body):
+            captured.update(body)
+            return {"data": [{"b64_json": base64.b64encode(png_bytes()).decode()}]}
+
+        worker.generate_background("p", api_key="k", base_url="https://x", model="m", fmt="feed", transport=transport, aspect_mode="none")
+        self.assertNotIn("aspect_ratio", captured)
+
+    def test_solid_fill_uses_edge_colors_and_keeps_side_content(self):
+        source = Image.new("RGB", (1280, 1920), (10, 20, 90))
+        __import__("PIL.ImageDraw", fromlist=["ImageDraw"]).Draw(source).rectangle((0, 0, 1279, 30), fill=(255, 203, 61))
+        buffer = io.BytesIO()
+        source.save(buffer, "PNG")
+        story = worker.fit_to_canvas(buffer.getvalue(), "story", fill="solid")
+        self.assertEqual(story.size, worker.CANVAS["story"])
+        top_pad = story.getpixel((540, 5))
+        self.assertGreater(top_pad[0], 150)   # pita kuning di tepi atas menurunkan warna isian atas
+        self.assertGreater(story.getpixel((540, 1900))[2], 60)
+
     def test_transient_muse_failures_are_retried_then_succeed(self):
         raw = png_bytes()
         calls, sleeps = [], []

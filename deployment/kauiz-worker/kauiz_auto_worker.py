@@ -432,7 +432,18 @@ def http_get_bytes(url, timeout=300.0):
         raise MuseTransientError(f"unduh gambar Muse gagal: {err!r}") from err
 
 
-def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None, fetch=None, sleep=time.sleep, waits=(5, 15)):
+def muse_body(prompt, model, fmt, aspect_mode="param"):
+    """Body request Muse. aspect_mode: param (aspect_ratio di body), image_config (di dalam image_config), none (rasio hanya di prompt)."""
+    body = {"model": model, "prompt": prompt, "output_format": "jpeg"}
+    if aspect_mode == "param":
+        body["aspect_ratio"] = ASPECT_RATIO[fmt]
+    elif aspect_mode == "image_config":
+        body["image_config"] = {"aspect_ratio": ASPECT_RATIO[fmt]}
+    return body
+
+
+def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None, fetch=None, sleep=time.sleep, waits=(5, 15),
+                        aspect_mode="param"):
     """Latar dari OpenRouter Images. Body dan respons sama dengan generate_muse_image di bot Jauki."""
     if not api_key:
         raise MuseError("OPENROUTER_API_KEY belum diisi")
@@ -443,7 +454,7 @@ def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None
             payload = transport(
                 f"{base_url.rstrip('/')}/images",
                 {"Authorization": f"Bearer {api_key}"},
-                {"model": model, "prompt": prompt, "aspect_ratio": ASPECT_RATIO[fmt], "output_format": "jpeg"},
+                muse_body(prompt, model, fmt, aspect_mode),
             )
             items = payload.get("data") or []
             item = items[0] if items else {}
@@ -459,13 +470,37 @@ def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None
             sleep(waits[attempt])
 
 
-def pad_to_canvas(source, canvas, feather=48):
+def solid_background(scaled, canvas, position):
+    """Isian polos: tiap sisi memakai warna rata-rata tepi gambar yang berbatasan dengannya."""
+    width, height = canvas
+    left, top = position
+    background = Image.new("RGB", canvas, scaled.resize((1, 1), Image.BOX).getpixel((0, 0)))
+    draw = ImageDraw.Draw(background)
+
+    def edge(box):
+        return scaled.crop(box).resize((1, 1), Image.BOX).getpixel((0, 0))
+
+    w, h = scaled.size
+    if top > 0:
+        draw.rectangle((0, 0, width, top), fill=edge((0, 0, w, min(24, h))))
+        draw.rectangle((0, top + h, width, height), fill=edge((0, max(0, h - 24), w, h)))
+    if left > 0:
+        draw.rectangle((0, 0, left, height), fill=edge((0, 0, min(24, w), h)))
+        draw.rectangle((left + w, 0, width, height), fill=edge((max(0, w - 24), 0, w, h)))
+    return background
+
+
+def pad_to_canvas(source, canvas, feather=48, fill="blur"):
     """Memasang seluruh gambar di dalam kanvas tanpa memotong. Sisa area diisi versi buram gambar itu sendiri."""
     width, height = canvas
     scale = min(width / source.width, height / source.height)
     size = (round(source.width * scale), round(source.height * scale))
     scaled = source.resize(size, Image.LANCZOS)
-    background = ImageOps.fit(source, canvas, method=Image.LANCZOS).filter(ImageFilter.GaussianBlur(40))
+    position = ((width - size[0]) // 2, (height - size[1]) // 2)
+    if fill == "solid":
+        background = solid_background(scaled, canvas, position)
+    else:
+        background = ImageOps.fit(source, canvas, method=Image.LANCZOS).filter(ImageFilter.GaussianBlur(40))
     vertical, horizontal = Image.new("L", size, 255), Image.new("L", size, 255)
     if size[1] < height:
         for row in range(min(feather, size[1] // 2)):
@@ -477,11 +512,11 @@ def pad_to_canvas(source, canvas, feather=48):
             value = round(255 * col / feather)
             ImageDraw.Draw(horizontal).line((col, 0, col, size[1]), fill=value)
             ImageDraw.Draw(horizontal).line((size[0] - 1 - col, 0, size[0] - 1 - col, size[1]), fill=value)
-    background.paste(scaled, ((width - size[0]) // 2, (height - size[1]) // 2), ImageChops.multiply(vertical, horizontal))
+    background.paste(scaled, position, ImageChops.multiply(vertical, horizontal))
     return background
 
 
-def fit_to_canvas(image_bytes, fmt, feed_fit="pad"):
+def fit_to_canvas(image_bytes, fmt, feed_fit="pad", fill="blur"):
     """Menyesuaikan gambar Muse ke kanvas. Muse selalu mengembalikan 2:3. Bawaan: seluruh gambar dipasang utuh dengan isian
     buram di area sisa (story: atas dan bawah yang tertutup tampilan Instagram; feed: sisi kiri dan kanan), jadi tidak ada
     teks yang terpotong. feed_fit="crop" memotong feed ke 4:5 seperti sebelumnya."""
@@ -492,7 +527,7 @@ def fit_to_canvas(image_bytes, fmt, feed_fit="pad"):
         return ImageOps.fit(rgb, CANVAS[fmt], method=Image.LANCZOS)
     if fmt == "story" or feed_fit != "crop":
         LOG.info("gambar Muse %dx%d dipasang utuh dengan isian buram untuk %s", rgb.width, rgb.height, ASPECT_RATIO[fmt])
-        return pad_to_canvas(rgb, CANVAS[fmt])
+        return pad_to_canvas(rgb, CANVAS[fmt], fill=fill)
     LOG.warning("gambar Muse %dx%d tidak sesuai rasio %s, tepinya terpotong", rgb.width, rgb.height, ASPECT_RATIO[fmt])
     return ImageOps.fit(rgb, CANVAS[fmt], method=Image.LANCZOS)
 
@@ -737,7 +772,7 @@ def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
             raise MuseError(f"batas gambar harian tercapai ({used}/{config.max_images_per_day})")
         raw = generate_background(
             prompt, api_key=config.openrouter_api_key, base_url=config.openrouter_base_url,
-            model=config.muse_model, fmt=fmt,
+            model=config.muse_model, fmt=fmt, aspect_mode=config.muse_aspect,
         )
         background_path.parent.mkdir(parents=True, exist_ok=True)
         background_path.write_bytes(raw)
@@ -749,7 +784,7 @@ def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
             "background_treatment": job["variation"]["background_treatment"], "slot_key": slot_key,
         }])[-HISTORY_LIMIT:]
         save_state(config.state_file, state)
-    image = fit_to_canvas(raw, fmt, config.feed_fit)
+    image = fit_to_canvas(raw, fmt, config.feed_fit, config.fill_mode)
     if not text_in_muse(config):
         image = apply_overlay(config, job, plan, topic, image)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -801,6 +836,8 @@ class Config:
     visual_memory_dir: Optional[Path] = None
     max_images_per_day: int = 12
     feed_fit: str = "pad"
+    fill_mode: str = "blur"
+    muse_aspect: str = "param"
     text_mode: str = "muse"
     llm_model: str = LLM_MODEL_DEFAULT
     llm_base_url: str = OPENROUTER_BASE_URL
@@ -847,6 +884,8 @@ def load_config(env):
         visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
         max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "12")),
         feed_fit=get("KAUIZ_FEED_FIT", "pad"),
+        fill_mode=get("KAUIZ_FILL", "blur"),
+        muse_aspect=get("KAUIZ_MUSE_ASPECT", "param"),
         text_mode=get("KAUIZ_TEXT_MODE", "muse"),
         llm_model=get("KAUIZ_LLM_MODEL", LLM_MODEL_DEFAULT),
         llm_base_url=get("KAUIZ_LLM_BASE_URL", OPENROUTER_BASE_URL),

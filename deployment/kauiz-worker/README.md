@@ -105,6 +105,37 @@ palet, dan ukuran (feed 4:5 atau story 9:16). Story tidak memakai caption.
 - Muse bisa mengembalikan rasio yang meleset (story 2:3), lalu tepinya dipotong. Karena itu margin kiri dan kanan story 20 persen.
 - Ejaan teks di gambar ditulis Muse dan belum diperiksa otomatis. Periksa hasil pertama di Instagram.
 
+### Probe rasio Muse
+
+Muse bisa mengembalikan 2:3 walau diminta 4:5. Probe ini mencoba empat cara mengirim rasio (sekitar $0,01 per gambar yang
+berhasil) dan mencetak ukuran gambar yang kembali. Pakai cara yang menghasilkan 1024x1280 atau 4:5 untuk `KAUIZ_MUSE_ASPECT`.
+
+```bash
+cd /home/jauhar/deploy/kauiz/kauiz-worker && python3 - <<'EOF'
+import base64, io, os
+import kauiz_auto_worker as w
+from PIL import Image
+w.load_env_file(w.WORKER_DIR / "worker.env")
+key = os.environ["OPENROUTER_API_KEY"]
+prompt = "Portrait 4:5 composition. A plain cream background with a single navy circle in the center. No text."
+base = {"model": "meta/muse-image", "prompt": prompt, "output_format": "jpeg"}
+variants = {
+    "tanpa parameter": {},
+    "image_config": {"image_config": {"aspect_ratio": "4:5"}},
+    "aspect_ratio": {"aspect_ratio": "4:5"},
+    "size": {"size": "1024x1280"},
+}
+for name, extra in variants.items():
+    try:
+        data = w.http_post_json("https://openrouter.ai/api/v1/images", {"Authorization": f"Bearer {key}"}, {**base, **extra})
+        item = data["data"][0]
+        raw = base64.b64decode(item["b64_json"]) if item.get("b64_json") else w.http_get_bytes(item["url"])
+        print(name, "->", Image.open(io.BytesIO(raw)).size)
+    except Exception as err:
+        print(name, "-> gagal:", str(err)[:200])
+EOF
+```
+
 ## Crontab
 
 Baris di bawah **belum dipasang**. Pasang hanya setelah publish live disetujui. Cron berjalan tiap 5 menit. Jam tayang tidak diatur di crontab, melainkan di file slot.
