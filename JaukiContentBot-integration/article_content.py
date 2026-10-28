@@ -21,6 +21,7 @@ ANALYSIS_KEYS = ("topic", "brief", "key_message", "angle", "hook_direction", "ob
                  "research_summary", "key_findings", "source_evidence")
 WORDS = (350, 1100)
 LIMITS = {"title": 90, "excerpt": 300, "seo_title": 60, "seo_description": 155, "category": 60, "tag": 30}
+PERSON_WORDS = {"student", "students", "person", "people", "man", "woman", "men", "women", "girl", "boy", "someone", "character", "mahasiswa"}
 INDONESIAN_HINTS = {"yang", "dan", "dengan", "untuk", "dari", "pada", "meja", "belajar", "buku", "rapi", "sedang", "seorang", "mahasiswa", "kertas", "catatan"}
 COVER = {"headline_words": 8, "headline_chars": 56, "subline_words": 12, "subline_chars": 72}
 
@@ -64,7 +65,7 @@ def build_messages(brand_data: Mapping[str, Any], payload: Mapping[str, Any], fe
         f"- title maksimal {LIMITS['title']} karakter, excerpt maksimal {LIMITS['excerpt']}, seo_title maksimal {LIMITS['seo_title']}, seo_description maksimal {LIMITS['seo_description']}.\n"
         f"- category satu frasa pendek (maksimal {LIMITS['category']} karakter). tags: 3 sampai 5 kata kunci huruf kecil (maksimal {LIMITS['tag']} karakter per tag).\n"
         f"- cover_headline maksimal {COVER['headline_words']} kata dan {COVER['headline_chars']} karakter (judul singkat untuk gambar sampul). cover_subline maksimal "
-        f"{COVER['subline_words']} kata dan {COVER['subline_chars']} karakter. cover_subject berbahasa Inggris, satu benda atau adegan konkret untuk gambar sampul.\n"
+        f"{COVER['subline_words']} kata dan {COVER['subline_chars']} karakter. cover_subject berbahasa Inggris, satu benda atau sekelompok benda konkret (BUKAN orang), misalnya 'a laptop beside a stack of books and an alarm clock'.\n"
         "- Fakta hanya dari data brand dan bagian 'bahan'. Saran umum yang masuk akal boleh. Jangan mengarang angka, statistik, penelitian, kutipan, nama orang, atau sumber.\n"
         "- Jangan menyebut atau menyiratkan avoid_claims. Harga hanya dari allowed_price_texts atau tidak disebut. Tanpa SARA, politik, makian, atau sindiran kepada orang atau kelompok.\n"
         + ("- Penutup boleh mengajak pembaca mencoba Kauiz di situs brand, tanpa janji berlebihan.\n" if kauiz else
@@ -107,9 +108,8 @@ def validate_article(article: Mapping[str, Any], brand_data: Mapping[str, Any]) 
         errors.append("cover_subline terlalu panjang")
     if '"' in headline + subline:
         errors.append("teks sampul tidak boleh memuat tanda kutip ganda")
-    subject_words = set(re.findall(r"[a-z]+", str(article["cover_subject"]).lower()))
-    if not str(article["cover_subject"]).isascii() or subject_words & INDONESIAN_HINTS:
-        errors.append("cover_subject harus berbahasa Inggris")
+    if not _english_subject(str(article["cover_subject"])):
+        errors.append("cover_subject harus benda atau adegan berbahasa Inggris, bukan orang (kartu sampul sudah menggambar mahasiswa sendiri)")
     blob = " ".join([plain_text(content), *(str(article[key]) for key in ("title", "excerpt", "seo_title", "seo_description", "cover_headline", "cover_subline")),
                      *(str(tag) for tag in tags or [])]).lower()
     avoid = [*brand_data.get("avoid_claims", []), *SENSITIVE_WORDS]
@@ -127,19 +127,23 @@ DEFAULT_SUBJECT = "a tidy student study desk with notebooks, a pencil, and stick
 
 
 def _clip(text: str, limit: int) -> str:
-    """Pangkas di batas kata (dan akhir kalimat bila ada) supaya tidak berhenti di tengah kata."""
+    """Pangkas rapi: utamakan akhir kalimat, lalu batas klausa (titik dua, strip, koma), baru batas kata."""
     text = " ".join(str(text or "").split())
     if len(text) <= limit:
         return text
-    cut = text[:limit].rsplit(" ", 1)[0]
-    sentence = max(cut.rfind(". "), cut.rfind("! "), cut.rfind("? "))
+    head = text[:limit + 1]
+    sentence = max(head.rfind(". "), head.rfind("! "), head.rfind("? "))
     if sentence >= limit * 0.6:
-        cut = cut[:sentence + 1]
-    return cut.rstrip(" ,;:-")
+        return head[:sentence + 1].rstrip()
+    clause = max(head.rfind(": "), head.rfind(" - "), head.rfind(" | "), head.rfind(", "))
+    if clause >= limit * 0.5:
+        return head[:clause].rstrip(" ,;:-|")
+    return text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-|")
 
 
 def _english_subject(subject: str) -> bool:
-    return bool(subject) and subject.isascii() and not set(re.findall(r"[a-z]+", subject.lower())) & INDONESIAN_HINTS
+    words = set(re.findall(r"[a-z]+", subject.lower()))
+    return bool(subject) and subject.isascii() and not words & (INDONESIAN_HINTS | PERSON_WORDS)
 
 
 def _clean(article: Mapping[str, Any]) -> dict[str, Any]:

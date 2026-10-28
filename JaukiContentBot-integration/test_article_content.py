@@ -70,6 +70,17 @@ class CleanTests(unittest.TestCase):
         self.assertLessEqual(len(cleaned["cover_subline"].split()), ac.COVER["subline_words"])
         self.assertEqual(ac.validate_article(cleaned, JAUKI), [])
 
+    def test_titles_are_trimmed_at_a_clause_or_sentence_not_in_the_middle_of_a_phrase(self):
+        self.assertEqual(ac._clip("Tips Mengerjakan Tugas Saat Deadline Mepet: Anti Panik Ala Mahasiswa", 60), "Tips Mengerjakan Tugas Saat Deadline Mepet")
+        self.assertEqual(ac._clip("Kalimat pertama selesai di sini. Kalimat kedua yang cukup panjang untuk terpotong", 45), "Kalimat pertama selesai di sini.")
+        self.assertEqual(ac._clip("pendek", 60), "pendek")
+        self.assertLessEqual(len(ac._clip("kata " * 40, 50)), 50)
+
+    def test_a_person_as_cover_subject_is_replaced_because_the_cards_draw_the_student_themselves(self):
+        for subject in ("A student looking stressed with a laptop", "a woman at a desk", "mahasiswa sedang belajar"):
+            self.assertEqual(ac._clean(valid(cover_subject=subject))["cover_subject"], ac.DEFAULT_SUBJECT, subject)
+            self.assertTrue(ac.validate_article(valid(cover_subject=subject), JAUKI), subject)
+
     def test_non_english_cover_subject_gets_a_safe_default_scene(self):
         self.assertEqual(ac._clean(valid(cover_subject="meja belajar rapi"))["cover_subject"], ac.DEFAULT_SUBJECT)
         self.assertEqual(ac._clean(valid(cover_subject="a laptop and a mug"))["cover_subject"], "a laptop and a mug")
