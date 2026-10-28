@@ -114,6 +114,28 @@ class ErrorTests(unittest.TestCase):
         api, send = client("kauiz", site.SiteError("koneksi putus"), (201, OK))
         self.assertEqual(api.create_draft(ARTICLE)["id"], 7)
 
+    def test_403_explains_that_a_firewall_not_the_token_is_the_likely_cause(self):
+        api, _ = client("jauki", (403, {}))
+        with self.assertRaises(site.SiteError) as caught:
+            api.publish(1)
+        self.assertIn("403", str(caught.exception))
+        self.assertIn("firewall", str(caught.exception))
+        self.assertNotIn("TOKEN-UJI", str(caught.exception))
+
+    def test_requests_carry_their_own_user_agent(self):
+        api, send = client("jauki")
+        api.create_draft(ARTICLE)
+        self.assertTrue(send.calls[0][2]["User-Agent"].startswith("JaukiArticleWorker/"))
+
+    def test_check_access_treats_404_as_success_and_blocks_otherwise(self):
+        api, send = client("kauiz", (404, {"success": False, "message": "Article not found"}))
+        api.check_access()
+        self.assertEqual(send.calls[0][:2], ("GET", "https://kauiz.web.id/v1/articles/0"))
+        for status in (401, 403):
+            api, _ = client("kauiz", (status, {}))
+            with self.assertRaises(site.SiteError):
+                api.check_access()
+
     def test_response_without_an_id_is_an_error(self):
         api, _ = client("kauiz", (201, {"success": True, "data": {"title": "x"}}))
         with self.assertRaises(site.SiteError):

@@ -166,6 +166,7 @@ def handle_generate_article(context: Dict[str, Any], settings: Settings, send: O
     key = _content_id(payload)
     _start(context, f"Generate artikel {brand}", "article_generation", f"Menulis artikel {brand}")
     site = settings.site(brand, send)            # gagal lebih awal bila token situs belum diatur
+    site.check_access()                          # dan bila situs menolak token atau memblokir klien, sebelum menulis dan membayar Muse
     _progress(context, 15, "Menulis artikel dari analisis")
     article = content_writer.write_article(brand, payload, settings.endpoints())
 
@@ -334,6 +335,8 @@ def cli(argv: Optional[list[str]] = None) -> int:
     if not args.brand or not args.topic:
         parser.error("--brand dan --topic wajib untuk preview dan draft")
     payload = {"brand": args.brand, "topic": args.topic, "brief": args.brief, "content_id": "uji-" + hashlib.sha1(args.topic.encode()).hexdigest()[:8]}
+    if args.mode == "draft" and args.live:
+        site.check_access()  # token dan jalur situs diperiksa lebih dulu, sebelum model teks dan Muse dipanggil
     article = content_writer.write_article(args.brand, payload, settings.endpoints())
     words = len(content_writer.plain_text(article["content"]).split())
     print(json.dumps({k: article[k] for k in ("title", "excerpt", "category", "tags", "seo_title", "seo_description", "cover_headline", "cover_subline", "cover_subject")}, ensure_ascii=False, indent=1))
@@ -350,7 +353,7 @@ def cli(argv: Optional[list[str]] = None) -> int:
     if not args.live:
         print("draft tanpa --live tidak membuat apa pun di situs dan tidak memanggil Muse")
         return 0
-    site = settings.site(args.brand)  # token situs diperiksa sebelum Muse dipanggil, supaya gambar tidak terbuang
+    site = settings.site(args.brand) if args.live else None
     cover, layout, _ = make_cover(settings, args.brand, article, payload["content_id"], state)
     summary = site.create_draft(article, cover)
     save_state(settings.state_path, state)

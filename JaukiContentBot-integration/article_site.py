@@ -21,6 +21,10 @@ class SiteError(RuntimeError):
     pass
 
 
+class NotFound(SiteError):
+    """404 dari situs: artikel tidak ada. Pada check_access ini justru tanda token dan jalur API diterima."""
+
+
 @dataclass(frozen=True)
 class SiteSpec:
     brand: str
@@ -34,6 +38,7 @@ SITES = {
     "kauiz": SiteSpec("kauiz", "https://kauiz.web.id/v1", "featured_image", 5120, "%Y-%m-%d %H:%M:%S"),
     "jauki": SiteSpec("jauki", "https://jaukitugas.my.id/api/internal", "featured_image", 2048, "%Y-%m-%d %H:%M:%S"),
 }
+USER_AGENT = "JaukiArticleWorker/1.0 (+https://jaukitugas.my.id)"
 TEXT_FIELDS = ("title", "excerpt", "content", "category", "seo_title", "seo_description", "status", "scheduled_at")
 
 
@@ -73,7 +78,8 @@ def _default_send(method: str, url: str, headers: Mapping[str, str], body: Optio
         try:
             return err.code, json.loads(raw)
         except ValueError:
-            return err.code, {"message": raw[:200]}
+            server = err.headers.get("Server", "") if err.headers else ""
+            return err.code, {"message": (raw[:160] or "badan kosong") + (f" [server: {server}]" if server else "")}
     except (urllib.error.URLError, http.client.HTTPException, OSError, ValueError) as err:
         raise SiteError(f"koneksi ke situs gagal: {err!r}") from err
 
@@ -94,7 +100,8 @@ class ArticleSite:
 
     # -- permintaan -----------------------------------------------------------------
     def _headers(self, extra: Optional[Mapping[str, str]] = None) -> dict[str, str]:
-        return {"Authorization": "Bearer " + self.token, "Accept": "application/json", **(extra or {})}
+        # User-Agent sendiri: firewall seperti Cloudflare sering menolak "Python-urllib" bawaan dengan 403.
+        return {"Authorization": "Bearer " + self.token, "Accept": "application/json", "User-Agent": USER_AGENT, **(extra or {})}
 
     def _request(self, method: str, path: str, *, json_body: Optional[Mapping[str, Any]] = None, multipart: Optional[tuple[bytes, str]] = None) -> dict[str, Any]:
         url = f"{self.base_url}{path}"
@@ -126,7 +133,11 @@ class ArticleSite:
         if status == 401:
             raise SiteError(f"token API artikel {self.spec.brand} ditolak (401), periksa CONTENT_BOT_TOKEN")
         if status == 404:
-            raise SiteError("artikel tidak ditemukan di situs (404)")
+            raise NotFound("artikel tidak ditemukan di situs (404)")
+        if status == 403:
+            detail = str(payload.get("message", "")).strip()[:160]
+            raise SiteError(f"akses ke situs {self.spec.brand} ditolak (403)" + (f": {detail}" if detail else " tanpa pesan")
+                            + ". Token yang salah menghasilkan 401, jadi 403 biasanya berarti firewall atau Cloudflare memblokir klien ini")
         if status == 422:
             errors = payload.get("errors") or {}
             detail = "; ".join(f"{field}: {', '.join(map(str, messages))}" for field, messages in list(errors.items())[:4]) or payload.get("message", "")
@@ -170,6 +181,13 @@ class ArticleSite:
 
     def schedule(self, article_id: Any, scheduled_at: str) -> dict[str, Any]:
         return self._summary(self._request("POST", f"/articles/{article_id}/schedule", json_body={"scheduled_at": scheduled_at}))
+
+    def check_access(self) -> None:
+        """Pemeriksaan murah sebelum menulis artikel atau memanggil Muse: token dan jalur API diterima situs bila artikel nomor 0 dijawab 404."""
+        try:
+            self._request("GET", "/articles/0")
+        except NotFound:
+            return
 
     def get(self, article_id: Any) -> dict[str, Any]:
         return self._summary(self._request("GET", f"/articles/{article_id}"))

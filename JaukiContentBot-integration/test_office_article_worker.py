@@ -27,6 +27,9 @@ class FakeSend:
         self.responses, self.calls = list(responses), []
 
     def __call__(self, method, url, headers, body, timeout=60.0):
+        if method == "GET" and url.endswith("/articles/0"):  # check_access: 404 berarti token dan jalur API diterima
+            self.checks = getattr(self, "checks", 0) + 1
+            return getattr(self, "access", (404, {"success": False, "message": "Article not found"}))
         self.calls.append((method, url, body))
         return self.responses.pop(0) if len(self.responses) > 1 else self.responses[0]
 
@@ -144,6 +147,15 @@ class ArticleWorkerTests(unittest.TestCase):
             self.assertFalse(ok)
             written.assert_not_called()
         self.assertEqual(self.send.calls, [])
+
+    def test_a_site_that_blocks_the_client_fails_before_the_article_is_written_or_the_cover_is_paid_for(self):
+        self.send.access = (403, {})
+        ok, written = self.run_command(self.command())
+        self.assertFalse(ok)
+        self.assertIn("403", self.client.updates[-1][2])
+        written.assert_not_called()
+        self.assertEqual(self.send.calls, [])
+        self.assertEqual(self.send.checks, 1)
 
     def test_errors_never_contain_the_site_token(self):
         self.send = FakeSend((401, {"success": False}))
