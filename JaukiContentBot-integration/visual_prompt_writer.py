@@ -26,14 +26,17 @@ ASPECT_TEXT = {
     "story": ("tall 9:16 story composition, with all text and key subjects kept in the central area and the top 20 percent "
               "and bottom 18 percent left free of any text or important content"),
 }
-ASPECT_MARK = {"feed": "4:5", "story": "9:16"}
+ASPECT_TEXT["article"] = "wide 16:9 landscape article cover composition"
+ASPECT_MARK = {"feed": "4:5", "story": "9:16", "article": "16:9"}
 MARGIN_RULE = {
     "feed": ("Leave the left and right 10 percent of the width and the top 14 percent and bottom 12 percent of the height free of any text "
              "or important object, and never let anything touch or get cut off by an edge."),
     "story": ("Leave the left and right 10 percent of the width free of any text or important object, keep everything below the top "
               "20 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
 }
-FOOTER_WHERE = {"feed": "At the very bottom", "story": "Near the bottom, inside the safe area"}
+MARGIN_RULE["article"] = ("Leave the left and right 10 percent of the width and the top and bottom 12 percent of the height free of any text "
+                          "or important object, and never let anything touch or get cut off by an edge.")
+FOOTER_WHERE = {"feed": "At the very bottom", "story": "Near the bottom, inside the safe area", "article": "At the lower left"}
 CAPTION_LIMIT = 2200
 HASHTAG_RANGE = (3, 12)
 
@@ -64,6 +67,12 @@ def load_layout_styles(path: Optional[Path] = None) -> dict[str, Any]:
 def load_brand_layouts(brand_data: Mapping[str, Any]) -> dict[str, Any]:
     """Kartu tata letak milik brand: `layout_file` di data brand, jika tidak ada dipakai layout-styles.json."""
     return load_layout_styles(MEMORY_DIR / brand_data.get("layout_file", "layout-styles.json"))
+
+
+def load_article_layouts(brand_data: Mapping[str, Any]) -> dict[str, Any]:
+    """Kartu tata letak sampul artikel (16:9) milik brand, di bagian article_templates pada file layout brand itu."""
+    path = MEMORY_DIR / brand_data.get("layout_file", "layout-styles.json")
+    return json.loads(path.read_text(encoding="utf-8"))["article_templates"]
 
 
 def _clip_words(text: str, max_words: int, max_chars: int) -> str:

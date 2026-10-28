@@ -158,6 +158,48 @@ class LayoutCardTests(unittest.TestCase):
         self.assertTrue(prompt)
 
 
+ARTICLE_SOURCE = {"headline": "Cara menulis daftar pustaka tanpa pusing", "subheadline": "Langkah ringkas supaya sumber rapi dan tidak tertukar."}
+
+
+class ArticleCoverTests(unittest.TestCase):
+    def test_each_brand_has_six_article_layouts_in_its_own_style(self):
+        for brand, prefix, color in (("kauiz", "KA", "#D8F810"), ("jauki", "JA", "#F4701B")):
+            data = writer.load_brand_data(brand)
+            layouts = writer.load_article_layouts(data)
+            self.assertEqual(sorted(layouts), [f"{prefix}{i}" for i in range(1, 7)])
+            for layout_id in layouts:
+                prompt = writer.write_content(brand, ARTICLE_SOURCE, {}, layout_id, "article", "a neat stack of books", cta_label=None,
+                                              footer=data["website"], styles=layouts)["muse_prompt"]
+                self.assertIn("16:9", prompt, layout_id)
+                self.assertIn(color, prompt, layout_id)
+                self.assertNotRegex(prompt, r"\{\w+\}", layout_id)
+
+    def test_article_prompts_pass_validation_with_exactly_three_texts(self):
+        for brand in ("kauiz", "jauki"):
+            data = writer.load_brand_data(brand)
+            layouts = writer.load_article_layouts(data)
+            for layout_id, style in layouts.items():
+                result = writer.write_content(brand, ARTICLE_SOURCE, {}, layout_id, "article", "a neat stack of books", cta_label=None,
+                                              footer=data["website"], styles=layouts)
+                copy = result["copy"]
+                content = {"headline": copy["headline"], "subline": copy.get("subline"), "chips": [], "muse_prompt": result["muse_prompt"]}
+                self.assertEqual(writer.validate_content(content, data, style, "article", None, data["website"]), [], (brand, layout_id))
+                self.assertIn("These 3 texts", result["muse_prompt"], (brand, layout_id))
+                self.assertIn(f'reads exactly "{data["website"]}"', result["muse_prompt"])
+                self.assertEqual((result["caption"], result["hashtags"]), ("", []))
+
+    def test_article_covers_do_not_mix_the_two_brands(self):
+        kauiz = writer.load_article_layouts(writer.load_brand_data("kauiz"))
+        jauki = writer.load_article_layouts(writer.load_brand_data("jauki"))
+        self.assertFalse(set(kauiz) & set(jauki))
+        for layout_id in jauki:
+            prompt = writer.write_content("jauki", ARTICLE_SOURCE, {}, layout_id, "article", "books", cta_label=None, footer="jaukitugas.my.id", styles=jauki)["muse_prompt"]
+            self.assertNotIn("#D8F810", prompt)
+        for layout_id in kauiz:
+            prompt = writer.write_content("kauiz", ARTICLE_SOURCE, {}, layout_id, "article", "books", cta_label=None, footer="kauiz.web.id", styles=kauiz)["muse_prompt"]
+            self.assertNotIn("#F4701B", prompt)
+
+
 class CaptionTests(unittest.TestCase):
     def test_deterministic_content_passes_its_own_validation(self):
         brand, styles = writer.load_brand_data("kauiz"), writer.load_styles()

@@ -295,5 +295,123 @@
    "prompt_template": "Dark graphic poster in {aspect}. The background is deep {ink} with faint tall vertical stripes. At the top, a huge tightly stacked headline in {headline_style}, white, centered, reads exactly \"{headline}\", with its last word in {accent}. In the middle, a charcoal (#1B1B1B) rounded panel with a thin {accent} outline holds a black-and-white photograph of {subject}.",
    "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
   }
+ },
+ "article_templates": {
+  "KA1": {
+   "concept": "Gelap bertitik, headline putih dengan blok lime, objek 3D hitam di kanan",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Bold dark tech-style article cover in {aspect}. The background is deep {ink} with a faint dotted grid and subtle grain. On the left, a large stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} highlight block with {ink} text. On the right, a dramatic matte-black 3D render of {subject} with {accent} accents and a sharp rim light.",
+   "footer_style": "a slim rounded {accent} footer bar with {ink} text"
+  },
+  "KA2": {
+   "concept": "Lime penuh, headline hitam, cutout halftone di kanan",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Loud graphic article cover in {aspect}. The background is solid {accent}. On the left, a large stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words inside a solid {ink} box with {accent} text. On the right, a black-and-white halftone cutout of {subject} with a hard shadow."
+  },
+  "KA3": {
+   "concept": "Off-white bersih, highlight lime, objek 3D di batu gelap",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Clean modern article cover in {aspect}. The background is {bg} with a soft {accent} paint smear in one corner. On the left, a large stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} highlight bar. On the right, a realistic 3D render of {subject} rests on a dark rock-like pedestal with a soft shadow."
+  },
+  "KA4": {
+   "concept": "Gelap dengan garis neon lime melengkung",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Sleek dark article cover in {aspect}. The background is deep {ink} with a thin glowing neon {accent} curved arc sweeping across from the right edge. On the left, a large stacked headline in {headline_style}, white, with its last line in {accent}, reads exactly \"{headline}\". On the right, a matte-black 3D render of {subject} with a soft {accent} glow.",
+   "footer_style": "a slim rounded {accent} footer bar with {ink} text"
+  },
+  "KA5": {
+   "concept": "Terbelah: panel lime berisi headline, foto hitam-putih penuh di kanan",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline in the lime panel",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Split-screen article cover in {aspect}. The left 55 percent is a solid {accent} panel holding a large stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\". The right 45 percent is a full-height black-and-white halftone photograph of {subject}."
+  },
+  "KA6": {
+   "concept": "Off-white dengan kartu hitam di kiri, objek 3D menonjol",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "On the card under the headline",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Modern article cover in {aspect}. The background is {bg}. On the left, a big rounded {ink} card holds a large stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} block with {ink} text. A glossy 3D render of {subject} pops out over the card's right edge with a soft shadow."
+  }
  }
 }

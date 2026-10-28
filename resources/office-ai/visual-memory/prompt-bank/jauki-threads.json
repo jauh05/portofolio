@@ -1,0 +1,1507 @@
+{
+ "brand": "jauki",
+ "format": "threads",
+ "description": "150 postingan Threads Jauki: keluh kesah lucu dan tips tugas, tanpa SARA dan sindiran. Tiap materi dipakai sekali.",
+ "items": [
+  {
+   "id": "jt-001",
+   "kind": "keluhan",
+   "text": "Sudah menulis 'menurut para ahli' empat kali, padahal diminta nama ahlinya. Sekarang saya mencari ahli-ahli itu di rak perpustakaan.",
+   "tags": [
+    "#sitasi",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-002",
+   "kind": "keluhan",
+   "text": "Menunggu balasan dosen itu seperti menunggu hujan reda di depan warung: tidak tahu kapan, tapi tidak berani pergi.",
+   "tags": [
+    "#balasandosen",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-003",
+   "kind": "keluhan",
+   "text": "Printer di tempat fotokopi selalu lancar sampai giliran saya. Lalu keluar kertas miring, tinta pudar, dan antrean di belakang makin panjang.",
+   "tags": [
+    "#printer",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-004",
+   "kind": "keluhan",
+   "text": "Giliran presentasi tinggal dua kelompok lagi. Tiba-tiba semua hafalan di kepala berubah jadi satu kalimat: 'baik, terima kasih'.",
+   "tags": [
+    "#presentasi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-005",
+   "kind": "keluhan",
+   "text": "Rapat kelompok dijadwalkan jam 7 malam. Mulai jam 8. Diskusi jam 9. Bahas tugasnya jam 10. Bahas mau makan apa jam 10.05.",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-006",
+   "kind": "keluhan",
+   "text": "Semangat jam 11 malam itu seperti tamu yang datang saat rumah sudah gelap. Saya buka pintu, kami ngobrol sampai jam 3, dan paginya dia menghilang.",
+   "tags": [
+    "#semangatmalam",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-007",
+   "kind": "keluhan",
+   "text": "Pembagian tugas kelompok yang ideal: semua kebagian adil.\nPembagian tugas kelompok di dunia nyata: yang datang paling akhir kebagian 'kesimpulan', karena kelihatannya paling pendek.",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-008",
+   "kind": "keluhan",
+   "text": "Listrik padam tepat setelah saya mengetik paragraf terbaik sepanjang hidup. Belum disimpan, tentu. Sekarang paragrafnya hanya ada di ingatan, dan ingatan saya tidak bisa dipercaya.",
+   "tags": [
+    "#listrik",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-009",
+   "kind": "keluhan",
+   "text": "Daftar tugas minggu ini sudah ditulis di tiga tempat: buku catatan, ponsel, dan telapak tangan. Tetap saja ada yang kelewat.",
+   "tags": [
+    "#tugasmenumpuk",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-010",
+   "kind": "keluhan",
+   "text": "Pertanyaan untuk kamu: kalau ada 5 tugas dan 1 hari, mulai dari yang tersulit, yang termudah, atau yang paling bikin malas? Saya mulai dengan membereskan kamar.",
+   "tags": [
+    "#tugaskuliah",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-011",
+   "kind": "keluhan",
+   "text": "Jam tidur saya sekarang ditentukan oleh jam tugas selesai, bukan jam malam. Kos hening, hanya suara kipas dan keyboard.",
+   "tags": [
+    "#jamtidur",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-012",
+   "kind": "keluhan",
+   "text": "Kuliah jam 7 pagi: badan hadir, nyawa masih di kasur. Untung presensi cuma menghitung badan.",
+   "tags": [
+    "#kuliahpagi",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-013",
+   "kind": "keluhan",
+   "text": "Slide sudah 30 halaman, isinya 29 foto dan 1 kalimat. Tenang, nanti saya jelaskan dengan penuh percaya diri.",
+   "tags": [
+    "#presentasi",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-014",
+   "kind": "keluhan",
+   "text": "Pertanyaan serius: kalau revisi bab 3 ternyata mengubah bab 1, 2, dan 4, berarti bab 3 itu sebenarnya pemimpin bab-bab lain?",
+   "tags": [
+    "#skripsi",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-015",
+   "kind": "keluhan",
+   "text": "Deadline besok pagi, progres baru judul dan nama. Tapi tenang, fontnya sudah dipilih dengan sangat teliti.",
+   "tags": [
+    "#deadline",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-016",
+   "kind": "keluhan",
+   "text": "Jam 11 malam, tiba-tiba semangat mengerjakan tugas muncul. Sayang, dia datang tepat setelah saya berbaring dan lampu sudah gelap.",
+   "tags": [
+    "#semangatmalam",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-017",
+   "kind": "keluhan",
+   "text": "Isi folder tugas saya: Dokumen1, Dokumen2, Dokumen3, Dokumen baru. Isi semuanya satu kalimat. Entah kenapa.",
+   "tags": [
+    "#filehilang",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-018",
+   "kind": "keluhan",
+   "text": "Nama file terakhir di grup kami: tugas_final_revisi_fix_beneran_yang_ini_ya_v3. Kami semua tahu itu belum final.",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-019",
+   "kind": "keluhan",
+   "text": "Berapa kali kamu menekan Ctrl+S dalam satu menit karena pernah kehilangan tugas sekali? Saya 11 kali. Dan baru satu paragraf.",
+   "tags": [
+    "#lupasimpan",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-020",
+   "kind": "keluhan",
+   "text": "Kamar kos saya punya tiga zona: kasur untuk tidur, meja untuk tugas, dan kasur untuk mengerjakan tugas. Meja hanya hiasan.",
+   "tags": [
+    "#anakkos",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-021",
+   "kind": "keluhan",
+   "text": "Produktivitas saya punya jadwal sendiri: padam total jam 9 pagi sampai 10 malam, lalu bangkit penuh tenaga jam 11. Entah siapa yang mengatur.",
+   "tags": [
+    "#semangatmalam",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-022",
+   "kind": "keluhan",
+   "text": "Bagian paling lama dari tugas bukan menulis isinya, tapi menata daftar pustaka supaya koma, titik, dan huruf miringnya persis sesuai panduan.",
+   "tags": [
+    "#daftarpustaka",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-023",
+   "kind": "keluhan",
+   "text": "Untuk kamu yang juga produktif setelah jam 11 malam: kalau semangat bisa ditarik ke jam 2 siang, kira-kira tugas kita sudah selesai berapa banyak? Ada yang sama?",
+   "tags": [
+    "#semangatmalam",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-024",
+   "kind": "keluhan",
+   "text": "Satu coretan di margin bisa mengubah rencana akhir pekan seseorang. Semangat, para pejuang revisi.",
+   "tags": [
+    "#revisi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-025",
+   "kind": "keluhan",
+   "text": "Alarm jam 5.30, 5.35, 5.40, 5.45. Kuliah jam 7. Hitungannya saya paham, hanya tidak mau menerima.",
+   "tags": [
+    "#kuliahpagi",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-026",
+   "kind": "keluhan",
+   "text": "Lupa tekan simpan, lalu laptop restart sendiri. Tidak ada yang lebih sunyi daripada layar yang menampilkan dokumen kosong.",
+   "tags": [
+    "#lupasimpan",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-027",
+   "kind": "keluhan",
+   "text": "Animasi slide yang ditambah jam 1 pagi terasa seperti ide cemerlang. Paginya: kenapa judulnya terbang dari kiri tiga kali?",
+   "tags": [
+    "#slide",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-028",
+   "kind": "keluhan",
+   "text": "Jam 2 pagi. Laporan baru 3 halaman dari 15. Kopi habis, semangat tinggal setengah, dan tiba-tiba merapikan meja terasa lebih penting daripada tugas. Ada yang begini juga? ☕",
+   "tags": [
+    "#begadang",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-029",
+   "kind": "keluhan",
+   "text": "Datang kuliah pagi dengan rambut basah, sandal beda sebelah, dan semangat 30 persen. Yang penting hadir. Semangat, para penghuni kursi belakang!",
+   "tags": [
+    "#kuliahpagi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-030",
+   "kind": "keluhan",
+   "text": "Baterai laptop 3 persen, charger ketinggalan di kos, tugas tinggal kesimpulan. Kita sedang diuji, atau ini cuma Rabu biasa?",
+   "tags": [
+    "#laptop",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-031",
+   "kind": "keluhan",
+   "text": "Hari ke-5 menunggu balasan. Saya lebih hafal tampilan 'terakhir dilihat' daripada wajah teman sekelas.",
+   "tags": [
+    "#balasandosen",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-032",
+   "kind": "keluhan",
+   "text": "Wi-Fi kos: kencang jam 3 pagi saat semua tidur, mendadak lemot jam 8 malam saat saya harus upload tugas. Tolong jelaskan logika alam semesta.",
+   "tags": [
+    "#wifi",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-033",
+   "kind": "keluhan",
+   "text": "Pukul 1 pagi, kos sunyi, perut ikut protes. Mi instan di dapur bersama sudah jadi sahabat tugas sejak semester dua. 🍜",
+   "tags": [
+    "#anakkos",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-034",
+   "kind": "keluhan",
+   "text": "Senin: 1 tugas. Selasa: 2 tugas. Rabu: kuis. Kamis: laporan dan presentasi. Jumat: semuanya jatuh tempo bersamaan. Kalender saya sudah minta pensiun.",
+   "tags": [
+    "#tugasmenumpuk",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-035",
+   "kind": "keluhan",
+   "text": "Minggu ini semua mata kuliah memberi tugas di hari yang sama. Kebetulan yang terlalu rapi.",
+   "tags": [
+    "#tugasmenumpuk",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-036",
+   "kind": "keluhan",
+   "text": "Bimbingan jam 10, revisi sampai jam 5 sore. Benerin satu hal, muncul tiga hal baru. Skripsi ini mirip permainan tepuk tikus.",
+   "tags": [
+    "#skripsi",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-037",
+   "kind": "keluhan",
+   "text": "Ekspektasi: mengerjakan tugas dari seminggu lalu, santai, tidur cukup.\nKenyataan: mengerjakan tugas 6 jam sebelum batas kumpul sambil menghitung mundur di kepala.",
+   "tags": [
+    "#deadline",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-038",
+   "kind": "keluhan",
+   "text": "Laptop memilih momen paling pas untuk update: 2 jam sebelum batas kumpul. Bar-nya 12 persen. Saya dan bar itu sama-sama menunggu keajaiban.",
+   "tags": [
+    "#laptop",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-039",
+   "kind": "keluhan",
+   "text": "Ekspektasi: presentasi lancar, audiens mengangguk.\nKenyataan: proyektor tidak mau tersambung, kabel kurang panjang, dan yang tampil malah catatan pembicara.",
+   "tags": [
+    "#presentasi",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-040",
+   "kind": "keluhan",
+   "text": "Rasanya baru satu menit buka laptop di kamar kos, ternyata sudah subuh. Waktu di kamar ini punya hukum fisikanya sendiri.",
+   "tags": [
+    "#jamtidur",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-041",
+   "kind": "keluhan",
+   "text": "Saya menulis: 'Selamat siang, mohon maaf mengganggu waktunya.' Sepuluh menit memilih kalimat pembuka, tiga menit mengetik pertanyaannya.",
+   "tags": [
+    "#balasandosen",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-042",
+   "kind": "keluhan",
+   "text": "Titik atau koma setelah nama penulis? Huruf miring untuk judul buku atau jurnal? Tahun pakai kurung atau tidak? Daftar pustaka itu ujian kesabaran paling sunyi.",
+   "tags": [
+    "#daftarpustaka",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-043",
+   "kind": "keluhan",
+   "text": "Daftar perasaan setelah file revisi dibuka:\n1. Penasaran\n2. Deg-degan\n3. Warna merah di mana-mana\n4. Pura-pura santai",
+   "tags": [
+    "#revisi",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-044",
+   "kind": "keluhan",
+   "text": "Chat ke dosen: terkirim. Dibaca: 09.14. Dibalas: belum. Saya sudah menyusun tiga skenario di kepala dan semuanya penuh drama.",
+   "tags": [
+    "#balasandosen",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-045",
+   "kind": "keluhan",
+   "text": "Revisinya cuma satu kalimat: 'tolong dipertajam'. Bagian mana yang dipertajam masih jadi misteri. Akhirnya satu bab saya tajamkan semuanya.",
+   "tags": [
+    "#revisi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-046",
+   "kind": "keluhan",
+   "text": "Batas kumpul jam 23.59 itu bukan batas, itu undangan resmi untuk mulai mengerjakan jam 23.00.",
+   "tags": [
+    "#deadline",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-047",
+   "kind": "keluhan",
+   "text": "Kalau ada yang tanya kenapa saya selalu duduk dekat pintu di kuliah pagi: strategi. Bukan untuk kabur, hanya supaya masuknya tidak terlalu kelihatan telat.",
+   "tags": [
+    "#kuliahpagi",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-048",
+   "kind": "keluhan",
+   "text": "Bangga sekali waktu daftar pustaka sudah rapi, lalu sadar sitasi di dalam teks belum ada satu pun. Lengkap sudah.",
+   "tags": [
+    "#daftarpustaka",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-049",
+   "kind": "keluhan",
+   "text": "Di kerja kelompok, peran saya jelas: yang tiba-tiba rajin mengetik jam 1 malam karena tidak enak hati melihat file masih kosong.",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-050",
+   "kind": "keluhan",
+   "text": "Flashdisk yang saya pinjam sebelum presentasi: kosong. Flashdisk saya sendiri: tertinggal di kos. Akhirnya kirim file ke diri sendiri dan bersyukur masih ada sinyal.",
+   "tags": [
+    "#filehilang",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-051",
+   "kind": "tips",
+   "text": "Tugas macet di kalimat pertama? Tulis dulu \"Pada tugas ini saya akan membahas...\" walau kaku banget. Kalimat itu boleh dihapus nanti. Yang penting jarimu sudah bergerak, dan halaman kosong berhenti menatapmu balik.",
+   "tags": [
+    "#tipskuliah",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-052",
+   "kind": "tips",
+   "text": "Kalau tugas terasa terlalu berat untuk dimulai, kecilkan targetnya sampai konyol. Bukan \"kerjakan makalah\", tapi \"buka file dan tulis judul\". Biasanya setelah judul jadi, tangan lanjut sendiri. Kalaupun tidak, kamu tetap sudah lebih maju dari tadi.",
+   "tags": [
+    "#memulai",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-053",
+   "kind": "tips",
+   "text": "Dulu aku harus punya suasana sempurna dulu baru mulai: meja rapi, minuman siap, playlist pas. Ujungnya malah dua jam menata meja. Sekarang aturannya: mulai sepuluh menit di mana pun duduk, merapikan meja belakangan. 😅",
+   "tags": [
+    "#tipskuliah",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-054",
+   "kind": "tips",
+   "text": "Macet karena bingung mulai dari mana? Tulis tiga pertanyaan yang harus dibahas tugasmu, lalu kerjakan yang paling gampang dulu. Urutan di dokumen bisa diatur belakangan. Kamu punya trik sendiri untuk memecah kebuntuan?",
+   "tags": [
+    "#memulai",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-055",
+   "kind": "tips",
+   "text": "Tugas besar itu seperti semangkuk mi yang menggunung: kalau ditatap sekaligus, kenyang duluan. Pecah jadi langkah kecil: cari bahan, bikin kerangka, tulis tiap bagian, rapikan. Centang satu per satu, rasanya lumayan memuaskan.",
+   "tags": [
+    "#tugasbesar",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-056",
+   "kind": "tips",
+   "text": "Cara memecah tugas: mulai dari tanggal kumpul, lalu hitung mundur. Kapan draf harus jadi? Kapan bahan harus terkumpul? Dengan hitungan mundur, kamu tahu hari ini harus ngapain, bukan cuma tahu bahwa deadline itu ada.",
+   "tags": [
+    "#manajemenwaktu",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-057",
+   "kind": "tips",
+   "text": "Langkah kecil yang baik itu bisa selesai dalam satu kali duduk dan jelas kapan selesainya. \"Kerjakan bab 2\" terlalu kabur. \"Tulis tiga paragraf latar belakang\" jelas. Coba ubah satu daftar tugasmu hari ini jadi seperti itu.",
+   "tags": [
+    "#tugasbesar",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-058",
+   "kind": "tips",
+   "text": "Tugas besar sering kali sebenarnya beberapa pekerjaan kecil yang menyamar. Kerangka, bahan tiap bagian, draf, lalu rapi-rapi. Empat pekerjaan kecil terasa lebih ramah daripada satu monster. Kamu biasanya memecahnya jadi berapa langkah?",
+   "tags": [
+    "#tipskuliah",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-059",
+   "kind": "tips",
+   "text": "Coba 25 menit kerja, lalu 5 menit istirahat. Selama 25 menit itu, hp tengkurap dan tab lain ditutup. Kalau muncul ide random, catat di kertas lalu lanjut. Setelah empat putaran, istirahatnya boleh lebih panjang. ⏱️",
+   "tags": [
+    "#fokus",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-060",
+   "kind": "tips",
+   "text": "Fokus itu bukan soal kuat-kuatan niat, tapi soal mengurangi godaan. Taruh hp di ruangan lain, atau minimal di luar jangkauan tangan. Aku pernah mengecek hp \"sebentar\" dan tiba-tiba tiga puluh menit lewat. Kamu juga?",
+   "tags": [
+    "#fokus",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-061",
+   "kind": "tips",
+   "text": "Sebelum mulai sesi fokus, tulis satu kalimat: \"Di sesi ini aku mau menyelesaikan ...\". Target yang jelas bikin kamu tidak melantur ke mana-mana. Selesai sesi, cek apakah tercapai. Kalau belum, ya tidak apa-apa, lanjut sesi berikutnya.",
+   "tags": [
+    "#belajar",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-062",
+   "kind": "tips",
+   "text": "Otak butuh jeda. Saat istirahat, berdiri, minum air, lalu lihat sesuatu yang jauh dari layar. Jangan mengganti satu layar dengan layar lain, itu bukan istirahat, itu pindah kerja. Pengakuan: aku sering begitu.",
+   "tags": [
+    "#fokus",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-063",
+   "kind": "tips",
+   "text": "Draf pertama boleh jelek. Tugasnya cuma satu: ada. Menulis dan menyunting itu dua pekerjaan berbeda, dan kalau dilakukan bersamaan, dua-duanya jadi lambat. Tulis dulu sampai habis, rapikan belakangan.",
+   "tags": [
+    "#menulis",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-064",
+   "kind": "tips",
+   "text": "Dulu aku menghapus kalimat berkali-kali sebelum satu paragraf jadi. Sekarang kalau ragu, kutulis saja lalu kuberi tanda [cek]. Setelah semua bagian terisi, baru kembali ke tanda itu satu per satu. Jauh lebih lancar.",
+   "tags": [
+    "#skripsi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-065",
+   "kind": "tips",
+   "text": "Draf jelek itu seperti adonan: belum bagus, tapi sudah bisa dibentuk. Halaman kosong tidak bisa dibentuk. Jadi tulis apa adanya dulu, lalu baca ulang dengan kepala dingin dan potong yang tidak perlu. 🍞",
+   "tags": [
+    "#menulis",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-066",
+   "kind": "tips",
+   "text": "Saat menulis draf, biarkan kalimatnya panjang dan berantakan dulu. Waktu merapikan, baru pecah jadi kalimat pendek dan buang kata yang berulang. Dua langkah ini lebih ringan daripada berusaha sempurna dalam sekali jalan. Kamu tim langsung rapi atau tim rapikan nanti?",
+   "tags": [
+    "#tipskuliah",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-067",
+   "kind": "tips",
+   "text": "Mencatat sumber sambil membaca itu hemat waktu. Begitu menemukan kutipan atau data yang berguna, langsung catat penulis, tahun, judul, dan halaman. Mencari ulang sumber jam sebelas malam rasanya tidak menyenangkan.",
+   "tags": [
+    "#referensi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-068",
+   "kind": "tips",
+   "text": "Bikin satu file catatan bacaan dengan tiga kolom: sumber, poin penting, dan \"mau dipakai di bagian mana\". Nanti saat menulis, kamu tinggal buka satu file, bukan lima belas tab. Kamu punya format catatan sendiri?",
+   "tags": [
+    "#referensi",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-069",
+   "kind": "tips",
+   "text": "Parafrase yang baik bukan sekadar mengganti beberapa kata. Baca bagiannya, tutup sumbernya, lalu jelaskan dengan bahasamu sendiri. Setelah itu tetap cantumkan sumbernya, karena ide itu milik penulis aslinya. Jujur itu bikin tidur lebih tenang.",
+   "tags": [
+    "#kejujuranakademik",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-070",
+   "kind": "tips",
+   "text": "Pilih satu format kutipan sejak awal, sesuai aturan yang diminta dosen atau program studimu, dan pakai terus. Kalau berganti-ganti, merapikan daftar pustaka di akhir bisa memakan waktu lama.",
+   "tags": [
+    "#daftarpustaka",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-071",
+   "kind": "tips",
+   "text": "Beri nama file dengan pola tanggal_matakuliah_versi, misalnya 2026-10-28_etika_v2. Kalau diurutkan, versi terbaru ketahuan. Hindari \"final_beneran_revisi_terakhir_fix\", karena besok kamu sendiri lupa mana yang paling baru.",
+   "tags": [
+    "#backup",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-072",
+   "kind": "tips",
+   "text": "Simpan salinan tugas di dua tempat berbeda, misalnya laptop dan penyimpanan online. Laptop bisa mati mendadak, flashdisk bisa hilang. Aku pernah kehilangan dua jam kerja karena malas menyimpan. Sekarang tiap satu bagian selesai, langsung kusimpan. 💾",
+   "tags": [
+    "#backup",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-073",
+   "kind": "tips",
+   "text": "Sebelum mengubah tugas secara besar-besaran, simpan dulu sebagai versi baru (v2, v3). Kalau hasil editanmu ternyata lebih berantakan, kamu bisa balik ke versi sebelumnya tanpa panik.",
+   "tags": [
+    "#tipskuliah",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-074",
+   "kind": "tips",
+   "text": "Kebiasaan kecil yang menolong: simpan tiap beberapa menit, dan nyalakan simpan otomatis kalau tersedia. Satu lagi, kirim salinan ke emailmu sendiri sebelum hari kumpul. Kamu punya kebiasaan backup yang aman?",
+   "tags": [
+    "#backup",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-075",
+   "kind": "tips",
+   "text": "Slide yang enak dilihat itu pendek. Satu slide, satu ide. Kalau satu slide berisi paragraf panjang, audiens akan membaca sambil mengabaikanmu. Taruh poin singkat di slide, penjelasannya kamu ucapkan.",
+   "tags": [
+    "#presentasi",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-076",
+   "kind": "tips",
+   "text": "Pilih satu jenis huruf dan dua atau tiga warna saja untuk seluruh slide. Tampilannya jadi konsisten dan tidak ramai. Pastikan tulisan masih terbaca dari kursi paling belakang.",
+   "tags": [
+    "#presentasi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-077",
+   "kind": "tips",
+   "text": "Latihan presentasi dengan suara keras, bukan di kepala. Di kepala semuanya terasa lancar, begitu bersuara baru ketahuan bagian mana yang tersendat. Rekam dirimu kalau berani, lumayan membuka mata. 🎤",
+   "tags": [
+    "#presentasi",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-078",
+   "kind": "tips",
+   "text": "Slide pembuka cukup menjelaskan apa yang mau dibahas dan kenapa itu penting. Slide penutup: satu kalimat inti yang ingin diingat. Sisanya mengalir di antara keduanya. Kamu biasanya membuka presentasi dengan apa?",
+   "tags": [
+    "#slide",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-079",
+   "kind": "tips",
+   "text": "Email ke dosen sebaiknya punya subjek yang jelas, misalnya \"Konsultasi Tugas Etika - Nama - NIM\". Sapaan sopan, isi singkat, sebutkan nama dan mata kuliahmu. Dosen menerima banyak email, jadi yang jelas biasanya lebih mudah ditanggapi.",
+   "tags": [
+    "#emaildosen",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-080",
+   "kind": "tips",
+   "text": "Struktur email sopan: salam, perkenalan singkat (nama, kelas, mata kuliah), inti permintaan, lalu terima kasih. Contoh inti: \"Saya ingin menanyakan jadwal konsultasi minggu ini.\" Pendek, jelas, tidak berputar-putar.",
+   "tags": [
+    "#emaildosen",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-081",
+   "kind": "tips",
+   "text": "Sebelum menekan kirim, tanyakan dirimu: apakah hal ini sudah tertulis di panduan tugas? Kalau sudah, baca dulu. Kalau belum, tulis pertanyaannya yang spesifik. Cek juga ejaan nama dan gelar dosennya, salah ketik di situ malunya lama. 😬",
+   "tags": [
+    "#emaildosen",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-082",
+   "kind": "tips",
+   "text": "Kalau mau menanyakan perpanjangan waktu, sampaikan alasan singkat dan jujur, lalu tawarkan kapan kamu bisa mengumpulkan, misalnya \"Apakah boleh saya kumpulkan hari Jumat?\" Hindari alasan bertele-tele. Kalau belum dibalas, tunggu beberapa hari kerja baru tanya ulang dengan sopan.",
+   "tags": [
+    "#tipskuliah",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-083",
+   "kind": "tips",
+   "text": "Bagi tugasmu ke empat kotak: penting dan mendesak, penting tapi tidak mendesak, mendesak tapi tidak penting, dan sisanya. Kerjakan kotak pertama dulu, jadwalkan kotak kedua. Rasanya lebih tenang karena tahu mana yang harus diurus lebih dulu.",
+   "tags": [
+    "#prioritas",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-084",
+   "kind": "tips",
+   "text": "Tulis tiga hal terpenting untuk hari ini, jangan lebih. Daftar dua puluh poin biasanya cuma bikin bingung mulai dari mana. Tiga hal selesai itu sudah hari yang bagus. ✅",
+   "tags": [
+    "#manajemenwaktu",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-085",
+   "kind": "tips",
+   "text": "Jadwalkan tugas di kalender, bukan cuma di kepala. Beri jam yang spesifik: \"Kamis 19.00 kerjakan kerangka\". Kepala itu tempat berpikir, bukan tempat menyimpan daftar. Kamu pakai kalender atau buku catatan?",
+   "tags": [
+    "#jadwal",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-086",
+   "kind": "tips",
+   "text": "Kerjakan tugas yang butuh pikiran paling berat di jam ketika kamu paling segar. Buat sebagian orang itu pagi, buat sebagian lain malam. Kenali jam terbaikmu, dan simpan pekerjaan ringan seperti merapikan format untuk jam yang sudah lelah.",
+   "tags": [
+    "#manajemenwaktu",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-087",
+   "kind": "tips",
+   "text": "Sebelum membaca satu bab, lihat dulu judul, subjudul, dan kalimat awal tiap paragraf. Itu membantu otakmu punya gambaran peta sebelum masuk ke detail. Bacaan terasa lebih ringan karena tidak kaget di tiap halaman.",
+   "tags": [
+    "#bacacepat",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-088",
+   "kind": "tips",
+   "text": "Membaca sambil menyorot semua kalimat itu jebakan, nanti satu halaman kuning semua. Coba sorot hanya satu atau dua poin per halaman, lalu tulis ringkasannya dengan kata-katamu sendiri di pinggir. 🖍️",
+   "tags": [
+    "#belajar",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-089",
+   "kind": "tips",
+   "text": "Mau tahu kamu sudah paham atau belum? Tutup bukunya, lalu jelaskan isinya seolah mengajari teman. Bagian yang bikin kamu tersendat adalah bagian yang perlu dibaca ulang. Agak malu bicara sendirian, tapi lumayan menolong.",
+   "tags": [
+    "#belajar",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-090",
+   "kind": "tips",
+   "text": "Belajar sedikit tapi sering biasanya lebih nyaman daripada begadang menjelang ujian. Tiga puluh menit sehari selama beberapa hari bisa lebih bersahabat daripada satu malam penuh. Kamu tim cicil atau tim kebut semalam?",
+   "tags": [
+    "#belajar",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-091",
+   "kind": "tips",
+   "text": "Sebelum mengumpulkan, baca tugasmu dengan suara keras. Telingamu sering menangkap kalimat janggal dan kata yang terlewat, yang tidak terlihat oleh mata. Kalau napasmu habis di tengah kalimat, kalimatnya kepanjangan.",
+   "tags": [
+    "#ejaan",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-092",
+   "kind": "tips",
+   "text": "Cek tiga hal sebelum kumpul: huruf kapital di awal kalimat dan nama, tanda baca di akhir kalimat, dan kata baku. Sekalian cari spasi ganda dan kata yang terketik dua kali. Beberapa menit yang menyelamatkan kesan pertama.",
+   "tags": [
+    "#tandabaca",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-093",
+   "kind": "tips",
+   "text": "Kesalahan yang sering lolos: \"di\" sebagai awalan menempel pada kata kerja (dimakan), sedangkan \"di\" penunjuk tempat dipisah (di kampus). Coba cari semua \"di\" di tugasmu dan periksa satu-satu. Dulu banyak yang lolos di tugasku.",
+   "tags": [
+    "#ejaan",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-094",
+   "kind": "tips",
+   "text": "Cetak tugasmu atau ubah ukuran hurufnya sebelum mengoreksi. Tampilan yang berbeda membuat mata melihat tulisan seperti baru, sehingga salah ketik lebih mudah ketahuan. Trik sederhana yang lumayan menolong.",
+   "tags": [
+    "#ejaan",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-095",
+   "kind": "tips",
+   "text": "Di awal kerja kelompok, tulis siapa mengerjakan apa dan kapan batasnya. Satu kalimat per orang sudah cukup. Banyak salah paham kelompok berawal dari \"kupikir kamu yang kerjakan\".",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-096",
+   "kind": "tips",
+   "text": "Pakai satu dokumen bersama, dan sepakati satu orang yang menggabungkan hasil akhir. Kalau tiap orang mengedit file sendiri, menyatukannya jadi teka-teki. Kamu pernah punya kelompok dengan lima versi file sekaligus?",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-097",
+   "kind": "tips",
+   "text": "Tetapkan tenggat internal kelompok, misalnya dua hari sebelum deadline sebenarnya. Waktu dua hari itu dipakai untuk menggabungkan, merapikan, dan menghadapi kejutan kecil yang biasanya muncul di menit terakhir.",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-098",
+   "kind": "tips",
+   "text": "Rapat kelompok singkat lebih bersahabat: siapkan tiga hal yang mau diputuskan, bahas satu per satu, tutup dengan mengulang pembagian tugas. Kalau semua sepakat, catat di grup supaya tidak ada yang lupa.",
+   "tags": [
+    "#kerjakelompok",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-099",
+   "kind": "tips",
+   "text": "Begadang untuk tugas kadang tak terhindarkan, tapi biasanya otak yang kurang tidur bekerja lebih lambat dan lebih sering salah ketik. Kalau bisa, berhenti di jam yang wajar dan lanjutkan setelah tidur. Besok pagi, kalimat yang macet sering terasa lebih mudah. 😴",
+   "tags": [
+    "#tidur",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-100",
+   "kind": "tips",
+   "text": "Energi itu bahan bakar tugas. Makan teratur, minum air putih, dan bergerak sebentar tiap beberapa jam membantu kepala tetap jernih. Aku pernah mengerjakan tugas dalam keadaan lapar dan hasilnya cuma tiga kalimat plus keluhan. Kamu punya kebiasaan penyemangat?",
+   "tags": [
+    "#energi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-101",
+   "kind": "keluhan",
+   "text": "Draf email ke dosen sudah kutulis ulang tujuh kali. Isinya cuma 'Selamat siang, izin bertanya'. Jempol sudah di tombol kirim, tapi hati belum siap. Akhirnya layar kututup dan aku makan dulu. 😅",
+   "tags": [
+    "#emaildosen",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-102",
+   "kind": "tips",
+   "text": "Takut kirim email ke dosen? Pakai tiga bagian saja: salam plus nama dan kelas, satu pertanyaan yang jelas, lalu terima kasih. Judul emailnya juga dibuat spesifik, misalnya nama mata kuliah dan keperluannya. Makin ringkas, biasanya makin mudah dibalas.",
+   "tags": [
+    "#etikaemail",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-103",
+   "kind": "keluhan",
+   "text": "Tugas yang dikerjakan seminggu rasanya berat, tapi tugas yang dikerjakan tiga jam sebelum tenggat entah kenapa selesai juga. Aku jadi curiga otakku baru mau jalan kalau ada hitung mundur.",
+   "tags": [
+    "#deadline",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-104",
+   "kind": "tips",
+   "text": "Terpaksa kerja di menit terakhir? Urutannya begini:\n1. Kerjakan bagian yang bobot nilainya paling besar.\n2. Tulis kerangka kasar dulu, rapikan belakangan.\n3. Sisakan 10 menit terakhir untuk cek nama berkas dan pastikan yang diunggah memang versi terbaru.",
+   "tags": [
+    "#kebutsemalam",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-105",
+   "kind": "keluhan",
+   "text": "Mencari jurnal di portal perpustakaan itu seperti main tebak-tebakan. Kata kunci A: 3 hasil. Kata kunci B: ribuan hasil yang tidak nyambung. Jalan tengahnya entah di mana.",
+   "tags": [
+    "#carijurnal",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-106",
+   "kind": "tips",
+   "text": "Susah menemukan jurnal? Buat daftar tiga sinonim untuk topikmu, lalu gabungkan dengan AND atau OR di kolom pencarian. Cek juga daftar pustaka dari satu jurnal yang cocok, dari situ biasanya ketemu jurnal lain yang searah.",
+   "tags": [
+    "#jurnal",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-107",
+   "kind": "keluhan",
+   "text": "Kata pengantar itu bagian paling pendek tapi paling lama kupandangi. Semua bab sudah jadi, kalimat pembukanya tetap kosong. Mau berterima kasih ke banyak orang, tapi takut ada satu nama yang kelewatan.",
+   "tags": [
+    "#katapengantar",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-108",
+   "kind": "tips",
+   "text": "Abstrak lebih enak ditulis paling akhir. Susun lima kalimat: latar masalah, tujuan, metode, hasil utama, kesimpulan. Satu kalimat per bagian, setelah itu baru dirapikan dan dipangkas sesuai batas kata.",
+   "tags": [
+    "#abstrak",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-109",
+   "kind": "keluhan",
+   "text": "Bimbingan online: kamera menyala, mikrofon senyap, sinyal putus tepat saat dosen mulai menjelaskan bagian yang paling penting. Layar membeku, dan aku hanya bisa mengangguk kepada gambar diam.",
+   "tags": [
+    "#bimbinganonline",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-110",
+   "kind": "tips",
+   "text": "Sebelum bimbingan online, kirim dulu berkas terbaru dan 3 pertanyaan yang ingin dibahas. Saat sesi, catat arahan di layar lain. Setelah selesai, tulis ringkasan dan kirim untuk dikonfirmasi supaya tidak ada yang salah tangkap.",
+   "tags": [
+    "#bimbingan",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-111",
+   "kind": "keluhan",
+   "text": "Tugas video berdurasi dua menit, bahan rekamannya satu jam. Mengedit tiga jam, lalu mengekspor ulang dua kali karena ada teks layar yang salah ketik. Ukuran berkas akhirnya tetap terlalu besar untuk diunggah.",
+   "tags": [
+    "#tugasvideo",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-112",
+   "kind": "tips",
+   "text": "Bikin video tugas? Tulis naskah dulu, rekam suara di ruangan yang tenang (dekat lemari baju membantu meredam gema), dan cek semua teks layar sebelum ekspor. Satu kali ekspor yang benar lebih hemat waktu daripada tiga kali ekspor ulang.",
+   "tags": [
+    "#editvideo",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-113",
+   "kind": "keluhan",
+   "text": "Membuat poster itu mudah, katanya. Lalu aku menghabiskan 45 menit menggeser satu kotak teks ke kiri sedikit, ke kanan sedikit, lalu kembali ke tempat semula. ✨",
+   "tags": [
+    "#tugasposter",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-114",
+   "kind": "tips",
+   "text": "Poster yang enak dilihat itu sederhana: maksimal dua jenis huruf, tiga warna, judul paling besar, dan ruang kosong yang cukup di sekitar teks. Coba perkecil tampilannya di layar. Kalau masih terbaca, berarti sudah bagus.",
+   "tags": [
+    "#desainposter",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-115",
+   "kind": "keluhan",
+   "text": "Praktikum hari ini berjalan lancar. Laporannya yang tidak. Data ada, grafik ada, tapi di kesimpulan aku tetap menulis hasilnya 'mendekati teori'. Mendekatinya dari mana, aku sendiri masih bertanya.",
+   "tags": [
+    "#laporanpraktikum",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-116",
+   "kind": "tips",
+   "text": "Saat praktikum, catat data mentah langsung di tempat, lengkap dengan satuan, tanggal, dan kondisi percobaan. Foto juga susunan alatnya. Menulis laporan jadi jauh lebih ringan kalau bahannya sudah rapi sejak awal.",
+   "tags": [
+    "#praktikum",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-117",
+   "kind": "keluhan",
+   "text": "Sebelum ujian: 'aku sudah paham semuanya'. Lembar soal dibagikan: 'ini bahasa apa'. Catatannya sama saja, yang berubah cuma kepalaku yang mendadak kosong seperti kelas jam enam sore.",
+   "tags": [
+    "#ujian",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-118",
+   "kind": "tips",
+   "text": "Kalau materi ujian terasa menumpuk, susun jadwal mundur dari hari ujian. Bagi materi per hari, sisakan satu hari untuk latihan soal. Mengerjakan soal tanpa melihat catatan biasanya lebih menancap daripada sekadar membaca ulang.",
+   "tags": [
+    "#belajarujian",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-119",
+   "kind": "keluhan",
+   "text": "Tugas bareng itu pelajaran sabar. Aku mengetik bagianku sampai jam dua, lalu menemukan bagian teman memakai huruf yang beda, margin yang beda, dan judul yang tiba-tiba hijau. Aku juga pernah begitu, jadi tidak bisa marah.",
+   "tags": [
+    "#tugasbareng",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-120",
+   "kind": "tips",
+   "text": "Biar tugas kelompok tidak berantakan: sepakati format (huruf, margin, gaya sitasi) sebelum mulai menulis, bagi tugas dengan tenggat internal, dan tunjuk satu orang untuk menggabungkan hasil akhir. Dua hari sebelum tenggat sudah cukup.",
+   "tags": [
+    "#tugaskelompok",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-121",
+   "kind": "keluhan",
+   "text": "Stabiloku habis di halaman ketiga karena semuanya kuwarnai kuning. Kalau semua penting, berarti tidak ada yang penting. Aku paham teorinya, tapi tanganku tetap lanjut mewarnai.",
+   "tags": [
+    "#stabilo",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-122",
+   "kind": "tips",
+   "text": "Pakai stabilo untuk satu hal saja per halaman: kata kunci, definisi, atau contoh. Lebih baik tiga warna dengan arti tetap daripada pelangi tanpa aturan. Tulis legenda warna kecil di sampul belakang buku catatan.",
+   "tags": [
+    "#catatankuliah",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-123",
+   "kind": "keluhan",
+   "text": "Rencana begadang: kopi dua gelas, camilan tiga bungkus, laptop terbuka. Hasil: kopi habis, camilan habis, dokumen masih berisi judul. Setidaknya judulnya sudah terasa sangat berani. ☕",
+   "tags": [
+    "#begadang",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-124",
+   "kind": "tips",
+   "text": "Kalau terpaksa begadang, siapkan air putih sebanyak kopimu dan camilan yang tidak berminyak supaya keyboard tidak lengket. Kopi jangan terlalu larut, karena tidurmu besok yang menanggung.",
+   "tags": [
+    "#begadang",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-125",
+   "kind": "keluhan",
+   "text": "Tab browserku ada 47. Aku yakin semuanya berhubungan dengan tugas. Aku juga yakin salah satunya sedang memutar musik, tapi tidak tahu yang mana.",
+   "tags": [
+    "#tabbrowser",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-126",
+   "kind": "tips",
+   "text": "Tab terlalu banyak? Simpan semuanya ke satu folder bookmark berlabel nama tugas, lalu tutup. Dua menit merapikan itu membuat kepala lebih ringan, dan besok tinggal buka folder yang sama.",
+   "tags": [
+    "#tabbrowser",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-127",
+   "kind": "keluhan",
+   "text": "Aku buka laptop untuk mengerjakan tugas, muncul notifikasi, aku balas, lihat video kucing, lalu hari sudah gelap. Tugasnya masih sama, hanya pengetahuanku tentang kucing yang bertambah.",
+   "tags": [
+    "#notifikasi",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-128",
+   "kind": "tips",
+   "text": "Coba fokus 25 menit dulu: taruh ponsel di tempat yang tidak terjangkau tangan, nyalakan mode jangan ganggu, lalu pasang timer. Setelah selesai baru lihat notifikasi. Cuma 25 menit, tapi biasanya cukup untuk memulai.",
+   "tags": [
+    "#fokus",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-129",
+   "kind": "keluhan",
+   "text": "Mengetik satu paragraf saja aku langsung merasa layak dapat hadiah. Padahal baru paragraf kedua dari sepuluh. Tapi biarlah, otakku butuh motivasi dan motivasinya bernama es teh.",
+   "tags": [
+    "#tugaskecil",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-130",
+   "kind": "tips",
+   "text": "Rayakan tugas kecil. Coret satu item di daftar pakai pulpen berwarna, atau beri dirimu jeda lima menit sebagai hadiah. Otak suka merasakan kemajuan, dan itu bikin tugas besar terasa lebih mungkin diselesaikan.",
+   "tags": [
+    "#rayakan",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-131",
+   "kind": "keluhan",
+   "text": "Katanya kalau buntu, istirahat dulu. Masalahnya istirahatku mulai dari 'lima menit' dan berakhir di tiga episode serial. Sepertinya aku perlu belajar istirahat yang punya alarm.",
+   "tags": [
+    "#istirahat",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-132",
+   "kind": "tips",
+   "text": "Sebelum bilang 'aku menyerah' pada satu tugas, coba istirahat 10 menit: berdiri, minum, lihat sesuatu yang jauh dari layar. Setelah itu kerjakan bagian terkecil dari yang buntu. Sering kali yang habis cuma tenaganya, bukan kemampuanmu.",
+   "tags": [
+    "#istirahatdulu",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-133",
+   "kind": "keluhan",
+   "text": "Setiap malam aku berjanji 'besok mulai dari awal'. Paginya aku buka berkas dan catatan semalam cuma berbunyi 'lanjutkan yang tadi'. Yang mana, wahai diriku semalam?",
+   "tags": [
+    "#besokmulai",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-134",
+   "kind": "tips",
+   "text": "Sebelum menutup laptop, tulis satu kalimat: 'besok mulai dari ...' lengkap dengan nama berkas dan bagian yang dikerjakan. Paginya kamu tidak perlu menebak-nebak, tinggal buka dan jalan.",
+   "tags": [
+    "#catatanbesok",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-135",
+   "kind": "keluhan",
+   "text": "Email ke dosen sudah terkirim, dan sekarang aku memeriksa kotak masuk tiap sepuluh menit. Belum ada balasan, tapi aku sudah menyiapkan lima skenario terburuk dan satu skenario yang lumayan bagus.",
+   "tags": [
+    "#menunggubalasan",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-136",
+   "kind": "tips",
+   "text": "Ada orang yang sering terlupakan saat mencari jurnal: pustakawan. Tanyakan langsung di meja layanan perpustakaan. Biasanya mereka tahu pangkalan data apa saja yang tersedia di kampus dan cara mencarinya dengan efektif.",
+   "tags": [
+    "#perpustakaan",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-137",
+   "kind": "keluhan",
+   "text": "Akhirnya ketemu jurnal yang judulnya persis topikku, klik, ternyata yang bisa dibuka cuma abstraknya. Rasanya seperti diberi kue tapi hanya boleh melihat kotaknya.",
+   "tags": [
+    "#aksesjurnal",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-138",
+   "kind": "tips",
+   "text": "Menulis ucapan terima kasih di kata pengantar? Daftar dulu nama-nama yang ingin kamu sebut, urutkan per kelompok, lalu tulis satu kalimat tulus untuk tiap kelompok. Yang singkat dan jujur biasanya lebih enak dibaca.",
+   "tags": [
+    "#ucapanterimakasih",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-139",
+   "kind": "keluhan",
+   "text": "Abstrak ada batas kata, dan aku menulis dua kali lipatnya. Memangkas abstrak rasanya seperti memilih anak mana yang dibawa pindahan.",
+   "tags": [
+    "#tulisabstrak",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-140",
+   "kind": "tips",
+   "text": "Setelah bimbingan, kerjakan revisi yang paling mudah dalam 24 jam pertama, selagi maksud arahannya masih segar. Revisi yang ditunda sering bikin kita bingung sendiri membaca catatan sendiri.",
+   "tags": [
+    "#revisi",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-141",
+   "kind": "keluhan",
+   "text": "Kamera depan menyala, wajahku di layar tampak seperti orang yang baru dapat kabar buruk. Aku rekam ulang lima kali supaya terlihat santai. Hasilnya tetap sama.",
+   "tags": [
+    "#rekamvideo",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-142",
+   "kind": "tips",
+   "text": "Untuk video presentasi, latihan sekali dengan timer sebelum merekam. Dari situ kelihatan bagian mana yang terlalu panjang. Memotong naskah jauh lebih mudah daripada memotong di aplikasi penyunting.",
+   "tags": [
+    "#presentasi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-143",
+   "kind": "keluhan",
+   "text": "Alat praktikum menunjukkan angka berbeda tiap kali kulihat. Ketiganya kucatat, lalu aku bertanya pada diri sendiri: ini soal fisika atau soal kesabaran?",
+   "tags": [
+    "#alatlab",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-144",
+   "kind": "tips",
+   "text": "Susun laporan praktikum dari bagian yang paling pasti: data dan grafik dulu, lalu pembahasan, baru pendahuluan dan kesimpulan. Pendahuluan jadi lebih tepat karena kamu sudah tahu apa yang sebenarnya terjadi.",
+   "tags": [
+    "#laporan",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-145",
+   "kind": "keluhan",
+   "text": "Ekspektasi belajar bareng: dua jam fokus. Kenyataan: 20 menit belajar, 40 menit bercerita, sisanya mencari makan. Anehnya pulang-pulang tetap merasa sudah belajar banyak.",
+   "tags": [
+    "#belajarbareng",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-146",
+   "kind": "tips",
+   "text": "Belajar bareng akan efektif kalau tiap orang membawa pertanyaan sendiri lalu menjelaskan pemahamannya ke yang lain. Kalau kamu bisa menjelaskan sesuatu dengan kata-katamu sendiri, biasanya kamu memang sudah paham.",
+   "tags": [
+    "#diskusi",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  },
+  {
+   "id": "jt-147",
+   "kind": "keluhan",
+   "text": "Aku beli buku catatan baru supaya semangat. Halaman pertama sangat rapi. Halaman kedua mulai miring. Halaman ketiga berisi daftar belanja. 📚",
+   "tags": [
+    "#bukucatatan",
+    "#jaukitugas",
+    "#tugaskuliah"
+   ]
+  },
+  {
+   "id": "jt-148",
+   "kind": "tips",
+   "text": "Beri nama berkas dengan pola yang sama: matakuliah_tugas_tanggal. Seminggu kemudian kamu akan berterima kasih pada dirimu sendiri saat mencari draf terbaru, bukan berkas bernama 'final_baru_revisi2'.",
+   "tags": [
+    "#namaberkas",
+    "#jaukitugas",
+    "#humormahasiswa"
+   ]
+  },
+  {
+   "id": "jt-149",
+   "kind": "keluhan",
+   "text": "Kopi sudah dingin, laptop sudah panas, ide sudah habis. Satu-satunya yang masih bersemangat adalah kipas laptopku.",
+   "tags": [
+    "#ngopi",
+    "#jaukitugas",
+    "#mahasiswa"
+   ]
+  },
+  {
+   "id": "jt-150",
+   "kind": "tips",
+   "text": "Merasa tidak sanggup mengerjakan semuanya? Tulis tiga hal terkecil yang bisa selesai hari ini, kerjakan satu, lalu lihat apakah kamu mau lanjut. Memulai dari yang kecil lebih mudah daripada menunggu semangat besar datang.",
+   "tags": [
+    "#mulaikecil",
+    "#jaukitugas",
+    "#anakkuliah"
+   ]
+  }
+ ]
+}

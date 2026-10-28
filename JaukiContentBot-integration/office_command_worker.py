@@ -67,6 +67,13 @@ def _threads_core():
     return threads_posting
 
 
+def _threads_writer():
+    """Bank 150 materi atau model teks dari analisis jadwal (lihat threads_content)."""
+    import threads_content
+
+    return threads_content
+
+
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -106,15 +113,17 @@ def handle_generate_threads(context: Dict[str, Any]) -> None:
     _start_task(context, "Generate Threads", "threads_generation", "Preparing Threads content")
     _progress(context, 20, "Selecting content strategy")
 
-    generated = core.generate_threads_content()
+    result = _threads_writer().generate(context.get("payload") or {})
+    generated = result["text"]
     if not isinstance(generated, str) or not generated.strip():
         raise RuntimeError("Threads generator returned empty content")
+    source = result.get("bank_id") or result.get("source") or "unknown"
 
     _progress(context, 80, "Saving Threads draft")
     core.save_state({"text": generated, "uploaded": False, "generated_at": _now_iso()})
     _emit_required(
         "content.preview_ready",
-        activity="Threads draft ready",
+        activity="Threads draft ready (" + str(source) + ")",
         content={
             "platform": "threads",
             "content_type": "thread",
@@ -207,7 +216,8 @@ def process_command(
         logger.warning("Ignoring claimed command without an ID")
         return False
 
-    context: Dict[str, Any] = {"task_id": None, "task_started": False}
+    payload = command.get("payload")
+    context: Dict[str, Any] = {"task_id": None, "task_started": False, "payload": payload if isinstance(payload, dict) else {}}
     client.update(command_id, "running")
     handler = DISPATCH.get((command.get("agent_id"), command.get("action")))
 

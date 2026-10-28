@@ -15,7 +15,8 @@ from visual_memory import MEMORY_DIR
 
 
 # Awalan ID per brand dan format. Dipakai untuk memastikan bank satu brand tidak pernah dipakai oleh brand lain.
-ID_PREFIX = {("kauiz", "feed"): "kf-", ("kauiz", "story"): "ks-", ("jauki", "feed"): "jf-", ("jauki", "story"): "js-"}
+ID_PREFIX = {("kauiz", "feed"): "kf-", ("kauiz", "story"): "ks-", ("jauki", "feed"): "jf-", ("jauki", "story"): "js-",
+             ("jauki", "threads"): "jt-"}
 
 
 def _check_id(brand: str, fmt: str, item_id: str) -> None:
@@ -25,6 +26,8 @@ def _check_id(brand: str, fmt: str, item_id: str) -> None:
 
 
 def load_bank(brand: str, fmt: str) -> list[dict[str, Any]]:
+    if (brand, fmt) not in ID_PREFIX:
+        raise ValueError(f"Tidak ada bank {fmt} untuk brand {brand}")
     path = MEMORY_DIR / "prompt-bank" / f"{brand}-{fmt}.json"
     data = json.loads(path.read_text(encoding="utf-8"))
     if data.get("brand") != brand or data.get("format") != fmt:

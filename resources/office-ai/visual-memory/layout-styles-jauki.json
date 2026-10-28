@@ -295,5 +295,124 @@
    "prompt_template": "Dynamic social poster in {aspect}. The background is a flat {accent} with a faint repeated outline pattern in a slightly deeper orange. In the lower middle, a white rounded card with one large soft notch holds a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\". A glossy 3D-style object resembling {subject} floats above the card, overlapping its top edge with a soft shadow.",
    "footer_style": "a slim rounded white footer bar with {accent} text on the left"
   }
+ },
+ "article_templates": {
+  "JA1": {
+   "concept": "Oranye penuh, mahasiswa ekspresif di kanan",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Bold campaign article cover in {aspect}. The background is a flat {accent} with a soft deeper-orange gradient and one large lighter curved swoosh. On the right, a cutout of a cheerful young university student reacting funnily to {subject}, with a thin white sticker outline and a soft shadow. On the left, a large stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last words inside a white box with {accent} text.",
+   "footer_style": "a slim rounded white footer bar with {accent} text"
+  },
+  "JA2": {
+   "concept": "Putih lega dengan lingkaran peach dan objek di kanan",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Minimal modern article cover in {aspect}. The background is clean white (#FFFFFF). On the right, a large {block} circle sits behind a realistic cutout of {subject} with a soft floor shadow. On the left, a large stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} highlight bar."
+  },
+  "JA3": {
+   "concept": "Terbelah: panel oranye berisi headline, kanan putih dengan cutout",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline in the orange panel",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Clean split article cover in {aspect}. The left 55 percent is flat {accent} and holds a large stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\". The right 45 percent is clean white (#FFFFFF), separated by a wavy edge, with a realistic cutout of {subject} straddling the dividing line with a soft shadow.",
+   "footer_style": "a slim rounded white footer bar with {accent} text"
+  },
+  "JA4": {
+   "concept": "Abu-abu terang dengan headline oranye besar dan objek 3D",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Bold typographic article cover in {aspect}. The background is a soft light-gray (#E6E6E6) gradient with a gentle vignette. On the left, a large stacked headline in {headline_style}, {accent}, left aligned, reads exactly \"{headline}\". On the right, a realistic 3D-style object resembling {subject} with a soft shadow."
+  },
+  "JA5": {
+   "concept": "Oranye dengan kartu putih miring dan stiker objek",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "On the card under the headline",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Playful sticker-style article cover in {aspect}. The background is a flat {accent} with a big deeper-orange circle and a few small white outlined squares as decoration. On the left, a large white rounded card tilted slightly with a soft shadow holds a large stacked headline in {headline_style}, {ink}, reads exactly \"{headline}\", and a realistic cutout of {subject} is stuck on the card's corner like a sticker with a thin white border.",
+   "footer_style": "a slim rounded white footer bar with {accent} text"
+  },
+  "JA6": {
+   "concept": "Putih dengan blob peach dan mahasiswa bereaksi lucu",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 8,
+     "max_chars": 56
+    },
+    "subline": {
+     "where": "Under the headline on the left",
+     "max_words": 12,
+     "max_chars": 72
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Friendly humorous article cover in {aspect}. The background is clean white (#FFFFFF) with a large {block} blob shape. On the right, a cutout of an expressive young university student with a hand on the head, reacting funnily to {subject}, with a thin white sticker outline. On the left, a large stacked headline in {headline_style}, {ink}, reads exactly \"{headline}\", with its last words in {accent}."
+  }
  }
 }

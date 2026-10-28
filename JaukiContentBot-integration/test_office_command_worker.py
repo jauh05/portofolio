@@ -45,6 +45,20 @@ class FakeThreadsCore:
         return self.publication
 
 
+class FakeThreadsWriter:
+    """Pengganti threads_content: mencatat payload jadwal yang diterima dan mengembalikan satu postingan."""
+
+    def __init__(self, result=None):
+        self.result = result or {"text": "Generated Threads copy", "source": "bank", "bank_id": "jt-007"}
+        self.payloads = []
+
+    def generate(self, payload):
+        self.payloads.append(payload)
+        if isinstance(self.result, Exception):
+            raise self.result
+        return self.result
+
+
 class OfficeCommandWorkerTests(unittest.TestCase):
     def setUp(self):
         self.events = []
@@ -59,8 +73,8 @@ class OfficeCommandWorkerTests(unittest.TestCase):
         self.addCleanup(self.event_patch.stop)
         self.addCleanup(self.status_patch.stop)
 
-    def command(self, action="generate_threads", agent_id="jauki-threads"):
-        return {"id": "command-1", "agent_id": agent_id, "action": action, "payload": {}}
+    def command(self, action="generate_threads", agent_id="jauki-threads", payload=None):
+        return {"id": "command-1", "agent_id": agent_id, "action": action, "payload": payload or {}}
 
     def test_empty_queue_does_nothing(self):
         client = FakeClient()
@@ -72,8 +86,9 @@ class OfficeCommandWorkerTests(unittest.TestCase):
     def test_generate_threads_dispatch_and_successful_lifecycle(self):
         client = FakeClient()
         core = FakeThreadsCore()
+        writer = FakeThreadsWriter()
 
-        with patch.object(worker, "_threads_core", return_value=core):
+        with patch.object(worker, "_threads_core", return_value=core), patch.object(worker, "_threads_writer", return_value=writer):
             self.assertTrue(worker.process_command(self.command(), client, idle_delay=0))
 
         self.assertEqual([update[1] for update in client.updates], ["running", "completed"])
@@ -81,12 +96,26 @@ class OfficeCommandWorkerTests(unittest.TestCase):
             [event for event, _ in self.events],
             ["task.started", "task.progress", "task.progress", "content.preview_ready", "task.completed"],
         )
+        self.assertIn("jt-007", self.events[3][1]["activity"])
         task_id = self.events[0][1]["task"]["id"]
         self.assertEqual(self.events[1][1]["task_id"], task_id)
         self.assertEqual(self.events[-1][1]["task_id"], task_id)
         self.assertEqual(core.saved_states[0]["text"], "Generated Threads copy")
         self.assertFalse(core.saved_states[0]["uploaded"])
         self.status.assert_called_once_with("jauki-threads", "idle", "Waiting for Threads task", 0)
+
+    def test_generate_threads_passes_the_schedule_payload_to_the_writer(self):
+        client = FakeClient()
+        core = FakeThreadsCore()
+        writer = FakeThreadsWriter({"text": "Dari analisis", "source": "llm", "bank_id": None})
+        payload = {"topic": "Revisi dosen", "key_message": "Revisi itu proses", "angle": "keluh kesah"}
+
+        with patch.object(worker, "_threads_core", return_value=core), patch.object(worker, "_threads_writer", return_value=writer):
+            self.assertTrue(worker.process_command(self.command(payload=payload), client, idle_delay=0))
+
+        self.assertEqual(writer.payloads, [payload])
+        self.assertEqual(core.saved_states[0]["text"], "Dari analisis")
+        self.assertIn("llm", self.events[3][1]["activity"])
 
     def test_publish_last_dispatch_and_successful_lifecycle(self):
         client = FakeClient()
@@ -119,9 +148,10 @@ class OfficeCommandWorkerTests(unittest.TestCase):
 
     def test_execution_failure_reports_same_task_id_and_failed_command(self):
         client = FakeClient()
-        core = FakeThreadsCore(generated=RuntimeError("generator unavailable"))
+        core = FakeThreadsCore()
+        writer = FakeThreadsWriter(RuntimeError("generator unavailable"))
 
-        with patch.object(worker, "_threads_core", return_value=core):
+        with patch.object(worker, "_threads_core", return_value=core), patch.object(worker, "_threads_writer", return_value=writer):
             self.assertFalse(worker.process_command(self.command(), client, idle_delay=0))
 
         self.assertEqual([update[1] for update in client.updates], ["running", "failed"])
