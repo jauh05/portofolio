@@ -23,15 +23,15 @@ from visual_memory import MEMORY_DIR
 
 ASPECT_TEXT = {
     "feed": "portrait 4:5 composition",
-    "story": ("tall 9:16 story composition, with all text and key subjects kept in the central area and the top 15 percent "
+    "story": ("tall 9:16 story composition, with all text and key subjects kept in the central area and the top 20 percent "
               "and bottom 18 percent left free of any text or important content"),
 }
 ASPECT_MARK = {"feed": "4:5", "story": "9:16"}
 MARGIN_RULE = {
-    "feed": ("Leave the left and right 10 percent of the width and the top and bottom 16 percent of the height free of any text or "
-             "important object because the top and bottom will be trimmed, and never let anything touch or get cut off by an edge."),
+    "feed": ("Leave the left and right 10 percent of the width and the top 14 percent and bottom 12 percent of the height free of any text "
+             "or important object, and never let anything touch or get cut off by an edge."),
     "story": ("Leave the left and right 10 percent of the width free of any text or important object, keep everything below the top "
-              "15 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
+              "20 percent and above the bottom 18 percent of the height, and never let anything touch or get cut off by an edge."),
 }
 FOOTER_WHERE = {"feed": "At the very bottom", "story": "Near the bottom, inside the safe area"}
 CAPTION_LIMIT = 2200

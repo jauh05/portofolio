@@ -202,8 +202,66 @@ class MuseTests(unittest.TestCase):
         self.assertGreater(right[2], 200)
         self.assertLess(right[0], 60)
 
-    def test_feed_is_cropped_to_four_by_five(self):
-        self.assertEqual(worker.fit_to_canvas(png_bytes((1280, 1920)), "feed").size, worker.CANVAS["feed"])
+    def feed_source_with_top_band(self):
+        source = Image.new("RGB", (1280, 1920), (255, 255, 255))
+        __import__("PIL.ImageDraw", fromlist=["ImageDraw"]).Draw(source).rectangle((0, 0, 1279, 39), fill=(255, 0, 0))
+        buffer = io.BytesIO()
+        source.save(buffer, "PNG")
+        return buffer.getvalue()
+
+    def test_feed_is_padded_by_default_so_the_top_survives(self):
+        feed = worker.fit_to_canvas(self.feed_source_with_top_band(), "feed")
+        self.assertEqual(feed.size, worker.CANVAS["feed"])
+        pixel = feed.getpixel((540, 3))
+        self.assertGreater(pixel[0], 200)
+        self.assertLess(pixel[1], 60)
+
+    def test_feed_crop_mode_still_crops_the_top_off(self):
+        feed = worker.fit_to_canvas(self.feed_source_with_top_band(), "feed", "crop")
+        self.assertEqual(feed.size, worker.CANVAS["feed"])
+        self.assertGreater(feed.getpixel((540, 3))[1], 200)  # pita merah di atas sudah terpotong
+
+    def test_transient_muse_failures_are_retried_then_succeed(self):
+        raw = png_bytes()
+        calls, sleeps = [], []
+
+        def transport(url, headers, body):
+            calls.append(1)
+            if len(calls) < 3:
+                raise worker.MuseTransientError("respons terputus")
+            return {"data": [{"b64_json": base64.b64encode(raw).decode()}]}
+
+        result = worker.generate_background("p", api_key="k", base_url="https://x", model="m", fmt="feed", transport=transport, sleep=sleeps.append)
+        self.assertEqual((result, len(calls), sleeps), (raw, 3, [5, 15]))
+
+    def test_permanent_muse_errors_are_not_retried_and_exhausted_retries_raise(self):
+        calls = []
+
+        def permanent(url, headers, body):
+            calls.append(1)
+            raise worker.MuseError("OpenRouter HTTP 400")
+
+        with self.assertRaises(worker.MuseError):
+            worker.generate_background("p", api_key="k", base_url="https://x", model="m", fmt="feed", transport=permanent, sleep=lambda s: None)
+        self.assertEqual(len(calls), 1)
+        failing = []
+
+        def transient(url, headers, body):
+            failing.append(1)
+            raise worker.MuseTransientError("putus")
+
+        with self.assertRaises(worker.MuseTransientError):
+            worker.generate_background("p", api_key="k", base_url="https://x", model="m", fmt="feed", transport=transient, sleep=lambda s: None)
+        self.assertEqual(len(failing), 3)
+
+    def test_truncated_http_response_becomes_a_transient_error(self):
+        import http.client
+        with mock.patch.object(worker.urllib.request, "urlopen", side_effect=http.client.IncompleteRead(b"")):
+            with self.assertRaises(worker.MuseTransientError):
+                worker.http_post_json("https://x", {}, {})
+        with mock.patch.object(worker.urllib.request, "urlopen", side_effect=ConnectionResetError("reset")):
+            with self.assertRaises(worker.MuseTransientError):
+                worker.http_get_bytes("https://x")
 
     def test_fit_to_canvas_matches_each_format(self):
         for fmt in worker.FORMATS:

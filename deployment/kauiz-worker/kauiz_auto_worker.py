@@ -22,6 +22,7 @@ import base64
 import contextlib
 import fcntl
 import hashlib
+import http.client
 import io
 import json
 import logging
@@ -41,7 +42,7 @@ from pathlib import Path
 from typing import Optional
 from zoneinfo import ZoneInfo
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 WORKER_DIR = Path(__file__).resolve().parent
 # Token Instagram Login hanya diterima di graph.instagram.com. Token Facebook Login memakai graph.facebook.com.
@@ -401,6 +402,10 @@ class MuseError(RuntimeError):
     pass
 
 
+class MuseTransientError(MuseError):
+    """Gangguan sementara (koneksi, respons terputus, 429, 5xx) yang layak dicoba lagi."""
+
+
 def http_post_json(url, headers, body, timeout=360.0):
     request = urllib.request.Request(
         url, data=json.dumps(body).encode("utf-8"), method="POST",
@@ -411,10 +416,11 @@ def http_post_json(url, headers, body, timeout=360.0):
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as err:
         detail = err.read().decode("utf-8", errors="replace")[:300]
-        raise MuseError(f"OpenRouter HTTP {err.code}: {detail}") from err
-    except (urllib.error.URLError, TimeoutError) as err:
-        raise MuseError(f"koneksi ke OpenRouter gagal: {err}") from err
-    except json.JSONDecodeError as err:
+        kind = MuseTransientError if err.code == 429 or err.code >= 500 else MuseError
+        raise kind(f"OpenRouter HTTP {err.code}: {detail}") from err
+    except (http.client.HTTPException, OSError) as err:
+        raise MuseTransientError(f"koneksi atau respons OpenRouter terputus: {err!r}") from err
+    except ValueError as err:
         raise MuseError("respons OpenRouter bukan JSON") from err
 
 
@@ -422,55 +428,70 @@ def http_get_bytes(url, timeout=300.0):
     try:
         with urllib.request.urlopen(url, timeout=timeout) as response:
             return response.read()
-    except (urllib.error.URLError, TimeoutError) as err:
-        raise MuseError(f"unduh gambar Muse gagal: {err}") from err
+    except (http.client.HTTPException, OSError) as err:
+        raise MuseTransientError(f"unduh gambar Muse gagal: {err!r}") from err
 
 
-def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None, fetch=None):
+def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None, fetch=None, sleep=time.sleep, waits=(5, 15)):
     """Latar dari OpenRouter Images. Body dan respons sama dengan generate_muse_image di bot Jauki."""
     if not api_key:
         raise MuseError("OPENROUTER_API_KEY belum diisi")
     transport = transport or http_post_json
     fetch = fetch or http_get_bytes
-    payload = transport(
-        f"{base_url.rstrip('/')}/images",
-        {"Authorization": f"Bearer {api_key}"},
-        {"model": model, "prompt": prompt, "aspect_ratio": ASPECT_RATIO[fmt], "output_format": "jpeg"},
-    )
-    items = payload.get("data") or []
-    item = items[0] if items else {}
-    if item.get("b64_json"):
-        return base64.b64decode(item["b64_json"])
-    if item.get("url"):
-        return fetch(item["url"])
-    raise MuseError("respons Muse tidak berisi gambar")
+    for attempt in range(len(waits) + 1):
+        try:
+            payload = transport(
+                f"{base_url.rstrip('/')}/images",
+                {"Authorization": f"Bearer {api_key}"},
+                {"model": model, "prompt": prompt, "aspect_ratio": ASPECT_RATIO[fmt], "output_format": "jpeg"},
+            )
+            items = payload.get("data") or []
+            item = items[0] if items else {}
+            if item.get("b64_json"):
+                return base64.b64decode(item["b64_json"])
+            if item.get("url"):
+                return fetch(item["url"])
+            raise MuseError("respons Muse tidak berisi gambar")
+        except MuseTransientError as err:
+            if attempt == len(waits):
+                raise
+            LOG.warning("Muse gangguan sementara (%s); percobaan %d dari %d, coba lagi dalam %d detik", err, attempt + 1, len(waits) + 1, waits[attempt])
+            sleep(waits[attempt])
 
 
 def pad_to_canvas(source, canvas, feather=48):
-    """Memasang gambar selebar kanvas tanpa memotong sisinya. Sisa area atas dan bawah diisi versi buram gambar itu sendiri."""
+    """Memasang seluruh gambar di dalam kanvas tanpa memotong. Sisa area diisi versi buram gambar itu sendiri."""
     width, height = canvas
+    scale = min(width / source.width, height / source.height)
+    size = (round(source.width * scale), round(source.height * scale))
+    scaled = source.resize(size, Image.LANCZOS)
     background = ImageOps.fit(source, canvas, method=Image.LANCZOS).filter(ImageFilter.GaussianBlur(40))
-    scaled = source.resize((width, round(source.height * width / source.width)), Image.LANCZOS)
-    top = (height - scaled.height) // 2
-    mask = Image.new("L", scaled.size, 255)
-    for row in range(min(feather, scaled.height // 2)):
-        value = round(255 * row / feather)
-        ImageDraw.Draw(mask).line((0, row, width, row), fill=value)
-        ImageDraw.Draw(mask).line((0, scaled.height - 1 - row, width, scaled.height - 1 - row), fill=value)
-    background.paste(scaled, (0, top), mask)
+    vertical, horizontal = Image.new("L", size, 255), Image.new("L", size, 255)
+    if size[1] < height:
+        for row in range(min(feather, size[1] // 2)):
+            value = round(255 * row / feather)
+            ImageDraw.Draw(vertical).line((0, row, size[0], row), fill=value)
+            ImageDraw.Draw(vertical).line((0, size[1] - 1 - row, size[0], size[1] - 1 - row), fill=value)
+    if size[0] < width:
+        for col in range(min(feather, size[0] // 2)):
+            value = round(255 * col / feather)
+            ImageDraw.Draw(horizontal).line((col, 0, col, size[1]), fill=value)
+            ImageDraw.Draw(horizontal).line((size[0] - 1 - col, 0, size[0] - 1 - col, size[1]), fill=value)
+    background.paste(scaled, ((width - size[0]) // 2, (height - size[1]) // 2), ImageChops.multiply(vertical, horizontal))
     return background
 
 
-def fit_to_canvas(image_bytes, fmt):
-    """Menyesuaikan gambar Muse ke kanvas. Muse selalu mengembalikan 2:3. Story dipasang selebar penuh dengan isian buram
-    di atas dan bawah (area yang tertutup tampilan Instagram), sehingga teks di sisi tidak terpotong. Feed dipotong atas dan bawah."""
+def fit_to_canvas(image_bytes, fmt, feed_fit="pad"):
+    """Menyesuaikan gambar Muse ke kanvas. Muse selalu mengembalikan 2:3. Bawaan: seluruh gambar dipasang utuh dengan isian
+    buram di area sisa (story: atas dan bawah yang tertutup tampilan Instagram; feed: sisi kiri dan kanan), jadi tidak ada
+    teks yang terpotong. feed_fit="crop" memotong feed ke 4:5 seperti sebelumnya."""
     with Image.open(io.BytesIO(image_bytes)) as source:
         rgb = source.convert("RGB")
     target = CANVAS[fmt][0] / CANVAS[fmt][1]
     if abs(rgb.width / rgb.height - target) / target <= 0.015:
         return ImageOps.fit(rgb, CANVAS[fmt], method=Image.LANCZOS)
-    if fmt == "story" and rgb.width / rgb.height > target:
-        LOG.info("gambar Muse %dx%d dipasang selebar penuh dan diisi buram di atas dan bawah untuk story", rgb.width, rgb.height)
+    if fmt == "story" or feed_fit != "crop":
+        LOG.info("gambar Muse %dx%d dipasang utuh dengan isian buram untuk %s", rgb.width, rgb.height, ASPECT_RATIO[fmt])
         return pad_to_canvas(rgb, CANVAS[fmt])
     LOG.warning("gambar Muse %dx%d tidak sesuai rasio %s, tepinya terpotong", rgb.width, rgb.height, ASPECT_RATIO[fmt])
     return ImageOps.fit(rgb, CANVAS[fmt], method=Image.LANCZOS)
@@ -728,7 +749,7 @@ def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
             "background_treatment": job["variation"]["background_treatment"], "slot_key": slot_key,
         }])[-HISTORY_LIMIT:]
         save_state(config.state_file, state)
-    image = fit_to_canvas(raw, fmt)
+    image = fit_to_canvas(raw, fmt, config.feed_fit)
     if not text_in_muse(config):
         image = apply_overlay(config, job, plan, topic, image)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -779,6 +800,7 @@ class Config:
     muse_model: str = MUSE_MODEL
     visual_memory_dir: Optional[Path] = None
     max_images_per_day: int = 12
+    feed_fit: str = "pad"
     text_mode: str = "muse"
     llm_model: str = LLM_MODEL_DEFAULT
     llm_base_url: str = OPENROUTER_BASE_URL
@@ -824,6 +846,7 @@ def load_config(env):
         muse_model=get("KAUIZ_MUSE_MODEL", MUSE_MODEL),
         visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
         max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "12")),
+        feed_fit=get("KAUIZ_FEED_FIT", "pad"),
         text_mode=get("KAUIZ_TEXT_MODE", "muse"),
         llm_model=get("KAUIZ_LLM_MODEL", LLM_MODEL_DEFAULT),
         llm_base_url=get("KAUIZ_LLM_BASE_URL", OPENROUTER_BASE_URL),
