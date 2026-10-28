@@ -63,7 +63,7 @@ class OfficeTrentOrchestratorService
         foreach ($proposal['items'] as $item) {
             $platform = strtolower((string) ($item['platform'] ?? ''));
             $type = strtolower((string) ($item['content_type'] ?? ''));
-            if (!in_array($platform . ':' . $type, ['instagram:feed', 'instagram:story', 'threads:thread', 'threads:threads'], true)) {
+            if (!in_array($platform . ':' . $type, ['instagram:feed', 'instagram:story', 'threads:thread', 'threads:threads', 'article:article', 'blog:article'], true)) {
                 $unsupportedCount++;
                 continue;
             }
@@ -103,7 +103,7 @@ class OfficeTrentOrchestratorService
 
         if ($unsupportedRecurring) return ['status' => 'ambiguous', 'summary' => 'Untuk rencana berulang, tentukan tanggal dan waktu konten satu kali terlebih dahulu.', 'items' => []];
         if (empty($validItems)) {
-            $message = $duplicateCount ? 'Semua usulan sudah ada di jadwal aktif. Ubah topik atau tanggalnya.' : 'Format konten belum didukung. Worker artikel belum tersedia; gunakan Instagram Feed, Story, atau Threads.';
+            $message = $duplicateCount ? 'Semua usulan sudah ada di jadwal aktif. Ubah topik atau tanggalnya.' : 'Format konten belum didukung. Gunakan Instagram Feed, Story, Threads, atau Artikel.';
             return ['status' => 'error', 'summary' => $message, 'items' => []];
         }
 

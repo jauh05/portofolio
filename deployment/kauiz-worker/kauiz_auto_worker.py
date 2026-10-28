@@ -51,7 +51,7 @@ GRAPH_VERSION = "v23.0"
 DEFAULT_TIMEZONE = "Asia/Jakarta"
 CAPTION_LIMIT = 2200
 FORMATS = ("feed", "story")
-CANVAS = {"feed": (1080, 1350), "story": (1080, 1920)}
+CANVAS = {"feed": (1080, 1350), "story": (1080, 1920), "article": (1600, 900)}
 MARGIN = 80
 # Story: area atas dan bawah dipakai UI Instagram, jadi konten dijauhkan dari tepinya.
 EDGE = {"feed": 80, "story": 250}
@@ -74,7 +74,7 @@ MUSE_MODEL = "meta/muse-image"
 # Format worker -> output mode di visual-template-memory.json.
 OUTPUT_MODE = {"feed": "feed_portrait", "story": "story"}
 # Rasio yang dikirim ke OpenRouter, sama dengan generate_muse_image di bot Jauki.
-ASPECT_RATIO = {"feed": "4:5", "story": "9:16"}
+ASPECT_RATIO = {"feed": "4:5", "story": "9:16", "article": "16:9"}
 
 # Kode error Graph API. Periksa ulang dengan dokumentasi Meta saat versi API dinaikkan.
 RATE_LIMIT_CODES = {4, 17, 32, 613, 80001}

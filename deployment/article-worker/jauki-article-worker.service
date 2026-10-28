@@ -1,0 +1,15 @@
+[Unit]
+Description=Jauki Article Living Office Worker
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/jauhar/deploy/article/worker
+EnvironmentFile=/home/jauhar/deploy/article/worker/worker.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /home/jauhar/deploy/article/worker/office_article_worker.py daemon
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

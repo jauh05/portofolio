@@ -124,12 +124,12 @@ def handle_generate_threads(context: Dict[str, Any]) -> None:
     _emit_required(
         "content.preview_ready",
         activity="Threads draft ready (" + str(source) + ")",
-        content={
+        content=_with_content_id({
             "platform": "threads",
             "content_type": "thread",
             "title": "Threads post",
             "text": generated,
-        },
+        }, context),
     )
     _emit_required(
         "task.completed",
@@ -137,6 +137,14 @@ def handle_generate_threads(context: Dict[str, Any]) -> None:
         progress=100,
         result={"title": "Threads draft ready", "stage": "preview_ready"},
     )
+
+
+def _with_content_id(content: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+    """Menautkan hasil ke kartu jadwal yang meminta (content_id dari dashboard), supaya draf muncul di kartu itu."""
+    content_id = (context.get("payload") or {}).get("content_id")
+    if content_id:
+        content["content_id"] = content_id
+    return content
 
 
 def _publication_details(result: Any) -> Dict[str, str]:
@@ -191,7 +199,7 @@ def handle_publish_threads(context: Dict[str, Any]) -> None:
     }
     if "public_url" in publication:
         content["public_url"] = publication["public_url"]
-    _emit_required("content.published", activity="Threads post published", content=content)
+    _emit_required("content.published", activity="Threads post published", content=_with_content_id(content, context))
     _emit_required(
         "task.completed",
         task_id=context["task_id"],

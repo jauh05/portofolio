@@ -114,8 +114,23 @@ class OfficeCommandWorkerTests(unittest.TestCase):
             self.assertTrue(worker.process_command(self.command(payload=payload), client, idle_delay=0))
 
         self.assertEqual(writer.payloads, [payload])
+        self.assertNotIn("content_id", self.events[3][1]["content"])
         self.assertEqual(core.saved_states[0]["text"], "Dari analisis")
         self.assertIn("llm", self.events[3][1]["activity"])
+
+    def test_threads_draft_and_publication_are_linked_to_the_requesting_card(self):
+        client = FakeClient()
+        core = FakeThreadsCore(state={"text": "Saved Threads copy", "uploaded": False})
+        writer = FakeThreadsWriter()
+
+        with patch.object(worker, "_threads_core", return_value=core), patch.object(worker, "_threads_writer", return_value=writer):
+            worker.process_command(self.command(payload={"content_id": 42, "topic": "Revisi"}), client, idle_delay=0)
+            draft = next(fields for event, fields in self.events if event == "content.preview_ready")
+            self.assertEqual(draft["content"]["content_id"], 42)
+            worker.process_command(self.command("publish_last", payload={"content_id": 42}), client, idle_delay=0)
+
+        published = next(fields for event, fields in self.events if event == "content.published")
+        self.assertEqual(published["content"]["content_id"], 42)
 
     def test_publish_last_dispatch_and_successful_lifecycle(self):
         client = FakeClient()
