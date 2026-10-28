@@ -188,6 +188,54 @@ class ArticleWorkerTests(unittest.TestCase):
                 sys.path[:] = saved_path
                 os.environ.pop("VISUAL_MEMORY_DIR", None)
 
+    def cli_args(self, *extra):
+        env_file = Path(self.tmp.name) / "worker.env"
+        env_file.write_text("ARTICLE_JAUKI_TOKEN=T2\nOPENROUTER_API_KEY=k\nARTICLE_STATE_FILE=%s\nARTICLE_OUTPUT_DIR=%s\n" % (self.settings.state_path, self.settings.output_dir), encoding="utf-8")
+        return ["draft", "--brand", "jauki", "--topic", "Tips", "--env-file", str(env_file), *extra]
+
+    def test_cli_draft_checks_the_site_before_writing_or_paying_for_a_cover(self):
+        class Blocked:
+            def check_access(self):
+                raise worker.article_site.SiteError("akses ditolak (403)")
+
+        with patch.object(worker.Settings, "site", return_value=Blocked()), \
+                patch.object(worker.content_writer, "write_article", return_value=self.article) as written, \
+                patch.object(worker, "make_cover") as cover:
+            with self.assertRaises(worker.article_site.SiteError):
+                worker.cli(self.cli_args("--live"))
+        written.assert_not_called()
+        cover.assert_not_called()
+
+    def test_cli_draft_live_creates_a_draft_and_never_publishes(self):
+        class Site:
+            def __init__(self):
+                self.calls = []
+
+            def check_access(self):
+                self.calls.append("check")
+
+            def create_draft(self, article, image):
+                self.calls.append("create")
+                return {"id": 9, "status": "draft", "image_url": "https://img"}
+
+            def publish(self, *_):
+                self.calls.append("publish")
+
+        site = Site()
+        with patch.object(worker.Settings, "site", return_value=site), \
+                patch.object(worker.content_writer, "write_article", return_value=self.article), \
+                patch.object(worker, "make_cover", return_value=(b"jpeg", "JA1", "p")):
+            self.assertEqual(worker.cli(self.cli_args("--live")), 0)
+        self.assertEqual(site.calls, ["check", "create"])
+
+    def test_cli_preview_and_draft_without_live_never_touch_the_site_or_muse(self):
+        with patch.object(worker.Settings, "site") as site, patch.object(worker.content_writer, "write_article", return_value=self.article), \
+                patch.object(worker, "make_cover") as cover:
+            self.assertEqual(worker.cli(["preview", "--brand", "jauki", "--topic", "Tips", "--env-file", str(Path(self.tmp.name) / "x.env")]), 0)
+            self.assertEqual(worker.cli(self.cli_args()), 0)
+        site.assert_not_called()
+        cover.assert_not_called()
+
     def test_claim_targets_the_article_agent(self):
         calls = []
         api = worker.ArticleCommandClient()

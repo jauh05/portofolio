@@ -335,7 +335,9 @@ def cli(argv: Optional[list[str]] = None) -> int:
     if not args.brand or not args.topic:
         parser.error("--brand dan --topic wajib untuk preview dan draft")
     payload = {"brand": args.brand, "topic": args.topic, "brief": args.brief, "content_id": "uji-" + hashlib.sha1(args.topic.encode()).hexdigest()[:8]}
+    site = None
     if args.mode == "draft" and args.live:
+        site = settings.site(args.brand)
         site.check_access()  # token dan jalur situs diperiksa lebih dulu, sebelum model teks dan Muse dipanggil
     article = content_writer.write_article(args.brand, payload, settings.endpoints())
     words = len(content_writer.plain_text(article["content"]).split())
@@ -353,7 +355,6 @@ def cli(argv: Optional[list[str]] = None) -> int:
     if not args.live:
         print("draft tanpa --live tidak membuat apa pun di situs dan tidak memanggil Muse")
         return 0
-    site = settings.site(args.brand) if args.live else None
     cover, layout, _ = make_cover(settings, args.brand, article, payload["content_id"], state)
     summary = site.create_draft(article, cover)
     save_state(settings.state_path, state)
