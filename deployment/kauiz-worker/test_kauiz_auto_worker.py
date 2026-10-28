@@ -417,6 +417,19 @@ class MuseTests(unittest.TestCase):
             self.assertIn("Extra scene detail", generate.call_args.args[0])
             self.assertTrue(client.calls[0][2].startswith("Hook dari model teks."))
 
+    def test_text_mode_muse_picks_layouts_not_templates_and_rotates_them(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = self.muse_config(Path(tmp), text_mode="muse")
+            history, chosen = [], []
+            for index in range(40):
+                job = worker.muse_job(config, PLAN, "feed", f"2026-11-{index:02d}-1300", history, with_prompt=False)
+                chosen.append(job["template_id"])
+                history = (history + [{"template_id": job["template_id"], "hero_position": "free", "background_treatment": "free"}])[-worker.HISTORY_LIMIT:]
+        self.assertTrue(all(lid.startswith("L") for lid in chosen))
+        self.assertEqual(len(set(chosen)), 8)
+        for index in range(3, len(chosen)):
+            self.assertNotIn(chosen[index], chosen[index - 3:index])
+
     def test_pattern_subject_and_short_line_helpers(self):
         self.assertEqual(worker.infer_pattern({"topic": "Tips belajar efektif"}), "tips")
         self.assertEqual(worker.infer_pattern({"topic": "Webinar gratis"}), "event")

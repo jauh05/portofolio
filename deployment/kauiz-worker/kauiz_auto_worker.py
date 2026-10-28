@@ -27,6 +27,7 @@ import json
 import logging
 import logging.handlers
 import os
+import random
 import re
 import shutil
 import sys
@@ -595,8 +596,19 @@ def muse_job(config, plan, fmt, slot_key, history, with_prompt=True):
     item["visual_intent"] = plan.get("visual_intent") or DEFAULT_INTENT
     analysis = visual_memory.analysis_from_plan_item(item)
     seed = int(hashlib.sha256(f"{slot_key}:{fmt}".encode("utf-8")).hexdigest(), 16) % 2**32
-    selected = visual_memory.VisualTemplateSelector().select(analysis, history=history, seed=seed)
     mode = OUTPUT_MODE[fmt]
+    if text_in_muse(config):
+        # Mode teks Muse: hanya tata letak yang dipilih (bergilir, tidak berulang dalam 3 terakhir). Adegan dan gaya teks ditentukan Muse.
+        import visual_prompt_writer
+
+        layout_ids = sorted(visual_prompt_writer.load_layout_styles())
+        recent = {entry.get("template_id") for entry in history[-3:]}
+        layout_id = random.Random(seed).choice([lid for lid in layout_ids if lid not in recent] or layout_ids)
+        return {
+            "prompt": None, "template_id": layout_id, "variation": {"hero_position": "free", "background_treatment": "free"},
+            "mode": mode, "subject": item["visual_subject"], "pattern": item["pattern"], "seed": seed,
+        }
+    selected = visual_memory.VisualTemplateSelector().select(analysis, history=history, seed=seed)
     prompt = None
     if with_prompt:
         prompt = visual_memory.VisualPromptCompiler().compile_prompt(
@@ -647,7 +659,7 @@ def write_content(config, plan, topic, fmt, slot_key, job, use_llm):
         return visual_prompt_writer.write_content(
             "kauiz", source, post, job["template_id"], fmt, job["subject"],
             cta_label=cta.get("label_story" if fmt == "story" else "label", "LINK DI BIO"), footer=cta.get("url", "kauiz.web.id"),
-            seed=job["seed"], llm=llm,
+            seed=job["seed"], llm=llm, styles=visual_prompt_writer.load_layout_styles(),
         )
     except visual_prompt_writer.WriterError as err:
         raise MuseError(f"penulis prompt gagal: {err}") from err
@@ -766,7 +778,7 @@ class Config:
     openrouter_base_url: str = OPENROUTER_BASE_URL
     muse_model: str = MUSE_MODEL
     visual_memory_dir: Optional[Path] = None
-    max_images_per_day: int = 6
+    max_images_per_day: int = 12
     text_mode: str = "muse"
     llm_model: str = LLM_MODEL_DEFAULT
     llm_base_url: str = OPENROUTER_BASE_URL
@@ -811,7 +823,7 @@ def load_config(env):
         openrouter_base_url=get("KAUIZ_OPENROUTER_BASE_URL", OPENROUTER_BASE_URL),
         muse_model=get("KAUIZ_MUSE_MODEL", MUSE_MODEL),
         visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
-        max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "6")),
+        max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "12")),
         text_mode=get("KAUIZ_TEXT_MODE", "muse"),
         llm_model=get("KAUIZ_LLM_MODEL", LLM_MODEL_DEFAULT),
         llm_base_url=get("KAUIZ_LLM_BASE_URL", OPENROUTER_BASE_URL),

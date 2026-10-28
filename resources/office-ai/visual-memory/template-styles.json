@@ -77,19 +77,23 @@
    "prompt_template": "Social poster in {aspect}. The background is a crumpled warm cream paper texture. In the center, a large hand-drawn black marker diagram of {subject} as a simple flow with arrows and no words, next to a high-contrast black and white cutout of a hand drawing it. At the top, a headline in {headline_style} in deep navy reads exactly \"{headline}\"."
   },
   "T05": {
-   "concept": "Person holding a poster card",
-   "text_color": "deep navy",
-   "subject_hint": "a person in neutral clothing holding a large blank card",
+   "concept": "Studio poster photograph, person in an armchair",
+   "text_color": "cream",
+   "subject_hint": "a calm student in an armchair with a related object on a side table",
    "slots": {
     "headline": {
      "max_words": 5,
      "max_chars": 34
     },
-    "subline": null,
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
     "chips": null,
     "cta": null
    },
-   "prompt_template": "Fashion-editorial social poster in {aspect}. The background is solid {ink} with a huge cropped abstract shape in lighter navy. A person in neutral clothing sits at the center holding a large cream poster card in front of their face, with {subject} resting on a small table beside them. The card reads exactly \"{headline}\" in {headline_style}, deep navy. Behind the person, a large {accent} circle adds depth."
+   "prompt_template": "Editorial studio poster photograph in {aspect} for a study-skills brand. A young student in a cream knit sweater leans back in a deep navy armchair with both hands behind the head, eyes closed with a calm, confident smile. A small round wooden side table beside the chair holds a glass of water and {subject}. The backdrop is a seamless matte navy wall ({ink}) with a soft vignette, and the floor is warm cream. Soft key light from the left, realistic fabric and paper textures, shallow depth of field. In the top third, a huge headline in {headline_style}, left aligned, white with the last two words in {accent}, reads exactly \"{headline}\"."
   },
   "T06": {
    "concept": "Surreal explorer cutout",

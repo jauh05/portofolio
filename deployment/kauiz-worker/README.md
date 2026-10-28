@@ -77,7 +77,7 @@ menulis teks dengan Pillow. Cara kerjanya:
 
 Dry run di mode muse tidak memanggil OpenRouter. Worker menulis `output/<slot>-<format>.prompt.txt`, `.plan.json`, dan
 `.preview.jpg` (layout di atas latar placeholder). Latar yang sudah dibayar disimpan sebagai `.bg.jpg` dan dipakai ulang
-bila overlay gagal. Batas harian diatur `KAUIZ_MAX_IMAGES_PER_DAY`.
+bila overlay gagal. Batas harian diatur `KAUIZ_MAX_IMAGES_PER_DAY` (bawaan 12).
 
 ### Sumber materi: analisis dashboard atau bank
 

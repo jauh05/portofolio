@@ -62,6 +62,34 @@ class StyleCardTests(unittest.TestCase):
         self.assertEqual((result["caption"], result["hashtags"]), ("", []))
 
 
+class LayoutCardTests(unittest.TestCase):
+    def test_layout_cards_build_valid_prompts_for_both_brands_and_formats(self):
+        layouts = writer.load_layout_styles()
+        self.assertEqual(sorted(layouts), [f"L{i}" for i in range(1, 9)])
+        for brand, footer in (("kauiz", "kauiz.web.id"), ("jauki", "@jaukitugas")):
+            data = writer.load_brand_data(brand)
+            for layout_id in layouts:
+                for fmt in ("feed", "story"):
+                    with self.subTest(brand=brand, layout=layout_id, fmt=fmt):
+                        result = writer.write_content(brand, SOURCE, {}, layout_id, fmt, "an open notebook beside a sticky note", cta_label=None,
+                                                      footer=footer, brand_data=data, styles=layouts)
+                        copy = result["copy"]
+                        content = {"headline": copy["headline"], "subline": copy.get("subline"), "chips": copy.get("chips", []),
+                                   "muse_prompt": result["muse_prompt"], "caption": result["caption"], "hashtags": result["hashtags"]}
+                        self.assertEqual(writer.validate_content(content, data, layouts[layout_id], fmt, None, footer), [])
+                        self.assertIn(f'reads exactly "{footer}"', result["muse_prompt"])
+                        self.assertIn("left and right 10 percent", result["muse_prompt"])
+
+    def test_layout_prompts_leave_scene_and_text_style_to_muse(self):
+        prompt = write("T01")["muse_prompt"]
+        layouts = writer.load_layout_styles()
+        result = writer.write_content("kauiz", SOURCE, {}, "L1", "feed", "an open notebook", cta_label=None, footer=FOOTER, styles=layouts)
+        self.assertIn("choose a fitting, natural scene", result["muse_prompt"])
+        self.assertNotIn("mascot", result["muse_prompt"])
+        self.assertNotIn("glass", result["muse_prompt"])
+        self.assertTrue(prompt)
+
+
 class CaptionTests(unittest.TestCase):
     def test_deterministic_content_passes_its_own_validation(self):
         brand, styles = writer.load_brand_data("kauiz"), writer.load_styles()

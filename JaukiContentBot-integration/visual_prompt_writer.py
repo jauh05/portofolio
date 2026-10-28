@@ -53,6 +53,11 @@ def load_styles(path: Optional[Path] = None) -> dict[str, Any]:
     return json.loads((path or MEMORY_DIR / "template-styles.json").read_text(encoding="utf-8"))["templates"]
 
 
+def load_layout_styles(path: Optional[Path] = None) -> dict[str, Any]:
+    """Kartu tata letak untuk mode teks Muse: posisi saja, adegan dan gaya diserahkan ke Muse."""
+    return json.loads((path or MEMORY_DIR / "layout-styles.json").read_text(encoding="utf-8"))["templates"]
+
+
 def _clip_words(text: str, max_words: int, max_chars: int) -> str:
     words = " ".join(str(text or "").replace('"', "").split()).split()[:max_words]
     while words and len(" ".join(words)) > max_chars:
