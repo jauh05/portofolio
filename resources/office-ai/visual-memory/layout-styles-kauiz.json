@@ -1,0 +1,299 @@
+{
+ "version": "1.0",
+ "description": "Tata letak khusus Kauiz: hitam, lime, dan off-white. Hanya posisi dan bentuk; adegan dan teks ditentukan Muse.",
+ "templates": {
+  "K1": {
+   "concept": "Gelap bertitik, headline putih dengan blok lime, objek 3D hitam",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline on the left",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the lower left, a row of three small rounded pills with thin {accent} outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Bold dark tech-style poster in {aspect}. The background is deep {ink} with a faint dotted grid and subtle grain. On the left, a huge tightly stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} highlight block with {ink} text. On the lower right, a dramatic matte-black 3D render of {subject} with {accent} accents and a sharp rim light.",
+   "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
+  },
+  "K2": {
+   "concept": "Off-white bersih, sapuan lime, objek 3D di atas batu gelap",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the subline, a row of three small rounded pills with thin {ink} outlines",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Clean modern poster in {aspect}. The background is {bg} with a soft {accent} paint smear in one corner. At the top, a huge tightly stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} highlight bar. In the lower half, a realistic 3D render of {subject} rests on a dark rock-like pedestal with a soft shadow."
+  },
+  "K3": {
+   "concept": "Lime penuh, bingkai tipis, headline hitam dalam kotak",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the lower left, a row of three small rounded pills filled {ink} with {accent} text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Loud graphic poster in {aspect}. The background is solid {accent} with a thin {ink} hairline frame inset from the edges. A huge tightly stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words inside a solid {ink} box with {accent} text. In the lower right, a black-and-white halftone cutout of {subject} with a hard shadow."
+  },
+  "K4": {
+   "concept": "Foto halftone hitam-putih di atas, panel gelap berisi headline",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline in the panel",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "At the bottom of the panel, a row of three small mono-style tags in {accent} text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Dark editorial poster in {aspect}. The upper third is a black-and-white halftone photograph of {subject}. Below it, a solid {ink} panel holds a huge tightly stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last two words on a solid {accent} block with {ink} text.",
+   "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
+  },
+  "K5": {
+   "concept": "Off-white, foto halftone dalam bingkai perangkat, pita lime diagonal",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Below the frame, a row of three small rounded pills with thin {ink} outlines",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Modern poster in {aspect}. The background is {bg}. At the top, a huge tightly stacked headline in {headline_style}, {ink}, centered, reads exactly \"{headline}\", with a solid {accent} highlight bar behind it. In the middle, a black-and-white halftone photograph of {subject} sits inside a thin laptop-like device frame, with a plain diagonal {accent} tape strip crossing over its top edge."
+  },
+  "K6": {
+   "concept": "Gelap dengan garis neon lime melengkung dan tombol bulat",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Along the lower left, a row of three small rounded pills with thin {accent} outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Sleek dark poster in {aspect}. The background is deep {ink} with a thin glowing neon {accent} curved arc sweeping in from the right edge. On the left, a huge tightly stacked headline in {headline_style}, white, with its last line in {accent}, reads exactly \"{headline}\". In the lower right, a small round {accent} button with a dark arrow icon and no text, beside a matte-black 3D object resembling {subject}.",
+   "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
+  },
+  "K7": {
+   "concept": "Lime penuh dengan kartu hitam berisi foto halftone",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Between the headline and the card",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the photo inside the card, a row of three small mono-style tags in white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Bold poster in {aspect}. The background is solid {accent}. At the top, a huge tightly stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\". Below it, a large rounded {ink} card holds a black-and-white halftone photograph of {subject}."
+  },
+  "K8": {
+   "concept": "Off-white dengan kartu hitam besar, objek 3D menonjol",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "On the card under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Inside the card near its bottom, a row of three small rounded pills with thin {accent} outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Modern poster in {aspect}. The background is {bg}. A big rounded {ink} card fills the middle and holds a huge tightly stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} block with {ink} text. A glossy 3D render of {subject} pops out over the card's top-right corner with a soft shadow."
+  },
+  "K9": {
+   "concept": "Gelap berbingkai lime tipis, objek hitam bercahaya lime",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "At the bottom inside the frame, a row of three small rounded pills with thin {accent} outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Premium dark poster in {aspect}. The background is deep {ink} with a thin {accent} hairline frame inset from the edges. At the top, a huge tightly stacked headline in {headline_style}, white, centered, with one word in {accent}, reads exactly \"{headline}\". Below it, a matte-black 3D render of {subject} with a soft {accent} glow.",
+   "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
+  },
+  "K10": {
+   "concept": "Lime penuh, kartu off-white bergaya brutalis dengan bayangan keras",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "On the card under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "On the card near its bottom, a row of three small rounded pills filled {ink} with {accent} text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Neo-brutalist poster in {aspect}. The background is solid {accent}. A large {bg} card with a thick {ink} outline and a hard {ink} offset shadow sits slightly tilted in the center and holds a huge tightly stacked headline in {headline_style}, {ink}, reads exactly \"{headline}\". A cutout of {subject} is stuck on the card's corner like a sticker with a thick {ink} outline."
+  },
+  "K11": {
+   "concept": "Off-white lega, blok lime besar di belakang cutout halftone",
+   "text_color": "rich black",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Under the cutout, a row of three small rounded pills with thin {ink} outlines",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Minimal modern poster in {aspect}. The background is {bg} with lots of empty space. A large solid {accent} rectangle sits behind a black-and-white halftone cutout of {subject} with a hard shadow. At the top left, a huge tightly stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\"."
+  },
+  "K12": {
+   "concept": "Gelap bergaris, panel arang berbingkai lime berisi foto hitam-putih",
+   "text_color": "white",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Under the headline",
+     "max_words": 16,
+     "max_chars": 90
+    },
+    "chips": {
+     "min": 3,
+     "max": 3,
+     "where": "Below the panel, a row of three small rounded pills with thin {accent} outlines and white text",
+     "max_chars": 18
+    },
+    "cta": null
+   },
+   "prompt_template": "Dark graphic poster in {aspect}. The background is deep {ink} with faint tall vertical stripes. At the top, a huge tightly stacked headline in {headline_style}, white, centered, reads exactly \"{headline}\", with its last word in {accent}. In the middle, a charcoal (#1B1B1B) rounded panel with a thin {accent} outline holds a black-and-white photograph of {subject}.",
+   "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
+  }
+ }
+}

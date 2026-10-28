@@ -200,30 +200,30 @@
     "status": "draft, belum dikonfirmasi pemilik"
   },
   "visual": {
-    "palette_prompt": "clean white (#FFFFFF), deep navy (#0B1537), warm yellow (#FFCB3D) and soft cream (#FBF6EA)",
-    "ink": "deep navy (#0B1537)",
-    "accent": "warm yellow (#FFCB3D)",
-    "headline_style": "heavy condensed geometric sans-serif capitals",
-    "footer_style": "a slim rounded deep-navy footer bar with white text on the left",
+    "palette_prompt": "electric lime (#D8F810), rich black (#0E0E0E), warm off-white (#F6F5EC) and white (#FFFFFF), with charcoal (#1B1B1B) for panels",
+    "ink": "rich black (#0E0E0E)",
+    "accent": "electric lime (#D8F810)",
+    "headline_style": "heavy tight condensed grotesque capitals",
+    "footer_style": "a slim rounded rich-black (#0E0E0E) footer bar with electric lime (#D8F810) text on the left",
     "allowed_hex": [
-      "#0B1537",
-      "#17264F",
-      "#FFCB3D",
-      "#FBF6EA",
-      "#EFE6D0",
+      "#D8F810",
+      "#0E0E0E",
+      "#F6F5EC",
       "#FFFFFF",
-      "#F1F1F4",
-      "#E4E4E4",
-      "#6B6B6B"
+      "#1B1B1B",
+      "#2A2A2A",
+      "#E9E9DF"
     ],
-    "ink_name": "deep navy",
-    "ink_short": "navy",
-    "alt_name": "lighter navy",
-    "paper_name": "cream",
-    "accent_name": "warm yellow",
-    "bg": "clean white (#FFFFFF)"
+    "ink_name": "rich black",
+    "ink_short": "black",
+    "alt_name": "charcoal",
+    "paper_name": "off-white",
+    "accent_name": "electric lime",
+    "bg": "warm off-white (#F6F5EC)",
+    "block": "charcoal (#1B1B1B)"
   },
   "sources": "Data harga dan fitur dari pemeriksaan kode dan situs kauiz.web.id yang dikirim pemilik. Ketidakcocokan situs dan kode (slot roadmap, batas upload, 40 vs 50 soal, harga coret) sengaja tidak dimasukkan.",
   "cta_required": true,
-  "footer_text": "kauiz.web.id"
+  "footer_text": "kauiz.web.id",
+  "layout_file": "layout-styles-kauiz.json"
 }

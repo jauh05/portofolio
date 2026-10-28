@@ -512,8 +512,8 @@ class MuseTests(unittest.TestCase):
                 job = worker.muse_job(config, PLAN, "feed", f"2026-{index // 28 + 1:02d}-{index % 28 + 1:02d}-1300", history, with_prompt=False)
                 chosen.append(job["template_id"])
                 history = (history + [{"template_id": job["template_id"], "hero_position": "free", "background_treatment": "free"}])[-worker.HISTORY_LIMIT:]
-        self.assertTrue(all(lid.startswith("L") for lid in chosen))
-        self.assertEqual(len(set(chosen)), 14)
+        self.assertTrue(all(lid.startswith("K") for lid in chosen))
+        self.assertEqual(len(set(chosen)), 12)
         for index in range(worker.LAYOUT_NO_REPEAT, len(chosen)):
             self.assertNotIn(chosen[index], chosen[index - worker.LAYOUT_NO_REPEAT:index])
 

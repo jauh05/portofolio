@@ -132,7 +132,7 @@ class BankPromptTests(unittest.TestCase):
                     if brand == "jauki":
                         self.assertNotRegex(result["muse_prompt"].lower(), r"navy|cream\b(?<!warm cream)")
                     else:
-                        self.assertIn("#0B1537", result["muse_prompt"])
+                        self.assertIn("#0E0E0E", result["muse_prompt"])
 
     def test_kauiz_feed_caption_carries_pain_tip_and_cta(self):
         item = bank.load_bank("kauiz", "feed")[0]

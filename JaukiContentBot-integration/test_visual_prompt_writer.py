@@ -76,7 +76,7 @@ def prompt_of(brand, layout_id, fmt="feed", footer=None):
 
 class LayoutCardTests(unittest.TestCase):
     def test_each_brand_has_its_own_layout_set(self):
-        self.assertEqual(sorted(layouts_of("kauiz"), key=lambda k: int(k[1:])), [f"L{i}" for i in range(1, 15)])
+        self.assertEqual(sorted(layouts_of("kauiz"), key=lambda k: int(k[1:])), [f"K{i}" for i in range(1, 13)])
         self.assertEqual(sorted(layouts_of("jauki"), key=lambda k: int(k[1:])), [f"J{i}" for i in range(1, 13)])
 
     def test_layout_cards_build_valid_prompts_for_both_brands_and_formats(self):
@@ -93,13 +93,24 @@ class LayoutCardTests(unittest.TestCase):
                         self.assertIn(f'reads exactly "{footer}"', result["muse_prompt"])
                         self.assertIn("left and right 10 percent", result["muse_prompt"])
 
-    def test_kauiz_keeps_navy_on_white(self):
+    def test_kauiz_uses_the_lime_black_off_white_palette_without_navy_or_jauki_colors(self):
         for layout_id in layouts_of("kauiz"):
             kauiz = prompt_of("kauiz", layout_id)["muse_prompt"]
-            self.assertIn("clean white (#FFFFFF)", kauiz, layout_id)
-            self.assertNotIn("solid deep navy", kauiz, layout_id)
-            for jauki_hex in ("#F4701B", "#532923", "#1A1A1A"):
-                self.assertNotIn(jauki_hex, kauiz, layout_id)
+            self.assertIn("electric lime (#D8F810)", kauiz, layout_id)
+            self.assertIn("rich black (#0E0E0E)", kauiz, layout_id)
+            for gone in ("navy", "#0B1537", "#FFCB3D", "#F4701B", "#532923", "#1A1A1A"):
+                self.assertNotIn(gone, kauiz, layout_id)
+
+    def test_kauiz_mixes_dark_lime_and_off_white_backgrounds(self):
+        layouts = layouts_of("kauiz")
+        dark = [lid for lid, card in layouts.items() if card["text_color"] == "white"]
+        self.assertGreaterEqual(len(dark), 4)
+        self.assertLess(len(dark), len(layouts))
+        for layout_id in dark:
+            self.assertIn("capitals, white", prompt_of("kauiz", layout_id)["muse_prompt"], layout_id)
+        for layout_id, card in layouts.items():
+            if card.get("footer_style"):  # latar gelap: bar footer lime agar terlihat
+                self.assertIn("electric lime (#D8F810) footer bar with rich black (#0E0E0E) text", prompt_of("kauiz", layout_id)["muse_prompt"], layout_id)
 
     def test_jauki_uses_the_orange_white_gray_palette_without_brown_or_navy(self):
         for layout_id in layouts_of("jauki"):
@@ -139,9 +150,9 @@ class LayoutCardTests(unittest.TestCase):
 
     def test_layout_prompts_leave_scene_and_text_style_to_muse(self):
         prompt = write("T01")["muse_prompt"]
-        layouts = writer.load_layout_styles()
-        result = writer.write_content("kauiz", SOURCE, {}, "L1", "feed", "an open notebook", cta_label=None, footer=FOOTER, styles=layouts)
-        self.assertIn("choose a fitting, natural scene", result["muse_prompt"])
+        layouts = layouts_of("kauiz")
+        result = writer.write_content("kauiz", SOURCE, {}, "K1", "feed", "an open notebook", cta_label=None, footer=FOOTER, styles=layouts)
+        self.assertIn("an open notebook", result["muse_prompt"])
         self.assertNotIn("mascot", result["muse_prompt"])
         self.assertNotIn("glass", result["muse_prompt"])
         self.assertTrue(prompt)
