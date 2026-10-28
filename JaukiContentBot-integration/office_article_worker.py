@@ -28,16 +28,20 @@ from zoneinfo import ZoneInfo
 
 
 
-def _bootstrap_paths() -> None:
-    """Modul bersama (prompt_bank, visual_prompt_writer, visual_memory) ada di VISUAL_MEMORY_DIR. Dibaca dari lingkungan atau worker.env di sebelah modul ini."""
+def _bootstrap_paths(env_file: Optional[Path] = None) -> str:
+    """Folder modul bersama (VISUAL_MEMORY_DIR): dibaca dari lingkungan atau worker.env di sebelah modul ini, dimasukkan ke sys.path dan
+    ke os.environ SEBELUM modul bersama diimpor, karena visual_memory menetapkan MEMORY_DIR saat diimpor."""
     directory = os.environ.get("VISUAL_MEMORY_DIR", "")
-    env_file = Path(__file__).resolve().parent / "worker.env"
+    env_file = env_file or Path(__file__).resolve().parent / "worker.env"
     if not directory and env_file.exists():
         for line in env_file.read_text(encoding="utf-8").splitlines():
             if line.strip().startswith("VISUAL_MEMORY_DIR="):
                 directory = line.split("=", 1)[1].strip().strip('"').strip("'")
-    if directory and directory not in sys.path:
-        sys.path.insert(0, directory)
+    if directory:
+        os.environ.setdefault("VISUAL_MEMORY_DIR", directory)
+        if directory not in sys.path:
+            sys.path.insert(0, directory)
+    return directory
 
 
 _bootstrap_paths()

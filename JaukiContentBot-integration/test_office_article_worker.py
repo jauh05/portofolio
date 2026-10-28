@@ -158,6 +158,24 @@ class ArticleWorkerTests(unittest.TestCase):
         noisy = Image.frombytes("RGB", (1600, 900), os.urandom(1600 * 900 * 3))
         self.assertLessEqual(len(worker.encode_jpeg(noisy, 1800)), 1800 * 1024)
 
+    def test_visual_memory_dir_from_worker_env_reaches_the_environment_before_shared_modules_load(self):
+        import os
+        import sys
+        from unittest.mock import patch as env_patch
+
+        env_file = Path(self.tmp.name) / "worker.env"
+        env_file.write_text("# komentar\nVISUAL_MEMORY_DIR='/tmp/memori-uji'\nLAIN=1\n", encoding="utf-8")
+        with env_patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("VISUAL_MEMORY_DIR", None)
+            saved_path = list(sys.path)
+            try:
+                self.assertEqual(worker._bootstrap_paths(env_file), "/tmp/memori-uji")
+                self.assertEqual(os.environ["VISUAL_MEMORY_DIR"], "/tmp/memori-uji")
+                self.assertIn("/tmp/memori-uji", sys.path)
+            finally:
+                sys.path[:] = saved_path
+                os.environ.pop("VISUAL_MEMORY_DIR", None)
+
     def test_claim_targets_the_article_agent(self):
         calls = []
         api = worker.ArticleCommandClient()
