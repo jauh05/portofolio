@@ -350,8 +350,9 @@ def cli(argv: Optional[list[str]] = None) -> int:
     if not args.live:
         print("draft tanpa --live tidak membuat apa pun di situs dan tidak memanggil Muse")
         return 0
+    site = settings.site(args.brand)  # token situs diperiksa sebelum Muse dipanggil, supaya gambar tidak terbuang
     cover, layout, _ = make_cover(settings, args.brand, article, payload["content_id"], state)
-    summary = settings.site(args.brand).create_draft(article, cover)
+    summary = site.create_draft(article, cover)
     save_state(settings.state_path, state)
     (settings.output_dir / f"{args.brand}-{payload['content_id']}.jpg").write_bytes(cover)
     print(f"draf dibuat di situs: id {summary['id']}, status {summary.get('status')}, gambar {summary.get('image_url')}")

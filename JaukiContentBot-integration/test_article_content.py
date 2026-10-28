@@ -74,6 +74,7 @@ class CleanTests(unittest.TestCase):
         self.assertEqual(ac._clip("Tips Mengerjakan Tugas Saat Deadline Mepet: Anti Panik Ala Mahasiswa", 60), "Tips Mengerjakan Tugas Saat Deadline Mepet")
         self.assertEqual(ac._clip("Kalimat pertama selesai di sini. Kalimat kedua yang cukup panjang untuk terpotong", 45), "Kalimat pertama selesai di sini.")
         self.assertEqual(ac._clip("pendek", 60), "pendek")
+        self.assertEqual(ac._clip("Tips Mengerjakan Tugas Cepat Saat Deadline Mepet untuk Mahasiswa", 56), "Tips Mengerjakan Tugas Cepat Saat Deadline Mepet")
         self.assertLessEqual(len(ac._clip("kata " * 40, 50)), 50)
 
     def test_a_person_as_cover_subject_is_replaced_because_the_cards_draw_the_student_themselves(self):

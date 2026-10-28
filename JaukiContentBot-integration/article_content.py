@@ -21,6 +21,7 @@ ANALYSIS_KEYS = ("topic", "brief", "key_message", "angle", "hook_direction", "ob
                  "research_summary", "key_findings", "source_evidence")
 WORDS = (350, 1100)
 LIMITS = {"title": 90, "excerpt": 300, "seo_title": 60, "seo_description": 155, "category": 60, "tag": 30}
+DANGLING = {"untuk", "yang", "dan", "di", "ke", "dari", "pada", "dengan", "ala", "agar", "saat", "atau", "serta", "bagi", "buat", "tanpa", "the", "for", "and"}
 PERSON_WORDS = {"student", "students", "person", "people", "man", "woman", "men", "women", "girl", "boy", "someone", "character", "mahasiswa"}
 INDONESIAN_HINTS = {"yang", "dan", "dengan", "untuk", "dari", "pada", "meja", "belajar", "buku", "rapi", "sedang", "seorang", "mahasiswa", "kertas", "catatan"}
 COVER = {"headline_words": 8, "headline_chars": 56, "subline_words": 12, "subline_chars": 72}
@@ -62,7 +63,7 @@ def build_messages(brand_data: Mapping[str, Any], payload: Mapping[str, Any], fe
         "Aturan:\n"
         f"- Bahasa Indonesia, nada sesuai data tone. Isi {WORDS[0] + 100} sampai {WORDS[1] - 200} kata, struktur jelas: pembuka, minimal dua subjudul <h2>, daftar <ul> atau <ol> bila cocok, penutup.\n"
         f"- content adalah HTML hanya dengan tag {', '.join('<' + tag + '>' for tag in ALLOWED_TAGS)}. Tanpa atribut, tanpa <h1>, tanpa gambar, tanpa tautan, tanpa tabel.\n"
-        f"- title maksimal {LIMITS['title']} karakter, excerpt maksimal {LIMITS['excerpt']}, seo_title maksimal {LIMITS['seo_title']}, seo_description maksimal {LIMITS['seo_description']}.\n"
+        f"- title maksimal {LIMITS['title']} karakter, excerpt maksimal {LIMITS['excerpt']}, seo_title maksimal {LIMITS['seo_title'] - 5} karakter berupa frasa utuh (jangan berakhir pada kata sambung), seo_description maksimal {LIMITS['seo_description'] - 10}.\n"
         f"- category satu frasa pendek (maksimal {LIMITS['category']} karakter). tags: 3 sampai 5 kata kunci huruf kecil (maksimal {LIMITS['tag']} karakter per tag).\n"
         f"- cover_headline maksimal {COVER['headline_words']} kata dan {COVER['headline_chars']} karakter (judul singkat untuk gambar sampul). cover_subline maksimal "
         f"{COVER['subline_words']} kata dan {COVER['subline_chars']} karakter. cover_subject berbahasa Inggris, satu benda atau sekelompok benda konkret (BUKAN orang), misalnya 'a laptop beside a stack of books and an alarm clock'.\n"
@@ -138,7 +139,10 @@ def _clip(text: str, limit: int) -> str:
     clause = max(head.rfind(": "), head.rfind(" - "), head.rfind(" | "), head.rfind(", "))
     if clause >= limit * 0.5:
         return head[:clause].rstrip(" ,;:-|")
-    return text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-|")
+    words = text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-|").split(" ")
+    while len(words) > 1 and words[-1].lower() in DANGLING:  # jangan berhenti pada kata sambung
+        words.pop()
+    return " ".join(words).rstrip(" ,;:-|")
 
 
 def _english_subject(subject: str) -> bool:
