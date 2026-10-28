@@ -59,6 +59,28 @@ class SanitizeTests(unittest.TestCase):
         self.assertEqual(ac.sanitize_html('<P STYLE="x">a</P><H2 id="b">c</H2><UL><LI>d</LI></UL>'), "<p>a</p><h2>c</h2><ul><li>d</li></ul>")
 
 
+class CleanTests(unittest.TestCase):
+    def test_overlong_short_fields_are_trimmed_at_word_boundaries_instead_of_rejected(self):
+        messy = valid(seo_description="Panduan praktis menyusun jadwal belajar yang bisa diikuti setiap hari tanpa membuat kepala pusing, lengkap dengan contoh langkah kecil dan cara mencatat hasilnya setiap malam sebelum tidur.",
+                      title="Cara menyusun jadwal belajar " + "panjang " * 20, cover_subline="satu dua tiga empat lima enam tujuh delapan sembilan sepuluh sebelas dua belas tiga belas")
+        cleaned = ac._clean(messy)
+        self.assertLessEqual(len(cleaned["seo_description"]), ac.LIMITS["seo_description"])
+        self.assertFalse(cleaned["seo_description"].endswith((" ", ",")))
+        self.assertLessEqual(len(cleaned["title"]), ac.LIMITS["title"])
+        self.assertLessEqual(len(cleaned["cover_subline"].split()), ac.COVER["subline_words"])
+        self.assertEqual(ac.validate_article(cleaned, JAUKI), [])
+
+    def test_non_english_cover_subject_gets_a_safe_default_scene(self):
+        self.assertEqual(ac._clean(valid(cover_subject="meja belajar rapi"))["cover_subject"], ac.DEFAULT_SUBJECT)
+        self.assertEqual(ac._clean(valid(cover_subject="a laptop and a mug"))["cover_subject"], "a laptop and a mug")
+
+    def test_json_with_raw_newlines_inside_strings_is_accepted(self):
+        newline = chr(10)
+        broken = {"choices": [{"message": {"content": '{"a": "satu' + newline + 'dua"}'}}]}
+        out = writer.chat_json(base_url="https://x", api_key="k", model="m", messages=[], transport=Transport(broken))
+        self.assertEqual(out["a"], "satu" + newline + "dua")
+
+
 class ValidationTests(unittest.TestCase):
     def test_accepts_a_good_article_for_both_brands(self):
         for data in (KAUIZ, JAUKI):

@@ -123,6 +123,25 @@ def validate_article(article: Mapping[str, Any], brand_data: Mapping[str, Any]) 
     return errors
 
 
+DEFAULT_SUBJECT = "a tidy student study desk with notebooks, a pencil, and sticky notes"
+
+
+def _clip(text: str, limit: int) -> str:
+    """Pangkas di batas kata (dan akhir kalimat bila ada) supaya tidak berhenti di tengah kata."""
+    text = " ".join(str(text or "").split())
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0]
+    sentence = max(cut.rfind(". "), cut.rfind("! "), cut.rfind("? "))
+    if sentence >= limit * 0.6:
+        cut = cut[:sentence + 1]
+    return cut.rstrip(" ,;:-")
+
+
+def _english_subject(subject: str) -> bool:
+    return bool(subject) and subject.isascii() and not set(re.findall(r"[a-z]+", subject.lower())) & INDONESIAN_HINTS
+
+
 def _clean(article: Mapping[str, Any]) -> dict[str, Any]:
     tags: list[str] = []
     for tag in article.get("tags") or []:
@@ -132,8 +151,14 @@ def _clean(article: Mapping[str, Any]) -> dict[str, Any]:
     out = {key: " ".join(str(article.get(key) or "").split()) for key in
            ("title", "excerpt", "category", "seo_title", "seo_description", "cover_headline", "cover_subline", "cover_subject")}
     out["content"] = sanitize_html(str(article.get("content") or ""))
-    out["tags"] = tags
-    out["cover_headline"] = out["cover_headline"].rstrip(".").upper()
+    out["tags"] = [tag for tag in tags if len(tag) <= LIMITS["tag"]][:5]
+    # Kolom pendek dipangkas rapi, bukan ditolak: model kecil sering melewati batas beberapa karakter.
+    for key in ("title", "excerpt", "seo_title", "seo_description", "category"):
+        out[key] = _clip(out[key], LIMITS[key])
+    out["cover_headline"] = writer._clip_headline(out["cover_headline"].replace('"', ""), COVER["headline_words"], COVER["headline_chars"]).rstrip(".").upper()
+    out["cover_subline"] = writer._clip_words(out["cover_subline"].replace('"', ""), COVER["subline_words"], COVER["subline_chars"])
+    if not _english_subject(out["cover_subject"]):
+        out["cover_subject"] = DEFAULT_SUBJECT
     return out
 
 

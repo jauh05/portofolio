@@ -333,7 +333,7 @@ def chat_json(*, base_url: str, api_key: str, model: str, messages: list[dict[st
     if start < 0 or end <= start:
         raise WriterError("respons LLM bukan JSON")
     try:
-        return json.loads(text[start:end + 1])
+        return json.loads(text[start:end + 1], strict=False)  # model sering menaruh baris baru mentah di dalam string
     except ValueError as err:
         raise WriterError("JSON dari LLM rusak") from err
 
