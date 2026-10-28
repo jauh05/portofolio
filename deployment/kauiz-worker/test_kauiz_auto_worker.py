@@ -162,8 +162,9 @@ class MuseTests(unittest.TestCase):
                                    model="meta/muse-image", fmt="feed", transport=transport)
         self.assertEqual(captured["url"], "https://openrouter.ai/api/v1/images")
         self.assertEqual(captured["headers"], {"Authorization": "Bearer test-key"})
-        self.assertEqual(captured["body"], {"model": "meta/muse-image", "prompt": "prompt teks",
-                                            "aspect_ratio": "4:5", "output_format": "jpeg"})
+        self.assertEqual(captured["body"], {"model": "meta/muse-image", "prompt": "prompt teks", "output_format": "jpeg",
+                                            "image_config": {"aspect_ratio": "4:5"}})
+        self.assertNotIn("aspect_ratio", captured["body"])  # parameter ini membuat Muse mengembalikan 2:3
 
     def test_b64_and_url_responses_return_image_bytes(self):
         raw = png_bytes()

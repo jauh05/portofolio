@@ -121,6 +121,7 @@ def _format_args(brand_data: Mapping[str, Any], fmt: str, subject: str, headline
     visual = brand_data["visual"]
     return {
         "aspect": ASPECT_TEXT[fmt], "ink": visual["ink"], "accent": visual["accent"], "palette": visual["palette_prompt"],
+        "bg": visual.get("bg", visual["palette_prompt"].split(",")[0]),
         "headline_style": visual["headline_style"], "subject": subject, "headline": headline,
     }
 

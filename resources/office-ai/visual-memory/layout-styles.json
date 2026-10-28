@@ -1,28 +1,9 @@
 {
- "version": "1.0",
- "description": "Tata letak untuk mode teks Muse. Hanya posisi headline, subjek, poin, dan footer. Adegan dan gaya teks ditentukan Muse.",
+ "version": "1.1",
+ "description": "Tata letak untuk mode teks Muse. Latar putih (placeholder bg dari data brand). Hanya posisi headline, subjek, poin, dan footer; adegan dan gaya teks ditentukan Muse.",
  "templates": {
   "L1": {
    "concept": "Foto studio, headline kiri atas",
-   "text_color": "cream",
-   "subject_hint": "a concrete, natural scene or object that fits the topic",
-   "slots": {
-    "headline": {
-     "max_words": 5,
-     "max_chars": 34
-    },
-    "subline": {
-     "where": "Below the headline",
-     "max_words": 14,
-     "max_chars": 80
-    },
-    "chips": null,
-    "cta": null
-   },
-   "prompt_template": "Bold editorial social media poster in {aspect}, in the style of a modern campaign. The main visual is {subject}, shown as a realistic high-quality studio photograph with premium lighting and realistic materials; choose a fitting, natural scene, and keep any people natural and friendly. The background is a seamless matte {ink} wall with a soft vignette. In the top third, a huge headline in {headline_style}, left aligned, white with the last two words in {accent}, reads exactly \"{headline}\". The subject sits in the lower two thirds, slightly right of center."
-  },
-  "L2": {
-   "concept": "Cutout hitam-putih di kertas kusut",
    "text_color": "deep navy",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -38,11 +19,11 @@
     "chips": null,
     "cta": null
    },
-   "prompt_template": "Bold social media poster in {aspect}, in the style of a modern digital-agency campaign. The background is a crumpled warm cream paper texture with soft creases and subtle shadows. In the center right, a high-contrast black and white cutout photograph of {subject}, with a single {accent} detail as the only color, sharp paper-cut edge and a light drop shadow. A large {ink} geometric block sits behind it at the lower left for depth. In the upper left, a huge headline in {headline_style}, deep navy, reads exactly \"{headline}\", with the last two words highlighted by a {accent} marker-style bar behind them."
+   "prompt_template": "Bold editorial social media poster in {aspect}, in the style of a modern campaign. The background is a {bg} studio backdrop with soft natural light and subtle shadows. The main visual is {subject}, shown as a realistic high-quality photograph with premium lighting and realistic materials; choose a fitting, natural scene, and keep any people natural and friendly. In the top third, a huge headline in {headline_style}, left aligned, {ink}, with the last two words highlighted by a {accent} marker-style bar behind them, reads exactly \"{headline}\". The subject sits in the lower two thirds, slightly right of center."
   },
-  "L3": {
-   "concept": "Tipografi besar di tengah",
-   "text_color": "cream",
+  "L2": {
+   "concept": "Cutout hitam-putih di kertas kusut putih",
+   "text_color": "deep navy",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -57,7 +38,26 @@
     "chips": null,
     "cta": null
    },
-   "prompt_template": "Bold typography-led social poster in {aspect}. The background is solid {ink} with a subtle crumpled paper texture and a soft lighter glow in the center. In the center, a huge stacked headline in {headline_style}, cream with one key word in {accent}, reads exactly \"{headline}\". Around it float two or three small realistic objects related to {subject}, tilted like stickers with thin white borders, with soft shadows."
+   "prompt_template": "Bold social media poster in {aspect}, in the style of a modern digital-agency campaign. The background is a crumpled {bg} paper texture with soft creases and subtle shadows. In the center right, a high-contrast black and white cutout photograph of {subject}, with a single {accent} detail as the only color, sharp paper-cut edge and a light drop shadow. A large {ink} geometric block sits behind it at the lower left for depth. In the upper left, a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\", with the last two words highlighted by a {accent} marker-style bar behind them."
+  },
+  "L3": {
+   "concept": "Tipografi besar di tengah",
+   "text_color": "deep navy",
+   "subject_hint": "a concrete, natural scene or object that fits the topic",
+   "slots": {
+    "headline": {
+     "max_words": 5,
+     "max_chars": 34
+    },
+    "subline": {
+     "where": "Below the headline",
+     "max_words": 14,
+     "max_chars": 80
+    },
+    "chips": null,
+    "cta": null
+   },
+   "prompt_template": "Bold typography-led social poster in {aspect}. The background is a {bg} surface with a subtle paper texture and soft shadows. In the center, a huge stacked headline in {headline_style}, {ink} with one key word in {accent}, reads exactly \"{headline}\". Around it float two or three small realistic objects related to {subject}, tilted like stickers with thin borders and soft shadows."
   },
   "L4": {
    "concept": "Blok headline atas, foto penuh di bawah",
@@ -76,11 +76,11 @@
     "chips": null,
     "cta": null
    },
-   "prompt_template": "Clean editorial social poster in {aspect}. The top third is a flat warm cream block holding a huge headline in {headline_style}, deep navy with one word in {accent}, reads exactly \"{headline}\". The lower two thirds are a full-bleed realistic photograph of {subject}, natural light, shallow depth of field, graded in {palette}."
+   "prompt_template": "Clean editorial social poster in {aspect}. The top third is a flat {bg} block holding a huge headline in {headline_style}, {ink} with one word in {accent}, reads exactly \"{headline}\". The lower two thirds are a full-bleed realistic photograph of {subject}, natural light, shallow depth of field, with bright airy tones that match {palette}."
   },
   "L5": {
    "concept": "Kolom teks kiri, subjek kanan",
-   "text_color": "cream",
+   "text_color": "deep navy",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -100,11 +100,11 @@
     },
     "cta": null
    },
-   "prompt_template": "Structured editorial social poster in {aspect}. The background is solid {ink} with subtle paper grain. On the right half, a realistic cutout photograph of {subject}, with a thin {accent} outline and a soft shadow. In the upper left column, a huge headline in {headline_style}, cream, reads exactly \"{headline}\"."
+   "prompt_template": "Structured editorial social poster in {aspect}. The background is a {bg} surface with subtle paper grain. On the right half, a realistic cutout photograph of {subject}, with a thin {accent} outline and a soft shadow. In the upper left column, a huge headline in {headline_style}, {ink}, reads exactly \"{headline}\"."
   },
   "L6": {
-   "concept": "Foto penuh, headline di sepertiga bawah",
-   "text_color": "cream",
+   "concept": "Foto penuh, headline di kartu putih bawah",
+   "text_color": "deep navy",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -119,7 +119,7 @@
     "chips": null,
     "cta": null
    },
-   "prompt_template": "Cinematic social poster in {aspect}. A full-frame realistic photograph of {subject}, dramatic soft lighting, graded in {palette}. In the lower third, on a soft dark gradient, a huge headline in {headline_style}, cream with the last word in {accent}, reads exactly \"{headline}\"."
+   "prompt_template": "Cinematic social poster in {aspect}. A full-frame realistic photograph of {subject}, bright natural light, with bright airy tones that match {palette}. In the lower third, on a {bg} rounded card with a soft shadow, a huge headline in {headline_style}, {ink} with the last word in {accent}, reads exactly \"{headline}\"."
   },
   "L7": {
    "concept": "Kapsul kata kunci",
@@ -134,16 +134,16 @@
     "chips": {
      "min": 3,
      "max": 4,
-     "where": "In the middle and lower area, tilted outlined pill-shaped capsules in cream with thick rounded borders cross each other like a playful word cloud, with bold condensed navy capitals, one of them filled {accent}",
+     "where": "In the middle and lower area, tilted pill-shaped capsules with thick {ink} outlines on {bg} cross each other like a playful word cloud, with bold condensed {ink} capitals, one of them filled {accent}",
      "max_chars": 18
     },
     "cta": null
    },
-   "prompt_template": "Typography poster in {aspect}. The background is a crumpled warm cream paper texture. At the top, a huge headline in {headline_style}, deep navy, centered, reads exactly \"{headline}\". A small realistic object related to {subject} peeks in from the lower corner."
+   "prompt_template": "Typography poster in {aspect}. The background is a {bg} surface with a subtle paper texture. At the top, a huge headline in {headline_style}, {ink}, centered, reads exactly \"{headline}\". A small realistic object related to {subject} peeks in from the lower corner."
   },
   "L8": {
    "concept": "Dua blok warna dengan cutout di tengah",
-   "text_color": "cream",
+   "text_color": "deep navy",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -158,7 +158,7 @@
     "chips": null,
     "cta": null
    },
-   "prompt_template": "Bold campaign poster in {aspect}. The canvas is split diagonally into a {ink} half and a warm cream half. A realistic cutout photograph of {subject}, sharp paper-cut edge with a light shadow, sits across the split. On the navy half, a huge headline in {headline_style}, cream with one word in {accent}, reads exactly \"{headline}\"."
+   "prompt_template": "Bold campaign poster in {aspect}. The canvas is split diagonally into a {bg} half and a {accent} half. A realistic cutout photograph of {subject}, sharp paper-cut edge with a light shadow, sits across the split. On the white half, a huge headline in {headline_style}, {ink} with one word in {accent}, reads exactly \"{headline}\"."
   }
  }
 }

@@ -432,7 +432,7 @@ def http_get_bytes(url, timeout=300.0):
         raise MuseTransientError(f"unduh gambar Muse gagal: {err!r}") from err
 
 
-def muse_body(prompt, model, fmt, aspect_mode="param"):
+def muse_body(prompt, model, fmt, aspect_mode="image_config"):
     """Body request Muse. aspect_mode: param (aspect_ratio di body), image_config (di dalam image_config), none (rasio hanya di prompt)."""
     body = {"model": model, "prompt": prompt, "output_format": "jpeg"}
     if aspect_mode == "param":
@@ -443,7 +443,7 @@ def muse_body(prompt, model, fmt, aspect_mode="param"):
 
 
 def generate_background(prompt, *, api_key, base_url, model, fmt, transport=None, fetch=None, sleep=time.sleep, waits=(5, 15),
-                        aspect_mode="param"):
+                        aspect_mode="image_config"):
     """Latar dari OpenRouter Images. Body dan respons sama dengan generate_muse_image di bot Jauki."""
     if not api_key:
         raise MuseError("OPENROUTER_API_KEY belum diisi")
@@ -516,7 +516,7 @@ def pad_to_canvas(source, canvas, feather=48, fill="blur"):
     return background
 
 
-def fit_to_canvas(image_bytes, fmt, feed_fit="pad", fill="blur"):
+def fit_to_canvas(image_bytes, fmt, feed_fit="pad", fill="solid"):
     """Menyesuaikan gambar Muse ke kanvas. Muse selalu mengembalikan 2:3. Bawaan: seluruh gambar dipasang utuh dengan isian
     buram di area sisa (story: atas dan bawah yang tertutup tampilan Instagram; feed: sisi kiri dan kanan), jadi tidak ada
     teks yang terpotong. feed_fit="crop" memotong feed ke 4:5 seperti sebelumnya."""
@@ -836,8 +836,8 @@ class Config:
     visual_memory_dir: Optional[Path] = None
     max_images_per_day: int = 12
     feed_fit: str = "pad"
-    fill_mode: str = "blur"
-    muse_aspect: str = "param"
+    fill_mode: str = "solid"
+    muse_aspect: str = "image_config"
     text_mode: str = "muse"
     llm_model: str = LLM_MODEL_DEFAULT
     llm_base_url: str = OPENROUTER_BASE_URL
@@ -884,8 +884,8 @@ def load_config(env):
         visual_memory_dir=Path(get("KAUIZ_VISUAL_MEMORY_DIR")) if get("KAUIZ_VISUAL_MEMORY_DIR") else None,
         max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "12")),
         feed_fit=get("KAUIZ_FEED_FIT", "pad"),
-        fill_mode=get("KAUIZ_FILL", "blur"),
-        muse_aspect=get("KAUIZ_MUSE_ASPECT", "param"),
+        fill_mode=get("KAUIZ_FILL", "solid"),
+        muse_aspect=get("KAUIZ_MUSE_ASPECT", "image_config"),
         text_mode=get("KAUIZ_TEXT_MODE", "muse"),
         llm_model=get("KAUIZ_LLM_MODEL", LLM_MODEL_DEFAULT),
         llm_base_url=get("KAUIZ_LLM_BASE_URL", OPENROUTER_BASE_URL),
