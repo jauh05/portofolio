@@ -517,6 +517,39 @@ class MuseTests(unittest.TestCase):
         for index in range(3, len(chosen)):
             self.assertNotIn(chosen[index], chosen[index - 3:index])
 
+    def test_jauki_brand_uses_its_own_bank_footer_palette_and_caption(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            slots = root / "slots.json"
+            slots.write_text(json.dumps([{"format": "feed", "day": 2, "time": "13:40", "timezone": "Asia/Jakarta", "lead_minutes": 120}]))
+            config = self.muse_config(root, slots_file=slots, text_mode="muse", brand="jauki")
+            now = datetime(2026, 10, 27, 13, 45, tzinfo=ZoneInfo("Asia/Jakarta"))
+            with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
+                self.assertEqual(worker.run_due(config, live=False, now=now), worker.EXIT_OK)
+            base = config.output_dir / "2026-10-27-1340-feed"
+            prompt = base.with_name(base.name + ".prompt.txt").read_text(encoding="utf-8")
+            caption = base.with_name(base.name + ".caption.txt").read_text(encoding="utf-8")
+            self.assertIn('reads exactly "@jaukitugas"', prompt)
+            self.assertIn("#532923", prompt)
+            self.assertIn("clean white (#FFFFFF)", prompt)
+            self.assertNotIn("#0B1537", prompt)
+            self.assertNotIn("kauiz", (prompt + caption).lower())
+            self.assertIn("#jaukitugas", caption)
+            self.assertNotIn("link di bio", caption.lower())
+
+    def test_jauki_bank_usage_is_recorded_under_the_jauki_key_only(self):
+        bank = worker.load_bank_module(self.visual_dir)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, text_mode="muse", brand="jauki")
+            state = {"published": {}}
+            item = bank.next_item(state, "jauki", "story")
+            plan = bank.to_plan(item, "story")
+            with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 1600))):
+                worker.render_muse_image(config, plan, worker.topic_from_plan(plan), "story", "slot-j", root / "j.jpg", state)
+            self.assertEqual(list(state["bank"]), ["jauki:story"])
+            self.assertTrue(state["bank"]["jauki:story"][0].startswith("js-"))
+
     def test_pattern_subject_and_short_line_helpers(self):
         self.assertEqual(worker.infer_pattern({"topic": "Tips belajar efektif"}), "tips")
         self.assertEqual(worker.infer_pattern({"topic": "Webinar gratis"}), "event")

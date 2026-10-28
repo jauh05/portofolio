@@ -80,14 +80,17 @@ class LayoutCardTests(unittest.TestCase):
                         self.assertIn(f'reads exactly "{footer}"', result["muse_prompt"])
                         self.assertIn("left and right 10 percent", result["muse_prompt"])
 
-    def test_kauiz_layouts_use_a_white_background_and_jauki_a_warm_cream_one(self):
+    def test_both_brands_use_a_white_background_with_their_own_colors(self):
         layouts = writer.load_layout_styles()
         for layout_id in layouts:
             kauiz = writer.write_content("kauiz", SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer=FOOTER, styles=layouts)["muse_prompt"]
             jauki = writer.write_content("jauki", SOURCE, {}, layout_id, "feed", "an open notebook", cta_label=None, footer="@jaukitugas", styles=layouts)["muse_prompt"]
             self.assertIn("clean white (#FFFFFF)", kauiz, layout_id)
             self.assertNotIn("solid deep navy", kauiz, layout_id)
-            self.assertIn("warm cream (#FFE8D0)", jauki, layout_id)
+            self.assertIn("clean white (#FFFFFF)", jauki, layout_id)
+            self.assertIn("dark brown (#532923)", jauki, layout_id)
+            self.assertNotIn("#0B1537", jauki, layout_id)
+            self.assertNotIn("#532923", kauiz, layout_id)
 
     def test_layout_prompts_leave_scene_and_text_style_to_muse(self):
         prompt = write("T01")["muse_prompt"]

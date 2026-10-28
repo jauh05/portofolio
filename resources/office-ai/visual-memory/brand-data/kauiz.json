@@ -224,5 +224,6 @@
     "bg": "clean white (#FFFFFF)"
   },
   "sources": "Data harga dan fitur dari pemeriksaan kode dan situs kauiz.web.id yang dikirim pemilik. Ketidakcocokan situs dan kode (slot roadmap, batas upload, 40 vs 50 soal, harga coret) sengaja tidak dimasukkan.",
-  "cta_required": true
+  "cta_required": true,
+  "footer_text": "kauiz.web.id"
 }

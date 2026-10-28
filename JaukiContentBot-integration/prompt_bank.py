@@ -14,9 +14,24 @@ from typing import Any, Mapping, Optional
 from visual_memory import MEMORY_DIR
 
 
+# Awalan ID per brand dan format. Dipakai untuk memastikan bank satu brand tidak pernah dipakai oleh brand lain.
+ID_PREFIX = {("kauiz", "feed"): "kf-", ("kauiz", "story"): "ks-", ("jauki", "feed"): "jf-", ("jauki", "story"): "js-"}
+
+
+def _check_id(brand: str, fmt: str, item_id: str) -> None:
+    prefix = ID_PREFIX.get((brand, fmt))
+    if prefix is None or not str(item_id).startswith(prefix):
+        raise ValueError(f"Materi {item_id} bukan milik bank {brand} {fmt}")
+
+
 def load_bank(brand: str, fmt: str) -> list[dict[str, Any]]:
     path = MEMORY_DIR / "prompt-bank" / f"{brand}-{fmt}.json"
-    return json.loads(path.read_text(encoding="utf-8"))["items"]
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("brand") != brand or data.get("format") != fmt:
+        raise ValueError(f"{path.name} berlabel {data.get('brand')}/{data.get('format')}, bukan {brand}/{fmt}")
+    for item in data["items"]:
+        _check_id(brand, fmt, item["id"])
+    return data["items"]
 
 
 def _order(brand: str, fmt: str, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -40,6 +55,7 @@ def next_item(state: Mapping[str, Any], brand: str, fmt: str) -> Optional[dict[s
 
 
 def consume(state: dict[str, Any], brand: str, fmt: str, item_id: str) -> None:
+    _check_id(brand, fmt, item_id)
     used = state.setdefault("bank", {}).setdefault(f"{brand}:{fmt}", [])
     if item_id not in used:
         used.append(item_id)

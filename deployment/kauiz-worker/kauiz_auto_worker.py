@@ -668,7 +668,7 @@ def muse_job(config, plan, fmt, slot_key, history, with_prompt=True):
     prompt = None
     if with_prompt:
         prompt = visual_memory.VisualPromptCompiler().compile_prompt(
-            "kauiz", analysis, selected["template_id"], selected["variation"], mode,
+            config.brand, analysis, selected["template_id"], selected["variation"], mode,
         )["prompt"]
     return {
         "prompt": prompt, "template_id": selected["template_id"], "variation": selected["variation"], "mode": mode,
@@ -685,7 +685,7 @@ def topic_from_plan(plan):
 
 def apply_overlay(config, job, plan, topic, image):
     visual_memory, visual_overlay = load_visual_modules(config.visual_memory_dir)
-    brand = visual_memory.VisualBrandMemory().get("kauiz")
+    brand = visual_memory.VisualBrandMemory().get(config.brand)
     layout = visual_overlay.load_layouts()["templates"][job["template_id"]][job["mode"]]
     try:
         return visual_overlay.render_overlay(image, layout, brand, overlay_copy(plan, topic), mode=job["mode"], variation=job["variation"])
@@ -702,8 +702,9 @@ def write_content(config, plan, topic, fmt, slot_key, job, use_llm):
     visual_memory, _ = load_visual_modules(config.visual_memory_dir)
     import visual_prompt_writer
 
-    brand = visual_memory.VisualBrandMemory().get("kauiz")
+    brand = visual_memory.VisualBrandMemory().get(config.brand)
     cta = brand.get("cta", {})
+    brand_data = visual_prompt_writer.load_brand_data(config.brand)
     source = {"headline": topic["headline"], "subheadline": topic["body"], "items": [p for p in (plan.get("key_points") or []) if p]}
     for key in ("pain", "tip", "feature", "caption_text"):
         if plan.get(key):
@@ -713,8 +714,9 @@ def write_content(config, plan, topic, fmt, slot_key, job, use_llm):
     llm = llm_endpoints(config) if use_llm else None
     try:
         return visual_prompt_writer.write_content(
-            "kauiz", source, post, job["template_id"], fmt, job["subject"],
-            cta_label=cta.get("label_story" if fmt == "story" else "label", "LINK DI BIO"), footer=cta.get("url", "kauiz.web.id"),
+            config.brand, source, post, job["template_id"], fmt, job["subject"],
+            cta_label=cta.get("label_story" if fmt == "story" else "label", "LINK DI BIO"),
+            footer=brand_data.get("footer_text") or cta.get("url", ""), brand_data=brand_data,
             seed=job["seed"], llm=llm, styles=visual_prompt_writer.load_layout_styles(),
         )
     except visual_prompt_writer.WriterError as err:
@@ -740,7 +742,7 @@ def write_prompt_preview(config, plan, topic, fmt, slot_key, state):
         prompt = job["prompt"]
         info["copy"] = overlay_copy(plan, topic)
         visual_memory, visual_overlay = load_visual_modules(config.visual_memory_dir)
-        background = visual_overlay.placeholder_background(visual_memory.VisualBrandMemory().get("kauiz"), job["mode"], 1)
+        background = visual_overlay.placeholder_background(visual_memory.VisualBrandMemory().get(config.brand), job["mode"], 1)
         apply_overlay(config, job, plan, topic, background).save(base.with_name(base.name + ".preview.jpg"), "JPEG", quality=88)
     path = base.with_name(base.name + ".prompt.txt")
     path.write_text(prompt + "\n", encoding="utf-8")
@@ -778,7 +780,7 @@ def render_muse_image(config, plan, topic, fmt, slot_key, out_path, state):
         background_path.write_bytes(raw)
         state["images"] = {today: used + 1}
         if plan.get("bank_id"):
-            load_bank_module(config.visual_memory_dir).consume(state, "kauiz", fmt, plan["bank_id"])
+            load_bank_module(config.visual_memory_dir).consume(state, config.brand, fmt, plan["bank_id"])
         state["history"] = (state.get("history", []) + [{
             "template_id": job["template_id"], "hero_position": job["variation"]["hero_position"],
             "background_treatment": job["variation"]["background_treatment"], "slot_key": slot_key,
@@ -837,6 +839,7 @@ class Config:
     max_images_per_day: int = 12
     feed_fit: str = "pad"
     fill_mode: str = "solid"
+    brand: str = "kauiz"
     muse_aspect: str = "image_config"
     text_mode: str = "muse"
     llm_model: str = LLM_MODEL_DEFAULT
@@ -885,6 +888,7 @@ def load_config(env):
         max_images_per_day=int(get("KAUIZ_MAX_IMAGES_PER_DAY", "12")),
         feed_fit=get("KAUIZ_FEED_FIT", "pad"),
         fill_mode=get("KAUIZ_FILL", "solid"),
+        brand=get("KAUIZ_BRAND", "kauiz"),
         muse_aspect=get("KAUIZ_MUSE_ASPECT", "image_config"),
         text_mode=get("KAUIZ_TEXT_MODE", "muse"),
         llm_model=get("KAUIZ_LLM_MODEL", LLM_MODEL_DEFAULT),
@@ -1103,7 +1107,7 @@ def run_due(config, *, live, now, client=None):
                 plan = {**job.plan, "source": "slot"}
             else:
                 bank = load_bank_module(config.visual_memory_dir)
-                item = bank.next_item(load_state(config.state_file), "kauiz", job.fmt)
+                item = bank.next_item(load_state(config.state_file), config.brand, job.fmt)
                 if item is None:
                     LOG.error("slot %s dilewati: bank materi %s habis dan jadwal tidak punya isi", job.slot_key, job.fmt)
                     failures += 1

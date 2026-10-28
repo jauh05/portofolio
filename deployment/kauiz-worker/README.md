@@ -105,6 +105,14 @@ palet, dan ukuran (feed 4:5 atau story 9:16). Story tidak memakai caption.
 - Muse bisa mengembalikan rasio yang meleset (story 2:3), lalu tepinya dipotong. Karena itu margin kiri dan kanan story 20 persen.
 - Ejaan teks di gambar ditulis Muse dan belum diperiksa otomatis. Periksa hasil pertama di Instagram.
 
+### Dua brand (Kauiz dan Jauki)
+
+Worker yang sama melayani dua brand lewat `KAUIZ_BRAND`. Pisahkan per folder: `/home/jauhar/deploy/kauiz/kauiz-worker` untuk
+Kauiz dan folder lain (mis. `/home/jauhar/deploy/jauki/jauki-worker`) untuk Jauki, masing-masing dengan `worker.env`, `state.json`,
+dan token Instagram sendiri. Bank materi, data brand, dan footer per brand: `prompt-bank/<brand>-<format>.json`,
+`brand-data/<brand>.json`, `footer_text`. Kode menolak bank atau data yang berlabel brand lain, dan pencatatan pemakaian bank
+memakai kunci `brand:format`. Konten Jauki berupa humor tentang tugas dan mahasiswa, tanpa promosi layanan.
+
 ### Probe rasio Muse
 
 Muse bisa mengembalikan 2:3 walau diminta 4:5. Probe ini mencoba empat cara mengirim rasio (sekitar $0,01 per gambar yang

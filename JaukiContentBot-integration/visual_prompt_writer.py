@@ -46,7 +46,10 @@ def load_brand_data(slug: str, path: Optional[Path] = None) -> dict[str, Any]:
     target = path or MEMORY_DIR / "brand-data" / f"{slug}.json"
     if not Path(target).exists():
         raise WriterError(f"Brand data not found: {target}")
-    return json.loads(Path(target).read_text(encoding="utf-8"))
+    data = json.loads(Path(target).read_text(encoding="utf-8"))
+    if data.get("brand") != slug:
+        raise WriterError(f"Data brand {target} berlabel {data.get('brand')}, bukan {slug}")
+    return data
 
 
 def load_styles(path: Optional[Path] = None) -> dict[str, Any]:
@@ -268,7 +271,8 @@ def build_messages(brand_data: Mapping[str, Any], style: Mapping[str, Any], post
         "kamu sesuaikan dengan topik. Setiap teks gambar ditulis persis dalam tanda kutip ganda dengan kata 'reads exactly'. "
         "Sebut rasio gambar dan pertahankan kalimat aturan margin dari contoh prompt apa adanya. Pakai hanya kode warna dari contoh prompt. Tegaskan bahwa teks itu satu-satunya teks di gambar.\n"
         "- caption berbahasa Indonesia, nada sesuai data tone, maksimal 1500 karakter: pembuka yang menarik, satu manfaat konkret dari data, "
-        "ajakan 'Klik link di bio', lalu semua hashtag di baris terakhir. Untuk story, caption dikosongkan.\n"
+        + ("ajakan 'Klik link di bio'" if brand_data.get("cta_required", True) else "tanpa ajakan memesan atau promosi layanan")
+        + ", lalu semua hashtag di baris terakhir. Untuk story, caption dikosongkan.\n"
         "- hashtags: 5 sampai 10 tag berformat #kata, ikuti hashtag brand dan topik di data, boleh menambah yang relevan.\n"
         "- Harga hanya dari allowed_price_texts atau tidak disebut. Jangan pernah memakai atau menyiratkan avoid_claims. Jangan mengarang fitur, angka, atau janji."
     )
@@ -326,6 +330,8 @@ def write_content(brand_slug: str, source: Mapping[str, Any], post: Mapping[str,
     Tanpa `llm`, atau bila semua endpoint gagal, dipakai cadangan dari kartu gaya.
     """
     brand_data = brand_data or load_brand_data(brand_slug)
+    if brand_data.get("brand") != brand_slug:
+        raise WriterError(f"Data brand {brand_data.get('brand')} tidak boleh dipakai untuk {brand_slug}")
     style = (styles or load_styles())[template_id]
     copy = derive_copy(source, style)
     use_cta = cta_label if style["slots"].get("cta") and cta_label else None

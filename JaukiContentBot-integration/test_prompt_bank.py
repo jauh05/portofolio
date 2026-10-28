@@ -64,6 +64,52 @@ class BankContentTests(unittest.TestCase):
             self.assertNotIn("jaukitugas.my.id", item["caption"])
 
 
+class BrandSeparationTests(unittest.TestCase):
+    KAUIZ_ONLY = ("kauiz", "learning memory", "mentor", "kuis otomatis", "roadmap", "utbk")
+    JAUKI_ONLY = ("jaukitugas", "joki", "jauki")
+
+    def test_bank_files_carry_the_right_brand_label_and_id_prefix(self):
+        for (brand, fmt), prefix in bank.ID_PREFIX.items():
+            items = bank.load_bank(brand, fmt)
+            self.assertTrue(all(item["id"].startswith(prefix) for item in items), (brand, fmt))
+
+    def test_kauiz_content_never_mentions_jauki_and_jauki_never_mentions_kauiz(self):
+        for fmt in COUNTS:
+            for item in bank.load_bank("kauiz", fmt):
+                for word in self.JAUKI_ONLY:
+                    self.assertNotIn(word, texts(item), (item["id"], word))
+            for item in bank.load_bank("jauki", fmt):
+                for word in self.KAUIZ_ONLY:
+                    self.assertNotIn(word, texts(item), (item["id"], word))
+
+    def test_no_hook_is_shared_between_the_two_brands(self):
+        for fmt in COUNTS:
+            kauiz = {item["hook"].lower() for item in bank.load_bank("kauiz", fmt)}
+            jauki = {item["hook"].lower() for item in bank.load_bank("jauki", fmt)}
+            self.assertFalse(kauiz & jauki, kauiz & jauki)
+
+    def test_usage_is_tracked_per_brand_and_foreign_ids_are_rejected(self):
+        state = {}
+        item = bank.next_item(state, "jauki", "feed")
+        bank.consume(state, "jauki", "feed", item["id"])
+        self.assertEqual(bank.remaining(state, "kauiz", "feed"), 100)
+        self.assertEqual(bank.remaining(state, "jauki", "feed"), 99)
+        with self.assertRaises(ValueError):
+            bank.consume(state, "kauiz", "feed", item["id"])
+        with self.assertRaises(ValueError):
+            bank.consume(state, "jauki", "story", "kf-001")
+
+    def test_brand_data_must_match_the_requested_brand(self):
+        kauiz = writer.load_brand_data("kauiz")
+        with self.assertRaises(writer.WriterError):
+            writer.write_content("jauki", {"headline": "Tes"}, {}, "L1", "feed", "objek", cta_label=None, footer="@x",
+                                 brand_data=kauiz, styles=writer.load_layout_styles())
+
+    def test_footers_belong_to_each_brand(self):
+        self.assertEqual(writer.load_brand_data("kauiz")["footer_text"], "kauiz.web.id")
+        self.assertEqual(writer.load_brand_data("jauki")["footer_text"], "@jaukitugas")
+
+
 class BankPromptTests(unittest.TestCase):
     def test_every_item_builds_a_valid_prompt_and_caption_on_a_rotating_template(self):
         styles = writer.load_styles()
