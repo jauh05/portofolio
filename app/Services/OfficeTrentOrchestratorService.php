@@ -118,7 +118,7 @@ class OfficeTrentOrchestratorService
         ];
 
         foreach ($validItems as $item) {
-            $dt = CarbonImmutable::parse($item['scheduled_at'], 'Asia/Jakarta');
+            $dt = CarbonImmutable::parse($item['scheduled_at'])->timezone('Asia/Jakarta');
             $dayName = $dayMap[$dt->format('l')] ?? $dt->format('l');
 
             $summary .= "\n{$dayName}\n";
@@ -191,7 +191,7 @@ class OfficeTrentOrchestratorService
             'recent_topics' => $recentContent->pluck('title')->filter()->values()->all(),
             'active_schedules' => $activeSchedules->map(fn ($schedule) => [
                 'platform' => $schedule->platform, 'content_type' => $schedule->content_type, 'schedule_type' => $schedule->schedule_type,
-                'topic' => $schedule->topic, 'date' => $schedule->scheduled_at ? CarbonImmutable::instance($schedule->scheduled_at)->setTimezone('Asia/Jakarta')->toDateString() : null,
+                'topic' => $schedule->topic, 'date' => $schedule->scheduled_at?->toDateString(),
             ])->all(),
         ];
     }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\UtcDatetime;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,11 +16,11 @@ class OfficeContentSchedule extends Model
     protected function casts(): array
     {
         return [
-            'scheduled_at' => UtcDatetime::class,
-            'starts_at' => UtcDatetime::class,
-            'ends_at' => UtcDatetime::class,
-            'last_generated_at' => UtcDatetime::class,
-            'next_run_at' => UtcDatetime::class,
+            'scheduled_at' => 'datetime',
+            'starts_at' => 'datetime',
+            'ends_at' => 'datetime',
+            'last_generated_at' => 'datetime',
+            'next_run_at' => 'datetime',
             'recurrence_rule' => 'array',
             'metadata' => 'array',
             'is_active' => 'boolean',
