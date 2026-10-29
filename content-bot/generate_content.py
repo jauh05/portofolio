@@ -1,0 +1,767 @@
+#!/usr/bin/env python3
+"""Bot Reels Jauki Academy.
+
+Sekali jalan:
+1. Cek jadwal mingguan (config.json -> videos_per_week).
+2. Pilih video mentah acak. Potongan diambil dari bagian tengah: skip_head_s
+   detik awal dan skip_tail_s detik akhir dibuang. Detik yang sudah tercatat
+   di history.json tidak diulang.
+3. Minta AI (LiteLLM) membuat overlay, caption, hashtag, dan saran mood musik.
+4. Pilih musik acak dari music/<mood>/. Audio asli video mentah dibuang.
+5. Render dengan ffmpeg ke MP4 1080x1920 (9:16), cek formatnya, lalu simpan
+   bersama file caption .txt.
+
+Contoh:
+    python generate_content.py --dry-run     # lihat rencana saja
+    python generate_content.py --force       # render sekarang, lewati jadwal
+"""
+
+import argparse
+import fcntl
+import json
+import logging
+import math
+import os
+import random
+import re
+import subprocess
+import sys
+import tempfile
+import textwrap
+import uuid
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+
+from ig_publisher import GraphError, PublishError, ReelsClient, publish_reel
+from slot_plan import due_actions
+
+BASE_DIR = Path(__file__).resolve().parent
+RAW_DIR = BASE_DIR / "raw_videos"
+OUT_DIR = BASE_DIR / "output"
+MUSIC_DIR = BASE_DIR / "music"
+LOG_DIR = BASE_DIR / "logs"
+HISTORY_FILE = BASE_DIR / "history.json"
+CONFIG_FILE = BASE_DIR / "config.json"
+ENV_FILE = BASE_DIR / ".env"
+LOCK_FILE = BASE_DIR / ".lock"
+
+DEFAULT_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+
+WIDTH, HEIGHT, FPS = 1080, 1920, 30
+FONT_SIZE = 50
+WRAP_CHARS = 28
+MUSIC_EXT = {".mp3", ".m4a", ".aac", ".wav", ".ogg"}
+RAW_EXT = {".mp4", ".mov"}
+MUSIC_FADE_IN_S = 0.5
+MUSIC_FADE_OUT_S = 1.5
+RECENT_MUSIC_COUNT = 3
+
+# Setiap nilai adalah rantai filter ffmpeg. Satu dipilih acak per video.
+# Warnanya dibuat terlihat, teks putih tetap dijaga kontras lewat DIM dan bayangan.
+GRADES = {
+    "teal_oranye": "colorbalance=rs=-0.12:gs=0.04:bs=0.14:rh=0.08:bh=-0.08,eq=saturation=1.2:contrast=1.08",
+    "keemasan": "colorbalance=rs=0.14:gs=0.06:bs=-0.12,eq=saturation=1.15:brightness=0.02",
+    "dingin": "colorbalance=rs=-0.1:gs=0.02:bs=0.12,eq=saturation=0.95:contrast=1.05",
+    "vivid": "eq=saturation=1.35:contrast=1.08",
+    "vintage_pudar": "hue=s=0.7,eq=saturation=0.75:contrast=0.9:brightness=0.05",
+    "moody": "eq=brightness=-0.06:contrast=1.15:saturation=0.9",
+    "magenta": "colorbalance=rm=0.1:bm=0.06,eq=saturation=1.2",
+    "hitam_putih": "hue=s=0,eq=contrast=1.2",
+}
+# Teks putih dengan garis tepi hitam dan bayangan gelap yang jelas, tanpa kotak di belakang.
+TEXT_STYLE = "borderw=3:bordercolor=black@0.9:shadowcolor=black@0.7:shadowx=3:shadowy=3"
+# Sedikit menggelapkan video supaya teks putih terbaca.
+DIM = "eq=brightness=-0.04"
+
+# (overlay, caption) dipakai jika LiteLLM gagal. Urutannya mengikuti services.
+
+# Istilah suku, agama, ras, dan golongan. Teks yang memuatnya ditolak dan dipakai fallback.
+SARA_TERMS = [
+    "islam", "kristen", "katolik", "katholik", "kristiani", "nasrani", "hindu", "buddha", "budha",
+    "konghucu", "kafir", "muslim", "yahudi", "jawa", "sunda", "batak", "madura", "bugis",
+    "makassar", "minang", "betawi", "aceh", "melayu", "dayak", "papua", "ambon", "flores", "bali",
+    "tionghoa", "cina", "china", "arab", "pribumi", "negro", "suku", "agama", "ras",
+]
+SARA_PATTERN = re.compile(r"\b(?:" + "|".join(SARA_TERMS) + r")\b")
+
+
+def has_sara(text):
+    return SARA_PATTERN.search(text.lower()) is not None
+
+log = logging.getLogger("content-bot")
+
+
+class BotError(Exception):
+    exit_code = 1
+
+
+class HistoryError(BotError):
+    exit_code = 2
+
+
+def load_env():
+    if not ENV_FILE.exists():
+        return
+    for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
+
+
+def load_config():
+    cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+    # Pengaturan dari dashboard menimpa config.json. File ini dibaca ulang tiap jalan.
+    settings_file = os.environ.get("REELS_SETTINGS_FILE")
+    if settings_file and Path(settings_file).exists():
+        cfg.update(json.loads(Path(settings_file).read_text(encoding="utf-8")))
+    return cfg
+
+
+def load_history():
+    if not HISTORY_FILE.exists():
+        return []
+    try:
+        history = json.loads(HISTORY_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise HistoryError(f"history.json rusak ({exc}). Perbaiki manual, jangan di-reset.") from exc
+    if not isinstance(history, list):
+        raise HistoryError("history.json harus berisi list.")
+    return history
+
+
+def save_history(history):
+    tmp = HISTORY_FILE.parent / (HISTORY_FILE.name + ".tmp")
+    with tmp.open("w", encoding="utf-8") as fh:
+        json.dump(history, fh, ensure_ascii=False, indent=2)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, HISTORY_FILE)
+
+
+def iso_week(stamp, tz):
+    year, week, _ = datetime.fromisoformat(stamp).astimezone(tz).isocalendar()
+    return year, week
+
+
+def should_run_today(history, per_week, tz, rng):
+    """Pilih hari secara acak sampai kuota mingguan terpenuhi."""
+    now = datetime.now(tz)
+    year, week, weekday = now.isocalendar()
+    made = sum(1 for e in history if iso_week(e["created_at"], tz) == (year, week))
+    quota = per_week - made
+    if quota <= 0:
+        return False, f"kuota {per_week}/minggu sudah terpenuhi ({made} video minggu ini)"
+    if made == 0:
+        # Video pertama minggu ini langsung dimulai pada jalan harian pertama.
+        return True, f"belum ada video minggu ini, mulai hari ini (kuota {per_week}/minggu)"
+    days_left = 8 - weekday  # hari ini ikut dihitung
+    if quota >= days_left:
+        return True, f"sisa kuota {quota}, sisa hari {days_left}: wajib buat hari ini"
+    chance = quota / days_left
+    return rng.random() < chance, f"sisa kuota {quota} dari {days_left} hari, peluang {chance:.2f}"
+
+
+def validate_copy(data, moods):
+    if not isinstance(data, dict):
+        raise ValueError("jawaban bukan objek JSON")
+    overlay = " ".join(re.sub(r'["“”]', "", str(data.get("overlay", ""))).split())
+    if not 22 <= len(overlay.split()) <= 40:
+        raise ValueError(f"overlay tidak valid: {overlay!r}")
+    caption = " ".join(str(data.get("caption", "")).split())
+    if not caption:
+        raise ValueError("caption kosong")
+    raw_tags = data.get("hashtags")
+    if not isinstance(raw_tags, list):
+        raise ValueError("hashtags bukan list")
+    tags = []
+    for raw in raw_tags:
+        tag = "#" + re.sub(r"[^a-z0-9_]", "", str(raw).lower().lstrip("#"))
+        if tag != "#" and tag not in tags:
+            tags.append(tag)
+    if len(tags) < 5:
+        raise ValueError("hashtag kurang dari 5")
+    if has_sara(" ".join([overlay, caption, *tags])):
+        raise ValueError("teks mengandung istilah SARA")
+    mood = str(data.get("mood", "")).strip().lower()
+    return {
+        "overlay": overlay,
+        "caption": caption,
+        "hashtags": tags[:10],
+        "mood": mood if mood in moods else None,
+    }
+
+
+COPY_BANK_FILE = BASE_DIR / "copy_bank.json"
+LOW_BANK_WARNING = 10
+
+
+def load_bank():
+    if not COPY_BANK_FILE.exists():
+        return []
+    try:
+        bank = json.loads(COPY_BANK_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise BotError(f"copy_bank.json rusak ({exc}). Perbaiki manual, jangan di-reset.") from exc
+    if not isinstance(bank, list):
+        raise BotError("copy_bank.json harus berisi list.")
+    return bank
+
+
+def save_bank(bank):
+    tmp = COPY_BANK_FILE.parent / (COPY_BANK_FILE.name + ".tmp")
+    with tmp.open("w", encoding="utf-8") as fh:
+        json.dump(bank, fh, ensure_ascii=False, indent=2)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, COPY_BANK_FILE)
+
+
+def pick_copy(bank):
+    return next((item for item in bank if not item.get("used_at")), None)
+
+
+def import_bank(path, moods, bank, now):
+    """Tambah batch dari Claude ke bank. Item yang tidak valid atau kembar dilewati dan dilaporkan."""
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise BotError("File batch harus berisi list JSON.")
+    seen = {item["overlay"] for item in bank}
+    added, skipped = 0, []
+    for index, raw in enumerate(data, start=1):
+        try:
+            copy = validate_copy(raw, moods)
+            if copy["mood"] is None:
+                raise ValueError(f"mood harus salah satu dari {', '.join(moods)}")
+            if copy["overlay"] in seen:
+                raise ValueError("overlay kembar dengan yang sudah ada")
+            if re.search(r"\bjoki\b", " ".join([copy["overlay"], copy["caption"], *copy["hashtags"]]).lower()):
+                raise ValueError("mengandung kata joki")
+        except (ValueError, KeyError, TypeError) as exc:
+            skipped.append(f"item {index}: {exc}")
+            continue
+        seen.add(copy["overlay"])
+        bank.append({
+            "id": uuid.uuid4().hex[:8],
+            "topic": str(raw.get("topic", "")).strip(),
+            "overlay": copy["overlay"],
+            "caption": copy["caption"],
+            "hashtags": copy["hashtags"],
+            "mood": copy["mood"],
+            "imported_at": now.isoformat(timespec="seconds"),
+            "used_at": None,
+            "used_by": None,
+        })
+        added += 1
+    return added, skipped
+
+
+def pick_music(preferred, moods, history, rng):
+    recent = {e.get("music") for e in history[-RECENT_MUSIC_COUNT:]}
+    others = [m for m in moods if m != preferred]
+    rng.shuffle(others)
+    order = ([preferred] if preferred else []) + others
+    for mood in order:
+        tracks = sorted(p for p in (MUSIC_DIR / mood).glob("*") if p.suffix.lower() in MUSIC_EXT)
+        if not tracks:
+            continue
+        fresh = [p for p in tracks if f"{mood}/{p.name}" not in recent]
+        track = rng.choice(fresh or tracks)
+        return mood, f"{mood}/{track.name}", track
+    raise BotError("Tidak ada lagu di music/<mood>/. Isi dulu dengan musik berlisensi komersial.")
+
+
+def ffprobe(path, *extra):
+    out = subprocess.run(
+        ["ffprobe", "-v", "error", "-of", "json", *extra, str(path)],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return json.loads(out.stdout)
+
+
+def probe_duration(path):
+    return float(ffprobe(path, "-show_format")["format"]["duration"])
+
+
+def probe_source(path):
+    """Durasi dan ukuran tampilan. Rotasi dari HP ikut diperhitungkan."""
+    data = ffprobe(path, "-show_format", "-select_streams", "v:0", "-show_streams")
+    stream = data["streams"][0]
+    width, height = int(stream["width"]), int(stream["height"])
+    rotation = int(stream.get("tags", {}).get("rotate", 0))
+    for side in stream.get("side_data_list", []):
+        if "rotation" in side:
+            rotation = int(side["rotation"])
+    if abs(rotation) % 180 == 90:
+        width, height = height, width
+    return float(data["format"]["duration"]), width, height
+
+
+def pick_slot(history, name, size, src_dur, span, skip_head, skip_tail, rng):
+    """Cari titik mulai acak di celah yang belum pernah dipakai, di luar bagian buangan."""
+    low, high = skip_head, src_dur - skip_tail
+    if high - low < span:
+        return None
+    used = sorted(
+        (e["start_s"], e["end_s"])
+        for e in history
+        if e["source"] == name and e["source_size"] == size
+    )
+    gaps, cur = [], low
+    for start, end in used:
+        if start >= high:
+            break
+        if start > cur:
+            gaps.append((cur, start))
+        cur = max(cur, end)
+    if cur < high:
+        gaps.append((cur, high))
+    fits = [(a, b) for a, b in gaps if b - a >= span]
+    if not fits:
+        return None
+    a, b = rng.choices(fits, weights=[b - a for a, b in fits])[0]
+    return math.floor(rng.uniform(a, b - span) * 100 + 1e-9) / 100
+
+
+def pick_segment(history, cfg, rng):
+    sources = {}
+    for path in sorted(p for p in RAW_DIR.iterdir() if p.suffix.lower() in RAW_EXT and not p.name.startswith(".")):
+        try:
+            duration, width, height = probe_source(path)
+        except (subprocess.CalledProcessError, KeyError, IndexError, ValueError) as exc:
+            log.warning("Lewati %s, tidak bisa dibaca: %s", path.name, exc)
+            continue
+        sources[path] = (duration, width, height, path.stat().st_size)
+    if not sources:
+        raise BotError("raw_videos/ kosong atau tidak ada .mp4/.mov yang bisa dibaca.")
+
+    items = list(sources.items())
+    rng.shuffle(items)
+    combos = [(d, s) for d in cfg["durations"] for s in cfg["speed_choices"]]
+    rng.shuffle(combos)
+    for duration, speed in combos:
+        span = duration * speed  # detik sumber yang dipakai sebelum dipercepat
+        for path, (src_dur, width, height, size) in items:
+            start = pick_slot(
+                history, path.name, size, src_dur, span,
+                cfg["skip_head_s"], cfg["skip_tail_s"], rng,
+            )
+            if start is not None:
+                return {
+                    "path": path,
+                    "name": path.name,
+                    "size": size,
+                    "src_dur": src_dur,
+                    "landscape": width > height,
+                    "start": start,
+                    "span": span,
+                    "duration": duration,
+                    "speed": speed,
+                }
+    return None
+
+
+def build_filter_complex(seg, grade, vignette, text_path, font, volume, stab=""):
+    duration = seg["duration"]
+    setpts = stab + (f"setpts=PTS/{seg['speed']}," if seg["speed"] != 1.0 else "")
+    if seg["landscape"]:
+        # Latar blur dari video yang sama, video asli di tengah agar tidak terpotong.
+        head = (
+            f"[0:v]{setpts}split=2[bg][fg];"
+            f"[bg]scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,"
+            f"crop={WIDTH}:{HEIGHT},boxblur=luma_radius=25:luma_power=2[bgb];"
+            f"[fg]scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=decrease[fgs];"
+            "[bgb][fgs]overlay=(W-w)/2:(H-h)/2[base];"
+        )
+    else:
+        head = (
+            f"[0:v]{setpts}scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,"
+            f"crop={WIDTH}:{HEIGHT}[base];"
+        )
+    drawtext = (
+        f"drawtext=textfile={text_path}:expansion=none:fontfile={font}:fontsize={FONT_SIZE}:"
+        f"fontcolor=white:line_spacing=12:{TEXT_STYLE}:"
+        "x=(w-text_w)/2:y=(h-text_h)/2"
+    )
+    effects = [f"fps={FPS}", "setsar=1", DIM, GRADES[grade]]
+    if vignette:
+        effects.append("vignette=PI/5")
+    effects.append(drawtext)
+    video = head + "[base]" + ",".join(effects) + "[v]"
+    audio = (
+        f"[1:a]volume={volume},"
+        f"afade=t=in:st=0:d={MUSIC_FADE_IN_S},"
+        f"afade=t=out:st={duration - MUSIC_FADE_OUT_S:.2f}:d={MUSIC_FADE_OUT_S}[a]"
+    )
+    return f"{video};{audio}"
+
+
+def has_filter(name):
+    out = subprocess.run(["ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True)
+    return f" {name} " in out.stdout
+
+
+def prepare_stabilizer(seg, cfg):
+    """Stabilizer dua langkah: baca goyangan kamera dulu, lalu dipakai saat render. None bila tidak aktif."""
+    if not cfg.get("stabilize"):
+        return None
+    if not has_filter("vidstabtransform"):
+        log.warning("ffmpeg di server tidak punya vidstab. Stabilizer dilewati.")
+        return None
+    fd, trf = tempfile.mkstemp(suffix=".trf")
+    os.close(fd)
+    cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-ss", f"{seg['start']:.2f}", "-i", str(seg["path"]),
+           "-t", f"{seg['span']:.2f}", "-vf", f"vidstabdetect=shakiness=5:accuracy=15:result={trf}", "-f", "null", "-"]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        Path(trf).unlink(missing_ok=True)
+        raise BotError(f"stabilizer gagal (langkah deteksi):\n{result.stderr[-500:]}")
+    log.info("Stabilizer aktif.")
+    return trf
+
+
+def render(seg, track, music_offset, music_loop, grade, vignette, overlay, volume, font, out_path, trf_path=None):
+    fd, text_name = tempfile.mkstemp(suffix=".txt")
+    os.close(fd)
+    text_path = Path(text_name)
+    text_path.write_text("\n".join(textwrap.wrap(overlay, WRAP_CHARS, break_long_words=False)), encoding="utf-8")
+    stab = f"vidstabtransform=input={trf_path}:smoothing=30," if trf_path else ""
+    cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-ss", f"{seg['start']:.2f}", "-i", str(seg["path"])]
+    if music_loop:
+        cmd += ["-stream_loop", "-1"]
+    cmd += ["-ss", f"{music_offset:.2f}", "-i", str(track)]
+    cmd += [
+        "-filter_complex", build_filter_complex(seg, grade, vignette, text_path, font, volume, stab),
+        "-map", "[v]", "-map", "[a]", "-t", str(seg["duration"]),
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+        "-profile:v", "high", "-level", "4.2", "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "128k", "-ar", "44100", "-ac", "2",
+        "-movflags", "+faststart", str(out_path),
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+    finally:
+        text_path.unlink(missing_ok=True)
+    if result.returncode != 0:
+        out_path.unlink(missing_ok=True)
+        raise BotError(f"ffmpeg gagal:\n{result.stderr[-800:]}")
+
+
+def check_output(path):
+    """Pastikan hasil sesuai format TikTok: MP4, H.264, 1080x1920, dan audio AAC."""
+    data = ffprobe(path, "-show_format", "-show_streams")
+    video = next((s for s in data["streams"] if s["codec_type"] == "video"), None)
+    audio = next((s for s in data["streams"] if s["codec_type"] == "audio"), None)
+    problems = []
+    if video is None:
+        problems.append("tanpa stream video")
+    else:
+        if (int(video["width"]), int(video["height"])) != (WIDTH, HEIGHT):
+            problems.append(f"ukuran {video['width']}x{video['height']}")
+        if video["codec_name"] != "h264" or video.get("pix_fmt") != "yuv420p":
+            problems.append(f"video {video['codec_name']}/{video.get('pix_fmt')}")
+    if audio is None or audio["codec_name"] != "aac":
+        problems.append(f"audio {audio['codec_name'] if audio else 'tidak ada'}")
+    if "mp4" not in data["format"]["format_name"]:
+        problems.append("container bukan MP4")
+    if problems:
+        path.unlink(missing_ok=True)
+        raise BotError("Output tidak sesuai format TikTok: " + ", ".join(problems))
+    return float(data["format"]["duration"])
+
+
+def unique(items):
+    return list(dict.fromkeys(items))
+
+
+def count_available(bank):
+    return sum(1 for item in bank if not item.get("used_at"))
+
+
+SLOT_STATE_FILE = BASE_DIR / "slot_state.json"
+
+
+def slots_path():
+    return Path(os.environ.get("REELS_SLOTS_FILE", str(BASE_DIR / "reels_slots.json")))
+
+
+def load_slots():
+    path = slots_path()
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [slot for slot in data if isinstance(slot, dict) and slot.get("active", True)] if isinstance(data, list) else []
+
+
+def load_slot_state():
+    if not SLOT_STATE_FILE.exists():
+        return {}
+    return json.loads(SLOT_STATE_FILE.read_text(encoding="utf-8"))
+
+
+def save_slot_state(state):
+    tmp = SLOT_STATE_FILE.parent / (SLOT_STATE_FILE.name + ".tmp")
+    tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, SLOT_STATE_FILE)
+
+
+def plan_render(cfg, item, history, rng):
+    """Pilih musik, potongan, dan efek untuk satu item bank. None bila potongan sudah habis."""
+    preferred = item["mood"] if item["mood"] in cfg["music_moods"] else rng.choice(cfg["music_moods"])
+    mood, music_rel, track = pick_music(preferred, cfg["music_moods"], history, rng)
+    seg = pick_segment(history, cfg, rng)
+    if seg is None:
+        return None
+    last_grade = history[-1].get("grade") if history else None
+    grade = rng.choice([g for g in GRADES if g != last_grade])
+    vignette = rng.random() < 0.5
+    track_dur = probe_duration(track)
+    if track_dur >= seg["duration"] + 1:
+        music_offset, music_loop = rng.uniform(0, track_dur - seg["duration"]), False
+    else:
+        music_offset, music_loop = 0.0, True
+    return {"mood": mood, "music_rel": music_rel, "track": track, "seg": seg, "grade": grade,
+            "vignette": vignette, "music_offset": music_offset, "music_loop": music_loop}
+
+
+def render_plan(cfg, plan, item, bank, stamp):
+    """Render video dari rencana, cek formatnya, lalu tandai teks sebagai terpakai."""
+    entry_id = uuid.uuid4().hex[:8]
+    out_path = OUT_DIR / f"reel_{stamp:%Y%m%d_%H%M%S}_{entry_id}.mp4"
+    seg = plan["seg"]
+    trf_path = prepare_stabilizer(seg, cfg)
+    try:
+        render(seg, plan["track"], plan["music_offset"], plan["music_loop"], plan["grade"], plan["vignette"],
+               item["overlay"], cfg["music_volume"], os.environ.get("FONT_PATH", DEFAULT_FONT), out_path, trf_path)
+    finally:
+        if trf_path:
+            Path(trf_path).unlink(missing_ok=True)
+    actual = check_output(out_path)
+    # Teks dianggap terpakai begitu video berhasil dirender, supaya tidak dipakai dua kali.
+    item["used_at"] = stamp.isoformat(timespec="seconds")
+    item["used_by"] = out_path.name
+    save_bank(bank)
+    return out_path, actual, entry_id
+
+
+def caption_for(item, cfg):
+    hashtags = unique(item["hashtags"] + cfg["brand_hashtags"])
+    return f"{item['caption']}\n\n{' '.join(hashtags)}"
+
+
+def post_video(out_path, caption_text):
+    """Posting ke Instagram. Mengembalikan id media, atau melempar error bila gagal."""
+    video_url = f"{os.environ['PUBLIC_VIDEO_BASE_URL'].rstrip('/')}/{out_path.name}"
+    client = ReelsClient(os.environ["IG_ACCESS_TOKEN"], os.environ["IG_USER_ID"])
+    return publish_reel(client, video_url, caption_text)
+
+
+def history_entry(plan, item, cfg, out_path, actual, entry_id, stamp, slot_at=None):
+    seg = plan["seg"]
+    return {
+        "id": entry_id,
+        "created_at": stamp.isoformat(timespec="seconds"),
+        "slot_at": slot_at,
+        "source": seg["name"],
+        "source_size": seg["size"],
+        "source_duration": round(seg["src_dur"], 2),
+        "start_s": round(seg["start"], 2),
+        "end_s": round(seg["start"] + seg["span"], 2),
+        "speed": seg["speed"],
+        "duration": seg["duration"],
+        "output_duration": round(actual, 2),
+        "output": out_path.name,
+        "topic": item.get("topic") or "-",
+        "overlay": item["overlay"],
+        "caption": item["caption"],
+        "hashtags": unique(item["hashtags"] + cfg["brand_hashtags"]),
+        "copy_source": "bank",
+        "bank_id": item["id"],
+        "mood": plan["mood"],
+        "music": plan["music_rel"],
+        "grade": plan["grade"],
+        "vignette": plan["vignette"],
+        "instagram_media_id": None,
+        "post_error": None,
+        "posted_at": None,
+    }
+
+
+def run_auto(cfg, tz, rng, live, now):
+    """Mode slot: render dan posting mengikuti jam di grid. Tanpa --live hanya mencatat rencana."""
+    slots = load_slots()
+    if not slots:
+        log.info("Belum ada slot Reels aktif (%s). Tidak ada yang dikerjakan.", slots_path())
+        return 0
+
+    state = load_slot_state()
+    history = load_history()
+    bank = load_bank()
+    code = 0
+    for action in due_actions(slots, state, now, tz):
+        at = action.occurrence.astimezone(tz).strftime("%d %b %H:%M")
+        if action.kind == "missed":
+            state[action.key] = {"status": "missed"}
+            log.warning("Slot %s (%s) terlewat dan tidak dikerjakan.", action.slot.get("label"), at)
+            continue
+        if action.kind == "render":
+            item = pick_copy(bank)
+            if item is None:
+                log.error("Bank teks habis. Slot %s (%s) tidak bisa dirender.", action.slot.get("label"), at)
+                code = 1
+                continue
+            plan = plan_render(cfg, item, history, rng)
+            if plan is None:
+                log.info("Potongan video habis. Slot %s (%s) dilewati.", action.slot.get("label"), at)
+                continue
+            if not live:
+                log.info("Dry run: akan render slot %s (%s) dengan teks %s.", action.slot.get("label"), at, item["id"])
+                continue
+            stamp = now.astimezone(tz)
+            out_path, actual, entry_id = render_plan(cfg, plan, item, bank, stamp)
+            caption_text = caption_for(item, cfg)
+            out_path.with_suffix(".txt").write_text(f"{caption_text}\n", encoding="utf-8")
+            history.append(history_entry(plan, item, cfg, out_path, actual, entry_id, stamp, action.occurrence.isoformat()))
+            save_history(history)
+            state[action.key] = {"status": "rendered", "output": out_path.name, "caption": caption_text,
+                                 "entry_id": entry_id, "slot_at": action.occurrence.isoformat()}
+            save_slot_state(state)
+            log.info("Render siap untuk slot %s (%s): %s", action.slot.get("label"), at, out_path.name)
+        elif action.kind == "post":
+            record = state[action.key]
+            if not live:
+                log.info("Dry run: akan posting %s untuk slot %s (%s).", record["output"], action.slot.get("label"), at)
+                continue
+            out_path = OUT_DIR / record["output"]
+            now_iso = now.astimezone(tz).isoformat(timespec="seconds")
+            try:
+                media_id = post_video(out_path, record["caption"])
+                record.update(status="posted", media_id=media_id, posted_at=now_iso)
+                log.info("Terposting slot %s (%s), id media %s", action.slot.get("label"), at, media_id)
+            except (GraphError, PublishError, KeyError, OSError) as exc:
+                record.update(status="failed", error=str(exc))
+                log.error("Gagal posting slot %s (%s): %s", action.slot.get("label"), at, exc)
+                code = 1
+            for entry in history:
+                if entry.get("id") == record.get("entry_id"):
+                    entry["instagram_media_id"] = record.get("media_id")
+                    entry["post_error"] = record.get("error")
+                    entry["posted_at"] = record.get("posted_at")
+            save_history(history)
+            save_slot_state(state)
+            continue
+    if live:
+        save_slot_state(state)
+    return code
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Bot Reels Jauki Academy")
+    parser.add_argument("--dry-run", action="store_true", help="tampilkan rencana, tanpa render dan tanpa mengubah bank atau history")
+    parser.add_argument("--force", action="store_true", help="lewati cek jadwal mingguan (mode bank, bukan --auto)")
+    parser.add_argument("--auto", action="store_true",
+                        help="ikuti jam slot di grid: render 2 jam sebelum slot, posting tepat di jam slot")
+    parser.add_argument("--live", action="store_true",
+                        help="publish ke Instagram Reels; tanpa flag ini tidak ada panggilan API")
+    parser.add_argument("--import-bank", metavar="BATCH.json",
+                        help="tambah batch teks dari Claude ke copy_bank.json, lalu berhenti")
+    args = parser.parse_args()
+
+    for folder in (RAW_DIR, OUT_DIR, MUSIC_DIR, LOG_DIR):
+        folder.mkdir(parents=True, exist_ok=True)
+    load_env()
+
+    lock = LOCK_FILE.open("w")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        log.warning("Proses lain masih berjalan. Lewati.")
+        return 0
+
+    cfg = load_config()
+    tz = ZoneInfo(cfg["timezone"])
+    rng = random.Random()
+    live = args.live and not args.dry_run
+    if live and not all(os.environ.get(k) for k in ("IG_USER_ID", "IG_ACCESS_TOKEN", "PUBLIC_VIDEO_BASE_URL")):
+        raise BotError("Untuk --live, isi IG_USER_ID, IG_ACCESS_TOKEN, dan PUBLIC_VIDEO_BASE_URL di .env.")
+
+    if args.import_bank:
+        bank = load_bank()
+        added, skipped = import_bank(args.import_bank, cfg["music_moods"], bank, datetime.now(tz))
+        save_bank(bank)
+        for line in skipped:
+            log.warning("Dilewati %s", line)
+        log.info("Batch diimpor: %d ditambahkan, %d dilewati. Sisa tersedia: %d.",
+                 added, len(skipped), count_available(bank))
+        return 0
+
+    if args.auto:
+        return run_auto(cfg, tz, rng, live, datetime.now(tz))
+
+    history = load_history()
+    if not args.force:
+        run_today, reason = should_run_today(history, cfg["videos_per_week"], tz, rng)
+        log.info("Jadwal: %s", reason)
+        if not run_today:
+            return 0
+
+    bank = load_bank()
+    item = pick_copy(bank)
+    if item is None:
+        raise BotError("Bank teks habis. Minta batch baru ke Claude, simpan jadi file JSON, lalu jalankan --import-bank.")
+    if count_available(bank) <= LOW_BANK_WARNING:
+        log.warning("Sisa bank teks tinggal %d. Segera siapkan batch baru.", count_available(bank))
+
+    plan = plan_render(cfg, item, history, rng)
+    if plan is None:
+        log.info("Semua potongan sudah habis. Tambahkan video ke raw_videos/. Tidak ada yang dibuat.")
+        return 0
+    seg = plan["seg"]
+    log.info("Topik: %s | bank: %s | mood: %s | musik: %s", item.get("topic") or "-", item["id"], plan["mood"], plan["music_rel"])
+    log.info("Sumber: %s, ambil dari %.2f dtk (buang %d dtk awal dan akhir), span %.2f dtk",
+             seg["name"], seg["start"], cfg["skip_head_s"], seg["span"])
+    log.info("Output %d dtk, kecepatan %.1fx, grade %s, vignette %s",
+             seg["duration"], seg["speed"], plan["grade"], plan["vignette"])
+    log.info("Overlay: %s", item["overlay"])
+    log.info("Caption: %s", item["caption"])
+
+    if args.dry_run:
+        log.info("Dry run selesai. Tidak ada file yang dibuat.")
+        return 0
+
+    stamp = datetime.now(tz)
+    out_path, actual, entry_id = render_plan(cfg, plan, item, bank, stamp)
+    caption_text = caption_for(item, cfg)
+    out_path.with_suffix(".txt").write_text(f"{caption_text}\n", encoding="utf-8")
+    entry = history_entry(plan, item, cfg, out_path, actual, entry_id, stamp)
+    post_error = None
+    if live:
+        try:
+            entry["instagram_media_id"] = post_video(out_path, caption_text)
+            entry["posted_at"] = datetime.now(tz).isoformat(timespec="seconds")
+            log.info("Terposting ke Instagram Reels, id media %s", entry["instagram_media_id"])
+        except (GraphError, PublishError) as exc:
+            post_error = str(exc)
+            entry["post_error"] = post_error
+            log.error("Gagal posting ke Instagram: %s", post_error)
+    history.append(entry)
+    save_history(history)
+    log.info("Selesai: %s (%.2f dtk). Sisa bank teks: %d.", out_path.name, actual, count_available(bank))
+    return 1 if post_error else 0
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout)
+    try:
+        sys.exit(main())
+    except BotError as exc:
+        log.error("%s", exc)
+        sys.exit(exc.exit_code)
+    except Exception:
+        log.exception("Error tak terduga")
+        sys.exit(1)

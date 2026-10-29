@@ -11,12 +11,12 @@ function timeLabel(value) {
     return value ? new Date(value).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '—';
 }
 
-function shorten(text, length = 12) {
+export function shorten(text, length = 12) {
     return text.length > length ? `${text.slice(0, length - 1)}…` : text;
 }
 
 /* One chart style for both cards: vertical stacked columns, dashed guides, value labels, highlighted maximum. */
-function ColumnChart({ columns, ariaLabel }) {
+export function ColumnChart({ columns, ariaLabel }) {
     const { width, height, left, right, top, bottom } = CHART;
     const plotWidth = width - left - right;
     const plotHeight = height - top - bottom;

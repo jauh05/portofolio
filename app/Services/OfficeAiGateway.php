@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class OfficeAiGateway
 {
@@ -25,9 +26,58 @@ class OfficeAiGateway
 
     private function requestCompletion(string $system, string $user, bool $json): string
     {
-        $baseUrl = rtrim((string) config('services.office_ai.base_url'), '/');
-        $apiKey = (string) config('services.office_ai.api_key');
-        $model = (string) config('services.office_ai.model');
+        $primary = $this->getConfig('office_ai');
+        $fallback = $this->getConfig('office_ai.fallback');
+
+        $providers = [$primary];
+        if ($this->isFallbackEnabled($fallback) && $this->isValidConfig($fallback)) {
+            $providers[] = $fallback;
+        }
+
+        $lastException = null;
+
+        foreach ($providers as $index => $provider) {
+            try {
+                return $this->callProvider($provider, $system, $user, $json);
+            } catch (OfficeAiGatewayException $exception) {
+                $lastException = $exception;
+
+                if ($index === 0 && count($providers) > 1 && $this->shouldFallback($exception)) {
+                    Log::warning('Office AI primary provider failed, switching to fallback.', [
+                        'message' => $exception->getMessage(),
+                        'code' => $exception->getCode(),
+                    ]);
+                    continue;
+                }
+
+                throw $exception;
+            } catch (\Throwable $throwable) {
+                $lastException = new OfficeAiGatewayException('Office AI provider is unavailable. Please try again.', 503);
+
+                if ($index === 0 && count($providers) > 1) {
+                    Log::warning('Office AI primary provider threw unexpected error, switching to fallback.', [
+                        'message' => $throwable->getMessage(),
+                    ]);
+                    continue;
+                }
+
+                throw $lastException;
+            }
+        }
+
+        if ($lastException instanceof OfficeAiGatewayException) {
+            throw $lastException;
+        }
+
+        throw new OfficeAiGatewayException('Office AI is not configured yet.', 422);
+    }
+
+    private function callProvider(array $provider, string $system, string $user, bool $json): string
+    {
+        $baseUrl = rtrim((string) ($provider['base_url'] ?? ''), '/');
+        $apiKey = (string) ($provider['api_key'] ?? '');
+        $model = (string) ($provider['model'] ?? '');
+
         if ($baseUrl === '' || $apiKey === '' || $model === '') {
             throw new OfficeAiGatewayException('Office AI is not configured yet.', 422);
         }
@@ -35,9 +85,14 @@ class OfficeAiGateway
         try {
             $payload = [
                 'model' => $model,
-                'messages' => [['role' => 'system', 'content' => $system], ['role' => 'user', 'content' => $user]],
+                'messages' => [
+                    ['role' => 'system', 'content' => $system],
+                    ['role' => 'user', 'content' => $user],
+                ],
             ];
-            if ($json) $payload['response_format'] = ['type' => 'json_object'];
+            if ($json) {
+                $payload['response_format'] = ['type' => 'json_object'];
+            }
             $response = Http::acceptJson()->withToken($apiKey)->timeout(90)->post($baseUrl.'/chat/completions', $payload);
         } catch (ConnectionException) {
             throw new OfficeAiGatewayException('Office AI provider timed out. Please try again.', 504);
@@ -51,7 +106,7 @@ class OfficeAiGateway
                 429 => 'Office AI provider is rate-limited. Please try again shortly.',
                 default => $response->serverError() ? 'Office AI provider is temporarily unavailable.' : 'Office AI provider rejected this request.',
             };
-            throw new OfficeAiGatewayException($message, $response->status() >= 500 ? 503 : 422);
+            throw new OfficeAiGatewayException($message, $response->serverError() ? 503 : 422);
         }
 
         $content = $response->json('choices.0.message.content');
@@ -60,6 +115,36 @@ class OfficeAiGateway
         }
 
         return trim($content);
+    }
+
+    private function shouldFallback(OfficeAiGatewayException $exception): bool
+    {
+        $code = $exception->getCode();
+        if (in_array($code, [429, 502, 503, 504], true)) {
+            return true;
+        }
+
+        $message = strtolower($exception->getMessage());
+        return str_contains($message, 'timeout') || str_contains($message, 'unavailable') || str_contains($message, 'empty response') || str_contains($message, 'invalid json');
+    }
+
+    private function getConfig(string $key): array
+    {
+        $value = config('services.'.$key);
+        return is_array($value) ? $value : [];
+    }
+
+    private function isFallbackEnabled(array $fallback): bool
+    {
+        if (array_key_exists('enabled', $fallback)) {
+            return filter_var($fallback['enabled'], FILTER_VALIDATE_BOOL);
+        }
+        return true;
+    }
+
+    private function isValidConfig(array $config): bool
+    {
+        return ! empty($config['base_url']) && ! empty($config['api_key']) && ! empty($config['model']);
     }
 
     private function stripMarkdownFence(string $value): string

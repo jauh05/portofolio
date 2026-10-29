@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\OfficeContentItem;
+use App\Models\OfficeCommand;
 use App\Models\OfficeContentBrand;
 use App\Models\OfficeContentSchedule;
 use App\Services\OfficeAiGatewayException;
 use App\Services\OfficeContentPlannerAiService;
 use App\Services\OfficeScheduledGenerationService;
+use App\Services\OfficeTrentOrchestratorService;
+use App\Services\SlotFile;
 use Carbon\CarbonInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
@@ -18,8 +21,36 @@ use Illuminate\Validation\Rule;
 
 class OfficeContentPlannerController extends Controller
 {
+    // Publishing yang tidak punya hasil dari bot selama ini dianggap macet.
+    private const STALLED_PUBLISHING_MINUTES = 60;
+
+    /** Konten yang terlalu lama menunggu hasil dari bot ditandai gagal beserta command-nya. Tidak diulang otomatis, karena post mungkin sudah tayang. */
+    private function expireStalledContent(): void
+    {
+        $stalled = OfficeContentItem::whereIn('status', ['publishing', 'queued_for_generation', 'generating'])
+            ->where('updated_at', '<', now()->subMinutes(self::STALLED_PUBLISHING_MINUTES))
+            ->get();
+
+        foreach ($stalled as $item) {
+            $publishing = $item->status === 'publishing';
+            $error = 'Tidak ada hasil dari bot setelah '.self::STALLED_PUBLISHING_MINUTES.' menit'
+                .($publishing ? '. Cek Instagram sebelum publish ulang.' : '. Generate ulang jika perlu.');
+            $key = $publishing ? 'publish_error' : 'generation_error';
+
+            OfficeCommand::whereIn('status', ['queued', 'claimed', 'running'])->get()
+                ->filter(fn (OfficeCommand $command) => ($command->payload['content_id'] ?? null) === $item->id)
+                ->each(fn (OfficeCommand $command) => $command->update(['status' => 'failed', 'error' => $error, 'completed_at' => now()]));
+
+            $item->update([
+                'status' => 'failed',
+                'metadata' => array_merge($item->metadata ?? [], [$key => $error]),
+            ]);
+        }
+    }
+
     public function dispatchScheduledPublishing()
     {
+        $this->expireStalledContent();
         $now = now('Asia/Jakarta');
         $items = \App\Models\OfficeContentItem::whereIn('status', ['approved', 'ready_for_review'])
             ->whereNull('published_at')
@@ -81,13 +112,18 @@ class OfficeContentPlannerController extends Controller
         $schedules = OfficeContentSchedule::with('brand')
             ->when($brandId, fn ($query) => $query->where('brand_id', $brandId))
             ->orderBy('next_run_at')->get();
-        $occurrences = $schedules->flatMap(fn (OfficeContentSchedule $schedule) => $this->occurrences($schedule, $start, $end))
+        // Kalender mengikuti grid: jadwal mingguan aktif dan slot Reels. Kartu tanpa jam ditandai timeless dan tampil di awal hari.
+        $occurrences = $schedules
+            ->filter(fn (OfficeContentSchedule $schedule) => $schedule->is_active && ($schedule->recurrence_rule['frequency'] ?? null) === 'weekly')
+            ->flatMap(fn (OfficeContentSchedule $schedule) => $this->weeklyOccurrences($schedule->recurrence_rule['days'] ?? [], $schedule->recurrence_rule['time'] ?? null, $schedule->timezone ?? $timezone, $start, $end)
+                ->map(fn (CarbonImmutable $when) => $this->occurrencePayload($schedule, $when) + ['timeless' => empty($schedule->recurrence_rule['time'])]))
+            ->concat($this->reelsOccurrences($timezone, $start, $end))
             ->sortBy('scheduledAt')->values();
 
         return response()->json([
             'range' => ['start' => $start->toIso8601String(), 'end' => $end->toIso8601String(), 'timezone' => $timezone],
             'occurrences' => $occurrences,
-            'upcoming' => $occurrences->filter(fn (array $item) => CarbonImmutable::parse($item['scheduledAt'])->greaterThanOrEqualTo(now($timezone)))->take(12)->values(),
+            'upcoming' => $occurrences->filter(fn (array $item) => ($item['timeless'] ? CarbonImmutable::parse($item['scheduledAt'])->endOfDay() : CarbonImmutable::parse($item['scheduledAt']))->greaterThanOrEqualTo(now($timezone)))->take(12)->values(),
             'schedules' => $schedules->map(fn (OfficeContentSchedule $schedule) => $this->schedulePayload($schedule)),
         ]);
     }
@@ -127,11 +163,77 @@ class OfficeContentPlannerController extends Controller
         return response()->json($this->brandPayload($brand->fresh()));
     }
 
-    public function analyze(Request $request, OfficeContentPlannerAiService $planner): JsonResponse
+    public function analyze(Request $request, OfficeTrentOrchestratorService $trent, OfficeContentPlannerAiService $planner): JsonResponse
     {
         $prompt = $request->validate(['prompt' => ['required', 'string', 'min:8', 'max:2000']])['prompt'];
         try {
-            return response()->json($planner->analyze($prompt, OfficeContentBrand::where('is_active', true)->orderBy('name')->get()));
+            $brands = OfficeContentBrand::where('is_active', true)->orderBy('name')->get();
+            $brandId = $request->input('brand_id') ?: $request->input('workspace_id') ?: $brands->first()?->id;
+
+            if ($brandId && $brands->pluck('id')->contains($brandId)) {
+                $result = $trent->processIntent($prompt, (string) $brandId);
+                if (($result['status'] ?? null) === 'needs_confirmation') {
+                    $items = [];
+                    foreach ($result['items'] ?? [] as $item) {
+                        $items[] = [
+                            'name' => $item['topic'] ?? ucfirst((string) ($item['content_type'] ?? 'Konten')),
+                            'brand_id' => $brandId,
+                            'schedule_type' => 'one_time',
+                            'platform' => $item['platform'] ?? null,
+                            'content_type' => $item['content_type'] ?? null,
+                            'topic' => $item['topic'] ?? null,
+                            'scheduled_at' => $item['scheduled_at'] ?? null,
+                            'timezone' => 'Asia/Jakarta',
+                            'generation_timing' => $item['generation_timing'] ?? $item['generation_timing_label'] ?? null,
+                            'generation_mode' => in_array($item['generation_timing'] ?? null, ['immediate', 'lead_time'], true) ? 'automatic' : 'manual',
+                            'publishing_mode' => $item['publishing_mode'] ?? 'review',
+                            'metadata' => [
+                                'source' => 'agent_reach',
+                                'trent_plan_id' => $item['plan_id'] ?? null,
+                                'generation_timing_label' => $item['generation_timing_label'] ?? null,
+                                'agent' => 'Agent-Reach',
+                            ],
+                        ];
+                    }
+
+                    return response()->json([
+                        'plan' => [
+                            'type' => 'schedule_plan',
+                            'items' => $items,
+                        ],
+                        'clarifications' => [],
+                        'source' => 'agent_reach',
+                        'summary' => $result['summary'] ?? null,
+                        'report_id' => $result['report_id'] ?? null,
+                    ]);
+                }
+
+                if (($result['status'] ?? null) === 'ambiguous') {
+                    $summary = $result['summary'] ?? 'Perlu klarifikasi.';
+                    $clarifications = collect(preg_split('/[\n\r]+/', (string) $summary))
+                        ->map(fn ($line) => trim($line))
+                        ->filter(fn ($line) => $line !== '')
+                        ->values()->all();
+                    if ($clarifications === []) {
+                        $clarifications[] = $summary;
+                    }
+
+                    return response()->json([
+                        'plan' => ['type' => 'schedule_plan', 'items' => []],
+                        'clarifications' => $clarifications,
+                        'source' => 'agent_reach',
+                    ]);
+                }
+
+                if (($result['status'] ?? null) === 'error') {
+                    return response()->json([
+                        'message' => $result['summary'] ?? 'Gagal membuat rencana dari Agent-Reach.',
+                        'source' => 'agent_reach',
+                    ], 422);
+                }
+            }
+
+            return response()->json($planner->analyze($prompt, $brands));
         } catch (OfficeAiGatewayException $exception) {
             return response()->json(['message' => $exception->getMessage()], $exception->getCode() ?: 422);
         } catch (\RuntimeException $exception) {
@@ -154,7 +256,68 @@ class OfficeContentPlannerController extends Controller
 
     public function update(Request $request, OfficeContentSchedule $schedule): JsonResponse
     {
-        $existing = ['generation_timing' => $schedule->generation_timing ?? 'manual',
+        $this->fillSchedule($schedule, array_replace($this->existingFor($schedule), $request->validate($this->rules(true))));
+        return response()->json($this->schedulePayload($schedule->load('brand')));
+    }
+
+    /**
+     * Pindah kartu dari grid. Jadwal satu hari cukup diubah; jadwal banyak hari dipecah,
+     * supaya kartu yang dipindah punya jam sendiri dan sisa harinya tetap di jadwal asal.
+     */
+    public function moveCard(Request $request, OfficeContentSchedule $schedule): JsonResponse
+    {
+        $data = $request->validate([
+            'from_day' => ['required', 'integer', 'between:1,7'],
+            'day' => ['required', 'integer', 'between:1,7'],
+            'time' => ['sometimes', 'nullable', 'date_format:H:i'],
+        ]);
+        $rule = $schedule->recurrence_rule ?? [];
+        abort_unless($schedule->schedule_type === 'recurring' && ($rule['frequency'] ?? null) === 'weekly', 422, 'Hanya jadwal mingguan yang bisa dipindah dari grid.');
+        $days = array_values($rule['days'] ?? []);
+        abort_unless(in_array($data['from_day'], $days, true), 422, 'Hari kartu tidak ada di jadwal ini.');
+        $rest = array_values(array_filter($days, fn (int $day) => $day !== $data['from_day']));
+        abort_if(in_array($data['day'], $rest, true), 422, 'Jadwal ini sudah ada di hari itu.');
+        $time = array_key_exists('time', $data) ? $data['time'] : ($rule['time'] ?? null);
+        $snapshot = $this->existingFor($schedule);
+
+        return DB::transaction(function () use ($schedule, $snapshot, $data, $rest, $time) {
+            if ($rest === []) {
+                $this->fillSchedule($schedule, array_replace($snapshot, ['days' => [$data['day']], 'time' => $time]));
+                return response()->json($this->schedulePayload($schedule->load('brand')));
+            }
+
+            $this->fillSchedule($schedule, array_replace($snapshot, ['days' => $rest]));
+            $card = new OfficeContentSchedule;
+            $this->fillSchedule($card, array_replace($snapshot, ['days' => [$data['day']], 'time' => $time]));
+
+            return response()->json($this->schedulePayload($card->load('brand')));
+        });
+    }
+
+    /** Hapus satu kartu dari grid. Hari terakhir sekaligus menghapus jadwalnya. */
+    public function removeCard(Request $request, OfficeContentSchedule $schedule): JsonResponse
+    {
+        $data = $request->validate(['day' => ['required', 'integer', 'between:1,7']]);
+        $rule = $schedule->recurrence_rule ?? [];
+        abort_unless($schedule->schedule_type === 'recurring' && ($rule['frequency'] ?? null) === 'weekly', 422, 'Hanya jadwal mingguan yang bisa dihapus dari grid.');
+        $days = array_values($rule['days'] ?? []);
+        abort_unless(in_array($data['day'], $days, true), 422, 'Hari kartu tidak ada di jadwal ini.');
+        $rest = array_values(array_filter($days, fn (int $day) => $day !== $data['day']));
+
+        if ($rest === []) {
+            $schedule->delete();
+
+            return response()->json(['status' => 'deleted']);
+        }
+
+        $this->fillSchedule($schedule, array_replace($this->existingFor($schedule), ['days' => $rest]));
+
+        return response()->json($this->schedulePayload($schedule->load('brand')));
+    }
+
+    private function existingFor(OfficeContentSchedule $schedule): array
+    {
+        return ['generation_timing' => $schedule->generation_timing ?? 'manual',
             'name' => $schedule->name, 'schedule_type' => $schedule->schedule_type, 'platform' => $schedule->platform,
             'brand_id' => $schedule->brand_id,
             'content_type' => $schedule->content_type, 'topic' => $schedule->topic, 'brief' => $schedule->brief,
@@ -166,8 +329,6 @@ class OfficeContentPlannerController extends Controller
             'generation_timing' => $schedule->generation_timing ?? 'manual', 'generation_lead_minutes' => $schedule->generation_lead_minutes,
             'publishing_mode' => $schedule->publishing_mode, 'is_active' => $schedule->is_active, 'metadata' => $schedule->metadata,
         ];
-        $this->fillSchedule($schedule, array_replace($existing, $request->validate($this->rules(true))));
-        return response()->json($this->schedulePayload($schedule->load('brand')));
     }
 
     public function destroy(OfficeContentSchedule $schedule): JsonResponse
@@ -215,9 +376,14 @@ class OfficeContentPlannerController extends Controller
         return response()->json(['action' => $data['action'], 'affected' => $affected]);
     }
 
-    public function generateSchedule(OfficeContentSchedule $schedule, OfficeScheduledGenerationService $generation): JsonResponse
+    public function generateSchedule(Request $request, OfficeContentSchedule $schedule, OfficeScheduledGenerationService $generation): JsonResponse
     {
-        return response()->json($generation->generateSchedule($schedule));
+        $data = $request->validate([
+            'occurrence_at' => ['nullable', 'date'],
+            'regenerate' => ['sometimes', 'boolean'],
+        ]);
+
+        return response()->json($generation->generateSchedule($schedule, $data['occurrence_at'] ?? null, (bool) ($data['regenerate'] ?? false)));
     }
 
     public function generateMonth(Request $request, OfficeScheduledGenerationService $generation): JsonResponse
@@ -369,7 +535,7 @@ class OfficeContentPlannerController extends Controller
         if ($isRecurring && empty($data['frequency'])) abort(422, 'frequency is required for recurring content.');
         if ($isRecurring && $data['frequency'] === 'weekly' && empty($data['days'])) abort(422, 'Select at least one weekday.');
 
-        $rule = $isRecurring ? ['frequency' => $data['frequency'], 'days' => array_values($data['days'] ?? []), 'time' => $data['time'] ?? '09:00'] : null;
+        $rule = $isRecurring ? ['frequency' => $data['frequency'], 'days' => array_values($data['days'] ?? []), 'time' => array_key_exists('time', $data) ? $data['time'] : '09:00'] : null;
         $attributes = array_merge($data, [
             'timezone' => $timezone, 'recurrence_rule' => $rule, 'recurrence_label' => $isRecurring ? $this->recurrenceLabel($rule) : null,
             'scheduled_at' => $isRecurring ? null : CarbonImmutable::parse($data['scheduled_at'], $timezone),
@@ -384,10 +550,11 @@ class OfficeContentPlannerController extends Controller
 
     private function recurrenceLabel(array $rule): string
     {
-        if ($rule['frequency'] === 'daily') return 'Every day at '.$rule['time'];
-        if ($rule['frequency'] === 'monthly') return 'Every month at '.$rule['time'];
+        $at = $rule['time'] ?? 'belum ada jam';
+        if ($rule['frequency'] === 'daily') return 'Every day at '.$at;
+        if ($rule['frequency'] === 'monthly') return 'Every month at '.$at;
         $names = collect($rule['days'])->map(fn (int $day) => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][$day - 1])->implode(' and ');
-        return 'Every '.$names.' at '.$rule['time'];
+        return 'Every '.$names.' at '.$at;
     }
 
     private function nextOccurrence(OfficeContentSchedule $schedule): ?CarbonImmutable
@@ -397,11 +564,45 @@ class OfficeContentPlannerController extends Controller
             return $this->immutable($schedule->scheduled_at, $timezone);
         }
 
-        $start = CarbonImmutable::now($timezone)->startOfDay();
+        // Mulai dari sekarang, bukan awal hari, supaya jam yang sudah lewat hari ini tidak dihitung sebagai kemunculan berikutnya.
+        $start = CarbonImmutable::now($timezone);
         $end = CarbonImmutable::now($timezone)->addDays(400)->endOfDay();
         $occurrence = collect($this->occurrences($schedule, $start, $end))->first();
 
         return $occurrence ? CarbonImmutable::parse($occurrence['scheduledAt']) : null;
+    }
+
+    /** Kemunculan mingguan dalam rentang, sama dengan grid: tanpa batas starts_at dan ends_at. Tanpa jam dimulai pukul 00:00. */
+    private function weeklyOccurrences(array $days, ?string $time, string $timezone, CarbonImmutable $start, CarbonImmutable $end): \Illuminate\Support\Collection
+    {
+        [$hour, $minute] = $time ? array_map('intval', explode(':', $time)) : [0, 0];
+        $items = collect();
+        for ($day = $start->startOfDay(); $day->lessThanOrEqualTo($end); $day = $day->addDay()) {
+            if (! in_array($day->isoWeekday(), array_map('intval', $days), true)) {
+                continue;
+            }
+            $when = CarbonImmutable::parse($day->toDateString().' '.sprintf('%02d:%02d', $hour, $minute), $timezone);
+            if ($when->betweenIncluded($start, $end)) {
+                $items->push($when);
+            }
+        }
+
+        return $items;
+    }
+
+    /** Slot Reels dari file slot, ditampilkan di kalender seperti di grid. */
+    private function reelsOccurrences(string $timezone, CarbonImmutable $start, CarbonImmutable $end): \Illuminate\Support\Collection
+    {
+        return collect(SlotFile::read(config('reels.slots_path')))
+            ->filter(fn ($slot) => is_array($slot) && ($slot['active'] ?? true) && isset($slot['day']))
+            ->flatMap(fn (array $slot) => $this->weeklyOccurrences([(int) $slot['day']], $slot['time'] ?? null, $timezone, $start, $end)
+                ->map(fn (CarbonImmutable $when) => [
+                    'id' => 'reels:'.$slot['id'].'@'.$when->format('YmdHi'),
+                    'scheduleId' => null, 'name' => $slot['label'] ?? 'Reels Jauki', 'topic' => null,
+                    'platform' => 'instagram', 'contentType' => 'reels', 'assignedAgent' => null, 'scheduleType' => 'recurring',
+                    'brand' => ['id' => null, 'name' => 'Jauki', 'slug' => 'jauki'], 'recurrenceLabel' => 'Reels setiap minggu',
+                    'scheduledAt' => $when->toIso8601String(), 'status' => 'scheduled', 'timeless' => empty($slot['time']),
+                ]));
     }
 
     private function occurrences(OfficeContentSchedule $schedule, CarbonImmutable $start, CarbonImmutable $end): array
@@ -413,6 +614,8 @@ class OfficeContentPlannerController extends Controller
             return $when && $when->betweenIncluded($start, $end) ? [$this->occurrencePayload($schedule, $when)] : [];
         }
         $rule = $schedule->recurrence_rule ?? [];
+        // Kartu tanpa jam belum punya kemunculan, jadi tidak di-generate sampai jamnya diisi.
+        if (empty($rule['time'])) return [];
         $startsAt = $this->immutable($schedule->starts_at, $timezone);
         $endsAt = $this->immutable($schedule->ends_at, $timezone);
         $from = $start->max($startsAt?->startOfDay() ?? $start);
@@ -463,7 +666,8 @@ class OfficeContentPlannerController extends Controller
 
     private function immutable(?CarbonInterface $value, string $timezone): ?CarbonImmutable
     {
-        return $value ? CarbonImmutable::instance($value)->setTimezone($timezone) : null;
+        // Tanggal jadwal disimpan sebagai jam dinding di zona jadwalnya, jadi dibaca ulang dalam zona itu, bukan dikonversi dari UTC.
+        return $value ? CarbonImmutable::parse($value->format('Y-m-d H:i:s'), $timezone) : null;
     }
 
     public function dispatchGeneration(\App\Models\OfficeContentItem $content)

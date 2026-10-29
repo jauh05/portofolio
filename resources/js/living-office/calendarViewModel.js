@@ -60,6 +60,11 @@ export function calendarTime(value) {
     return new Intl.DateTimeFormat('id-ID', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(value));
 }
 
+// Kartu tanpa jam disimpan di 00:00, jadi labelnya diganti agar tidak terbaca sebagai jam.
+export function occurrenceTime(item) {
+    return item.timeless ? 'Tanpa jam' : calendarTime(item.scheduledAt);
+}
+
 export function calendarTitle(view, key) {
     const format = (date, options) => new Intl.DateTimeFormat('id-ID', { timeZone: 'UTC', ...options }).format(asUtc(date));
     if (view === 'day') return format(key, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });

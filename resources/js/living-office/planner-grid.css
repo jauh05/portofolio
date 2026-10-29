@@ -1,0 +1,112 @@
+/* Tone warna jenis konten dipakai kartu grid, pill tabel, dan item menu "+". */
+.office-redesign .tone-reels-jauki { --tone: var(--accent); }
+.office-redesign .tone-feed-jauki { --tone: #7c5cff; }
+.office-redesign .tone-story-jauki { --tone: #e5488c; }
+.office-redesign .tone-feed-kauiz { --tone: var(--success); }
+.office-redesign .tone-story-kauiz { --tone: #f08c1c; }
+.office-redesign .tone-threads { --tone: #6b7280; }
+.office-redesign .tone-article { --tone: #d9a400; }
+.office-redesign .tone-other { --tone: var(--muted); }
+
+.office-redesign .planner-grid-page { display: grid; gap: 16px; padding: 24px 20px 48px; max-width: 1280px; margin: 0 auto; }
+.office-redesign .planner-grid-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.office-redesign .planner-grid-title h2 { margin: 0; color: var(--text); font: 800 22px/1.2 Sora, sans-serif; letter-spacing: -.02em; }
+.office-redesign .planner-grid-title p { margin: 4px 0 0; color: var(--muted); font: 600 13px/1.5 Inter, sans-serif; }
+.office-redesign .planner-grid-actions { display: flex; align-items: center; gap: 10px; position: relative; }
+.office-redesign .planner-toggle { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 12px Inter, sans-serif; cursor: pointer; }
+.office-redesign .planner-add { position: relative; }
+.office-redesign .planner-add-button { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 50%; background: var(--highlight); color: #fff; box-shadow: var(--pill-shadow); cursor: pointer; }
+.office-redesign .planner-menu { position: absolute; top: 46px; left: 0; z-index: 30; display: grid; gap: 4px; min-width: 200px; padding: 8px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); box-shadow: 0 20px 40px -20px rgba(2,12,28,.4); }
+.office-redesign .planner-menu-item { display: flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: var(--text); font: 700 12px Inter, sans-serif; text-align: left; cursor: pointer; }
+.office-redesign .planner-menu-item:hover { background: var(--surface-2); }
+.office-redesign .planner-menu-item i { width: 10px; height: 10px; border-radius: 50%; background: var(--tone); }
+.office-redesign .planner-notice { margin: 0; padding: 10px 14px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-strong); font: 600 12px Inter, sans-serif; }
+
+/* Papan mingguan: satu kolom per hari, kartu berurutan dari jam paling awal. */
+.office-redesign .slot-board { display: grid; grid-template-columns: repeat(7, minmax(150px, 1fr)); gap: 10px; overflow-x: auto; padding: 2px 2px 8px; }
+.office-redesign .slot-col { display: grid; align-content: start; gap: 8px; min-height: 240px; padding: 10px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); transition: background .15s ease, border-color .15s ease; }
+.office-redesign .slot-col.is-over { border-color: var(--accent); background: var(--accent-soft); }
+.office-redesign .slot-col-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 4px 8px; border-bottom: 1px solid var(--border); color: var(--text); font: 800 12px Inter, sans-serif; }
+.office-redesign .slot-col-head span { color: var(--muted); font: 700 11px 'JetBrains Mono', monospace; }
+.office-redesign .slot-group { display: grid; gap: 6px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+.office-redesign .slot-group-label, .office-redesign .slot-empty { margin: 0; color: var(--muted); font: 700 10px Inter, sans-serif; }
+.office-redesign .slot-row { display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: start; gap: 6px; }
+.office-redesign .slot-row.is-dragging { opacity: .35; }
+.office-redesign .slot-time { padding-top: 9px; color: var(--muted); font: 700 10px 'JetBrains Mono', monospace; text-align: right; }
+.office-redesign .slot-stack { display: grid; gap: 6px; min-width: 0; }
+.office-redesign .slot-chip-wrap { display: grid; width: 100%; min-width: 0; padding: 8px 10px; border: 0; border-radius: 12px; background: var(--tone, var(--accent)); color: #fff; font: inherit; text-align: left; box-shadow: var(--pill-shadow); cursor: grab; touch-action: none; user-select: none; }
+.office-redesign .slot-chip-wrap:active { cursor: grabbing; }
+.office-redesign .slot-chip-wrap b { font: 800 11px Inter, sans-serif; }
+.office-redesign .slot-menu { display: grid; gap: 8px; width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: 0 16px 30px -22px rgba(2, 12, 28, .5); }
+.office-redesign .slot-menu label { display: grid; gap: 4px; }
+.office-redesign .slot-menu label span { color: var(--muted); font: 700 10px Inter, sans-serif; }
+.office-redesign .slot-menu input { min-height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); color: var(--text); font: 700 12px 'JetBrains Mono', monospace; }
+.office-redesign .slot-menu-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.office-redesign .slot-menu button { min-height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .slot-menu button:disabled { opacity: .5; cursor: wait; }
+.office-redesign .slot-menu .slot-menu-remove { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
+.office-redesign .slot-overlay { padding: 8px 12px; border-radius: 12px; background: var(--tone, var(--accent)); color: #fff; box-shadow: 0 18px 32px -18px rgba(2, 12, 28, .6); transform: rotate(-2deg); }
+.office-redesign .slot-overlay b { font: 800 11px Inter, sans-serif; }
+
+/* Tabel hasil generate, dengan tiga kepadatan. */
+.office-redesign .results-panel { display: grid; gap: 12px; padding: 18px; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); }
+.office-redesign .results-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.office-redesign .results-head h3 { margin: 0; color: var(--text); font: 800 16px Sora, sans-serif; }
+.office-redesign .density-toggle { display: inline-flex; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); }
+.office-redesign .density-toggle button { min-height: 28px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .density-toggle button.active { background: var(--highlight); color: #fff; }
+.office-redesign .results-scroll { overflow-x: auto; }
+.office-redesign .results-table { width: 100%; border-collapse: collapse; color: var(--text); font: 600 12px Inter, sans-serif; }
+.office-redesign .results-table th { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--muted); font: 800 11px Inter, sans-serif; text-align: left; }
+.office-redesign .results-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
+.office-redesign .density-compact .results-table td { padding: 4px 8px; }
+.office-redesign .density-expanded .results-table td { padding: 14px 12px; }
+.office-redesign .results-table td.results-error { max-width: 220px; white-space: normal; color: #a72246; }
+.office-redesign .results-check { width: 36px; text-align: center; }
+.office-redesign .results-check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+.office-redesign .results-check input:disabled { opacity: .35; cursor: not-allowed; }
+.office-redesign .results-bulk { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 12px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-strong); font: 700 12px Inter, sans-serif; }
+.office-redesign .results-bulk button { min-height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .results-bulk button:disabled { opacity: .5; cursor: wait; }
+.office-redesign .results-bulk .is-danger { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
+.office-redesign .results-opsi { min-height: 28px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .opsi-dialog { width: min(440px, calc(100% - 32px)); display: grid; gap: 10px; padding: 22px; }
+.office-redesign .opsi-dialog header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.office-redesign .opsi-dialog header span { color: var(--accent-strong); font: 800 10px 'JetBrains Mono', monospace; }
+.office-redesign .opsi-dialog header h2 { margin: 4px 0 0; color: var(--text); font: 800 18px Sora, sans-serif; }
+.office-redesign .opsi-action { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text); text-align: left; cursor: pointer; }
+.office-redesign .opsi-action b { font: 800 13px Inter, sans-serif; }
+.office-redesign .opsi-action small { color: var(--muted); font: 600 11px/1.5 Inter, sans-serif; }
+.office-redesign .opsi-action:disabled { opacity: .5; cursor: not-allowed; }
+.office-redesign .opsi-action.is-danger b { color: #a72246; }
+.office-redesign .result-thumb { display: block; width: 64px; height: 64px; object-fit: cover; border-radius: 12px; background: var(--surface-2); }
+.office-redesign .result-thumb.is-empty { display: grid; place-items: center; color: var(--muted); }
+.office-redesign .type-pill, .office-redesign .status-pill { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font: 800 10px Inter, sans-serif; }
+.office-redesign .type-pill { background: var(--tone); color: #fff; }
+.office-redesign .status-pill.ok { background: #e4f6ed; color: var(--success); }
+.office-redesign .status-pill.bad { background: #fff0f2; color: #a72246; }
+.office-redesign .status-pill.ready { background: var(--accent-soft); color: var(--accent-strong); }
+.office-redesign .status-pill.wait { background: var(--surface-2); color: var(--muted); }
+.office-redesign .results-view { margin-left: 6px; min-height: 26px; padding: 0 8px; border: 0; background: transparent; color: var(--accent-strong); font: 700 11px Inter, sans-serif; text-decoration: underline; cursor: pointer; }
+.office-redesign .results-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.office-redesign .results-actions button { min-height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .results-actions button:disabled { opacity: .45; cursor: not-allowed; }
+.office-redesign .results-reason { display: block; max-width: 200px; color: var(--muted); font: 600 10px/1.4 Inter, sans-serif; }
+.office-redesign .results-empty { margin: 0; color: var(--muted); font: 600 13px Inter, sans-serif; }
+.office-redesign .result-detail { width: min(560px, calc(100% - 32px)); display: grid; gap: 12px; padding: 22px; }
+.office-redesign .result-detail header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.office-redesign .result-detail header span { color: var(--accent-strong); font: 800 10px 'JetBrains Mono', monospace; }
+.office-redesign .result-detail header h2 { margin: 4px 0 0; color: var(--text); font: 800 18px Sora, sans-serif; }
+.office-redesign .result-media { width: 100%; max-height: 70vh; object-fit: contain; border-radius: 16px; background: #000; }
+.office-redesign .result-text { margin: 0; color: var(--text); font: 600 13px/1.6 Inter, sans-serif; white-space: pre-line; }
+
+/* Kartu jadwal berikutnya di bawah kalender. */
+.office-redesign .planner-next { display: grid; gap: 12px; padding: 18px 20px; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 20px; background: var(--surface); box-shadow: 0 14px 28px -26px rgba(15, 46, 92, .5); }
+.office-redesign .planner-next > header { display: flex; align-items: center; gap: 10px; color: var(--muted); }
+.office-redesign .planner-next > header span { display: block; font: 800 10px 'JetBrains Mono', monospace; letter-spacing: .08em; }
+.office-redesign .planner-next > header strong { display: block; color: var(--text); font: 800 14px Sora, sans-serif; }
+.office-redesign .planner-next article { display: grid; gap: 4px; }
+.office-redesign .planner-next article em { color: var(--accent-strong); font: 800 10px Inter, sans-serif; font-style: normal; }
+.office-redesign .planner-next article b { color: var(--text); font: 800 14px Sora, sans-serif; }
+.office-redesign .planner-next article small, .office-redesign .planner-next article time { color: var(--muted); font: 600 12px Inter, sans-serif; }
+.office-redesign .planner-next > p { margin: 0; color: var(--muted); font: 600 13px Inter, sans-serif; }

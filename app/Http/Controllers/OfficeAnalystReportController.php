@@ -3,8 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\OfficeAnalystReport;
+use App\Models\OfficeContentBrand;
+use App\Models\OfficeContentItem;
+use App\Models\OfficeContentMetric;
+use App\Models\OfficeContentPlanItem;
+use App\Models\OfficeContentSchedule;
 use App\Models\OfficeResearchRun;
 use App\Services\OfficeAnalystReportService;
+use App\Services\OfficeContentMetricsService;
+use App\Services\OfficeScheduledGenerationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,7 +20,8 @@ class OfficeAnalystReportController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(['data' => OfficeAnalystReport::latest('generated_at')->limit(30)->get()->map(fn (OfficeAnalystReport $report) => $this->payload($report))]);
+        // Laporan yang disembunyikan tidak tampil. Daftar dibatasi 200 terbaru; paging dan pencarian dilakukan di frontend.
+        return response()->json(['data' => OfficeAnalystReport::whereNull('hidden_at')->latest('generated_at')->limit(200)->get()->map(fn (OfficeAnalystReport $report) => $this->payload($report))]);
     }
 
     public function researchStats(): JsonResponse
@@ -70,6 +78,26 @@ class OfficeAnalystReportController extends Controller
         ]]);
     }
 
+    /** Sembunyikan laporan dari daftar: dengan id tertentu, atau semua laporan yang masih tampil. Datanya tidak dihapus. */
+    public function hide(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'ids' => ['required_without:all', 'array', 'max:500'],
+            'ids.*' => ['uuid'],
+            'all' => ['required_without:ids', 'boolean'],
+        ]);
+
+        $query = OfficeAnalystReport::whereNull('hidden_at');
+        if (! empty($data['all'])) {
+            $count = (clone $query)->count();
+            $query->update(['hidden_at' => now('Asia/Jakarta')]);
+        } else {
+            $count = (clone $query)->whereIn('id', $data['ids'])->update(['hidden_at' => now('Asia/Jakarta')]);
+        }
+
+        return response()->json(['hidden' => $count]);
+    }
+
     public function show(OfficeAnalystReport $report): JsonResponse
     {
         return response()->json($this->payload($report));
@@ -79,7 +107,7 @@ class OfficeAnalystReportController extends Controller
     {
         $data = $request->validate([
             'report_type' => ['required', Rule::in(['daily', 'weekly', 'manual'])],
-            'scope' => ['nullable', Rule::in(['today', 'last_7_days', 'content_planner', 'worker_performance', 'brand'])],
+            'scope' => ['nullable', Rule::in(['today', 'last_7_days', 'content_planner', 'worker_performance', 'brand', 'luar', 'dalam', 'keduanya'])],
             'brand_id' => ['nullable', 'uuid', 'exists:office_content_brands,id'],
             'planning_horizon' => ['nullable', Rule::in(['only_analysis', '7_days', '14_days', '30_days'])],
         ]);
@@ -104,6 +132,101 @@ class OfficeAnalystReportController extends Controller
     {
         $ids = $request->validate(['plan_ids' => ['required', 'array', 'min:1'], 'plan_ids.*' => ['uuid']])['plan_ids'];
         return response()->json($this->payload($analyst->dismiss($report, $ids)));
+    }
+
+    /** Data kartu Chart di Daily Report: semua topik yang pernah dibuat, konten per hari, views dan likes per topik, dan sosial per brand. */
+    public function charts(): JsonResponse
+    {
+        $timezone = 'Asia/Jakarta';
+        $today = now($timezone)->startOfDay();
+        $days = collect(range(13, 0))->map(fn (int $ago) => $today->copy()->subDays($ago)->toDateString());
+
+        $items = OfficeContentItem::with(['brand', 'schedule'])->where('status', '!=', 'dismissed')->latest('generated_at')->limit(2000)->get();
+        $topics = $items
+            ->map(fn (OfficeContentItem $item) => OfficeContentMetricsService::topicOf($item->schedule?->topic) ?? 'Tanpa topik')
+            ->filter()
+            ->countBy()
+            ->sortDesc()
+            ->map(fn (int $count, string $topic) => ['topic' => $topic, 'count' => $count])
+            ->values();
+
+        $byDay = $items->groupBy(fn (OfficeContentItem $item) => $item->generated_at?->copy()->setTimezone($timezone)->toDateString());
+        $contentPerDay = $days->map(fn (string $date) => ['date' => $date, 'total' => $byDay->get($date, collect())->count()])->values();
+
+        $metricsByDay = OfficeContentMetric::query()->whereNotNull('published_at')->get()
+            ->groupBy(fn (OfficeContentMetric $row) => $row->published_at?->copy()->setTimezone($timezone)->toDateString());
+        $social = collect(['kauiz', 'jauki'])->mapWithKeys(fn (string $slug) => [$slug => $days->map(function (string $date) use ($metricsByDay, $slug) {
+            $rows = $metricsByDay->get($date, collect())->where('brand_slug', $slug);
+
+            return ['date' => $date, 'views' => (int) $rows->sum('views'), 'likes' => (int) $rows->sum('likes')];
+        })->values()]);
+
+        $metricTopics = OfficeContentMetricsService::topicTotals();
+
+        return response()->json(['data' => [
+            'generatedAt' => now($timezone)->toIso8601String(),
+            'metricsConfigured' => app(OfficeContentMetricsService::class)->configured(),
+            'lastFetchedAt' => OfficeContentMetric::query()->max('fetched_at'),
+            'topics' => $topics,
+            'topTopic' => $metricTopics->first() ?? $topics->first(),
+            'contentPerDay' => $contentPerDay,
+            'topicMetrics' => $metricTopics->take(12)->values(),
+            'social' => $social,
+        ]]);
+    }
+
+    /**
+     * Tombol generate per format di Daily Report. Feed, Story, dan Artikel memakai generator yang sudah ada.
+     * Reels dan TikTok dibuat sebagai rencana yang menunggu persetujuan, karena render dan skrip-nya belum punya jalur sendiri.
+     */
+    public function generateFormat(Request $request, OfficeScheduledGenerationService $generation): JsonResponse
+    {
+        $data = $request->validate([
+            'brand_slug' => ['required', Rule::in(['jauki', 'kauiz'])],
+            'format' => ['required', Rule::in(['feed', 'story', 'reels', 'article', 'tiktok'])],
+            'topic' => ['required', 'string', 'max:255'],
+        ]);
+        $brand = OfficeContentBrand::where('slug', $data['brand_slug'])->firstOrFail();
+        $topic = trim($data['topic']);
+
+        if (in_array($data['format'], ['feed', 'story', 'article'], true)) {
+            $when = now('Asia/Jakarta')->addHour();
+            $schedule = OfficeContentSchedule::create([
+                'brand_id' => $brand->id,
+                'name' => 'Daily Report: '.$topic,
+                'schedule_type' => 'one_time',
+                'platform' => $data['format'] === 'article' ? 'article' : 'instagram',
+                'content_type' => $data['format'],
+                'topic' => $topic,
+                'timezone' => 'Asia/Jakarta',
+                'scheduled_at' => $when,
+                'next_run_at' => $when,
+                'is_active' => true,
+                'generation_mode' => 'manual',
+                'generation_timing' => 'manual',
+                'publishing_mode' => 'review',
+                'metadata' => ['source' => 'daily_report'],
+            ]);
+            $result = $generation->generateSchedule($schedule, null, true);
+
+            return response()->json(['status' => $result['status'], 'reason' => $result['reason'] ?? null, 'contentId' => $result['content_id'] ?? null], 201);
+        }
+
+        $plan = OfficeContentPlanItem::create([
+            'brand_id' => $brand->id,
+            'platform' => $data['format'] === 'tiktok' ? 'tiktok' : 'instagram',
+            'content_type' => $data['format'],
+            'topic' => $topic,
+            'brief' => 'Dibuat dari Daily Report: '.$topic,
+            'reason' => 'Dibuat manual dari Daily Report.',
+            'scheduled_at' => now('Asia/Jakarta')->addDay(),
+            'generation_mode' => 'manual',
+            'publishing_mode' => 'review',
+            'status' => 'proposed',
+            'metadata' => ['source' => 'daily_report', 'overlay' => $topic],
+        ]);
+
+        return response()->json(['status' => 'proposed', 'planId' => $plan->id], 201);
     }
 
     private function payload(OfficeAnalystReport $report): array

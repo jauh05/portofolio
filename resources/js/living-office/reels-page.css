@@ -1,0 +1,26 @@
+.office-redesign .reels-page { max-width: 760px; margin: 0 auto; padding: 28px 16px 56px; display: grid; gap: 18px; }
+.office-redesign .reels-page-head { display: grid; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.office-redesign .reels-page-head h2 { margin: 0; color: var(--text); font: 800 22px/1.2 Sora, sans-serif; letter-spacing: -.02em; }
+.office-redesign .reels-page-head p { margin: 0; color: var(--muted); font: 600 13px/1.5 Inter, sans-serif; }
+
+.office-redesign .reels-settings { display: grid; gap: 12px; }
+.office-redesign .reels-settings input:not([type="checkbox"]):not([type="range"]),
+.office-redesign .reels-settings select,
+.office-redesign .reels-settings textarea { width: 100%; min-height: 42px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); color: var(--text); font: 600 13px Inter, sans-serif; outline: none; }
+.office-redesign .reels-settings textarea { min-height: 120px; resize: vertical; }
+.office-redesign .reels-settings input:focus,
+.office-redesign .reels-settings select:focus,
+.office-redesign .reels-settings textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(46,144,250,.16); }
+.office-redesign .reels-settings input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+.office-redesign .reels-settings fieldset { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 0; }
+.office-redesign .reels-settings fieldset legend { margin-bottom: 8px; color: var(--muted); font: 700 11px Inter, sans-serif; }
+.office-redesign .reels-settings fieldset label { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .reels-settings fieldset label:has(input:checked) { border-color: transparent; background: var(--highlight); color: #fff; }
+.office-redesign .reels-settings fieldset input[type="checkbox"] { margin: 0; accent-color: #fff; }
+
+.office-redesign .reels-settings [role="status"] { margin: 0; color: var(--muted); font: 600 12px Inter, sans-serif; }
+.office-redesign .reels-settings [role="alert"] { margin: 0; padding: 10px 14px 10px 30px; border-radius: 14px; background: #fff0f2; color: #a72246; font: 600 12px Inter, sans-serif; }
+
+.office-redesign .reels-settings > button[type="submit"] { justify-self: end; min-height: 42px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--highlight); color: #fff; font: 800 12px Inter, sans-serif; box-shadow: var(--pill-shadow); cursor: pointer; white-space: nowrap; }
+.office-redesign .reels-settings > button[type="submit"]:disabled { opacity: .55; cursor: wait; }

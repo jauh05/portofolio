@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { CALENDAR_VIEWS, calendarRange, calendarTime, calendarTitle, datesInRange, groupCalendarOccurrences, todayKey } from './calendarViewModel';
+import { CALENDAR_VIEWS, calendarRange, calendarTitle, datesInRange, groupCalendarOccurrences, occurrenceTime, todayKey } from './calendarViewModel';
 import { resolvePlannerOutput } from './plannerGeneration';
 
 const VIEW_LABELS = { day: 'Hari', week: 'Minggu', month: 'Bulan' };
@@ -12,7 +12,7 @@ const weekdayIndex = key => (new Date(`${key}T12:00:00Z`).getUTCDay() + 6) % 7;
 
 function EventButton({ item, compact = false, statusFor, onOpen }) {
     const output = resolvePlannerOutput(item).label.replace('Instagram ', '');
-    const time = calendarTime(item.scheduledAt);
+    const time = occurrenceTime(item);
     const status = statusLabel(statusFor(item));
     return <button type="button" className={`pc-event ${compact ? 'compact' : ''}`} onClick={() => onOpen(item)} title={`${time} · ${output} · ${item.name} · ${status}`}>
         <time>{time}</time><span><b>{output}</b>{!compact && <><strong>{item.topic || item.name}</strong><small>{status}</small></>}</span>

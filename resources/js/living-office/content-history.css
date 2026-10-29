@@ -1,0 +1,31 @@
+/* Riwayat generate: halaman kartu, pencarian, paging, dan tombol tambahan di tabel Hasil Generate. */
+.office-redesign .results-head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.office-redesign .results-clear, .office-redesign .results-more { min-height: 32px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 12px Inter, sans-serif; cursor: pointer; }
+.office-redesign .results-clear { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
+.office-redesign .results-clear:disabled { opacity: .5; cursor: not-allowed; }
+.office-redesign .results-more { justify-self: center; }
+
+.office-redesign .content-history { gap: 16px; }
+.office-redesign .hist-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.office-redesign .hist-search { display: flex; align-items: center; gap: 8px; min-width: min(360px, 100%); padding: 0 12px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); color: var(--muted); }
+.office-redesign .hist-search input { flex: 1; min-height: 38px; border: 0; background: transparent; color: var(--text); font: 600 13px Inter, sans-serif; outline: none; }
+.office-redesign .hist-toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.office-redesign .hist-toolbar-actions button, .office-redesign .hist-pager button { min-height: 34px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 12px Inter, sans-serif; cursor: pointer; }
+.office-redesign .hist-toolbar-actions button:disabled, .office-redesign .hist-pager button:disabled { opacity: .5; cursor: not-allowed; }
+.office-redesign .hist-toolbar-actions .is-danger { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
+
+.office-redesign .hist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.office-redesign .hist-card { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); min-width: 0; }
+.office-redesign .hist-card.is-selected { border-color: var(--accent); }
+.office-redesign .hist-card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.office-redesign .hist-card-top input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+.office-redesign .hist-thumb-button { display: block; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.office-redesign .hist-thumb { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; background: var(--surface-2); }
+.office-redesign .hist-thumb.is-empty { display: grid; place-items: center; color: var(--muted); font: 700 11px Inter, sans-serif; }
+.office-redesign .hist-card strong { color: var(--text); font: 800 13px Sora, sans-serif; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.office-redesign .hist-card small { color: var(--muted); font: 600 11px Inter, sans-serif; }
+.office-redesign .hist-card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.office-redesign .hist-card-actions button { min-height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 700 11px Inter, sans-serif; cursor: pointer; }
+.office-redesign .hist-card-actions .is-danger { border-color: #f3c5d0; background: #fff0f2; color: #a72246; }
+.office-redesign .hist-empty { margin: 0; color: var(--muted); font: 600 13px Inter, sans-serif; }
+.office-redesign .hist-pager { display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--muted); font: 700 12px Inter, sans-serif; }
