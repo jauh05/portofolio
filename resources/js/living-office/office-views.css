@@ -327,6 +327,9 @@
 .office-redesign .planner-generated-image,.office-redesign .planner-image-missing { position: relative; display: grid; place-items: center; width: min(100%,400px); aspect-ratio: 4/3; overflow: hidden; border: 0; border-radius: 20px; background: var(--surface-3); color: var(--muted); font-size: 12px; text-align: center; }
 .office-redesign .planner-generated-image.story,.office-redesign .planner-image-missing.story { width: min(100%,210px); aspect-ratio: 9/16; }
 .office-redesign .planner-generated-image img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .28s ease; }
+.office-redesign .planner-generated-image.wide,.office-redesign .planner-image-missing.wide { width: min(100%,420px); aspect-ratio: 16/9; }
+.office-redesign .planner-card-normal .planner-generated-image.wide { width: min(100%,260px); }
+.office-redesign .planner-result-title { margin: 8px 0 2px; }
 .office-redesign .planner-generated-image.story img { object-fit: contain; }
 .office-redesign .planner-generated-image.loaded img { opacity: 1; }
 .office-redesign .planner-generated-image.error img { display: none; }

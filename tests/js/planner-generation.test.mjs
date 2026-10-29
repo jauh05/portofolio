@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { build } from 'esbuild';
-import { articleReady, contentPreview, generationStatus, resolvePlannerOutput, runGenerationRequest, safeGenerationError, selectGenerationCommand, selectScheduleContent, shouldPollGeneration } from '../../resources/js/living-office/plannerGeneration.js';
+import { articleReady, contentPreview, coverShape, safeLinkUrl, generationStatus, resolvePlannerOutput, runGenerationRequest, safeGenerationError, selectGenerationCommand, selectScheduleContent, shouldPollGeneration } from '../../resources/js/living-office/plannerGeneration.js';
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), '../..');
 const output = join(repo, 'node_modules/.cache/office-planner-tests/card.mjs');
@@ -150,4 +150,38 @@ test('targeted polling starts for active generation and stops at success or work
     assert.equal(shouldPollGeneration({ status: 'ready_for_review' }), false);
     assert.equal(shouldPollGeneration({ status: 'queued_for_generation' }, { status: 'failed' }), false);
     assert.equal(shouldPollGeneration({ status: 'published' }), false);
+});
+
+const readyAgents = [{ id: 'jauki-article', status: 'idle', availableActions: ['generate_article'] }];
+test('cover shapes: feed, story, wide article cover, and none for Threads', () => {
+    assert.deepEqual(['feed', 'story', 'article', 'threads', 'x'].map(coverShape), ['feed', 'story', 'wide', null, null]);
+});
+test('Article ready shows the wide cover, title, and excerpt on its own card', () => {
+    const content = { id: 'content-9', status: 'ready_for_review', title: 'Cara belajar dengan active recall', imageUrl: 'https://kauiz.web.id/v1/article-images/a.jpg', text: 'Ringkasan artikel Kauiz.' };
+    const html = render(schedule('article', 'article'), { mode: 'expanded', agents: readyAgents, content });
+    assert.match(html, /planner-generated-image wide/);
+    assert.match(html, /article-images\/a.jpg/);
+    assert.match(html, /Cara belajar dengan active recall/);
+    assert.match(html, /Ringkasan artikel Kauiz/);
+    assert.match(html, /Artikel berhasil dibuat/);
+    assert.doesNotMatch(html, /Worker Artikel Belum Tersedia/);
+});
+test('Article without a cover says so instead of showing nothing', () => {
+    const html = render(schedule('article', 'article'), { mode: 'expanded', agents: readyAgents, content: { id: 'content-9', status: 'ready_for_review', title: 'Tanpa sampul', text: 'Isi.' } });
+    assert.match(html, /planner-image-missing wide/);
+});
+test('Article cards use the Article worker, not Feed or Threads', () => {
+    const html = render(schedule('article', 'article'), { agents: readyAgents });
+    assert.match(html, /Generate Article Sekarang/);
+    assert.match(html, /data-output="article"/);
+});
+test('safeLinkUrl only accepts http(s)', () => {
+    assert.equal(safeLinkUrl('https://kauiz.web.id/berita/artikel?slug=a'), 'https://kauiz.web.id/berita/artikel?slug=a');
+    assert.equal(safeLinkUrl('javascript:alert(1)'), null);
+    assert.equal(safeLinkUrl(null), null);
+});
+test('an article worker whose last task failed can still be asked to try again, but a disconnected one cannot', () => {
+    const article = resolvePlannerOutput(schedule('article', 'article'));
+    assert.equal(articleReady(article, [{ id: 'jauki-article', status: 'error', availableActions: ['generate_article'] }]), true);
+    for (const status of ['offline', 'not_connected', 'not_installed']) assert.equal(articleReady(article, [{ id: 'jauki-article', status, availableActions: ['generate_article'] }]), false, status);
 });

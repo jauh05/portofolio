@@ -20,10 +20,16 @@ export function resolvePlannerOutput(schedule = {}) {
     return { ...output, assignedAgent, workerMismatch: Boolean(assignedAgent && output.workerId && assignedAgent !== output.workerId) };
 }
 
+// Bentuk gambar hasil per output: feed 4:5, story 9:16, sampul artikel 16:9. Threads tidak punya gambar.
+export function coverShape(outputKey) {
+    return { feed: 'feed', story: 'story', article: 'wide' }[outputKey] || null;
+}
+
+// 'error' berarti tugas terakhir gagal, bukan worker mati: kartu tetap boleh mencoba lagi.
 export function articleReady(output, agents = []) {
     if (output.key !== 'article') return true;
     const worker = agents.find(agent => agent.id === output.workerId);
-    return Boolean(worker && ['idle', 'working', 'generating', 'completed'].includes(worker.status) && worker.availableActions?.includes(output.action));
+    return Boolean(worker && ['idle', 'working', 'generating', 'completed', 'error'].includes(worker.status) && worker.availableActions?.includes(output.action));
 }
 
 const timestamp = (item) => {
@@ -77,6 +83,10 @@ export function safeImageUrl(url) {
     const trimmed = url.trim();
     if (/^https?:\/\/[^\s]+$/i.test(trimmed) || /^\/(?!\/)[^\s]*$/.test(trimmed)) return trimmed;
     return null;
+}
+
+export function safeLinkUrl(url) {
+    return typeof url === 'string' && /^https?:\/\/[^\s]+$/i.test(url.trim()) ? url.trim() : null;
 }
 
 export function contentPreview(content) {

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2, LoaderCircle } from 'lucide-react';
-import { articleReady, contentPreview, generationStatus, resolvePlannerOutput, safeGenerationError, STATUS_LABELS } from './plannerGeneration';
+import { articleReady, contentPreview, coverShape, generationStatus, resolvePlannerOutput, safeGenerationError, STATUS_LABELS } from './plannerGeneration';
 
-export function GeneratedImage({ src, story = false }) {
+export function GeneratedImage({ src, story = false, wide = false }) {
     const [state, setState] = useState('loading');
-    if (!src) return <div className={`planner-image-missing ${story ? 'story' : ''}`}>Preview gambar belum tersedia.</div>;
-    return <div className={`planner-generated-image ${story ? 'story' : ''} ${state}`}>
+    const shape = `${story ? 'story' : ''} ${wide ? 'wide' : ''}`.trim();
+    if (!src) return <div className={`planner-image-missing ${shape}`}>Preview gambar belum tersedia.</div>;
+    return <div className={`planner-generated-image ${shape} ${state}`}>
         {state === 'loading' && <span className="planner-image-placeholder" aria-label="Memuat preview gambar" />}
         {state === 'error' && <span className="planner-image-error">Preview gambar tidak dapat dimuat.</span>}
-        <img src={src} alt={story ? 'Hasil visual Instagram Story' : 'Hasil visual Instagram Feed'} loading="lazy" onLoad={() => setState('loaded')} onError={() => setState('error')} />
+        <img src={src} alt={story ? 'Hasil visual Instagram Story' : wide ? 'Sampul artikel' : 'Hasil visual Instagram Feed'} loading="lazy" onLoad={() => setState('loaded')} onError={() => setState('error')} />
     </div>;
 }
 
@@ -54,7 +55,7 @@ export function PlannerGenerationCard({ schedule, content, command, mode = 'norm
             {requesting && <div className="planner-progress-card" role="status"><LoaderCircle size={16} className="planner-spin" /> Mengirim permintaan ke Laravel...</div>}
             {processing && <div className="planner-progress-card" role="status"><div className="planner-progress-copy"><LoaderCircle size={17} className="planner-spin" /><span><strong>{status === 'generating' ? 'Sedang dibuat' : 'Menunggu giliran worker'}</strong><small>{output.worker} · {STATUS_LABELS[status]}</small></span></div>{mode === 'expanded' && <GenerationSkeleton output={output} />}</div>}
             {(!finished && failedRequest || status === 'failed') && <div className="planner-error-card" role="alert"><AlertCircle size={16} /><span><strong>{failedRequest ? 'Generation gagal dimulai' : 'Generation gagal'}</strong><small>{safeGenerationError(failedRequest ? requestState.message : command?.error || content?.metadata?.error)}</small></span></div>}
-            {finished && mode !== 'compact' && <div className="planner-result"><span className="planner-success"><CheckCircle2 size={14} /> {output.key === 'feed' ? 'Feed' : output.key === 'story' ? 'Story' : output.key === 'threads' ? 'Threads' : 'Konten'} berhasil dibuat</span>{['feed', 'story'].includes(output.key) && <GeneratedImage key={`${content?.id}-${preview.imageUrl}`} src={preview.imageUrl} story={output.key === 'story'} />}{output.key !== 'story' && preview.text && <p className="planner-result-text">{preview.text}</p>}{output.key === 'threads' && !preview.text && <p className="planner-card-note">Teks hasil belum tersedia pada respons.</p>}</div>}
+            {finished && mode !== 'compact' && <div className="planner-result"><span className="planner-success"><CheckCircle2 size={14} /> {output.key === 'feed' ? 'Feed' : output.key === 'story' ? 'Story' : output.key === 'threads' ? 'Threads' : output.key === 'article' ? 'Artikel' : 'Konten'} berhasil dibuat</span>{coverShape(output.key) && <GeneratedImage key={`${content?.id}-${preview.imageUrl}`} src={preview.imageUrl} story={coverShape(output.key) === 'story'} wide={coverShape(output.key) === 'wide'} />}{output.key === 'article' && preview.title && <p className="planner-result-title"><strong>{preview.title}</strong></p>}{output.key !== 'story' && preview.text && <p className="planner-result-text">{preview.text}</p>}{output.key === 'threads' && !preview.text && <p className="planner-card-note">Teks hasil belum tersedia pada respons.</p>}</div>}
             <div className="planner-card-footer"><span className="planner-worker-avatar" title={output.worker} aria-hidden="true">{workerInitials}</span><button className="planner-primary-action" type="button" disabled={buttonDisabled} title={buttonTitle} onClick={primaryAction}>{requesting && <LoaderCircle size={14} className="planner-spin" />}{buttonLabel}</button><details className="planner-row-menu"><summary>Opsi</summary><div className="planner-actions"><button type="button" onClick={onSetH1}>Set H-1</button><button type="button" onClick={onEdit}>Edit</button><button type="button" onClick={onPause}>{schedule.isActive ? 'Jeda' : 'Lanjutkan'}</button><button type="button" onClick={onDelete}>Hapus</button></div></details></div>
         </div>
     </article>;

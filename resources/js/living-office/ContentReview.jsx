@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Edit2, CheckCircle2, Wand2 } from 'lucide-react';
-import { contentPreview } from './plannerGeneration';
+import { contentPreview, coverShape, safeLinkUrl } from './plannerGeneration';
 import { GeneratedImage } from './PlannerGenerationCard';
 
 export function ContentReview(props) {
@@ -78,7 +78,9 @@ function ContentReviewBody({ contentItem, onClose, reviseContent, updateContent,
         if (!data) return null;
         return (
             <div className="content-payload">
-                {['feed', 'post', 'story'].includes(outputType) && <GeneratedImage key={`${contentItem.id}-${actual.imageUrl}`} src={actual.imageUrl} story={outputType === 'story'} />}
+                {(coverShape(outputType) || outputType === 'post') && <GeneratedImage key={`${contentItem.id}-${actual.imageUrl}`} src={actual.imageUrl} story={outputType === 'story'} wide={outputType === 'article'} />}
+                {outputType === 'article' && !data.title && actual.title && <p><strong>Judul:</strong> {actual.title}</p>}
+                {safeLinkUrl(contentItem.publicUrl) && <p><a href={safeLinkUrl(contentItem.publicUrl)} target="_blank" rel="noopener noreferrer">Buka di situs</a></p>}
                 {outputType !== 'story' && actual.text && <p className="review-actual-text">{actual.text}</p>}
                 {data.title && <p><strong>Title:</strong> {data.title}</p>}
                 {data.hook && <p><strong>Hook:</strong> {data.hook}</p>}
