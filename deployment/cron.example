@@ -1,0 +1,14 @@
+# Cron user jauhar (crontab -e). Setiap baris memakai flock supaya satu proses tidak ditimpa proses berikutnya.
+# Salin hanya setelah deployment/check-schedule-health.sh menunjukkan path slot dashboard dan worker sudah sama.
+
+# 1. Scheduler Laravel: membuat Threads dan artikel sehari sebelumnya, menerbitkannya di jam tayang, dan mengirim perintah ke worker.
+* * * * * cd /var/www/jauharfauzi.my.id && php artisan schedule:run >> /dev/null 2>&1
+
+# 2. Worker Instagram Kauiz: gambar Feed dan Story dibuat sehari sebelumnya dan diposting tepat jam tayang.
+*/5 * * * * cd /home/jauhar/deploy/kauiz/kauiz-worker && flock -n /tmp/kauiz-worker.lock /usr/bin/python3 kauiz_auto_worker.py auto --live >> logs/cron.log 2>&1
+
+# 3. Worker Instagram Jauki: sama seperti Kauiz, dengan file slot dan akun Jauki sendiri.
+*/5 * * * * cd /home/jauhar/deploy/jauki/jauki-worker && flock -n /tmp/jauki-worker.lock /usr/bin/python3 kauiz_auto_worker.py auto --live >> logs/cron.log 2>&1
+
+# 4. Reels Jauki: render sehari sebelumnya, kirim ke Telegram untuk TikTok, dan posting Instagram di jam tayang.
+*/5 * * * * cd /var/www/jauharfauzi.my.id/content-bot && flock -n /tmp/reels-bot.lock nice -n 19 ./venv/bin/python generate_content.py --auto --live >> logs/cron.log 2>&1

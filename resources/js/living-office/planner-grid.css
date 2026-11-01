@@ -6,6 +6,7 @@
 .office-redesign .tone-story-kauiz { --tone: #f08c1c; }
 .office-redesign .tone-threads { --tone: #6b7280; }
 .office-redesign .tone-article { --tone: #d9a400; }
+.office-redesign .tone-article-kauiz { --tone: #7c3aed; }
 .office-redesign .tone-other { --tone: var(--muted); }
 
 .office-redesign .planner-grid-page { display: grid; gap: 16px; padding: 24px 20px 48px; max-width: 1280px; margin: 0 auto; }

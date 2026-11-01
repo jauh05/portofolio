@@ -52,7 +52,7 @@ class OfficePlannerGridTest extends TestCase
             'label' => 'Reels Jauki', 'day' => 1, 'time' => '16:00',
         ])->assertCreated()->json('slot');
 
-        $this->assertSame(120, $created['lead_minutes']);
+        $this->assertSame(1440, $created['lead_minutes']);
         $this->assertSame('jauki', $created['brand']);
 
         $this->actingAs($this->owner)->patchJson("/office/api/reels-slots/{$created['id']}", [
@@ -60,7 +60,7 @@ class OfficePlannerGridTest extends TestCase
         ])->assertOk()->assertJsonPath('slot.day', 4)->assertJsonPath('slot.time', '19:30');
 
         $this->actingAs($this->owner)->getJson('/office/api/reels-slots')
-            ->assertJsonPath('slots.0.day', 4)->assertJsonPath('slots.0.lead_minutes', 120);
+            ->assertJsonPath('slots.0.day', 4)->assertJsonPath('slots.0.lead_minutes', 1440);
 
         $this->actingAs($this->owner)->deleteJson("/office/api/reels-slots/{$created['id']}")->assertOk();
         $this->actingAs($this->owner)->getJson('/office/api/reels-slots')->assertJsonPath('slots', []);

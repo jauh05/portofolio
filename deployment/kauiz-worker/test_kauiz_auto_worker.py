@@ -120,6 +120,10 @@ PLAN = {
 }
 
 
+def load_json(path):
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
 def png_bytes(size=(640, 480), color=(20, 40, 90)):
     buffer = io.BytesIO()
     Image.new("RGB", size, color).save(buffer, "PNG")
@@ -550,6 +554,71 @@ class MuseTests(unittest.TestCase):
                 worker.render_muse_image(config, plan, worker.topic_from_plan(plan), "story", "slot-j", root / "j.jpg", state)
             self.assertEqual(list(state["bank"]), ["jauki:story"])
             self.assertTrue(state["bank"]["jauki:story"][0].startswith("js-"))
+
+    def slot_file(self, root, slots):
+        path = root / "slots.json"
+        path.write_text(json.dumps(slots), encoding="utf-8")
+        return path
+
+    def test_muse_image_is_created_a_day_ahead_and_posted_on_time_without_a_second_muse_call(self):
+        slot = {"format": "feed", "platform": "instagram", "day": 7, "time": "09:00", "timezone": "Asia/Jakarta"}  # tanpa lead_minutes: bawaan 1 hari
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, slots_file=self.slot_file(root, [slot]), text_mode="muse", brand="kauiz")
+            before = datetime(2026, 10, 24, 9, 30, tzinfo=ZoneInfo("Asia/Jakarta"))  # 23,5 jam sebelum tayang
+            early = FakeClient()
+            with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 1125))) as muse:
+                self.assertEqual(worker.run_due(config, live=True, now=before, client=early), worker.EXIT_OK)
+            self.assertEqual(muse.call_count, 1)
+            self.assertEqual(early.calls, [])  # belum tayang
+            self.assertTrue((config.output_dir / "2026-10-25-0900-feed.jpg").exists())
+            self.assertEqual(load_json(config.state_file).get("published"), {})
+
+            on_time = FakeClient()
+            with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil lagi")):
+                self.assertEqual(worker.run_due(config, live=True, now=datetime(2026, 10, 25, 9, 2, tzinfo=ZoneInfo("Asia/Jakarta")), client=on_time), worker.EXIT_OK)
+            self.assertEqual([call[0] for call in on_time.calls], ["create", "publish"])
+            self.assertEqual(set(load_json(config.state_file)["published"]), {"2026-10-25-0900:feed"})
+
+    def test_dry_run_a_day_ahead_still_never_calls_muse(self):
+        slot = {"format": "story", "platform": "instagram", "day": 7, "time": "09:00", "timezone": "Asia/Jakarta"}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, slots_file=self.slot_file(root, [slot]), text_mode="muse", brand="kauiz")
+            with mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
+                self.assertEqual(worker.run_due(config, live=False, now=datetime(2026, 10, 24, 9, 30, tzinfo=ZoneInfo("Asia/Jakarta"))), worker.EXIT_OK)
+
+    def test_slots_of_other_platforms_are_ignored_without_errors(self):
+        zone = ZoneInfo("Asia/Jakarta")
+        slots = [{"format": "article", "platform": "article", "day": 7, "time": "09:00", "timezone": "Asia/Jakarta"},
+                 {"format": "thread", "platform": "threads", "day": 7, "time": "09:00", "timezone": "Asia/Jakarta"},
+                 {"format": "story", "platform": "instagram", "day": 7, "time": "09:00", "timezone": "Asia/Jakarta"}]
+        with self.assertNoLogs(worker.LOG, level="ERROR"):
+            jobs = worker.due_jobs(slots, datetime(2026, 10, 25, 8, 0, tzinfo=zone), "Asia/Jakarta")
+        self.assertEqual([(job.fmt, job.publish) for job in jobs], [("story", False)])
+
+    def test_a_slot_file_of_another_brand_is_refused_so_nothing_posts_to_the_wrong_account(self):
+        slots = [{"format": "story", "platform": "instagram", "brand": "kauiz", "day": 7, "time": "09:00", "timezone": "Asia/Jakarta", "label": "Story Kauiz"}]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = self.muse_config(root, slots_file=self.slot_file(root, slots), text_mode="muse", brand="jauki")
+            client = FakeClient()
+            with self.assertLogs(worker.LOG, level="ERROR") as logs, \
+                    mock.patch.object(worker, "generate_background", side_effect=AssertionError("Muse tidak boleh dipanggil")):
+                self.assertEqual(worker.run_due(config, live=True, now=datetime(2026, 10, 25, 9, 2, tzinfo=ZoneInfo("Asia/Jakarta")), client=client), worker.EXIT_OK)
+            self.assertEqual(client.calls, [])
+            self.assertIn("milik brand kauiz", logs.output[0])
+
+    def test_a_slot_of_the_same_brand_or_without_a_brand_label_is_still_processed(self):
+        zone = ZoneInfo("Asia/Jakarta")
+        for label in ({"brand": "jauki"}, {}):
+            slot = {"format": "story", "platform": "instagram", "day": 7, "time": "09:00", "timezone": "Asia/Jakarta", **label}
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                config = self.muse_config(root, slots_file=self.slot_file(root, [slot]), text_mode="muse", brand="jauki")
+                with mock.patch.object(worker, "generate_background", return_value=png_bytes((900, 1600))) as muse:
+                    worker.run_due(config, live=True, now=datetime(2026, 10, 24, 12, 0, tzinfo=zone), client=FakeClient())
+                self.assertEqual(muse.call_count, 1, label)
 
     def test_pattern_subject_and_short_line_helpers(self):
         self.assertEqual(worker.infer_pattern({"topic": "Tips belajar efektif"}), "tips")

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildChips, chipKey, chipLabel, CHIP_TYPES } from '../../resources/js/living-office/plannerGridModel.js';
+import { buildChips, chipKey, chipLabel, chipTone, CHIP_TYPES } from '../../resources/js/living-office/plannerGridModel.js';
 
 test('Threads schedules land on the Threads chip, not on Feed', () => {
     assert.equal(chipKey('jauki', 'thread'), 'jauki-threads');
@@ -33,4 +33,10 @@ test('weekly schedules become one chip per day with their time', () => {
         recurrenceRule: { frequency: 'weekly', days: [1, 3], time: '09:00' } }];
     const chips = buildChips(schedules, []);
     assert.deepEqual(chips.map(c => [c.day, c.time, c.key]), [[1, '09:00', 'jauki-threads'], [3, '09:00', 'jauki-threads']]);
+});
+
+test('Artikel Kauiz and Artikel Jauki have different colours on the grid', () => {
+    assert.equal(chipTone('jauki-article'), 'article');
+    assert.equal(chipTone('kauiz-article'), 'article-kauiz');
+    assert.notEqual(chipTone('kauiz-article'), chipTone('jauki-article'));
 });

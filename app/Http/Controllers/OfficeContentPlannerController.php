@@ -59,6 +59,8 @@ class OfficeContentPlannerController extends Controller
         foreach ($items as $item) {
             $schedule = $item->schedule;
             if (!$schedule) continue;
+            // publish_last memakai token dan draf bot Jauki, jadi Instagram Kauiz dan Jauki hanya boleh diposting worker slot.
+            if (\App\Services\SlotWorkers::manages($schedule)) continue;
 
             $pubMode = $schedule->publishing_mode ?? 'review';
             if ($pubMode === 'review' && $item->status !== 'approved') continue;

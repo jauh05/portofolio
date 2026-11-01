@@ -24,3 +24,6 @@ Schedule::call(function () {
 
 // Views dan likes dari Instagram Insights. Tanpa INSTAGRAM_ACCESS_TOKEN job ini hanya mencatat "dilewati".
 Schedule::call(fn () => app(\App\Services\OfficeContentMetricsService::class)->refresh())->everySixHours()->name('office-content-metrics')->timezone('Asia/Jakarta')->withoutOverlapping();
+
+// Jaring pengaman: file slot worker ditulis ulang tiap jam, kalau sampai hilang atau tertinggal dari jadwal di database.
+Schedule::command('office:sync-slots')->hourly()->name('office-sync-slots')->timezone('Asia/Jakarta')->withoutOverlapping();

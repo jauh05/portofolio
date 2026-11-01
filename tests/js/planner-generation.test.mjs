@@ -185,3 +185,17 @@ test('an article worker whose last task failed can still be asked to try again, 
     assert.equal(articleReady(article, [{ id: 'jauki-article', status: 'error', availableActions: ['generate_article'] }]), true);
     for (const status of ['offline', 'not_connected', 'not_installed']) assert.equal(articleReady(article, [{ id: 'jauki-article', status, availableActions: ['generate_article'] }]), false, status);
 });
+
+test('a schedule managed by the slot worker explains itself instead of failing to start', async () => {
+    const states = [], notices = [];
+    let refreshed = false;
+    const result = await runGenerationRequest({
+        scheduleId: 'schedule-1', post: async () => ({ status: 'skipped', reason: 'managed_by_slot_worker' }),
+        refresh: async () => { refreshed = true; }, onState: state => states.push(state), onNotice: text => notices.push(text),
+    });
+    assert.equal(result.reason, 'managed_by_slot_worker');
+    assert.deepEqual(states.map(state => state.phase), ['requesting', 'idle']);
+    assert.match(notices.at(-1), /dibuat otomatis oleh worker sehari sebelum jam tayang/);
+    assert.equal(refreshed, false);
+    assert.ok(!states.some(state => state.phase === 'error'));
+});

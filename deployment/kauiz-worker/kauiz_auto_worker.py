@@ -86,7 +86,7 @@ TRANSIENT_SUBCODES = {2207006}
 EXIT_OK, EXIT_FAILED, EXIT_CONFIG, EXIT_LOCKED = 0, 1, 2, 3
 
 # Generate dimulai sejak lead time sebelum jam tayang. Bisa diubah per slot lewat lead_minutes.
-DEFAULT_LEAD_MINUTES = 120
+DEFAULT_LEAD_MINUTES = 1440  # gambar dibuat sehari sebelum jam tayang
 # Posting masih dicoba sampai menit ini setelah jam tayang. Lewat dari itu slot dianggap terlewat.
 POST_GRACE_MINUTES = 60
 
@@ -976,6 +976,9 @@ def due_jobs(slots, now, default_timezone):
         # Slot tanpa jam belum siap dijadwalkan, jadi dilewati tanpa error.
         if isinstance(slot, dict) and not slot.get("time"):
             continue
+        # Artikel, Threads, dan jenis lain dijalankan worker lain; slot-nya bukan urusan worker Instagram ini.
+        if isinstance(slot, dict) and slot.get("platform") not in (None, "", "instagram"):
+            continue
         try:
             fmt = slot["format"]
             day = int(slot["day"])
@@ -1016,7 +1019,9 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
     if config.image_mode not in IMAGE_MODES or config.text_mode not in ("muse", "pillow"):
         LOG.error("KAUIZ_IMAGE_MODE atau KAUIZ_TEXT_MODE tidak dikenali: %s, %s", config.image_mode, config.text_mode)
         return EXIT_CONFIG
-    # publish=False hanya membuat gambar; posting menunggu jam tayang.
+    # publish=False hanya membuat gambar; posting menunggu jam tayang. Muse tetap dipanggil bila --live, jadi gambar
+    # sudah siap sejak lead time, bukan baru dibuat saat jam tayang.
+    generate_live = live
     live = live and publish
 
     if live:
@@ -1029,7 +1034,7 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
             max_retries=config.max_retries, max_wait=config.max_wait,
         )
 
-    mode = "LIVE" if live else ("dry run" if publish else "generate")
+    mode = "LIVE" if live else ("generate" if generate_live else "dry run")
     LOG.info("slot %s, topik '%s', mode %s, format %s", slot_key, topic["tag"], mode, ",".join(formats))
     failures = 0
     with run_lock(config.lock_file):
@@ -1045,7 +1050,7 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
                 caption = None
                 if config.image_mode == "muse":
                     # Muse hanya dipanggil saat live. Dry run cukup menulis prompt untuk diperiksa.
-                    if not live and not image_path.exists():
+                    if not generate_live and not image_path.exists():
                         preview, template_id = write_prompt_preview(config, plan or {}, topic, fmt, slot_key, state)
                         LOG.info("%s: template %s, prompt Muse ditulis ke %s, belum memanggil OpenRouter", key, template_id, preview)
                         continue
@@ -1091,9 +1096,17 @@ def run_auto(config, *, live, formats, now, slot=None, client=None, slot_key=Non
 def run_due(config, *, live, now, client=None):
     """Satu jalan cron: buat gambar slot yang akan tayang, lalu posting slot yang sudah jatuh tempo."""
     state = load_state(config.state_file)
-    jobs = due_jobs(load_slots(config.slots_file), now, config.timezone)
+    slots = []
+    for slot in load_slots(config.slots_file):
+        owner = slot.get("brand") if isinstance(slot, dict) else None
+        if owner and owner != config.brand:
+            # File slot satu brand tidak boleh dibaca worker brand lain: jadwal Kauiz tidak boleh tayang di akun Jauki.
+            LOG.error("slot %s dilewati: milik brand %s, sedangkan worker ini untuk %s", slot.get("label") or slot.get("id"), owner, config.brand)
+            continue
+        slots.append(slot)
+    jobs = due_jobs(slots, now, config.timezone)
     if not jobs:
-        LOG.info("tidak ada slot Kauiz yang aktif sekarang")
+        LOG.info("tidak ada slot %s yang aktif sekarang", config.brand)
     failures = 0
     for job in jobs:
         if f"{job.slot_key}:{job.fmt}" in state["published"]:

@@ -8,7 +8,7 @@ Setiap slot punya jam tetap (hari 1-7 dengan Senin=1, dan HH:MM). Video dirender
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-DEFAULT_LEAD_MINUTES = 120
+DEFAULT_LEAD_MINUTES = 1440  # video dirender sehari sebelum jam tayang
 LOOKBACK = timedelta(hours=6)
 LOOKAHEAD = timedelta(days=7)
 
@@ -40,14 +40,15 @@ def occurrences(slot, now, tz):
     return found
 
 
-def due_actions(slots, state, now, tz):
+def due_actions(slots, state, now, tz, lead_minutes=None):
     """Daftar tindakan yang harus dilakukan sekarang, berdasarkan slot dan status tiap kemunculan."""
     actions = []
     for slot in slots:
         # Slot tanpa jam belum punya tanggal tayang, jadi dilewati sampai jamnya diisi.
         if not slot.get("active", True) or not slot.get("time"):
             continue
-        lead = timedelta(minutes=int(slot.get("lead_minutes", DEFAULT_LEAD_MINUTES)))
+        # lead_minutes dari pemanggil menggantikan nilai di slot, supaya slot lama (120 menit) ikut berpindah ke sehari sebelumnya.
+        lead = timedelta(minutes=int(lead_minutes if lead_minutes is not None else slot.get("lead_minutes", DEFAULT_LEAD_MINUTES)))
         for at in occurrences(slot, now, tz):
             key = occurrence_key(slot, at)
             status = (state.get(key) or {}).get("status")

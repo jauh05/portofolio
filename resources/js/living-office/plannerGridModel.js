@@ -10,7 +10,7 @@ export const CHIP_TYPES = {
     'kauiz-story': { label: 'Story Kauiz', tone: 'story-kauiz', platform: 'instagram', contentType: 'story', brand: 'kauiz' },
     'jauki-threads': { label: 'Threads Jauki', tone: 'threads', platform: 'threads', contentType: 'thread', brand: 'jauki' },
     'jauki-article': { label: 'Artikel Jauki', tone: 'article', platform: 'article', contentType: 'article', brand: 'jauki' },
-    'kauiz-article': { label: 'Artikel Kauiz', tone: 'article', platform: 'article', contentType: 'article', brand: 'kauiz' },
+    'kauiz-article': { label: 'Artikel Kauiz', tone: 'article-kauiz', platform: 'article', contentType: 'article', brand: 'kauiz' },
 };
 
 // Nama tipe yang disimpan dashboard dan worker, disamakan dengan kunci di CHIP_TYPES.

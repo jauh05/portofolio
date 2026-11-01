@@ -35,7 +35,8 @@ from zoneinfo import ZoneInfo
 
 
 from ig_publisher import GraphError, PublishError, ReelsClient, publish_reel
-from slot_plan import due_actions
+import telegram_notify
+from slot_plan import DEFAULT_LEAD_MINUTES, due_actions
 
 BASE_DIR = Path(__file__).resolve().parent
 RAW_DIR = BASE_DIR / "raw_videos"
@@ -592,6 +593,55 @@ def history_entry(plan, item, cfg, out_path, actual, entry_id, stamp, slot_at=No
     }
 
 
+TELEGRAM_RETRIES = 5
+
+
+def reels_lead_minutes():
+    """Menit sebelum jam tayang untuk mulai render. Bawaan 1 hari; REELS_LEAD_MINUTES di .env mengubahnya."""
+    try:
+        return max(0, int(os.environ.get("REELS_LEAD_MINUTES", DEFAULT_LEAD_MINUTES)))
+    except ValueError:
+        return DEFAULT_LEAD_MINUTES
+
+
+def notify_telegram(record, out_path, slot_at):
+    """Kirim video dan caption TikTok ke Telegram, dan catat hasilnya di record. Gagal kirim tidak membatalkan render."""
+    token, chat_id = os.environ.get("TELEGRAM_BOT_TOKEN", ""), os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not token or not chat_id:
+        if record.get("telegram") != "skipped":
+            log.warning("Telegram belum diatur (TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID di .env). Video tidak dikirim.")
+        record["telegram"] = "skipped"
+        return
+    record["telegram_attempts"] = int(record.get("telegram_attempts", 0)) + 1
+    base = os.environ.get("PUBLIC_VIDEO_BASE_URL", "").rstrip("/")
+    try:
+        telegram_notify.send_reel(token, chat_id, out_path, slot_at, record["caption"], label=record.get("label") or "Reels Jauki",
+                                  public_url=f"{base}/{out_path.name}" if base else None)
+        record["telegram"] = "sent"
+        record.pop("telegram_error", None)
+        log.info("Video %s dikirim ke Telegram untuk diunggah ke TikTok.", out_path.name)
+    except telegram_notify.TelegramError as exc:
+        record["telegram"] = "failed"
+        record["telegram_error"] = str(exc)
+        log.error("Kirim ke Telegram gagal (percobaan %d dari %d): %s", record["telegram_attempts"], TELEGRAM_RETRIES, exc)
+
+
+def retry_telegram(state, tz, now):
+    """Video yang sudah dirender tetapi belum terkirim ke Telegram dicoba lagi sampai jam tayang. True bila ada yang berubah."""
+    changed = False
+    for record in state.values():
+        if record.get("status") != "rendered" or record.get("telegram") not in (None, "failed", "skipped"):
+            continue
+        if int(record.get("telegram_attempts", 0)) >= TELEGRAM_RETRIES or not record.get("slot_at") or not record.get("output"):
+            continue
+        slot_at = datetime.fromisoformat(record["slot_at"]).astimezone(tz)
+        out_path = OUT_DIR / record["output"]
+        if now < slot_at and out_path.exists():
+            notify_telegram(record, out_path, slot_at)
+            changed = True
+    return changed
+
+
 def run_auto(cfg, tz, rng, live, now):
     """Mode slot: render dan posting mengikuti jam di grid. Tanpa --live hanya mencatat rencana."""
     slots = load_slots()
@@ -603,7 +653,9 @@ def run_auto(cfg, tz, rng, live, now):
     history = load_history()
     bank = load_bank()
     code = 0
-    for action in due_actions(slots, state, now, tz):
+    if live and retry_telegram(state, tz, now):
+        save_slot_state(state)
+    for action in due_actions(slots, state, now, tz, lead_minutes=reels_lead_minutes()):
         at = action.occurrence.astimezone(tz).strftime("%d %b %H:%M")
         if action.kind == "missed":
             state[action.key] = {"status": "missed"}
@@ -629,7 +681,10 @@ def run_auto(cfg, tz, rng, live, now):
             history.append(history_entry(plan, item, cfg, out_path, actual, entry_id, stamp, action.occurrence.isoformat()))
             save_history(history)
             state[action.key] = {"status": "rendered", "output": out_path.name, "caption": caption_text,
-                                 "entry_id": entry_id, "slot_at": action.occurrence.isoformat()}
+                                 "entry_id": entry_id, "slot_at": action.occurrence.isoformat(),
+                                 "label": action.slot.get("label") or "Reels Jauki"}
+            save_slot_state(state)
+            notify_telegram(state[action.key], out_path, action.occurrence.astimezone(tz))
             save_slot_state(state)
             log.info("Render siap untuk slot %s (%s): %s", action.slot.get("label"), at, out_path.name)
         elif action.kind == "post":

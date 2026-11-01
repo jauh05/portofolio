@@ -24,9 +24,14 @@ async function request(url, options = {}) {
 
 const todayKey = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
 
+// Alasan dilewati yang perlu dijelaskan dengan bahasa biasa.
+const SKIP_NOTICES = {
+    managed_by_slot_worker: 'Feed dan Story Kauiz dan Jauki dibuat otomatis oleh worker sehari sebelum jam tayang, jadi tidak perlu generate manual.',
+};
+
 const generateNotice = (result) => {
     if (result.status === 'generated') return 'Generate ulang masuk antrean.';
-    if (result.status === 'skipped') return `Dilewati: ${result.reason}.`;
+    if (result.status === 'skipped') return SKIP_NOTICES[result.reason] || `Dilewati: ${result.reason}.`;
     return `Gagal: ${result.reason || 'tidak diketahui'}.`;
 };
 
@@ -138,7 +143,7 @@ export function PlannerGrid({ calendarProps }) {
                         name: type.label, schedule_type: 'recurring', platform: type.platform, content_type: type.contentType,
                         topic: '', brief: '', assigned_agent: '', timezone: TZ, brand_id: brand?.id ?? null,
                         frequency: 'weekly', days: [1], time: null, starts_at: todayKey(),
-                        generation_mode: 'manual', generation_timing: 'lead_time', generation_lead_minutes: 120,
+                        generation_mode: 'manual', generation_timing: 'lead_time', generation_lead_minutes: 1440,
                         publishing_mode: 'automatic', is_active: true,
                     }),
                 });

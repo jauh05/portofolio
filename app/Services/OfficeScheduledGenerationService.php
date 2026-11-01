@@ -41,6 +41,10 @@ class OfficeScheduledGenerationService
         if (! $schedule->is_active || $schedule->trashed()) {
             return ['status' => 'skipped', 'reason' => 'inactive_or_deleted'];
         }
+        // Feed dan Story Kauiz dan Jauki dikerjakan worker slot (sehari sebelumnya), bukan perintah Office ke bot lama.
+        if (SlotWorkers::manages($schedule)) {
+            return ['status' => 'skipped', 'reason' => 'managed_by_slot_worker'];
+        }
 
         return DB::transaction(function () use ($schedule, $occurrenceAt, $regenerate) {
             $schedule = OfficeContentSchedule::with('brand')->lockForUpdate()->find($schedule->id);
