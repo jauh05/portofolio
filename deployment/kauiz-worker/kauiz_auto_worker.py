@@ -996,7 +996,11 @@ def due_jobs(slots, now, default_timezone):
         # Lead time dan masa tenggang tidak lebih dari sehari, jadi cukup mengecek kemarin, hari ini, dan besok.
         for offset in (-1, 0, 1):
             candidate = today + timedelta(days=offset)
-            if candidate.isoweekday() != day:
+            # Slot bertanggal (jadwal sekali jalan) hanya berlaku pada tanggalnya; slot mingguan pada hari yang sama tiap minggu.
+            if isinstance(slot, dict) and slot.get("date"):
+                if candidate.isoformat() != str(slot["date"]):
+                    continue
+            elif candidate.isoweekday() != day:
                 continue
             at = datetime.combine(candidate, datetime.min.time().replace(hour=hour, minute=minute), tzinfo=zone)
             if not at - lead <= now < at + timedelta(minutes=POST_GRACE_MINUTES):

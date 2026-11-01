@@ -24,13 +24,11 @@ class OfficeScheduledGenerationService
         $schedules = OfficeContentSchedule::with('brand')->where('is_active', true)->whereIn('generation_timing', ['immediate', 'lead_time'])->limit($limit)->get();
 
         foreach ($schedules as $schedule) {
-            $occurrence = $this->nextOccurrence($schedule);
-            if (! $occurrence || ! $this->isDue($schedule, $occurrence)) {
-                continue;
+            foreach ($this->dueOccurrences($schedule) as $occurrence) {
+                $summary['eligible']++;
+                $result = $this->generateSchedule($schedule, $occurrence->toIso8601String());
+                $summary[$result['status'] === 'generated' ? 'generated' : ($result['status'] === 'failed' ? 'failed' : 'skipped')]++;
             }
-            $summary['eligible']++;
-            $result = $this->generateSchedule($schedule, $occurrence->toIso8601String());
-            $summary[$result['status'] === 'generated' ? 'generated' : ($result['status'] === 'failed' ? 'failed' : 'skipped')]++;
         }
 
         return $summary;
@@ -43,7 +41,8 @@ class OfficeScheduledGenerationService
         }
         // Feed dan Story Kauiz dan Jauki dikerjakan worker slot (sehari sebelumnya), bukan perintah Office ke bot lama.
         if (SlotWorkers::manages($schedule)) {
-            return ['status' => 'skipped', 'reason' => 'managed_by_slot_worker'];
+            // Jadwal review tidak akan diposting worker (tanpa persetujuan), jadi alasannya dibedakan agar tidak menyesatkan.
+            return ['status' => 'skipped', 'reason' => SlotWorkers::postsAutomatically($schedule) ? 'managed_by_slot_worker' : 'slot_worker_needs_automatic'];
         }
 
         return DB::transaction(function () use ($schedule, $occurrenceAt, $regenerate) {
@@ -94,6 +93,28 @@ class OfficeScheduledGenerationService
         if ($platform === 'threads') return ['jauki-threads', 'generate_threads'];
         if (in_array($platform, ['article', 'blog', 'website'], true) || in_array($type, ['article', 'blog'], true)) return ['jauki-article', 'generate_article'];
         return ['jauki-social', $type === 'story' ? 'generate_story' : 'generate_feed'];
+    }
+
+    /**
+     * Kemunculan yang waktu pembuatannya sudah tiba. Jadwal sekali jalan memakai scheduled_at. Jadwal berulang dihitung dari aturannya
+     * saat ini, bukan dari next_run_at (tidak pernah dimajukan, jadi hanya kemunculan pertama yang akan dibuat). Kemunculan yang
+     * sudah lewat tidak dibuat; kemunculan yang sudah punya konten dilewati oleh generateSchedule.
+     *
+     * @return list<CarbonImmutable>
+     */
+    private function dueOccurrences(OfficeContentSchedule $schedule): array
+    {
+        if ($schedule->schedule_type === 'one_time') {
+            $occurrence = $this->nextOccurrence($schedule);
+            return $occurrence && $this->isDue($schedule, $occurrence) ? [$occurrence] : [];
+        }
+
+        $now = CarbonImmutable::now($schedule->timezone ?: 'Asia/Jakarta');
+        $lead = $schedule->generation_timing === 'lead_time' ? max(0, (int) ($schedule->generation_lead_minutes ?? 0)) : 0;
+        $upcoming = RecurrenceOccurrences::between($schedule, $now, $now->addMinutes($lead > 0 ? $lead : 10080));
+
+        // "immediate": siapkan hanya kemunculan berikutnya. "lead_time": semua yang jam pembuatannya sudah tiba.
+        return $lead > 0 ? $upcoming : array_slice($upcoming, 0, 1);
     }
 
     private function isDue(OfficeContentSchedule $schedule, CarbonImmutable $occurrence): bool

@@ -30,6 +30,15 @@ class SlotWorkers
             && in_array($schedule->brand?->slug, self::brands(), true);
     }
 
+    /**
+     * Worker slot memposting begitu jam tayang tiba, tanpa tahap persetujuan. Karena itu hanya jadwal berstatus publishing otomatis
+     * yang masuk file slot; jadwal "review" tidak boleh diposting tanpa persetujuan dan harus diubah ke otomatis lebih dulu.
+     */
+    public static function postsAutomatically(OfficeContentSchedule $schedule): bool
+    {
+        return ($schedule->publishing_mode ?? 'review') === 'automatic';
+    }
+
     /** Jadwal yang masuk file slot worker: Instagram feed atau story. Artikel dan Threads punya worker sendiri. */
     public static function wantsSlot(OfficeContentSchedule $schedule): bool
     {

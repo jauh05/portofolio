@@ -620,6 +620,19 @@ class MuseTests(unittest.TestCase):
                     worker.run_due(config, live=True, now=datetime(2026, 10, 24, 12, 0, tzinfo=zone), client=FakeClient())
                 self.assertEqual(muse.call_count, 1, label)
 
+    def test_a_dated_slot_runs_only_on_its_date_not_every_week(self):
+        zone = ZoneInfo("Asia/Jakarta")
+        slot = {"format": "feed", "platform": "instagram", "day": 1, "time": "13:00", "date": "2026-11-02", "timezone": "Asia/Jakarta"}
+        def jobs(when):
+            return worker.due_jobs([slot], when, "Asia/Jakarta")
+        self.assertEqual([job.slot_key for job in jobs(datetime(2026, 11, 1, 20, 0, tzinfo=zone))], ["2026-11-02-1300"])   # sehari sebelumnya
+        self.assertEqual([job.publish for job in jobs(datetime(2026, 11, 2, 13, 2, tzinfo=zone))], [True])                # jam tayang
+        self.assertEqual(jobs(datetime(2026, 11, 8, 20, 0, tzinfo=zone)), [])                                              # Minggu depan: Senin lain, bukan tanggalnya
+        self.assertEqual(jobs(datetime(2026, 11, 9, 12, 0, tzinfo=zone)), [])
+        weekly = dict(slot)
+        weekly.pop("date")
+        self.assertEqual([job.slot_key for job in worker.due_jobs([weekly], datetime(2026, 11, 8, 20, 0, tzinfo=zone), "Asia/Jakarta")], ["2026-11-09-1300"])
+
     def test_pattern_subject_and_short_line_helpers(self):
         self.assertEqual(worker.infer_pattern({"topic": "Tips belajar efektif"}), "tips")
         self.assertEqual(worker.infer_pattern({"topic": "Webinar gratis"}), "event")

@@ -199,3 +199,12 @@ test('a schedule managed by the slot worker explains itself instead of failing t
     assert.equal(refreshed, false);
     assert.ok(!states.some(state => state.phase === 'error'));
 });
+
+test('a review-mode schedule of a slot-worker brand tells the owner to switch publishing to automatic', async () => {
+    const notices = [];
+    await runGenerationRequest({
+        scheduleId: 'schedule-1', post: async () => ({ status: 'skipped', reason: 'slot_worker_needs_automatic' }),
+        refresh: async () => assert.fail('must not refresh'), onState: () => {}, onNotice: text => notices.push(text),
+    });
+    assert.match(notices.at(-1), /Ubah Publishing ke Otomatis/);
+});

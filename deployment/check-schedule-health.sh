@@ -164,6 +164,21 @@ if [ -d "$APP_DIR" ]; then
     use App\Models\OfficeContentSchedule as S; use App\Models\OfficeContentItem as I; use App\Models\OfficeCommand as C;
     echo "  jadwal aktif per brand/platform/timing/publishing:\n";
     foreach (S::with("brand")->where("is_active", true)->get()->groupBy(fn($s) => ($s->brand?->slug ?? "-")."/".$s->platform."/".$s->content_type." timing=".($s->generation_timing ?? "-")."/".($s->generation_lead_minutes ?? "-")." publish=".($s->publishing_mode ?? "-")) as $k => $g) echo "    ".$g->count()."x $k\n";
+    echo "  Instagram Kauiz/Jauki yang TIDAK akan diposting worker (publishing review, atau tanpa jam):\n";
+    $none = 0;
+    foreach (S::with("brand")->where("is_active", true)->where("platform", "instagram")->get() as $s) {
+        if (! in_array($s->brand?->slug, ["kauiz", "jauki"], true)) continue;
+        $auto = ($s->publishing_mode ?? "review") === "automatic";
+        $timed = $s->schedule_type === "one_time" ? (bool) $s->scheduled_at : ! empty($s->recurrence_rule["time"]);
+        if ($auto && $timed) continue;
+        $none++;
+        echo "    ".$s->brand->slug."/".$s->content_type." ".$s->name." (".($s->schedule_type === "one_time" ? ($s->scheduled_at?->format("Y-m-d H:i") ?? "tanpa tanggal") : "mingguan").") publish=".($s->publishing_mode ?? "-").($timed ? "" : " TANPA JAM").PHP_EOL;
+    }
+    if ($none === 0) echo "    (tidak ada)\n";
+    echo "  Threads/artikel yang menunggu persetujuan sebelum terbit (publishing review):\n";
+    $held = S::with("brand")->where("is_active", true)->whereIn("platform", ["threads", "article", "blog"])->where("publishing_mode", "review")->get();
+    foreach ($held as $s) echo "    ".($s->brand?->slug ?? "-")."/".$s->platform." ".$s->name.PHP_EOL;
+    if ($held->isEmpty()) echo "    (tidak ada)\n";
     echo "  konten 3 hari terakhir per status:\n";
     foreach (I::where("created_at", ">=", now()->subDays(3))->get()->groupBy(fn($i) => $i->platform."/".$i->content_type." ".$i->status) as $k => $g) echo "    ".$g->count()."x $k\n";
     echo "  perintah 3 hari terakhir per agen/aksi/status:\n";

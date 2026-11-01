@@ -157,3 +157,53 @@ test('office:sync-slots rebuilds missing slot files from the active schedules', 
 test('the hourly slot sync is registered with the scheduler', function () {
     $this->artisan('schedule:list')->expectsOutputToContain('office:sync-slots')->assertExitCode(0);
 });
+
+function oneTime(string $brand, string $type, string $name, string $when, array $extra = []): OfficeContentSchedule
+{
+    return OfficeContentSchedule::create(array_merge([
+        'name' => $name, 'topic' => 'Tips fokus belajar', 'brief' => 'Tiga langkah kecil', 'schedule_type' => 'one_time', 'platform' => 'instagram',
+        'content_type' => $type, 'brand_id' => OfficeContentBrand::where('slug', $brand)->firstOrFail()->id, 'timezone' => 'Asia/Jakarta',
+        'scheduled_at' => $when, 'next_run_at' => $when, 'generation_mode' => 'automatic', 'generation_timing' => 'lead_time',
+        'generation_lead_minutes' => 1440, 'publishing_mode' => 'automatic', 'is_active' => true,
+    ], $extra));
+}
+
+test('a one-time instagram schedule becomes one dated slot that carries its topic and brief', function () {
+    $when = \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(3)->setTime(13, 0);
+    oneTime('kauiz', 'feed', 'Feed fokus', $when->format('Y-m-d H:i:s'));
+
+    $slot = SlotFile::read(config('kauiz.slots_path'))[0];
+    expect($slot)->toMatchArray([
+        'brand' => 'kauiz', 'format' => 'feed', 'platform' => 'instagram', 'date' => $when->toDateString(), 'time' => '13:00',
+        'day' => $when->isoWeekday(), 'topic' => 'Tips fokus belajar', 'brief' => 'Tiga langkah kecil', 'lead_minutes' => 1440,
+    ]);
+    expect(SlotFile::read(config('jauki.slots_path')))->toBe([]);
+});
+
+test('one-time slots too far in the past or the future are not written', function () {
+    $now = \Carbon\CarbonImmutable::now('Asia/Jakarta');
+    oneTime('jauki', 'story', 'Lama', $now->subDays(3)->setTime(9, 0)->format('Y-m-d H:i:s'));
+    oneTime('jauki', 'story', 'Jauh', $now->addDays(90)->setTime(9, 0)->format('Y-m-d H:i:s'));
+    oneTime('jauki', 'story', 'Besok', $now->addDay()->setTime(9, 0)->format('Y-m-d H:i:s'));
+    expect(collect(SlotFile::read(config('jauki.slots_path')))->pluck('label')->all())->toBe(['Besok']);
+});
+
+test('schedules in review mode never reach a slot file, because the worker posts without approval', function () {
+    weekly('jauki', 'instagram', 'story', 'Story review', [2], '09:00', ['publishing_mode' => 'review']);
+    oneTime('kauiz', 'feed', 'Feed review', \Carbon\CarbonImmutable::now('Asia/Jakarta')->addDays(2)->setTime(10, 0)->format('Y-m-d H:i:s'), ['publishing_mode' => 'review']);
+    weekly('jauki', 'instagram', 'story', 'Story otomatis', [3], '09:00');
+    expect(collect(SlotFile::read(config('jauki.slots_path')))->pluck('label')->all())->toBe(['Story otomatis']);
+    expect(SlotFile::read(config('kauiz.slots_path')))->toBe([]);
+});
+
+test('generating a review-mode instagram schedule explains that it needs automatic publishing', function () {
+    $owner = User::factory()->create(['is_office_owner' => true]);
+    $review = weekly('jauki', 'instagram', 'story', 'Story review', [2], '09:00', ['publishing_mode' => 'review']);
+    $auto = weekly('jauki', 'instagram', 'story', 'Story otomatis', [3], '09:00');
+
+    $this->actingAs($owner)->postJson('/office/api/content-schedules/'.$review->id.'/generate')
+        ->assertOk()->assertJsonPath('reason', 'slot_worker_needs_automatic');
+    $this->actingAs($owner)->postJson('/office/api/content-schedules/'.$auto->id.'/generate')
+        ->assertOk()->assertJsonPath('reason', 'managed_by_slot_worker');
+    expect(OfficeCommand::count())->toBe(0);
+});

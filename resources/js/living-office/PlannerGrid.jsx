@@ -27,6 +27,7 @@ const todayKey = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format
 // Alasan dilewati yang perlu dijelaskan dengan bahasa biasa.
 const SKIP_NOTICES = {
     managed_by_slot_worker: 'Feed dan Story Kauiz dan Jauki dibuat otomatis oleh worker sehari sebelum jam tayang, jadi tidak perlu generate manual.',
+    slot_worker_needs_automatic: 'Jadwal ini berstatus review, sedangkan worker hanya memposting jadwal otomatis. Ubah Publishing ke Otomatis agar tayang.',
 };
 
 const generateNotice = (result) => {

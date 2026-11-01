@@ -110,9 +110,11 @@ export async function runGenerationRequest({ scheduleId, post, refresh, onState,
         const result = await post(`/office/api/content-schedules/${scheduleId}/generate`);
         if (result.status === 'generated') onState({ phase: 'queued' });
         else if (result.status === 'skipped' && ['content_exists', 'command_exists'].includes(result.reason)) onState({ phase: 'idle' });
-        else if (result.status === 'skipped' && result.reason === 'managed_by_slot_worker') {
+        else if (result.status === 'skipped' && ['managed_by_slot_worker', 'slot_worker_needs_automatic'].includes(result.reason)) {
             onState({ phase: 'idle' });
-            onNotice('Feed dan Story brand ini dibuat otomatis oleh worker sehari sebelum jam tayang, jadi tidak perlu generate manual.');
+            onNotice(result.reason === 'managed_by_slot_worker'
+                ? 'Feed dan Story brand ini dibuat otomatis oleh worker sehari sebelum jam tayang, jadi tidak perlu generate manual.'
+                : 'Jadwal ini berstatus review, sedangkan worker hanya memposting jadwal otomatis. Ubah Publishing ke Otomatis agar tayang.');
             return result;
         }
         else throw new Error(result.reason === 'inactive_or_deleted' ? 'Jadwal tidak aktif.' : 'Generation tidak dapat dimulai.');
