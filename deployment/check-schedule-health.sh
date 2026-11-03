@@ -122,6 +122,18 @@ PYEOF
     echo "  log terakhir yang bermasalah:"
     grep -E "ERROR|WARNING" "$log" | tail -4 | mask | cut -c1-200 | sed 's/^/           /'
     echo "  entri log terakhir: $(tail -1 "$log" | cut -c1-19)"
+    since="$(date -d '60 minutes ago' '+%Y-%m-%d %H:%M' 2>/dev/null)"
+    if [ -n "$since" ]; then
+      recent="$(awk -v s="$since" 'substr($0,1,16) >= s && / ERROR /' "$log")"
+      count="$(printf '%s' "$recent" | grep -c .)"
+      if [ "$count" -gt 0 ]; then
+        if printf '%s' "$recent" | grep -qiE "budget|quota|credit|HTTP 40[123]"; then
+          warn "$label: $count error dalam 60 menit terakhir, penyebab: ANGGARAN/KREDENSIAL OPENROUTER DITOLAK. Gambar berikutnya tidak bisa dibuat sampai anggaran dinaikkan"
+        else
+          warn "$label: $count error dalam 60 menit terakhir (lihat log di atas)"
+        fi
+      else ok "$label: tidak ada error dalam 60 menit terakhir"; fi
+    fi
   else warn "log $log belum ada"; fi
 }
 workersummary "Kauiz" "$KAUIZ_DIR"
@@ -183,8 +195,11 @@ if [ -d "$APP_DIR" ]; then
     foreach (I::where("created_at", ">=", now()->subDays(3))->get()->groupBy(fn($i) => $i->platform."/".$i->content_type." ".$i->status) as $k => $g) echo "    ".$g->count()."x $k\n";
     echo "  perintah 3 hari terakhir per agen/aksi/status:\n";
     foreach (C::where("created_at", ">=", now()->subDays(3))->get()->groupBy(fn($c) => $c->agent_id." ".$c->action." ".$c->status) as $k => $g) echo "    ".$g->count()."x $k\n";
+    $failedHour = C::where("status", "failed")->where("created_at", ">=", now()->subHour())->count();
+    if ($failedHour > 3) echo "  PERIKSA  ".$failedHour." perintah worker gagal dalam 1 jam terakhir (kemungkinan terus diulang atau anggaran/kredensial ditolak)\n";
     foreach (C::where("status", "failed")->where("created_at", ">=", now()->subDays(3))->latest()->limit(3)->get() as $c) echo "  gagal: ".$c->agent_id." ".$c->action." - ".mb_substr((string) $c->error, 0, 110)."\n";
-  ' 2>&1 | grep -v -E "^\s*$|Psy Shell|INFO" | head -40)
+  ' 2>&1 | grep -v -E "^\s*$|Psy Shell|INFO" | head -40 | tee /tmp/.health-dash.$$)
+  PROBLEMS=$((PROBLEMS + $(grep -c '^  PERIKSA' /tmp/.health-dash.$$ 2>/dev/null || echo 0))); rm -f /tmp/.health-dash.$$
 else warn "tidak bisa membaca database dashboard"; fi
 
 section "Ringkasan"

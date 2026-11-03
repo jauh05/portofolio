@@ -244,5 +244,47 @@ class ArticleWorkerTests(unittest.TestCase):
         self.assertEqual(calls, [("POST", "/api/office/commands/claim", {"agent_id": "jauki-article"})])
 
 
+class FallbackEndpointTests(unittest.TestCase):
+    FALLBACK = {"ARTICLE_LLM_FALLBACK_BASE_URL": "http://127.0.0.1:20128/v1", "ARTICLE_LLM_FALLBACK_MODEL": "oc/free", "ARTICLE_LLM_FALLBACK_API_KEY": "lokal"}
+
+    def endpoints(self, **env):
+        return worker.Settings(env).endpoints()
+
+    def test_openrouter_comes_first_and_the_fallback_second(self):
+        found = self.endpoints(OPENROUTER_API_KEY="k", **self.FALLBACK)
+        self.assertEqual([e["base_url"] for e in found], ["https://openrouter.ai/api/v1", "http://127.0.0.1:20128/v1"])
+        self.assertEqual(found[1]["model"], "oc/free")
+
+    def test_no_fallback_configured_keeps_the_single_openrouter_endpoint(self):
+        self.assertEqual(len(self.endpoints(OPENROUTER_API_KEY="k")), 1)
+        self.assertEqual(self.endpoints(), [])
+
+    def test_fallback_alone_works_without_an_openrouter_key(self):
+        self.assertEqual([e["model"] for e in self.endpoints(**self.FALLBACK)], ["oc/free"])
+
+    def test_article_fallback_falls_back_to_the_threads_fallback_variables(self):
+        found = self.endpoints(OPENROUTER_API_KEY="k", THREADS_LLM_FALLBACK_BASE_URL="http://gw/v1", THREADS_LLM_FALLBACK_MODEL="oc/threads")
+        self.assertEqual(found[1]["model"], "oc/threads")
+
+    def test_budget_rejection_from_openrouter_is_answered_by_the_fallback(self):
+        import article_content as ac
+        calls = []
+
+        def openrouter(url, headers, body, timeout=120.0):
+            calls.append("openrouter")
+            raise ac.writer.WriterError('LLM HTTP 403: {"error":{"message":"Workspace lifetime budget of $2.00 exceeded."}}')
+
+        def gateway(url, headers, body, timeout=120.0):
+            calls.append("fallback")
+            return fixtures.reply(fixtures.valid())
+
+        endpoints = self.endpoints(OPENROUTER_API_KEY="k", **self.FALLBACK)
+        endpoints[0]["transport"], endpoints[1]["transport"] = openrouter, gateway
+        article = ac.write_article("kauiz", {"brand": "Kauiz", "topic": "Jadwal belajar", "content_id": 5}, endpoints)
+        self.assertEqual(calls, ["openrouter", "fallback"])
+        self.assertEqual(article["model"], "oc/free")
+        self.assertIn("403", article["errors"][0])
+
+
 if __name__ == "__main__":
     unittest.main()

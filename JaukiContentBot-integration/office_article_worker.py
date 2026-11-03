@@ -76,9 +76,17 @@ class Settings:
         return article_site.ArticleSite(brand, self.env.get(f"ARTICLE_{key}_TOKEN", ""), self.env.get(f"ARTICLE_{key}_BASE_URL") or None, send=send)
 
     def endpoints(self) -> list[dict[str, str]]:
-        if not self.openrouter_key:
-            return []
-        return [{"base_url": self.openrouter_base, "api_key": self.openrouter_key, "model": self.env.get("ARTICLE_LLM_MODEL", LLM_MODEL_DEFAULT)}]
+        """OpenRouter lebih dulu, lalu cadangan (mis. 9Router ke model gratis opencode) bila OpenRouter menolak, misalnya anggaran habis.
+        Cadangan boleh dipakai sendirian bila kunci OpenRouter kosong. Variabel ARTICLE_LLM_FALLBACK_* jatuh ke THREADS_LLM_FALLBACK_*."""
+        endpoints: list[dict[str, str]] = []
+        if self.openrouter_key:
+            endpoints.append({"base_url": self.openrouter_base, "api_key": self.openrouter_key,
+                              "model": self.env.get("ARTICLE_LLM_MODEL", LLM_MODEL_DEFAULT)})
+        fallback = {name: self.env.get(f"ARTICLE_LLM_FALLBACK_{name}") or self.env.get(f"THREADS_LLM_FALLBACK_{name}", "")
+                    for name in ("BASE_URL", "MODEL", "API_KEY")}
+        if fallback["BASE_URL"] and fallback["MODEL"]:
+            endpoints.append({"base_url": fallback["BASE_URL"], "api_key": fallback["API_KEY"], "model": fallback["MODEL"]})
+        return endpoints
 
 
 # -- status dan sampul ------------------------------------------------------------------------
