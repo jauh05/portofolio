@@ -16,6 +16,13 @@ class OfficeScheduledGenerationService
     // "dismissed" dipakai saat konten dihapus dari dashboard, supaya kemunculan itu tidak dibuat ulang otomatis.
     private const BLOCKING_STATUSES = ['queued_for_generation', 'generating', 'ready_for_review', 'ready', 'approved', 'scheduled_for_publish', 'publishing', 'published', 'dismissed'];
 
+    /** Percobaan otomatis per kemunculan, termasuk yang pertama. Generate manual selalu bisa dan mengulang hitungan. */
+    private const MAX_AUTO_ATTEMPTS = 3;
+    /** Jeda sebelum percobaan berikutnya: menit ini dikali jumlah percobaan yang sudah gagal (30, lalu 60). */
+    private const RETRY_BACKOFF_MINUTES = 30;
+    /** Error yang tidak akan sembuh sendiri: kredensial, anggaran, atau kuota. Mengulang hanya membakar antrean dan notifikasi. */
+    private const PERMANENT_ERROR = '/budget|quota|credit|insufficient|billing|unauthori[sz]ed|invalid api key|rejected its configured credentials|HTTP 40[123]\b|\b40[123]\b/i';
+
     public function __construct(private OfficeContentGenerator $generator) {}
 
     public function runDue(int $limit = 50): array
@@ -59,6 +66,11 @@ class OfficeScheduledGenerationService
                 return ['status' => 'skipped', 'reason' => 'content_exists', 'content_id' => $item->id];
             }
 
+            // Konten yang gagal tidak dibuat ulang tiap 5 menit: batasi percobaan, beri jeda, dan jangan ulangi error yang tidak akan sembuh.
+            if (! $regenerate && $item->status === 'failed' && ($block = $this->retryBlock($item))) {
+                return ['status' => 'skipped', 'reason' => $block, 'content_id' => $item->id];
+            }
+
             $commandExists = OfficeCommand::whereIn('status', ['queued', 'claimed', 'running'])
                 ->where('payload->content_id', $item->id)
                 ->whereIn('action', ['generate_feed', 'generate_story', 'generate_threads', 'generate_article'])
@@ -71,7 +83,11 @@ class OfficeScheduledGenerationService
             $payload = $this->payloadFor($item, $schedule);
             OfficeCommand::create(['agent_id' => $agent, 'action' => $action, 'payload' => $payload, 'status' => 'queued', 'requested_by' => auth()->id() ?? User::where('is_office_owner', true)->first()?->id]);
 
-            $item->update(['status' => 'queued_for_generation', 'metadata' => array_merge($item->metadata ?? [], ['generation_requested_at' => now('Asia/Jakarta')->toIso8601String(), 'scheduled_at' => $payload['scheduled_at']])]);
+            $attempts = $regenerate ? 1 : ((int) ($item->metadata['generation_attempts'] ?? 0) + 1);
+            $item->update(['status' => 'queued_for_generation', 'metadata' => array_merge($item->metadata ?? [], [
+                'generation_requested_at' => now('Asia/Jakarta')->toIso8601String(), 'scheduled_at' => $payload['scheduled_at'],
+                'generation_attempts' => $attempts, 'last_generation_attempt_at' => CarbonImmutable::now('Asia/Jakarta')->toIso8601String(),
+            ])]);
             $schedule->update(['last_generated_at' => now('Asia/Jakarta')]);
 
             return ['status' => 'generated', 'content_id' => $item->id];
@@ -93,6 +109,25 @@ class OfficeScheduledGenerationService
         if ($platform === 'threads') return ['jauki-threads', 'generate_threads'];
         if (in_array($platform, ['article', 'blog', 'website'], true) || in_array($type, ['article', 'blog'], true)) return ['jauki-article', 'generate_article'];
         return ['jauki-social', $type === 'story' ? 'generate_story' : 'generate_feed'];
+    }
+
+    /** Alasan konten gagal ini belum boleh dibuat ulang otomatis, atau null bila boleh dicoba lagi. */
+    private function retryBlock(OfficeContentItem $item): ?string
+    {
+        $metadata = $item->metadata ?? [];
+        $attempts = (int) ($metadata['generation_attempts'] ?? 0);
+        if ($attempts >= self::MAX_AUTO_ATTEMPTS) {
+            return 'retry_exhausted';
+        }
+        if (preg_match(self::PERMANENT_ERROR, (string) ($metadata['generation_error'] ?? ''))) {
+            return 'retry_blocked_credentials';
+        }
+        $last = $metadata['last_generation_attempt_at'] ?? null;
+        if ($last && CarbonImmutable::parse($last)->addMinutes(self::RETRY_BACKOFF_MINUTES * max(1, $attempts))->isFuture()) {
+            return 'retry_later';
+        }
+
+        return null;
     }
 
     /**

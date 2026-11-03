@@ -125,3 +125,76 @@ test('one-time schedules still use their own date', function () {
     expect(run()['generated'])->toBe(1);
     expect(scheduledTimes())->toBe(['2026-11-02T09:00']);
 });
+
+function failLatest(string $error): void
+{
+    OfficeCommand::query()->update(['status' => 'failed', 'error' => $error]);
+    $item = OfficeContentItem::latest('created_at')->first();
+    $item->update(['status' => 'failed', 'metadata' => array_merge($item->metadata ?? [], ['generation_error' => $error])]);
+}
+
+test('a failed generation is retried a few times with growing pauses, not every five minutes', function () {
+    recurring(['frequency' => 'weekly', 'days' => [4], 'time' => '14:00']);
+    at('2026-11-04 15:00');
+    expect(run()['generated'])->toBe(1);
+    failLatest('Tidak ada hasil dari worker.');
+    expect(OfficeContentItem::first()->metadata['generation_attempts'])->toBe(1);
+
+    at('2026-11-04 15:05');
+    $early = run();
+    expect($early['generated'])->toBe(0)->and($early['skipped'])->toBe(1)->and(OfficeCommand::count())->toBe(1);
+
+    at('2026-11-04 15:31'); // 30 menit setelah percobaan pertama
+    expect(run()['generated'])->toBe(1);
+    expect(OfficeContentItem::first()->metadata['generation_attempts'])->toBe(2);
+    failLatest('Tidak ada hasil dari worker.');
+
+    at('2026-11-04 16:00'); // jeda kedua 60 menit belum lewat
+    expect(run()['generated'])->toBe(0);
+    at('2026-11-04 16:32');
+    expect(run()['generated'])->toBe(1);
+    failLatest('Tidak ada hasil dari worker.');
+
+    at('2026-11-04 23:00'); // percobaan ketiga sudah habis
+    expect(run()['generated'])->toBe(0);
+    expect(OfficeCommand::count())->toBe(3);
+});
+
+test('credential and budget errors are not retried because they cannot heal on their own', function () {
+    recurring(['frequency' => 'weekly', 'days' => [4], 'time' => '14:00']);
+    at('2026-11-04 15:00');
+    run();
+    failLatest('9Router HTTP 403: {"error":{"message":"Workspace lifetime budget of $2.00 exceeded."}}');
+
+    at('2026-11-04 19:00'); // jauh melewati jeda mana pun
+    $later = run();
+    expect($later['generated'])->toBe(0)->and($later['skipped'])->toBe(1);
+    expect(OfficeCommand::count())->toBe(1);
+
+    $schedule = OfficeContentSchedule::first();
+    $result = app(OfficeScheduledGenerationService::class)->generateSchedule($schedule, CarbonImmutable::parse('2026-11-05 14:00', 'Asia/Jakarta')->toIso8601String());
+    expect($result['reason'])->toBe('retry_blocked_credentials');
+});
+
+test('each kind of permanent error is recognised and a plain timeout is not', function () {
+    foreach (['Workspace lifetime budget exceeded', 'insufficient credits', 'token API artikel kauiz ditolak (401)', 'situs menolak (HTTP 403)', 'quota habis'] as $error) {
+        expect(preg_match('/budget|quota|credit|insufficient|billing|unauthori[sz]ed|invalid api key|rejected its configured credentials|HTTP 40[123]\b|\b40[123]\b/i', $error))->toBe(1, $error);
+    }
+    foreach (['Office AI provider timed out.', 'koneksi terputus', 'Tidak ada hasil dari bot setelah 60 menit', 'HTTP 429 rate limit', 'HTTP 503'] as $error) {
+        expect(preg_match('/budget|quota|credit|insufficient|billing|unauthori[sz]ed|invalid api key|rejected its configured credentials|HTTP 40[123]\b|\b40[123]\b/i', $error))->toBe(0, $error);
+    }
+});
+
+test('a manual regenerate always works and starts the attempt count again', function () {
+    recurring(['frequency' => 'weekly', 'days' => [4], 'time' => '14:00']);
+    at('2026-11-04 15:00');
+    run();
+    failLatest('9Router HTTP 403: Workspace lifetime budget exceeded');
+    expect(run()['generated'])->toBe(0);
+
+    $schedule = OfficeContentSchedule::first();
+    $result = app(OfficeScheduledGenerationService::class)->generateSchedule($schedule, CarbonImmutable::parse('2026-11-05 14:00', 'Asia/Jakarta')->toIso8601String(), true);
+    expect($result['status'])->toBe('generated');
+    expect(OfficeContentItem::first()->metadata['generation_attempts'])->toBe(1);
+    expect(OfficeCommand::count())->toBe(2);
+});

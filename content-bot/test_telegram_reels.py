@@ -40,7 +40,15 @@ class TelegramNotifyTests(unittest.TestCase):
     def test_tiktok_caption_keeps_the_text_and_limits_hashtags_to_five(self):
         caption = tn.tiktok_caption(CAPTION)
         self.assertTrue(caption.startswith("Tugas numpuk tapi semangat jalan terus."))
-        self.assertEqual(caption.split("\n\n")[1].split(), ["#jaukiacademy", "#tugas", "#mahasiswa", "#kuliah", "#deadline"])
+        # Hashtag terakhir (brand) selalu ikut, sisanya dari yang paling awal.
+        self.assertEqual(caption.split("\n\n")[1].split(), ["#jaukiacademy", "#tugas", "#mahasiswa", "#kuliah", "#relatable"])
+
+    def test_fyp_and_the_brand_tag_survive_the_hashtag_limit(self):
+        real = "Mulai nulis tuh emang bagian paling susah.\n\n#makalah #tugaskuliah #mahasiswa #nulistugas #kuliah #fyp #relate #jaukiacademy"
+        tags = tn.tiktok_caption(real).split("\n\n")[1].split()
+        self.assertEqual(tags, ["#makalah", "#tugaskuliah", "#mahasiswa", "#fyp", "#jaukiacademy"])
+        self.assertEqual(tn.pick_hashtags(["#a", "#b"], 5), ["#a", "#b"])
+        self.assertEqual(tn.pick_hashtags(["#a", "#fyp", "#c", "#d", "#e", "#f", "#g"], 3), ["#a", "#fyp", "#g"])
         self.assertEqual(tn.tiktok_caption("Tanpa tagar"), "Tanpa tagar")
         self.assertEqual(tn.tiktok_caption("Isi\n\nbukan hanya #tagar saja"), "Isi\n\nbukan hanya #tagar saja")
         self.assertLessEqual(len(tn.tiktok_caption("a" * 5000)), tn.TIKTOK_CAPTION_LIMIT)

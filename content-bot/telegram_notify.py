@@ -34,10 +34,24 @@ def split_hashtags(text):
     return text.strip(), []
 
 
+def pick_hashtags(tags, limit):
+    """Hashtag untuk TikTok: #fyp dan hashtag terakhir (brand, karena caption_for menaruhnya di belakang) selalu ikut, sisanya
+    diisi dari yang paling awal. Urutan asli dipertahankan."""
+    if len(tags) <= limit:
+        return list(tags)
+    keep = {index for index, tag in enumerate(tags) if tag.lower() == "#fyp"}
+    keep.add(len(tags) - 1)
+    for index in range(len(tags)):
+        if len(keep) >= limit:
+            break
+        keep.add(index)
+    return [tags[index] for index in sorted(keep)][:limit]
+
+
 def tiktok_caption(text, max_hashtags=5):
     """Caption TikTok: isi yang sama, tetapi hashtag dibatasi supaya tidak seperti spam dan tetap di bawah batas karakter."""
     body, tags = split_hashtags(text)
-    caption = body + ("\n\n" + " ".join(tags[:max_hashtags]) if tags else "")
+    caption = body + ("\n\n" + " ".join(pick_hashtags(tags, max_hashtags)) if tags else "")
     return caption[:TIKTOK_CAPTION_LIMIT].rstrip()
 
 
