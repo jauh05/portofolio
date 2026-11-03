@@ -124,7 +124,12 @@ PYEOF
     echo "  entri log terakhir: $(tail -1 "$log" | cut -c1-19)"
     since="$(date -d '60 minutes ago' '+%Y-%m-%d %H:%M' 2>/dev/null)"
     if [ -n "$since" ]; then
-      recent="$(awk -v s="$since" 'substr($0,1,16) >= s && / ERROR /' "$log")"
+      # hanya error yang slotnya belum berhasil sesudahnya: gambar siap atau publish berhasil menghapus error lama slot yang sama
+      recent="$(awk -v s="$since" 'substr($0,1,16) < s { next }
+        / ERROR / { k = ($4 == "generate/render") ? $5 : "?"; line[k, ++cnt[k]] = $0; next }
+        / INFO / && /: gambar .* siap/ { k = $4; sub(/:$/, "", k); delete cnt[k]; next }
+        / INFO / && $4 == "publish" && /berhasil/ { delete cnt[$5] }
+        END { for (k in cnt) for (i = 1; i <= cnt[k]; i++) print line[k, i] }' "$log")"
       count="$(printf '%s' "$recent" | grep -c .)"
       if [ "$count" -gt 0 ]; then
         if printf '%s' "$recent" | grep -qiE "budget|quota|credit|HTTP 40[123]"; then
