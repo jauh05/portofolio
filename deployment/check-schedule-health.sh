@@ -199,7 +199,7 @@ if [ -d "$APP_DIR" ]; then
     if ($failedHour > 3) echo "  PERIKSA  ".$failedHour." perintah worker gagal dalam 1 jam terakhir (kemungkinan terus diulang atau anggaran/kredensial ditolak)\n";
     foreach (C::where("status", "failed")->where("created_at", ">=", now()->subDays(3))->latest()->limit(3)->get() as $c) echo "  gagal: ".$c->agent_id." ".$c->action." - ".mb_substr((string) $c->error, 0, 110)."\n";
   ' 2>&1 | grep -v -E "^\s*$|Psy Shell|INFO" | head -40 | tee /tmp/.health-dash.$$)
-  PROBLEMS=$((PROBLEMS + $(grep -c '^  PERIKSA' /tmp/.health-dash.$$ 2>/dev/null || echo 0))); rm -f /tmp/.health-dash.$$
+  dash_found="$(grep -c '^  PERIKSA' /tmp/.health-dash.$$ 2>/dev/null)"; PROBLEMS=$((PROBLEMS + ${dash_found:-0})); rm -f /tmp/.health-dash.$$
 else warn "tidak bisa membaca database dashboard"; fi
 
 section "Ringkasan"
