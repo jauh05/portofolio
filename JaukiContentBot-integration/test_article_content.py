@@ -154,7 +154,7 @@ class WriteArticleTests(unittest.TestCase):
 
 class CoverTests(unittest.TestCase):
     def test_cover_prompt_uses_the_brand_article_layouts_and_three_texts(self):
-        for brand, layout, color in (("kauiz", "KA1", "#D8F810"), ("jauki", "JA1", "#F4701B")):
+        for brand, layout, color in (("kauiz", "KA1", "#FFD43B"), ("jauki", "JA1", "#F4701B")):
             prompt = ac.cover_prompt(brand, {**valid(), "cover_headline": "JADWAL BELAJAR"}, layout)
             self.assertIn("16:9", prompt)
             self.assertIn(color, prompt)

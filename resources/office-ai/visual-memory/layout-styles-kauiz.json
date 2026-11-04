@@ -1,9 +1,9 @@
 {
  "version": "1.0",
- "description": "Tata letak khusus Kauiz: hitam, lime, dan off-white. Hanya posisi dan bentuk; adegan dan teks ditentukan Muse.",
+ "description": "Tata letak khusus Kauiz: hitam, kuning, dan putih kertas. Hanya posisi dan bentuk; adegan dan teks ditentukan Muse.",
  "templates": {
   "K1": {
-   "concept": "Gelap bertitik, headline putih dengan blok lime, objek 3D hitam",
+   "concept": "Gelap bertitik, headline putih dengan blok kuning, objek 3D hitam",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -28,8 +28,8 @@
    "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
   },
   "K2": {
-   "concept": "Off-white bersih, sapuan lime, objek 3D di atas batu gelap",
-   "text_color": "rich black",
+   "concept": "Putih kertas bersih, sapuan kuning, objek 3D di atas batu gelap",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -52,8 +52,8 @@
    "prompt_template": "Clean modern poster in {aspect}. The background is {bg} with a soft {accent} paint smear in one corner. At the top, a huge tightly stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} highlight bar. In the lower half, a realistic 3D render of {subject} rests on a dark rock-like pedestal with a soft shadow."
   },
   "K3": {
-   "concept": "Lime penuh, bingkai tipis, headline hitam dalam kotak",
-   "text_color": "rich black",
+   "concept": "Kuning penuh, bingkai tipis, headline hitam dalam kotak",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -101,8 +101,8 @@
    "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
   },
   "K5": {
-   "concept": "Off-white, foto halftone dalam bingkai perangkat, pita lime diagonal",
-   "text_color": "rich black",
+   "concept": "Putih kertas, foto halftone dalam bingkai perangkat, pita kuning diagonal",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -125,7 +125,7 @@
    "prompt_template": "Modern poster in {aspect}. The background is {bg}. At the top, a huge tightly stacked headline in {headline_style}, {ink}, centered, reads exactly \"{headline}\", with a solid {accent} highlight bar behind it. In the middle, a black-and-white halftone photograph of {subject} sits inside a thin laptop-like device frame, with a plain diagonal {accent} tape strip crossing over its top edge."
   },
   "K6": {
-   "concept": "Gelap dengan garis neon lime melengkung dan tombol bulat",
+   "concept": "Gelap dengan garis neon kuning melengkung dan tombol bulat",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -150,8 +150,8 @@
    "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
   },
   "K7": {
-   "concept": "Lime penuh dengan kartu hitam berisi foto halftone",
-   "text_color": "rich black",
+   "concept": "Kuning penuh dengan kartu hitam berisi foto halftone",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -174,7 +174,7 @@
    "prompt_template": "Bold poster in {aspect}. The background is solid {accent}. At the top, a huge tightly stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\". Below it, a large rounded {ink} card holds a black-and-white halftone photograph of {subject}."
   },
   "K8": {
-   "concept": "Off-white dengan kartu hitam besar, objek 3D menonjol",
+   "concept": "Putih kertas dengan kartu hitam besar, objek 3D menonjol",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -198,7 +198,7 @@
    "prompt_template": "Modern poster in {aspect}. The background is {bg}. A big rounded {ink} card fills the middle and holds a huge tightly stacked headline in {headline_style}, white, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} block with {ink} text. A glossy 3D render of {subject} pops out over the card's top-right corner with a soft shadow."
   },
   "K9": {
-   "concept": "Gelap berbingkai lime tipis, objek hitam bercahaya lime",
+   "concept": "Gelap berbingkai kuning tipis, objek hitam bercahaya kuning",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -223,8 +223,8 @@
    "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
   },
   "K10": {
-   "concept": "Lime penuh, kartu off-white bergaya brutalis dengan bayangan keras",
-   "text_color": "rich black",
+   "concept": "Kuning penuh, kartu putih kertas bergaya brutalis dengan bayangan keras",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -247,8 +247,8 @@
    "prompt_template": "Neo-brutalist poster in {aspect}. The background is solid {accent}. A large {bg} card with a thick {ink} outline and a hard {ink} offset shadow sits slightly tilted in the center and holds a huge tightly stacked headline in {headline_style}, {ink}, reads exactly \"{headline}\". A cutout of {subject} is stuck on the card's corner like a sticker with a thick {ink} outline."
   },
   "K11": {
-   "concept": "Off-white lega, blok lime besar di belakang cutout halftone",
-   "text_color": "rich black",
+   "concept": "Putih kertas lega, blok kuning besar di belakang cutout halftone",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -271,7 +271,7 @@
    "prompt_template": "Minimal modern poster in {aspect}. The background is {bg} with lots of empty space. A large solid {accent} rectangle sits behind a black-and-white halftone cutout of {subject} with a hard shadow. At the top left, a huge tightly stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\"."
   },
   "K12": {
-   "concept": "Gelap bergaris, panel arang berbingkai lime berisi foto hitam-putih",
+   "concept": "Gelap bergaris, panel hitam berbingkai kuning berisi foto hitam-putih",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -292,13 +292,13 @@
     },
     "cta": null
    },
-   "prompt_template": "Dark graphic poster in {aspect}. The background is deep {ink} with faint tall vertical stripes. At the top, a huge tightly stacked headline in {headline_style}, white, centered, reads exactly \"{headline}\", with its last word in {accent}. In the middle, a charcoal (#1B1B1B) rounded panel with a thin {accent} outline holds a black-and-white photograph of {subject}.",
+   "prompt_template": "Dark graphic poster in {aspect}. The background is deep {ink} with faint tall vertical stripes. At the top, a huge tightly stacked headline in {headline_style}, white, centered, reads exactly \"{headline}\", with its last word in {accent}. In the middle, a black (#0A0A0A) rounded panel with a thin {accent} outline holds a black-and-white photograph of {subject}.",
    "footer_style": "a slim rounded {accent} footer bar with {ink} text on the left"
   }
  },
  "article_templates": {
   "KA1": {
-   "concept": "Gelap bertitik, headline putih dengan blok lime, objek 3D hitam di kanan",
+   "concept": "Gelap bertitik, headline putih dengan blok kuning, objek 3D hitam di kanan",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -318,8 +318,8 @@
    "footer_style": "a slim rounded {accent} footer bar with {ink} text"
   },
   "KA2": {
-   "concept": "Lime penuh, headline hitam, cutout halftone di kanan",
-   "text_color": "rich black",
+   "concept": "Kuning penuh, headline hitam, cutout halftone di kanan",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -337,8 +337,8 @@
    "prompt_template": "Loud graphic article cover in {aspect}. The background is solid {accent}. On the left, a large stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words inside a solid {ink} box with {accent} text. On the right, a black-and-white halftone cutout of {subject} with a hard shadow."
   },
   "KA3": {
-   "concept": "Off-white bersih, highlight lime, objek 3D di batu gelap",
-   "text_color": "rich black",
+   "concept": "Putih kertas bersih, highlight kuning, objek 3D di batu gelap",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -356,7 +356,7 @@
    "prompt_template": "Clean modern article cover in {aspect}. The background is {bg} with a soft {accent} paint smear in one corner. On the left, a large stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\", with its last words on a solid {accent} highlight bar. On the right, a realistic 3D render of {subject} rests on a dark rock-like pedestal with a soft shadow."
   },
   "KA4": {
-   "concept": "Gelap dengan garis neon lime melengkung",
+   "concept": "Gelap dengan garis neon kuning melengkung",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
@@ -376,8 +376,8 @@
    "footer_style": "a slim rounded {accent} footer bar with {ink} text"
   },
   "KA5": {
-   "concept": "Terbelah: panel lime berisi headline, foto hitam-putih penuh di kanan",
-   "text_color": "rich black",
+   "concept": "Terbelah: panel kuning berisi headline, foto hitam-putih penuh di kanan",
+   "text_color": "black",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {
     "headline": {
@@ -385,7 +385,7 @@
      "max_chars": 56
     },
     "subline": {
-     "where": "Under the headline in the lime panel",
+     "where": "Under the headline in the kuning panel",
      "max_words": 12,
      "max_chars": 72
     },
@@ -395,7 +395,7 @@
    "prompt_template": "Split-screen article cover in {aspect}. The left 55 percent is a solid {accent} panel holding a large stacked headline in {headline_style}, {ink}, left aligned, reads exactly \"{headline}\". The right 45 percent is a full-height black-and-white halftone photograph of {subject}."
   },
   "KA6": {
-   "concept": "Off-white dengan kartu hitam di kiri, objek 3D menonjol",
+   "concept": "Putih kertas dengan kartu hitam di kiri, objek 3D menonjol",
    "text_color": "white",
    "subject_hint": "a concrete, natural scene or object that fits the topic",
    "slots": {

@@ -93,15 +93,15 @@ class LayoutCardTests(unittest.TestCase):
                         self.assertIn(f'reads exactly "{footer}"', result["muse_prompt"])
                         self.assertIn("left and right 10 percent", result["muse_prompt"])
 
-    def test_kauiz_uses_the_lime_black_off_white_palette_without_navy_or_jauki_colors(self):
+    def test_kauiz_uses_the_yellow_black_white_palette_without_navy_or_jauki_colors(self):
         for layout_id in layouts_of("kauiz"):
             kauiz = prompt_of("kauiz", layout_id)["muse_prompt"]
-            self.assertIn("electric lime (#D8F810)", kauiz, layout_id)
-            self.assertIn("rich black (#0E0E0E)", kauiz, layout_id)
+            self.assertIn("bright yellow (#FFD43B)", kauiz, layout_id)
+            self.assertIn("black (#0A0A0A)", kauiz, layout_id)
             for gone in ("navy", "#0B1537", "#FFCB3D", "#F4701B", "#532923", "#1A1A1A"):
                 self.assertNotIn(gone, kauiz, layout_id)
 
-    def test_kauiz_mixes_dark_lime_and_off_white_backgrounds(self):
+    def test_kauiz_mixes_dark_yellow_and_paper_white_backgrounds(self):
         layouts = layouts_of("kauiz")
         dark = [lid for lid, card in layouts.items() if card["text_color"] == "white"]
         self.assertGreaterEqual(len(dark), 4)
@@ -109,8 +109,8 @@ class LayoutCardTests(unittest.TestCase):
         for layout_id in dark:
             self.assertIn("capitals, white", prompt_of("kauiz", layout_id)["muse_prompt"], layout_id)
         for layout_id, card in layouts.items():
-            if card.get("footer_style"):  # latar gelap: bar footer lime agar terlihat
-                self.assertIn("electric lime (#D8F810) footer bar with rich black (#0E0E0E) text", prompt_of("kauiz", layout_id)["muse_prompt"], layout_id)
+            if card.get("footer_style"):  # latar gelap: bar footer kuning agar terlihat
+                self.assertIn("bright yellow (#FFD43B) footer bar with black (#0A0A0A) text", prompt_of("kauiz", layout_id)["muse_prompt"], layout_id)
 
     def test_jauki_uses_the_orange_white_gray_palette_without_brown_or_navy(self):
         for layout_id in layouts_of("jauki"):
@@ -163,7 +163,7 @@ ARTICLE_SOURCE = {"headline": "Cara menulis daftar pustaka tanpa pusing", "subhe
 
 class ArticleCoverTests(unittest.TestCase):
     def test_each_brand_has_six_article_layouts_in_its_own_style(self):
-        for brand, prefix, color in (("kauiz", "KA", "#D8F810"), ("jauki", "JA", "#F4701B")):
+        for brand, prefix, color in (("kauiz", "KA", "#FFD43B"), ("jauki", "JA", "#F4701B")):
             data = writer.load_brand_data(brand)
             layouts = writer.load_article_layouts(data)
             self.assertEqual(sorted(layouts), [f"{prefix}{i}" for i in range(1, 7)])
@@ -194,7 +194,7 @@ class ArticleCoverTests(unittest.TestCase):
         self.assertFalse(set(kauiz) & set(jauki))
         for layout_id in jauki:
             prompt = writer.write_content("jauki", ARTICLE_SOURCE, {}, layout_id, "article", "books", cta_label=None, footer="jaukitugas.my.id", styles=jauki)["muse_prompt"]
-            self.assertNotIn("#D8F810", prompt)
+            self.assertNotIn("#FFD43B", prompt)
         for layout_id in kauiz:
             prompt = writer.write_content("kauiz", ARTICLE_SOURCE, {}, layout_id, "article", "books", cta_label=None, footer="kauiz.web.id", styles=kauiz)["muse_prompt"]
             self.assertNotIn("#F4701B", prompt)
